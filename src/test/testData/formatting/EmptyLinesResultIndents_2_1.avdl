@@ -1,0 +1,185 @@
+/**
+ * Test case for formatting with empty lines.
+ */
+
+protocol
+
+     ThreeEmptyLines
+
+{
+
+
+  enum
+
+       Kind
+
+  {
+
+    FOO
+
+         ,
+
+         BAR
+
+         ,
+
+         BAZ
+
+  }
+
+
+  import idl "foo.avdl";
+
+
+  import schema "schema.avsc";
+
+
+  import protocol "protocol.avpr";
+
+
+  enum
+
+       Status
+
+  {
+
+    A
+
+         ,
+
+         B
+
+         ,
+
+         C
+
+  }
+
+       =
+
+       C
+
+       ;
+
+
+  record
+
+       TestRecord
+
+  {
+
+
+    string
+
+         name
+
+              =
+
+              "foo"
+
+         ;
+
+
+    array
+
+         <
+
+         Kind
+
+         >
+
+         kinds
+
+              =
+
+              [
+
+                   "FOO"
+
+                   ,
+
+                   "BAR"
+
+                   ]
+
+         ;
+
+
+    Status
+
+         status
+
+              =
+
+              "A"
+
+         ;
+
+
+  }
+
+
+  string
+
+       hello
+
+  (
+
+    string
+
+         greeting
+
+  )
+
+       ;
+
+
+  TestRecord
+
+       echo
+
+  (
+
+    TestRecord
+
+         `record`
+
+              =
+
+              {
+
+                   "name"
+
+                        :
+
+                        "bar"
+
+                   ,
+
+                   "kind"
+
+                        :
+
+                        "BAR"
+
+                   }
+
+  )
+
+       ;
+
+
+  void
+
+       ping
+
+  (
+
+  )
+
+       oneway
+
+       ;
+
+
+}

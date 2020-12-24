@@ -1,0 +1,30 @@
+<idea-plugin>
+	<id>net.sf.opk.avro-schema-support</id>
+	<name>Apache Avro IDL Schema Support</name>
+	<vendor email="oscar@westravanholthe.nl" url="http://www.github.com/opwvhk/avro-schema-support">
+		Oscar Westra van Holthe - Kind
+	</vendor>
+
+	<description><![CDATA[
+	<p>A plugin to support Avro schema files in IDL format (.avdl).</p>
+	]]></description>
+
+	<!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html on how to target different products -->
+	<depends>com.intellij.modules.platform</depends>
+	<depends>com.intellij.modules.lang</depends>
+	<depends>com.intellij.modules.java</depends>
+
+	<resource-bundle>messages</resource-bundle>
+	<extensions defaultExtensionNs="com.intellij">
+		<!-- File type & Language -->
+		<fileType name="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.AvroIdlFileType" fieldName="INSTANCE" language="AvroIDL" extensions="avdl"/>
+		<lang.parserDefinition language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroIdlParserDefinition"/>
+		<!-- Syntax highlighting & color definitions -->
+		<lang.syntaxHighlighter language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroIdlSyntaxHighlighter"/>
+		<colorSettingsPage implementation="opwvhk.intellij.avro_idl.editor.AvroIdlColorSettingsPage"/>
+		<!-- Formatting & code style -->
+		<lang.formatter language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlFormattingModelBuilder"/>
+		<codeStyleSettingsProvider implementation="opwvhk.intellij.avro_idl.editor.AvroIdlCodeStyleSettingsProvider"/>
+		<langCodeStyleSettingsProvider implementation="opwvhk.intellij.avro_idl.editor.AvroIdlLanguageCodeStyleSettingsProvider"/>
+	</extensions>
+</idea-plugin>

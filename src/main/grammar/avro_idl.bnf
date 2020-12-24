@@ -1,0 +1,206 @@
+{
+    parserClass = "opwvhk.intellij.avro_idl.syntax.AvroIdlParser"
+    extends = "com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+    psiClassPrefix = "AvroIdl"
+    psiImplClassSuffix = "Impl"
+    psiPackage = "opwvhk.intellij.avro_idl.psi"
+    psiImplPackage = "opwvhk.intellij.avro_idl.psi.impl"
+    psiImplUtilClass = "opwvhk.intellij.avro_idl.psi.AvroIdlPsiUtil"
+
+    elementTypeHolderClass = "opwvhk.intellij.avro_idl.psi.AvroIdlTypes"
+    elementTypeClass = "opwvhk.intellij.avro_idl.psi.AvroIdlElementType"
+    tokenTypeClass = "opwvhk.intellij.avro_idl.psi.AvroIdlTokenType"
+
+	generate=[tokens="yes"]
+    tokens=[
+        // Used to debug the grammar in live preview; the actual code uses a pre-defined 'WHITE_SPACE'
+        NOT_USED="regexp:\s+"
+
+        // The actual IDL compiler defines hexadecimal and octal numbers, but cannot parse them.
+        INT_LITERAL="regexp:-?(0|[1-9][0-9]*)"
+        FLOAT_LITERAL="regexp:-?(NaN|Infinity|(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?)"
+        STRING_LITERAL="regexp:\"([^\"\\\n\r]|\\([ntbrf\\\'\"]|[0-7][0-7]?|[0-3][0-7][0-7]))*\""
+        // Note: a doc element is NOT a comment (which is ignored like whitespace), but part of documented elements.
+        DOC_COMMENT="regexp:/\*\*([^*]|\*+[^/*])*\*+/"
+        LINE_COMMENT="regexp://.*"
+        BLOCK_COMMENT="regexp:/\*([^*]|\*+[^/*])*\*+/"
+
+        LEFT_BRACE='{'
+        RIGHT_BRACE='}'
+        LEFT_PAREN='('
+        RIGHT_PAREN=')'
+        LEFT_BRACKET='['
+        RIGHT_BRACKET=']'
+        LEFT_ANGLE='<'
+        RIGHT_ANGLE='>'
+        AT='@'
+        COMMA=','
+        SEMICOLON=';'
+        COLON=':'
+        EQUALS='='
+
+        ARRAY='array'
+        BOOLEAN='boolean'
+        DOUBLE='double'
+        ENUM='enum'
+        ERROR='error'
+        FALSE='false'
+        FIXED='fixed'
+        FLOAT='float'
+        IDL='idl'
+        IMPORT='import'
+        INT='int'
+        LONG='long'
+        MAP='map'
+        ONEWAY='oneway'
+        BYTES='bytes'
+        SCHEMA='schema'
+        STRING='string'
+        NULL='null'
+        PROTOCOL='protocol'
+        RECORD='record'
+        THROWS='throws'
+        TRUE='true'
+        UNION='union'
+        VOID='void'
+        DATE='date'
+        TIME_MS='time_ms'
+        TIMESTAMP_MS='timestamp_ms'
+        LOCAL_TIMESTAMP_MS='local_timestamp_ms'
+        DECIMAL='decimal'
+        UUID='uuid'
+
+		// Use this to debug the grammar with the PSI preview
+        IDENTIFIER="regexp:(`\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}`)|\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*([.-]\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*)*"
+		// Use this when generating the lexer
+        //IDENTIFIER="regexp:(`[:jletter:][:jletterdigit:]*`)|([:jletter:][:jletterdigit:]*)([.-][:jletter:][:jletterdigit:]*)*"
+    ]
+
+	consumeTokenMethod("recover.*")="consumeTokenFast"
+}
+
+CompilationUnit ::= ProtocolDeclaration
+
+SchemaProperty ::= AT IDENTIFIER LEFT_PAREN JsonValue RIGHT_PAREN { pin=1
+	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNamedType"
+	methods=[getName setName]
+}
+Documentation ::= DOC_COMMENT
+
+ProtocolDeclaration ::= ProtocolDeclaration1 | ProtocolDeclaration2 | ProtocolDeclaration3 {
+	implements=["opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"]
+	methods=[getNameIdentifier getTextOffset getName setName]
+}
+// Without parsing errors, Documentation* SchemaProperty* would be a better start. But by splitting in alternatives with a required start,
+// we can pin to start the ProtocolDeclaration early. We'll repeat this for other documented and/or annotated constructs.
+private ProtocolDeclaration1 ::= Documentation+ SchemaProperty* PROTOCOL IDENTIFIER LEFT_BRACE ProtocolBody RIGHT_BRACE { pin=1 }
+private ProtocolDeclaration2 ::= SchemaProperty+ PROTOCOL IDENTIFIER LEFT_BRACE ProtocolBody RIGHT_BRACE { pin=1 }
+private ProtocolDeclaration3 ::= PROTOCOL IDENTIFIER LEFT_BRACE ProtocolBody RIGHT_BRACE { pin=1 }
+ProtocolBody ::= (ImportDeclaration | NamedSchemaDeclaration | MessageDeclaration)* { recoverWhile="recoverProtocolBody" }
+private recoverProtocolBody ::= !(RIGHT_BRACE)
+
+ImportDeclaration ::= IMPORT ImportInnerDeclaration SEMICOLON { pin=1 }
+private ImportInnerDeclaration ::= ImportType STRING_LITERAL { recoverWhile="recoverImportInnerDeclaration"}
+ImportType ::= IDL | PROTOCOL | SCHEMA
+private recoverImportInnerDeclaration ::= !(SEMICOLON|FIXED|ENUM|RECORD|ERROR|AT)
+
+NamedSchemaDeclaration ::= ( FixedDeclaration | EnumDeclaration | RecordDeclaration ) {
+	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
+	methods=[getNameIdentifier getTextOffset getName setName]
+}
+
+// Always start all options with a required element to ensure the declarations are recognized correctly, but don't pin to prevent unintended paths.
+FixedDeclaration ::= FixedDeclaration1 | FixedDeclaration2 | FixedDeclaration3 { extends=NamedSchemaDeclaration }
+private FixedDeclaration1 ::= Documentation+ SchemaProperty* FixedInnerDeclaration SEMICOLON
+private FixedDeclaration2 ::= SchemaProperty+ FixedInnerDeclaration SEMICOLON
+private FixedDeclaration3 ::= FixedInnerDeclaration SEMICOLON
+private FixedInnerDeclaration ::= FIXED IDENTIFIER LEFT_PAREN INT_LITERAL RIGHT_PAREN { pin=1 recoverWhile="recoverFixedInnerDeclaration" }
+private recoverFixedInnerDeclaration ::= !(SEMICOLON|FIXED|ENUM|RECORD|ERROR|AT)
+
+// Always start all options with a required element to ensure the declarations are recognized correctly, but don't pin to prevent unintended paths.
+EnumDeclaration ::= EnumDeclaration1 | EnumDeclaration2 | EnumDeclaration3 { extends=NamedSchemaDeclaration }
+private EnumDeclaration1 ::= Documentation+ SchemaProperty* EnumInnerDeclaration
+private EnumDeclaration2 ::= SchemaProperty+ EnumInnerDeclaration
+private EnumDeclaration3 ::= EnumInnerDeclaration
+private EnumInnerDeclaration ::= ENUM IDENTIFIER LEFT_BRACE EnumBody RIGHT_BRACE [ EnumDefaultValueAssignment ] { pin=1 }
+EnumBody ::= [ EnumConstant (COMMA EnumConstant)* ] { recoverWhile="recoverEnumBody" }
+private EnumDefaultValueAssignment ::= EQUALS EnumDefault SEMICOLON { pin=1 }
+EnumConstant ::= IDENTIFIER {
+	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
+	methods=[getNameIdentifier getTextOffset getName setName]
+}
+EnumDefault ::= IDENTIFIER
+private recoverEnumBody ::= !(RIGHT_BRACE)
+
+// Always start all options with a required element to ensure the declarations are recognized correctly, but don't pin to prevent unintended paths.
+RecordDeclaration ::= RecordDeclaration1 | RecordDeclaration2 | RecordDeclaration3 { extends=NamedSchemaDeclaration }
+private RecordDeclaration1 ::= Documentation+ SchemaProperty* RecordInnerDeclaration
+private RecordDeclaration2 ::= SchemaProperty+ RecordInnerDeclaration
+private RecordDeclaration3 ::= RecordInnerDeclaration
+private RecordInnerDeclaration ::= RecordType IDENTIFIER LEFT_BRACE RecordBody RIGHT_BRACE { pin=1 }
+private RecordType ::= RECORD | ERROR
+RecordBody ::= FieldDeclaration*
+FieldDeclaration ::= FieldDeclaration1 | FieldDeclaration2
+private FieldDeclaration1 ::= Type VariableDeclarator ( COMMA VariableDeclarator )* SEMICOLON { pin=1 }
+private FieldDeclaration2 ::= Documentation+ Type VariableDeclarator ( COMMA VariableDeclarator )* SEMICOLON { pin=1 }
+
+// Reused in FormalParameter
+VariableDeclarator ::= VariableDeclarator1 | VariableDeclarator2 | VariableDeclarator3 { recoverWhile=recoverVariableDeclarator
+	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
+	methods=[getNameIdentifier getTextOffset getName setName]
+}
+private VariableDeclarator1 ::= Documentation+ SchemaProperty* IDENTIFIER [ EQUALS JsonValue ] { pin=1 }
+private VariableDeclarator2 ::= SchemaProperty+ IDENTIFIER [ EQUALS JsonValue ] { pin=1 }
+private VariableDeclarator3 ::= IDENTIFIER [ EQUALS JsonValue ] { pin=1 }
+private recoverVariableDeclarator ::= !(SEMICOLON|RIGHT_BRACE|RIGHT_PAREN|COMMA)
+
+MessageDeclaration ::= MessageDeclaration1 | MessageDeclaration2 {
+	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
+	methods=[getNameIdentifier getTextOffset getName setName]
+}
+private MessageDeclaration1 ::= Documentation+ ResultType MessageSignature SEMICOLON { pin=1 }
+private MessageDeclaration2 ::= ResultType MessageSignature SEMICOLON { pin=1 }
+ResultType ::= VOID | Type { extends=Type }
+private MessageSignature ::= IDENTIFIER LEFT_PAREN FormalParameters RIGHT_PAREN [ MessageAttributes ] { recoverWhile=recoverMessageSignature }
+private FormalParameters ::= [ FormalParameter (COMMA FormalParameter)* ] { recoverWhile="recoverFormalParameters" }
+FormalParameter ::= FormalParameter1 | FormalParameter2 { recoverWhile="recoverFormalParameter" }
+private FormalParameter1 ::= Type VariableDeclarator { pin=1 }
+private FormalParameter2 ::= Documentation+ Type VariableDeclarator { pin=1 }
+MessageAttributes ::= ONEWAY | MessageAttributeThrowsList
+private MessageAttributeThrowsList ::= THROWS MessageAttributeThrows (COMMA MessageAttributeThrows)* { pin=1 }
+MessageAttributeThrows ::= IDENTIFIER
+private recoverMessageSignature ::= !(SEMICOLON)
+private recoverFormalParameters ::= !(RIGHT_PAREN)
+private recoverFormalParameter ::= !(RIGHT_PAREN|COMMA)
+
+fake TypeProperties ::= SchemaProperty*
+Type ::= (ArrayType | MapType | UnionType | PrimitiveType | ReferenceType) { extends=TypeProperties }
+ArrayType ::= (ArrayType1 | ArrayType2) { extends=Type }
+private ArrayType1 ::= SchemaProperty+ ArrayType2
+private ArrayType2 ::= ARRAY AngleType { pin=1 }
+private AngleType ::= LEFT_ANGLE Type RIGHT_ANGLE { pin=1 }
+MapType ::= (MapType1 | MapType2) { extends=Type }
+private MapType1 ::= SchemaProperty+ MapType2
+private MapType2 ::= MAP AngleType { pin=1 }
+UnionType ::= UNION LEFT_BRACE UnionContents RIGHT_BRACE { pin=1 extends=Type } // Unions have no schema properties
+private UnionContents ::= [ Type (COMMA Type)* ] { recoverWhile="recoverUnionContents" }
+private recoverUnionContents ::= !(RIGHT_BRACE)
+PrimitiveType ::= (PrimitiveType1 | PrimitiveType2) { extends=Type }
+private PrimitiveType1 ::= SchemaProperty+ PrimitiveType2
+private PrimitiveType2 ::= BOOLEAN | BYTES | INT | STRING | FLOAT | DOUBLE | LONG | NULL | DATE | TIME_MS | TIMESTAMP_MS| LOCAL_TIMESTAMP_MS | DecimalType | UUID
+DecimalType ::= (DecimalType1 | DecimalType2) { extends=PrimitiveType }
+private DecimalType1 ::= SchemaProperty+ DecimalType2
+private DecimalType2 ::= DECIMAL LEFT_PAREN INT_LITERAL COMMA INT_LITERAL RIGHT_PAREN { pin=1 }
+ReferenceType ::= (ReferenceType1 | ReferenceType2) { extends=Type }
+private ReferenceType1 ::= SchemaProperty+ ReferenceType2 { pin=1 }
+private ReferenceType2 ::= IDENTIFIER
+
+JsonValue ::= (STRING_LITERAL | INT_LITERAL | FLOAT_LITERAL | TRUE | FALSE | NULL | JsonObject | JsonArray) { recoverWhile=recoverJsonValue }
+JsonObject ::= LEFT_BRACE [ JsonPair (COMMA JsonPair)* ] RIGHT_BRACE { pin=1 }
+JsonPair ::= STRING_LITERAL COLON JsonValue { pin=2 recoverWhile="recoverJsonPair" }
+JsonArray ::= LEFT_BRACKET JsonElements RIGHT_BRACKET { pin=1 }
+private JsonElements ::= [ JsonValue (COMMA JsonValue)* ] { recoverWhile="recoverJsonElements" }
+private recoverJsonValue ::= !(RIGHT_PAREN|COMMA|SEMICOLON|FIXED|ENUM|RECORD|ERROR|AT|RIGHT_BRACE|RIGHT_BRACKET)
+private recoverJsonPair ::= !(RIGHT_BRACE|COMMA)
+private recoverJsonElements ::= !(RIGHT_BRACKET)
