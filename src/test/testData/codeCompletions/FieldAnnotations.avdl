@@ -1,0 +1,6 @@
+@namespace("my.test")
+protocol Proto {
+	error Failure {
+		string @<caret>
+	}
+}

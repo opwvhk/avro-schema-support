@@ -7,6 +7,17 @@
 
 	<description><![CDATA[
 	<p>A plugin to support Avro schema files in IDL format (.avdl).</p>
+	<p>Features include:<ul>
+		<li>Full parsing of Avro <code>.avdl</code> files, including new logical types like <code>local_timestamp_ms</code></li>
+		<li>Syntax highlighting & formatting</li>
+		<li>Code completion based on syntax and supported references</li>
+		<li>
+			Some semantic checks, like unknown symbols, invalid identifiers, and values for <code>@namespace</code>, <code>@aliases</code>
+			and <code>@order</code> annotations</li>
+		<li>Rename support for schema names (i.e. renaming records/errors, enums and fixed types also updates its references)</li>
+	</ul></p>
+
+	<p><em><strong>Work in progress:</strong> references to named schemas presently ignore import declarations.</em></p>
 	]]></description>
 
 	<!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html on how to target different products -->
@@ -22,6 +33,8 @@
 		<!-- Syntax highlighting & color definitions -->
 		<lang.syntaxHighlighter language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroIdlSyntaxHighlighter"/>
 		<colorSettingsPage implementation="opwvhk.intellij.avro_idl.editor.AvroIdlColorSettingsPage"/>
+		<!-- Code completion (additional to type references) -->
+		<completion.contributor language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlCompletionContributor"/>
 		<!-- Formatting & code style -->
 		<lang.formatter language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlFormattingModelBuilder"/>
 		<codeStyleSettingsProvider implementation="opwvhk.intellij.avro_idl.editor.AvroIdlCodeStyleSettingsProvider"/>

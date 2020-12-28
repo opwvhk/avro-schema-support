@@ -1,0 +1,12 @@
+@namespace("my.test")
+protocol Proto {
+	record Rec1 {
+
+	}
+	@namespace("other.namespace")
+	enum Enum { TRUE, FALSE, FILE_NOT_FOUND }
+
+	record Rec2 {
+		<caret>
+	}
+}

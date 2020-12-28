@@ -1,0 +1,10 @@
+@namespace("my.test")
+protocol Proto {
+	record Rec1 {
+
+	}
+	@namespace("other.namespace")
+	enum Enum { TRUE, FALSE, FILE_NOT_FOUND }
+
+	void ping(int count = 1, <caret>)
+}
