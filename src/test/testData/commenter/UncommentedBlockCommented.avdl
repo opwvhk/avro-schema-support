@@ -1,0 +1,9 @@
+protocol Commenting {
+	record Unsure {
+		string name;
+		/*
+		string description;
+		int number;
+		*/
+	}
+}

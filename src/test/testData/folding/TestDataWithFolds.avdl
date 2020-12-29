@@ -1,0 +1,23 @@
+<fold text='/**...*/'>/**
+ * Folding test case.
+ */</fold>
+protocol Folding <fold text='{...}'>{
+	enum Alphabet <fold text='{...}'>{
+		A, B, C
+	}</fold> = A;
+
+	record MyData <fold text='{...}'>{
+		string name;
+		<fold text='/*...*/'>/*
+		Note that JSON values also fold.
+		*/</fold>
+		map<string> properties = <fold text='{...}'>{
+			"key1": "value",
+			"key2": <fold text='[...]'>[
+				"one",
+				"two",
+				"three"
+				]</fold>
+		}</fold>;
+	}</fold>
+}</fold>

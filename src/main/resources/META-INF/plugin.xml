@@ -35,7 +35,14 @@
 		<colorSettingsPage implementation="opwvhk.intellij.avro_idl.editor.AvroIdlColorSettingsPage"/>
 		<!-- Code completion (additional to type references) -->
 		<completion.contributor language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlCompletionContributor"/>
+		<!-- References, navigation & editor actions -->
+		<lang.commenter language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlCommenter"/>
+		<lang.braceMatcher language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlPairedBraceMatcher"/>
+		<!--<declarationRangeHandler implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlDeclarationRangeHandler"/>-->
+		<!-- Structure view -->
+		<lang.psiStructureViewFactory language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlStructureViewFactory"/>
 		<!-- Formatting & code style -->
+		<lang.foldingBuilder language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlFoldingBuilder"/>
 		<lang.formatter language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlFormattingModelBuilder"/>
 		<codeStyleSettingsProvider implementation="opwvhk.intellij.avro_idl.editor.AvroIdlCodeStyleSettingsProvider"/>
 		<langCodeStyleSettingsProvider implementation="opwvhk.intellij.avro_idl.editor.AvroIdlLanguageCodeStyleSettingsProvider"/>
