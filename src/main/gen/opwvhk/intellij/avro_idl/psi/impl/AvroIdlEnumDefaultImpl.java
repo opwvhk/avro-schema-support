@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import opwvhk.intellij.avro_idl.psi.*;
+import opwvhk.intellij.avro_idl.language.AvroIdlEnumConstantReference;
 
 public class AvroIdlEnumDefaultImpl extends ASTWrapperPsiElement implements AvroIdlEnumDefault {
 
@@ -30,6 +31,12 @@ public class AvroIdlEnumDefaultImpl extends ASTWrapperPsiElement implements Avro
   @NotNull
   public PsiElement getIdentifier() {
     return findNotNullChildByType(IDENTIFIER);
+  }
+
+  @Override
+  @NotNull
+  public AvroIdlEnumConstantReference getReference() {
+    return AvroIdlPsiUtil.getReference(this);
   }
 
 }

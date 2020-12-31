@@ -30,12 +30,16 @@
 		<!-- File type & Language -->
 		<fileType name="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.AvroIdlFileType" fieldName="INSTANCE" language="AvroIDL" extensions="avdl"/>
 		<lang.parserDefinition language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroIdlParserDefinition"/>
+		<lang.namesValidator language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlNamesValidator"/>
 		<!-- Syntax highlighting & color definitions -->
 		<lang.syntaxHighlighter language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroIdlSyntaxHighlighter"/>
 		<colorSettingsPage implementation="opwvhk.intellij.avro_idl.editor.AvroIdlColorSettingsPage"/>
 		<!-- Code completion (additional to type references) -->
 		<completion.contributor language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlCompletionContributor"/>
 		<!-- References, navigation & editor actions -->
+		<lang.findUsagesProvider language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlFindUsagesProvider"/>
+		<gotoSymbolContributor implementation="opwvhk.intellij.avro_idl.language.AvroIdlChooseByNameContributor"/>
+		<lang.refactoringSupport language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlRefactoringSupportProvider"/>
 		<lang.commenter language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlCommenter"/>
 		<lang.braceMatcher language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlPairedBraceMatcher"/>
 		<!--<declarationRangeHandler implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlDeclarationRangeHandler"/>-->

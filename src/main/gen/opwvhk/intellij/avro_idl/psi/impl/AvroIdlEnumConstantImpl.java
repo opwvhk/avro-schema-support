@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import opwvhk.intellij.avro_idl.psi.*;
+import com.intellij.navigation.ItemPresentation;
 import com.intellij.util.IncorrectOperationException;
 
 public class AvroIdlEnumConstantImpl extends ASTWrapperPsiElement implements AvroIdlEnumConstant {
@@ -54,6 +55,12 @@ public class AvroIdlEnumConstantImpl extends ASTWrapperPsiElement implements Avr
   @Override
   public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
     return AvroIdlPsiUtil.setName(this, name);
+  }
+
+  @Override
+  @NotNull
+  public ItemPresentation getPresentation() {
+    return AvroIdlPsiUtil.getPresentation(this);
   }
 
 }

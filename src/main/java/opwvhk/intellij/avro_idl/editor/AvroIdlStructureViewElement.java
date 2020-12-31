@@ -72,7 +72,7 @@ public class AvroIdlStructureViewElement extends PsiTreeElementBase<PsiElement> 
 	@Override
 	public @Nullable String getPresentableText() {
 		if (getValue() instanceof AvroIdlNamedSchemaDeclaration) {
-			return text(((AvroIdlNamedSchemaDeclaration) getValue()).getName());
+			return text(((AvroIdlNamedSchemaDeclaration) getValue()).getFullName());
 		} else if (getValue() instanceof AvroIdlMessageDeclaration) {
 			final AvroIdlMessageDeclaration messageDeclaration = (AvroIdlMessageDeclaration) getValue();
 			String messageName = text(messageDeclaration.getName());

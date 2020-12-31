@@ -74,4 +74,11 @@ public class AvroIdlProtocolDeclarationImpl extends ASTWrapperPsiElement impleme
     return AvroIdlPsiUtil.setName(this, name);
   }
 
+  @Override
+  @Nullable
+  @NonNls
+  public String getFullName() {
+    return AvroIdlPsiUtil.getFullName(this);
+  }
+
 }

@@ -29,8 +29,13 @@ public class AvroIdlCodeCompletionsTest extends LightJavaCodeInsightFixtureTestC
 			"boolean ", "bytes ", "int ", "string ", "float ", "double ", "long ",
 			"null ",
 			"date ", "time_ms ", "local_timestamp_ms ", "timestamp_ms ", "decimal(",
-			"union {", "array<", "map<"
+			"union {", "array<", "map<",
+			"Rec1", "other.namespace.Enum"
 		);
+	}
+
+	public void testCompletionsForEnumDefaults() {
+		assertThat(getBasicCompletions("EnumDefaults.avdl")).containsExactlyInAnyOrder("TRUE", "FALSE", "FILE_NOT_FOUND");
 	}
 
 	public void testCompletionsForRecordBody() {
@@ -38,7 +43,8 @@ public class AvroIdlCodeCompletionsTest extends LightJavaCodeInsightFixtureTestC
 			"boolean ", "bytes ", "int ", "string ", "float ", "double ", "long ",
 			"null ",
 			"date ", "time_ms ", "local_timestamp_ms ", "timestamp_ms ", "decimal(",
-			"union {", "array<", "map<"
+			"union {", "array<", "map<",
+			"Rec1", "Rec2", "other.namespace.Enum"
 		);
 	}
 
@@ -79,7 +85,8 @@ public class AvroIdlCodeCompletionsTest extends LightJavaCodeInsightFixtureTestC
 			"boolean ", "bytes ", "int ", "string ", "float ", "double ", "long ",
 			"null ",
 			"date ", "time_ms ", "local_timestamp_ms ", "timestamp_ms ", "decimal(",
-			"union {", "array<", "map<"
+			"union {", "array<", "map<",
+			"Rec1", "other.namespace.Enum"
 		);
 	}
 
@@ -88,12 +95,17 @@ public class AvroIdlCodeCompletionsTest extends LightJavaCodeInsightFixtureTestC
 			"boolean ", "bytes ", "int ", "string ", "float ", "double ", "long ",
 			"null ",
 			"date ", "time_ms ", "local_timestamp_ms ", "timestamp_ms ", "decimal(",
-			"union {", "array<", "map<"
+			"union {", "array<", "map<",
+			"Rec1", "other.namespace.Enum"
 		);
 	}
 
 	public void testCompletionsForMessageAttributes() {
 		assertThat(getBasicCompletions("MessageAttributesKeywords.avdl")).containsExactlyInAnyOrder("oneway", "throws ");
+	}
+
+	public void testCompletionsForMessageThrowsClause() {
+		assertThat(getBasicCompletions("MessageThrowsClause.avdl")).containsExactlyInAnyOrder("Failure");
 	}
 
 	@Nullable

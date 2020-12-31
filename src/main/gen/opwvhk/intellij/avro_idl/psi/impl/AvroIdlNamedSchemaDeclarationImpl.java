@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import opwvhk.intellij.avro_idl.psi.*;
+import com.intellij.navigation.ItemPresentation;
 import com.intellij.util.IncorrectOperationException;
 
 public abstract class AvroIdlNamedSchemaDeclarationImpl extends ASTWrapperPsiElement implements AvroIdlNamedSchemaDeclaration {
@@ -48,6 +49,29 @@ public abstract class AvroIdlNamedSchemaDeclarationImpl extends ASTWrapperPsiEle
   @Override
   public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
     return AvroIdlPsiUtil.setName(this, name);
+  }
+
+  @Override
+  @Nullable
+  @NonNls
+  public String getFullName() {
+    return AvroIdlPsiUtil.getFullName(this);
+  }
+
+  @Override
+  @NotNull
+  public ItemPresentation getPresentation() {
+    return AvroIdlPsiUtil.getPresentation(this);
+  }
+
+  @Override
+  public boolean isErrorType() {
+    return AvroIdlPsiUtil.isErrorType(this);
+  }
+
+  @Override
+  public void delete() throws IncorrectOperationException {
+    AvroIdlPsiUtil.delete(this);
   }
 
 }

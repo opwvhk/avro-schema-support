@@ -88,7 +88,7 @@ public class AvroIdlVisitor extends PsiElementVisitor {
   }
 
   public void visitNamedSchemaDeclaration(@NotNull AvroIdlNamedSchemaDeclaration o) {
-    visitNameIdentifierOwner(o);
+    visitNamespacedNameIdentifierOwner(o);
   }
 
   public void visitPrimitiveType(@NotNull AvroIdlPrimitiveType o) {
@@ -100,7 +100,7 @@ public class AvroIdlVisitor extends PsiElementVisitor {
   }
 
   public void visitProtocolDeclaration(@NotNull AvroIdlProtocolDeclaration o) {
-    visitNameIdentifierOwner(o);
+    visitNamespacedNameIdentifierOwner(o);
   }
 
   public void visitRecordBody(@NotNull AvroIdlRecordBody o) {
@@ -136,7 +136,11 @@ public class AvroIdlVisitor extends PsiElementVisitor {
   }
 
   public void visitVariableDeclarator(@NotNull AvroIdlVariableDeclarator o) {
-    visitNameIdentifierOwner(o);
+    visitAnnotatedNameIdentifierOwner(o);
+  }
+
+  public void visitAnnotatedNameIdentifierOwner(@NotNull AvroIdlAnnotatedNameIdentifierOwner o) {
+    visitPsiElement(o);
   }
 
   public void visitNameIdentifierOwner(@NotNull AvroIdlNameIdentifierOwner o) {
@@ -144,6 +148,10 @@ public class AvroIdlVisitor extends PsiElementVisitor {
   }
 
   public void visitNamedType(@NotNull AvroIdlNamedType o) {
+    visitPsiElement(o);
+  }
+
+  public void visitNamespacedNameIdentifierOwner(@NotNull AvroIdlNamespacedNameIdentifierOwner o) {
     visitPsiElement(o);
   }
 

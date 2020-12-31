@@ -6,7 +6,7 @@ import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 
-public interface AvroIdlVariableDeclarator extends AvroIdlNameIdentifierOwner {
+public interface AvroIdlVariableDeclarator extends AvroIdlAnnotatedNameIdentifierOwner {
 
   @NotNull
   List<AvroIdlDocumentation> getDocumentationList();

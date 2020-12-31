@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import opwvhk.intellij.avro_idl.psi.*;
+import opwvhk.intellij.avro_idl.language.AvroIdlNamedSchemaReference;
 
 public class AvroIdlMessageAttributeThrowsImpl extends ASTWrapperPsiElement implements AvroIdlMessageAttributeThrows {
 
@@ -30,6 +31,12 @@ public class AvroIdlMessageAttributeThrowsImpl extends ASTWrapperPsiElement impl
   @NotNull
   public PsiElement getIdentifier() {
     return findNotNullChildByType(IDENTIFIER);
+  }
+
+  @Override
+  @NotNull
+  public AvroIdlNamedSchemaReference getReference() {
+    return AvroIdlPsiUtil.getReference(this);
   }
 
 }

@@ -9,6 +9,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 import opwvhk.intellij.avro_idl.psi.*;
+import opwvhk.intellij.avro_idl.language.AvroIdlNamedSchemaReference;
 
 public class AvroIdlReferenceTypeImpl extends AvroIdlTypeImpl implements AvroIdlReferenceType {
 
@@ -29,6 +30,12 @@ public class AvroIdlReferenceTypeImpl extends AvroIdlTypeImpl implements AvroIdl
   @Nullable
   public PsiElement getIdentifier() {
     return findChildByType(IDENTIFIER);
+  }
+
+  @Override
+  @Nullable
+  public AvroIdlNamedSchemaReference getReference() {
+    return AvroIdlPsiUtil.getReference(this);
   }
 
 }

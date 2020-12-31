@@ -376,15 +376,40 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // FieldDeclaration1 | FieldDeclaration2
+  // FieldDeclaration1 | FieldDeclaration2 { //recoverWhile="recoverFieldDeclaration"
+  // //	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
+  // //	methods=[getNameIdentifier getTextOffset getName setName]
+  // }
   public static boolean FieldDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FieldDeclaration")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, FIELD_DECLARATION, "<field declaration>");
     r = FieldDeclaration1(b, l + 1);
-    if (!r) r = FieldDeclaration2(b, l + 1);
+    if (!r) r = FieldDeclaration_1(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
+  }
+
+  // FieldDeclaration2 { //recoverWhile="recoverFieldDeclaration"
+  // //	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
+  // //	methods=[getNameIdentifier getTextOffset getName setName]
+  // }
+  private static boolean FieldDeclaration_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FieldDeclaration_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = FieldDeclaration2(b, l + 1);
+    r = r && FieldDeclaration_1_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // { //recoverWhile="recoverFieldDeclaration"
+  // //	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
+  // //	methods=[getNameIdentifier getTextOffset getName setName]
+  // }
+  private static boolean FieldDeclaration_1_1(PsiBuilder b, int l) {
+    return true;
   }
 
   /* ********************************************************** */
