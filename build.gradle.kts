@@ -9,13 +9,14 @@ plugins {
 }
 
 group = "net.sf.opk"
-version = "0.1.1"
+version = "0.1.1-SNAPSHOT"
 
 repositories {
 	mavenCentral()
 }
 
 dependencies {
+	implementation("org.apache.avro", "avro", "1.10.1")
 	testImplementation("junit", "junit", "4.12")
 	testImplementation("org.assertj", "assertj-core", "3.18.1")
 }
@@ -23,12 +24,12 @@ dependencies {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
 	version = "2020.2"
-	setPlugins("com.intellij.java", "PsiViewer:202-SNAPSHOT.3")
+	setPlugins("com.intellij.java", "PsiViewer:202-SNAPSHOT.3") // Add the java plugin here to satisfy test dependencies.
 }
 tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml") {
 	version(project.version)
 	sinceBuild("202")
-	//untilBuild("203.*")
+	untilBuild("203.*")
 	changeNotes(
 		"""
 		<p>Version 0.1.0:</p>
