@@ -30,6 +30,7 @@
 		<!-- File type & Language -->
 		<fileType name="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.AvroIdlFileType" fieldName="INSTANCE" language="AvroIDL" extensions="avdl"/>
 		<lang.parserDefinition language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroIdlParserDefinition"/>
+		<annotator language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlAnnotator"/>
 		<lang.namesValidator language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlNamesValidator"/>
 		<!-- Syntax highlighting & color definitions -->
 		<lang.syntaxHighlighter language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroIdlSyntaxHighlighter"/>
@@ -50,5 +51,21 @@
 		<lang.formatter language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlFormattingModelBuilder"/>
 		<codeStyleSettingsProvider implementation="opwvhk.intellij.avro_idl.editor.AvroIdlCodeStyleSettingsProvider"/>
 		<langCodeStyleSettingsProvider implementation="opwvhk.intellij.avro_idl.editor.AvroIdlLanguageCodeStyleSettingsProvider"/>
+		<!-- Inspections (can be turned off) -->
+		<localInspection language="AvroIDL" groupName="Avro IDL" displayName="Duplicate annotations" enabledByDefault="true" level="WARNING"
+						 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlDuplicateAnnotationsInspectionTool"/>
+		<!-- TODO: Inspect naming conventions, implementing com.intellij.codeInspection.LocalInspectionTool
+		     See com.intellij.codeInspection.naming.AbstractNamingConventionInspection
+		<localInspection language="AvroIDL" groupName="Avro IDL" displayName="Namespace naming convention" enabledByDefault="false" level="ERROR|WARNING|WEAK_WARNING|INFORMATION"
+						 implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlNamespaceNamingInspectionTool"/>
+		<localInspection language="AvroIDL" groupName="Avro IDL" displayName="Protocol naming convention" enabledByDefault="false" level="ERROR|WARNING|WEAK_WARNING|INFORMATION"
+						 implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlProtocolNamingInspectionTool"/>
+		<localInspection language="AvroIDL" groupName="Avro IDL" displayName="Schema naming convention" enabledByDefault="false" level="ERROR|WARNING|WEAK_WARNING|INFORMATION"
+						 implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlSchemaNamingInspectionTool"/>
+		<localInspection language="AvroIDL" groupName="Avro IDL" displayName="Field naming convention" enabledByDefault="false" level="ERROR|WARNING|WEAK_WARNING|INFORMATION"
+						 implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlFieldNamingInspectionTool"/>
+		<localInspection language="AvroIDL" groupName="Avro IDL" displayName="Method naming convention" enabledByDefault="false" level="ERROR|WARNING|WEAK_WARNING|INFORMATION"
+						 implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlMethodNamingInspectionTool"/>
+		-->
 	</extensions>
 </idea-plugin>

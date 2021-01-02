@@ -1,0 +1,9 @@
+@namespace("my.test")
+protocol Simple {
+	@foo("bar1")
+	@foo("bar2")
+	@foo("bar3")
+	record TestRecord {
+		string foo;
+	}
+}

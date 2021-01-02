@@ -1,0 +1,100 @@
+/**
+ * A simple test case.
+ */
+@namespace("12 monkeys")
+protocol Many.Mistakes {
+	@namespace("hashes")
+	fixed MD5(16);
+	enum Letters { A, B, C } = A;
+
+	@foo.bar({"key": 3})
+	record MyData {
+		Letters @order("ascending") one_letter;
+		Letters @order("descending") another_letter;
+		Letters @order("ignore") different_letter;
+	}
+
+	record Unusual {
+		@logicalType("date")
+		int can_use_primitive_date;
+		@logicalType("time-millis")
+		int can_use_primitive_time_ms;
+		@logicalType("timestamp-millis")
+		long can_use_primitive_timestamp_ms;
+		@logicalType("local-timestamp-millis")
+		long can_use_primitive_local_timestamp_ms;
+		@logicalType("uuid")
+		string can_use_primitive_uuid;
+		@logicalType("decimal")
+		@precision(6)
+		@scale(2)
+		bytes can_use_decimal_type;
+	}
+
+	null firstCorrectOnewayMessage() oneway;
+	void secondCorrectOnewayMessage() oneway;
+
+	enum Status { ON, OFF }
+	fixed Status(1);
+
+	@namespace(12)
+	fixed foo.bar(16);
+	@aliases(["even-more-wrong"])
+	enum also-wrong { A, B } = C;
+	record my-data {
+		@namespace("unused")
+		Letters @logicalType("character") one-letter;
+
+		@namespace("on.type")
+		@aliases(["for_type"])
+		@order("ignore")
+		@logicalType(23)
+		long @order(34) notLogic1;
+		@logicalType("date")
+		string @order("wrong") notLogic2;
+		@logicalType("time-millis")
+		string @aliases(45) notLogic3;
+		@logicalType("timestamp-millis")
+		string @aliases([56, "invites-failure"]) notLogic4;
+		@logicalType("local-timestamp-millis")
+		int notLogic5;
+		@logicalType("decimal")
+		bytes notLogic6;
+		@logicalType("decimal")
+		@precision(true)
+		bytes notLogic7;
+		@logicalType("decimal")
+		@precision(-1)
+		bytes notLogic8;
+		@logicalType("decimal")
+		@precision(4294967296)
+		bytes notLogic9;
+		@logicalType("decimal")
+		@precision(6)
+		@scale(false)
+		bytes notLogic10;
+		@logicalType("decimal")
+		@precision(6)
+		@scale(-2)
+		bytes notLogic11;
+		@logicalType("decimal")
+		@precision(6)
+		@scale(8)
+		long notLogic12;
+		@logicalType("decimal")
+		@precision(6)
+		@scale(2)
+		long notLogic13;
+		@logicalType("decimal")
+		@precision(40)
+		@scale(0)
+		hashes.MD5 notLogic14;
+	}
+	@aliases(67)
+	@aliases([78, "her-failure"])
+	error his-failure {}
+
+	Whatever do-stuff(Something one) throws SomeError, hashes.MD5;
+
+	string onewayMessagesMustUseVoid() oneway;
+}
