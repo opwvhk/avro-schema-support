@@ -25,7 +25,6 @@
 	<depends>com.intellij.modules.lang</depends>
 	<!--<depends>com.intellij.modules.java</depends>-->
 
-	<resource-bundle>messages</resource-bundle>
 	<extensions defaultExtensionNs="com.intellij">
 		<!-- File type & Language -->
 		<fileType name="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.AvroIdlFileType" fieldName="INSTANCE" language="AvroIDL" extensions="avdl"/>
