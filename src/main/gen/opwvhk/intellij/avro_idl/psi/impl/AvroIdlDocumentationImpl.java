@@ -21,6 +21,7 @@ public class AvroIdlDocumentationImpl extends ASTWrapperPsiElement implements Av
     visitor.visitDocumentation(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof AvroIdlVisitor) accept((AvroIdlVisitor)visitor);
     else super.accept(visitor);

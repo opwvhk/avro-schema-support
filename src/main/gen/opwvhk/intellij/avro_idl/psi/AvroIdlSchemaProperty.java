@@ -14,9 +14,8 @@ public interface AvroIdlSchemaProperty extends AvroIdlNamedType {
   @Nullable
   PsiElement getIdentifier();
 
-  @Nullable
   @NonNls
-  String getName();
+  @Nullable String getName();
 
   PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException;
 

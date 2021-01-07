@@ -11,7 +11,6 @@ public interface AvroIdlEnumDefault extends PsiElement {
   @NotNull
   PsiElement getIdentifier();
 
-  @NotNull
-  AvroIdlEnumConstantReference getReference();
+  @NotNull AvroIdlEnumConstantReference getReference();
 
 }

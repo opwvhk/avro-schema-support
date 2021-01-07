@@ -1,0 +1,5 @@
+{
+	"type": "enum",
+	"name": "imports.ContractType",
+	"symbols": ["Temporary", "Fixed"]
+}

@@ -4,6 +4,9 @@ import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.CheckUtil;
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet;
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiFileReference;
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiFileReferenceHelper;
 import com.intellij.util.IncorrectOperationException;
 import opwvhk.intellij.avro_idl.AvroIdlIcons;
 import opwvhk.intellij.avro_idl.language.AvroIdlEnumConstantReference;
@@ -50,7 +53,7 @@ public class AvroIdlPsiUtil {
 			throw new IncorrectOperationException();
 		}
 		final PsiElement oldIdentifier = identifierNode.getPsi();
-		final PsiElement newNameIdentifier = AvroIdlElementFactory.createIdentifier(owner.getProject(), name);
+		final PsiElement newNameIdentifier = new AvroIdlElementFactory(owner.getProject()).createIdentifier(name);
 		oldIdentifier.replace(newNameIdentifier);
 		return owner;
 	}
@@ -100,20 +103,27 @@ public class AvroIdlPsiUtil {
 
 	@Nullable
 	public static AvroIdlNamedSchemaReference getReference(@NotNull AvroIdlReferenceType owner) {
-		if (owner.getIdentifier() == null) {
-			return null;
-		}
-		return new AvroIdlNamedSchemaReference(owner);
+		return AvroIdlNamedSchemaReference.forType(owner);
 	}
 
 	@NotNull
 	public static AvroIdlNamedSchemaReference getReference(@NotNull AvroIdlMessageAttributeThrows owner) {
-		return new AvroIdlNamedSchemaReference(owner);
+		return AvroIdlNamedSchemaReference.forMessageAttribute(owner);
 	}
 
 	@NotNull
 	public static AvroIdlEnumConstantReference getReference(@NotNull AvroIdlEnumDefault owner) {
-		return new AvroIdlEnumConstantReference(owner);
+		return AvroIdlEnumConstantReference.forDefault(owner);
+	}
+
+	@Nullable
+	public static PsiFileReference getReference(@NotNull AvroIdlJsonStringLiteral owner) {
+		if (owner.getParent() instanceof AvroIdlImportDeclaration) {
+			final FileReferenceSet fileReferenceSet = FileReferenceSet.createSet(owner, false, false, false);
+			return fileReferenceSet.getLastReference();
+		} else {
+			return null;
+		}
 	}
 
 	@NotNull

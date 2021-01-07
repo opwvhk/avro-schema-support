@@ -67,6 +67,10 @@ public class AvroIdlVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitJsonStringLiteral(@NotNull AvroIdlJsonStringLiteral o) {
+    visitJsonValue(o);
+  }
+
   public void visitJsonValue(@NotNull AvroIdlJsonValue o) {
     visitPsiElement(o);
   }

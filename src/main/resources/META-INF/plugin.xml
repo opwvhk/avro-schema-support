@@ -16,8 +16,6 @@
 			and <code>@order</code> annotations</li>
 		<li>Rename support for schema names (i.e. renaming records/errors, enums and fixed types also updates its references)</li>
 	</ul></p>
-
-	<p><em><strong>Work in progress:</strong> references to named schemas presently ignore import declarations.</em></p>
 	]]></description>
 
 	<!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html on how to target different products -->
@@ -31,6 +29,8 @@
 		<lang.parserDefinition language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroIdlParserDefinition"/>
 		<annotator language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlAnnotator"/>
 		<lang.namesValidator language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlNamesValidator"/>
+		<lang.elementManipulator forClass="opwvhk.intellij.avro_idl.psi.AvroIdlJsonStringLiteral"
+								 implementationClass="opwvhk.intellij.avro_idl.psi.AvroIdlJsonStringLiteralManipulator"/>
 		<!-- Syntax highlighting & color definitions -->
 		<lang.syntaxHighlighter language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroIdlSyntaxHighlighter"/>
 		<colorSettingsPage implementation="opwvhk.intellij.avro_idl.editor.AvroIdlColorSettingsPage"/>

@@ -21,6 +21,7 @@ public class AvroIdlMessageAttributesImpl extends ASTWrapperPsiElement implement
     visitor.visitMessageAttributes(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof AvroIdlVisitor) accept((AvroIdlVisitor)visitor);
     else super.accept(visitor);

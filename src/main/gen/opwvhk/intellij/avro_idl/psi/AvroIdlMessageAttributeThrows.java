@@ -11,7 +11,6 @@ public interface AvroIdlMessageAttributeThrows extends PsiElement {
   @NotNull
   PsiElement getIdentifier();
 
-  @NotNull
-  AvroIdlNamedSchemaReference getReference();
+  @NotNull AvroIdlNamedSchemaReference getReference();
 
 }

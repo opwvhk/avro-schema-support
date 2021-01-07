@@ -74,16 +74,11 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 	}
 
 	public void testAnnotatorForImports() {
-		myFixture.configureByFiles("ImportsAndReferences.avdl");
+		myFixture.configureByFiles("ImportsAndReferences.avdl", "Employee.avdl", "ContractType.avsc", "HelloWorld.avpr");
 		final List<Highlight> highlight = Highlight.fromHighlightInfoList(myFixture.doHighlighting());
 		// Note: because we're cutting out the text offsets, all error texts should be unique enough to be identified.
 		// Luckily, the highlights will be returned in the order they are in the file.
 		assertContainsOrdered(highlight,
-			Highlight.info("TODO: When IDL imports are supported, move this declaration to AnnotatorTestDataImported.avdl",
-				"TODO: When IDL imports are supported, move this declaration to AnnotatorTestDataImported.avdl"),
-			Highlight.weakWarning("ContractType", "Unknown schema: ContractType"),
-			Highlight.weakWarning("ContractType", "Unknown schema: ContractType"),
-			Highlight.weakWarning("Failure", "Unknown schema: Failure"),
 			Highlight.error("NotAnError", "Not an error: NotAnError")
 		);
 	}
@@ -131,10 +126,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 
 		static Highlight weakWarning(String text, String description) {
 			return new Highlight(HighlightSeverity.WEAK_WARNING, text, description);
-		}
-
-		static Highlight info(String text, String description) {
-			return new Highlight(HighlightSeverity.INFORMATION, text, description);
 		}
 
 		static List<Highlight> fromHighlightInfoList(List<HighlightInfo> highlightInfoList) {

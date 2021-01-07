@@ -21,6 +21,7 @@ public class AvroIdlProtocolBodyImpl extends ASTWrapperPsiElement implements Avr
     visitor.visitProtocolBody(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof AvroIdlVisitor) accept((AvroIdlVisitor)visitor);
     else super.accept(visitor);

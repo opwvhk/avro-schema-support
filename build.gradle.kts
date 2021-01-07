@@ -9,14 +9,14 @@ plugins {
 }
 
 group = "net.sf.opk"
-version = "0.1.1-SNAPSHOT"
+version = "0.2.0-SNAPSHOT"
 
 repositories {
 	mavenCentral()
 }
 
 dependencies {
-	implementation("org.apache.avro", "avro", "1.10.1")
+	implementation("org.apache.avro", "avro", "1.10.1").exclude("org.slf4j")
 	testImplementation("junit", "junit", "4.12")
 	testImplementation("org.assertj", "assertj-core", "3.18.1")
 }

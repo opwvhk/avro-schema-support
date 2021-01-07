@@ -1,31 +1,35 @@
 package opwvhk.intellij.avro_idl.language;
 
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementResolveResult;
-import com.intellij.psi.PsiPolyVariantReference;
-import com.intellij.psi.ResolveResult;
-import opwvhk.intellij.avro_idl.AvroIdlIcons;
-import opwvhk.intellij.avro_idl.psi.*;
+import opwvhk.intellij.avro_idl.psi.AvroIdlMessageAttributeThrows;
+import opwvhk.intellij.avro_idl.psi.AvroIdlProtocolDeclaration;
+import opwvhk.intellij.avro_idl.psi.AvroIdlPsiUtil;
+import opwvhk.intellij.avro_idl.psi.AvroIdlReferenceType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
-public class AvroIdlNamedSchemaReference extends AvroIdlAbstractReference<AvroIdlNamedSchemaDeclaration>
-	implements PsiPolyVariantReference {
+import static opwvhk.intellij.avro_idl.language.AvroIdlUtil.IS_ERROR_KEY;
+
+public class AvroIdlNamedSchemaReference extends AvroIdlAbstractReference {
 
 	private final String fullName;
 	private final boolean matchErrorTypesOnly;
 
-	public AvroIdlNamedSchemaReference(@NotNull AvroIdlReferenceType element) {
-		this(element, element.getIdentifier(), false);
+	@Nullable
+	public static AvroIdlNamedSchemaReference forType(@NotNull AvroIdlReferenceType owner) {
+		if (owner.getIdentifier() == null) {
+			return null;
+		}
+		return new AvroIdlNamedSchemaReference(owner, owner.getIdentifier(), false);
 	}
 
-	public AvroIdlNamedSchemaReference(@NotNull AvroIdlMessageAttributeThrows element) {
-		this(element, element.getIdentifier(), true);
+	@NotNull
+	public static AvroIdlNamedSchemaReference forMessageAttribute(@NotNull AvroIdlMessageAttributeThrows owner) {
+		return new AvroIdlNamedSchemaReference(owner, owner.getIdentifier(), true);
 	}
 
 	private AvroIdlNamedSchemaReference(@NotNull PsiElement element, @NotNull PsiElement identifier, boolean matchErrorTypesOnly) {
@@ -39,22 +43,27 @@ public class AvroIdlNamedSchemaReference extends AvroIdlAbstractReference<AvroId
 		this.matchErrorTypesOnly = matchErrorTypesOnly;
 	}
 
-	@NotNull
-	@Override
-	public ResolveResult[] multiResolve(boolean incompleteCode) {
-		AvroIdlProtocolDeclaration protocol = findProtocol();
-		if (protocol != null) {
-			final List<AvroIdlNamedSchemaDeclaration> namedTypes = AvroIdlUtil.findNamedTypes(protocol, fullName, incompleteCode);
-			return PsiElementResolveResult.createResults(namedTypes);
-		}
-		return new ResolveResult[0];
+	protected Optional<LookupElement> resolve0() {
+		final String namespace = AvroIdlPsiUtil.getNamespace(myElement);
+		return Stream.ofNullable(findProtocol())
+			.flatMap(protocol -> AvroIdlUtil.findAllSchemaNamesAvailableInProtocol(protocol, false, namespace))
+			.filter(lookupElement -> lookupElement.getAllLookupStrings().contains(fullName))
+			.findFirst();
 	}
 
-
+	@Override
 	@Nullable
-	private AvroIdlProtocolDeclaration findProtocol() {
+	public PsiElement resolve() {
+		return resolve0().map(LookupElement::getPsiElement).orElse(null);
+	}
+
+	public boolean resolvesToError() {
+		return resolve0().map(lookupElement -> lookupElement.getUserData(IS_ERROR_KEY)).orElse(false);
+	}
+
+	private @NotNull AvroIdlProtocolDeclaration findProtocol() {
 		PsiElement parent = myElement;
-		while (parent != null && !(parent instanceof AvroIdlProtocolDeclaration)) {
+		while (!(parent instanceof AvroIdlProtocolDeclaration)) {
 			parent = parent.getParent();
 		}
 		return (AvroIdlProtocolDeclaration) parent;
@@ -63,20 +72,9 @@ public class AvroIdlNamedSchemaReference extends AvroIdlAbstractReference<AvroId
 	@NotNull
 	@Override
 	public Object[] getVariants() {
-		final List<AvroIdlNamedSchemaDeclaration> namedTypes = AvroIdlUtil.findNamedTypes(findProtocol(), null, true);
-		final String myNamespacePrefix = AvroIdlPsiUtil.getNamespacePrefix(myElement);
-		List<LookupElement> variants = new ArrayList<>();
-		for (AvroIdlNamedSchemaDeclaration namedSchema : namedTypes) {
-			boolean hasName = namedSchema.getName() != null && namedSchema.getName().length() > 0;
-			boolean isError = namedSchema.isErrorType();
-			if ((!matchErrorTypesOnly || isError) && hasName) {
-				final String fullName = namedSchema.getFullName();
-				//noinspection ConstantConditions hasName means getFullName does not return null.
-				final String name = fullName.startsWith(myNamespacePrefix) ? fullName.substring(myNamespacePrefix.length()) : fullName;
-				variants.add(LookupElementBuilder.create(name)
-					.withTypeText(namedSchema.getContainingFile().getName()).withIcon(AvroIdlIcons.FILE));
-			}
-		}
-		return variants.toArray();
+		final AvroIdlProtocolDeclaration protocol = findProtocol();
+		final String namespace = AvroIdlPsiUtil.getNamespace(myElement);
+		final Object[] variants = AvroIdlUtil.findAllSchemaNamesAvailableInProtocol(protocol, matchErrorTypesOnly, namespace).toArray();
+		return variants;
 	}
 }

@@ -11,7 +11,6 @@ public interface AvroIdlReferenceType extends AvroIdlType {
   @Nullable
   PsiElement getIdentifier();
 
-  @Nullable
-  AvroIdlNamedSchemaReference getReference();
+  @Nullable AvroIdlNamedSchemaReference getReference();
 
 }

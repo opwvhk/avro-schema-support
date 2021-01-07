@@ -8,17 +8,18 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import opwvhk.intellij.avro_idl.psi.*;
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiFileReference;
 
-public class AvroIdlFormalParameterImpl extends ASTWrapperPsiElement implements AvroIdlFormalParameter {
+public class AvroIdlJsonStringLiteralImpl extends AvroIdlJsonValueImpl implements AvroIdlJsonStringLiteral {
 
-  public AvroIdlFormalParameterImpl(@NotNull ASTNode node) {
+  public AvroIdlJsonStringLiteralImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull AvroIdlVisitor visitor) {
-    visitor.visitFormalParameter(this);
+    visitor.visitJsonStringLiteral(this);
   }
 
   @Override
@@ -29,20 +30,13 @@ public class AvroIdlFormalParameterImpl extends ASTWrapperPsiElement implements 
 
   @Override
   @NotNull
-  public List<AvroIdlDocumentation> getDocumentationList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlDocumentation.class);
+  public PsiElement getStringLiteral() {
+    return findNotNullChildByType(STRING_LITERAL);
   }
 
   @Override
-  @Nullable
-  public AvroIdlType getType() {
-    return findChildByClass(AvroIdlType.class);
-  }
-
-  @Override
-  @Nullable
-  public AvroIdlVariableDeclarator getVariableDeclarator() {
-    return findChildByClass(AvroIdlVariableDeclarator.class);
+  public @Nullable PsiFileReference getReference() {
+    return AvroIdlPsiUtil.getReference(this);
   }
 
 }

@@ -3,13 +3,8 @@
  */
 @namespace("imports")
 protocol Protocol {
-	import idl "AnnotatorTestDataImported.avdl";
-
-	// TODO: When IDL imports are supported, move this declaration to AnnotatorTestDataImported.avdl
-	record Employee {
-		string name;
-		ContractType contract_type;
-	}
+	import idl "Employee.avdl";
+	import protocol "HelloWorld.avpr";
 
 	record NotAnError {
 		string description = "";
