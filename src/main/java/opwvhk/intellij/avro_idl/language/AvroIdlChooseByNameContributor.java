@@ -10,7 +10,7 @@ import java.util.Objects;
 public class AvroIdlChooseByNameContributor implements ChooseByNameContributor {
 	@Override
 	public String @NotNull [] getNames(Project project, boolean includeNonProjectItems) {
-		return AvroIdlUtil.findNavigatableNamedSchemasInProject(project).stream()
+		return AvroIdlUtil.findNavigableNamedSchemasInProject(project).stream()
 			.map(NavigationItem::getName)
 			.filter(Objects::nonNull)
 			.toArray(String[]::new);
@@ -20,7 +20,7 @@ public class AvroIdlChooseByNameContributor implements ChooseByNameContributor {
 	public NavigationItem @NotNull [] getItemsByName(String name, String pattern,
 													Project project,
 													boolean includeNonProjectItems) {
-		return AvroIdlUtil.findNavigatableNamedSchemasInProject(project)
+		return AvroIdlUtil.findNavigableNamedSchemasInProject(project)
 			.toArray(NavigationItem[]::new);
 	}
 }
