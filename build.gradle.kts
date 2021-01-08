@@ -32,6 +32,15 @@ tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml
 	untilBuild("203.*")
 	changeNotes(
 		"""
+		<p>Version 0.2.0:</p>
+		<ul>
+		<li>Add support for imports</li>
+		<li>Add file types and JSON schemas for <code>.avsc</code> &amp; <code>.avpr</code></li>
+		</ul>
+		<p>Version 0.1.1:</p>
+		<ul>
+		<li>Extra build for IntelliJ 2020.3</li>
+		</ul>
 		<p>Version 0.1.0:</p>
         <ul>
 		<li>Initial release</li>
