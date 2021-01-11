@@ -22,6 +22,7 @@ public class AvroIdlProtocolDeclarationImpl extends ASTWrapperPsiElement impleme
     visitor.visitProtocolDeclaration(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof AvroIdlVisitor) accept((AvroIdlVisitor)visitor);
     else super.accept(visitor);
@@ -52,8 +53,7 @@ public class AvroIdlProtocolDeclarationImpl extends ASTWrapperPsiElement impleme
   }
 
   @Override
-  @Nullable
-  public PsiElement getNameIdentifier() {
+  public @Nullable PsiElement getNameIdentifier() {
     return AvroIdlPsiUtil.getNameIdentifier(this);
   }
 
@@ -63,9 +63,8 @@ public class AvroIdlProtocolDeclarationImpl extends ASTWrapperPsiElement impleme
   }
 
   @Override
-  @Nullable
   @NonNls
-  public String getName() {
+  public @Nullable String getName() {
     return AvroIdlPsiUtil.getName(this);
   }
 
@@ -75,9 +74,8 @@ public class AvroIdlProtocolDeclarationImpl extends ASTWrapperPsiElement impleme
   }
 
   @Override
-  @Nullable
   @NonNls
-  public String getFullName() {
+  public @Nullable String getFullName() {
     return AvroIdlPsiUtil.getFullName(this);
   }
 

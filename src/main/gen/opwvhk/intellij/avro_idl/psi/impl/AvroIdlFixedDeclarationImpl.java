@@ -16,10 +16,12 @@ public class AvroIdlFixedDeclarationImpl extends AvroIdlNamedSchemaDeclarationIm
     super(node);
   }
 
+  @Override
   public void accept(@NotNull AvroIdlVisitor visitor) {
     visitor.visitFixedDeclaration(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof AvroIdlVisitor) accept((AvroIdlVisitor)visitor);
     else super.accept(visitor);

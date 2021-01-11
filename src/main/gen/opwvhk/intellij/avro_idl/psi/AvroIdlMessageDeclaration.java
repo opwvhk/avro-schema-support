@@ -23,14 +23,12 @@ public interface AvroIdlMessageDeclaration extends AvroIdlNameIdentifierOwner {
   @Nullable
   PsiElement getIdentifier();
 
-  @Nullable
-  PsiElement getNameIdentifier();
+  @Nullable PsiElement getNameIdentifier();
 
   int getTextOffset();
 
-  @Nullable
   @NonNls
-  String getName();
+  @Nullable String getName();
 
   PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException;
 

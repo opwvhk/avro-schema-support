@@ -23,6 +23,7 @@ public interface AvroIdlTypes {
   IElementType JSON_ARRAY = new AvroIdlElementType("JSON_ARRAY");
   IElementType JSON_OBJECT = new AvroIdlElementType("JSON_OBJECT");
   IElementType JSON_PAIR = new AvroIdlElementType("JSON_PAIR");
+  IElementType JSON_STRING_LITERAL = new AvroIdlElementType("JSON_STRING_LITERAL");
   IElementType JSON_VALUE = new AvroIdlElementType("JSON_VALUE");
   IElementType MAP_TYPE = new AvroIdlElementType("MAP_TYPE");
   IElementType MESSAGE_ATTRIBUTES = new AvroIdlElementType("MESSAGE_ATTRIBUTES");
@@ -139,6 +140,9 @@ public interface AvroIdlTypes {
       }
       else if (type == JSON_PAIR) {
         return new AvroIdlJsonPairImpl(node);
+      }
+      else if (type == JSON_STRING_LITERAL) {
+        return new AvroIdlJsonStringLiteralImpl(node);
       }
       else if (type == JSON_VALUE) {
         return new AvroIdlJsonValueImpl(node);

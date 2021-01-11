@@ -21,6 +21,7 @@ public class AvroIdlEnumBodyImpl extends ASTWrapperPsiElement implements AvroIdl
     visitor.visitEnumBody(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof AvroIdlVisitor) accept((AvroIdlVisitor)visitor);
     else super.accept(visitor);

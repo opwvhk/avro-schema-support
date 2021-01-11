@@ -1,34 +1,36 @@
 package opwvhk.intellij.avro_idl.language;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.psi.PsiElementResolveResult;
-import com.intellij.psi.PsiPolyVariantReference;
-import com.intellij.psi.ResolveResult;
 import opwvhk.intellij.avro_idl.AvroIdlIcons;
 import opwvhk.intellij.avro_idl.psi.AvroIdlEnumBody;
 import opwvhk.intellij.avro_idl.psi.AvroIdlEnumConstant;
 import opwvhk.intellij.avro_idl.psi.AvroIdlEnumDeclaration;
 import opwvhk.intellij.avro_idl.psi.AvroIdlEnumDefault;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
-public class AvroIdlEnumConstantReference extends AvroIdlAbstractReference<AvroIdlEnumConstant> implements PsiPolyVariantReference {
+public class AvroIdlEnumConstantReference extends AvroIdlAbstractReference {
 
 	private final String name;
 
-	public AvroIdlEnumConstantReference(@NotNull AvroIdlEnumDefault element) {
+	@NotNull
+	public static AvroIdlEnumConstantReference forDefault(@NotNull AvroIdlEnumDefault element) {
+		return new AvroIdlEnumConstantReference(element);
+	}
+
+	private AvroIdlEnumConstantReference(@NotNull AvroIdlEnumDefault element) {
 		super(element, element.getIdentifier());
 		name = element.getIdentifier().getText();
 	}
 
-	@NotNull
 	@Override
-	public ResolveResult[] multiResolve(boolean incompleteCode) {
+	@Nullable
+	public AvroIdlEnumConstant resolve() {
 		return findConstants()
 			.filter(enumValue -> name.equals(enumValue.getName()))
-			.map(PsiElementResolveResult::createResults)
-			.findFirst().orElse(new ResolveResult[0]);
+			.findFirst().orElse(null);
 	}
 
 	private Stream<AvroIdlEnumConstant> findConstants() {

@@ -13,25 +13,29 @@
 		<li>Code completion based on syntax and supported references</li>
 		<li>
 			Some semantic checks, like unknown symbols, invalid identifiers, and values for <code>@namespace</code>, <code>@aliases</code>
-			and <code>@order</code> annotations</li>
+			and <code>@order</code> annotations
+		</li>
 		<li>Rename support for schema names (i.e. renaming records/errors, enums and fixed types also updates its references)</li>
+		<li>Recognizes <code>.avsc</code> and <code>.avpr</code> files as JSON5 (i.e. with comments) and supplies JSON schemas for them</li>
 	</ul></p>
-
-	<p><em><strong>Work in progress:</strong> references to named schemas presently ignore import declarations.</em></p>
 	]]></description>
 
 	<!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html on how to target different products -->
 	<depends>com.intellij.modules.platform</depends>
 	<depends>com.intellij.modules.lang</depends>
-	<depends>com.intellij.modules.java</depends>
+	<!--<depends>com.intellij.modules.java</depends>-->
 
-	<resource-bundle>messages</resource-bundle>
 	<extensions defaultExtensionNs="com.intellij">
 		<!-- File type & Language -->
 		<fileType name="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.AvroIdlFileType" fieldName="INSTANCE" language="AvroIDL" extensions="avdl"/>
+		<fileType name="Avro Schema" implementationClass="opwvhk.intellij.avro_idl.AvroSchemaFileType" fieldName="INSTANCE" language="JSON5" extensions="avsc"/>
+		<fileType name="Avro Protocol" implementationClass="opwvhk.intellij.avro_idl.AvroProtocolFileType" fieldName="INSTANCE" language="JSON5"
+				  extensions="avpr"/>
 		<lang.parserDefinition language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroIdlParserDefinition"/>
 		<annotator language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlAnnotator"/>
 		<lang.namesValidator language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlNamesValidator"/>
+		<lang.elementManipulator forClass="opwvhk.intellij.avro_idl.psi.AvroIdlJsonStringLiteral"
+								 implementationClass="opwvhk.intellij.avro_idl.psi.AvroIdlJsonStringLiteralManipulator"/>
 		<!-- Syntax highlighting & color definitions -->
 		<lang.syntaxHighlighter language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroIdlSyntaxHighlighter"/>
 		<colorSettingsPage implementation="opwvhk.intellij.avro_idl.editor.AvroIdlColorSettingsPage"/>
@@ -67,5 +71,8 @@
 		<localInspection language="AvroIDL" groupName="Avro IDL" displayName="Method naming convention" enabledByDefault="false" level="ERROR|WARNING|WEAK_WARNING|INFORMATION"
 						 implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlMethodNamingInspectionTool"/>
 		-->
+	</extensions>
+	<extensions defaultExtensionNs="JavaScript">
+		<JsonSchema.ProviderFactory implementation="opwvhk.intellij.avro_idl.json_schema.AvroJsonSchemaProviderFactory"/>
 	</extensions>
 </idea-plugin>

@@ -98,7 +98,7 @@ public class AvroIdlStructureViewElement extends PsiTreeElementBase<PsiElement> 
 		} else if (getValue() instanceof AvroIdlImportDeclaration) {
 			final AvroIdlImportDeclaration value = (AvroIdlImportDeclaration) getValue();
 			final AvroIdlImportType importType = value.getImportType();
-			final String imported = AvroIdlUtil.stringValue(value.getStringLiteral());
+			final String imported = AvroIdlUtil.getJsonString(value.getJsonStringLiteral());
 			if (importType == null) {
 				return "???";
 			}

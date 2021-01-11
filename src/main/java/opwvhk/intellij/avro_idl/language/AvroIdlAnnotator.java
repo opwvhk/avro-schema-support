@@ -1,11 +1,14 @@
 package opwvhk.intellij.avro_idl.language;
 
+import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.lang.annotation.AnnotationBuilder;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -17,7 +20,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static com.intellij.lang.annotation.HighlightSeverity.*;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.NULL;
@@ -38,9 +40,9 @@ public class AvroIdlAnnotator implements Annotator {
 		if (element.getNode().getElementType() == AvroIdlTypes.IDENTIFIER) {
 			final PsiElement parent = element.getParent();
 			if (parent instanceof AvroIdlReferenceType) {
-				annotateReference(element, holder, false);
+				annotateSchemaReference(element, holder, false);
 			} else if (parent instanceof AvroIdlMessageAttributeThrows) {
-				annotateReference(element, holder, true);
+				annotateSchemaReference(element, holder, true);
 			} else if (parent instanceof AvroIdlEnumDefault) {
 				annotateEnumDefault(element, holder);
 			} else if (parent instanceof AvroIdlNameIdentifierOwner) {
@@ -55,9 +57,9 @@ public class AvroIdlAnnotator implements Annotator {
 		}
 	}
 
-	private void annotateReference(@NotNull PsiElement element, @NotNull AnnotationHolder holder, boolean mustBeAnError) {
+	private void annotateSchemaReference(@NotNull PsiElement element, @NotNull AnnotationHolder holder, boolean mustBeAnError) {
 		final PsiElement parent = element.getParent();
-		final PsiReference reference = parent.getReference();
+		final AvroIdlNamedSchemaReference reference = (AvroIdlNamedSchemaReference) parent.getReference();
 		assert reference != null; // Because we've matched on an identifier and our parent is a ReferenceType, MessageAttributeThrows or EnumDefault
 		final PsiElement referencedElement = reference.resolve();
 
@@ -65,11 +67,8 @@ public class AvroIdlAnnotator implements Annotator {
 			final boolean unsupportedFeatureMayCauseErrors = !(parent instanceof AvroIdlEnumDefault) && protocolContainingElementHasUnsupportedImports(parent);
 			final HighlightSeverity unknownSymbolSeverity = unsupportedFeatureMayCauseErrors ? WEAK_WARNING : ERROR;
 			holder.newAnnotation(unknownSymbolSeverity, "Unknown schema: " + getIdentifier(element)).create();
-		} else if (mustBeAnError) {
-			final boolean isNamedType = referencedElement instanceof AvroIdlNamedSchemaDeclaration;
-			if (!isNamedType || !((AvroIdlNamedSchemaDeclaration) referencedElement).isErrorType()) {
-				holder.newAnnotation(ERROR, "Not an error: " + getIdentifier(element)).create();
-			}
+		} else if (mustBeAnError && !reference.resolvesToError()) {
+			holder.newAnnotation(ERROR, "Not an error: " + getIdentifier(element)).create();
 		}
 	}
 
@@ -344,10 +343,11 @@ public class AvroIdlAnnotator implements Annotator {
 	}
 
 	private void annotateFile(AvroIdlFile element, AnnotationHolder holder) {
-		final List<AvroIdlNamedSchemaDeclaration> allAvailableTypes = AvroIdlUtil.findAllAvailableTypes(element.getProject());
-		final Map<String, List<AvroIdlNamedSchemaDeclaration>> allTypesByName = allAvailableTypes.stream()
-			.filter(schema -> schema.getFullName() != null)
-			.collect(Collectors.groupingBy(AvroIdlNamedSchemaDeclaration::getFullName));
+		final PsiManager psiManager = PsiManager.getInstance(element.getProject());
+
+		final Map<String, List<LookupElement>> allTypesByName = new LinkedHashMap<>();
+		AvroIdlUtil.findAllSchemaNamesAvailableInProtocol(element).forEach(lookupElement -> lookupElement.getAllLookupStrings()
+			.forEach(name -> allTypesByName.computeIfAbsent(name, ignored -> new ArrayList<>()).add(lookupElement)));
 
 		final Collection<AvroIdlNamedSchemaDeclaration> schemasInThisFile = PsiTreeUtil.findChildrenOfType(element, AvroIdlNamedSchemaDeclaration.class);
 		for (AvroIdlNamedSchemaDeclaration schema : schemasInThisFile) {
@@ -355,20 +355,34 @@ public class AvroIdlAnnotator implements Annotator {
 			if (fullName == null) {
 				continue;
 			}
-			final List<AvroIdlNamedSchemaDeclaration> duplicates = allTypesByName.getOrDefault(fullName, Collections.emptyList());
+			final List<LookupElement> duplicates = allTypesByName.getOrDefault(fullName, Collections.emptyList());
 			if (duplicates.size() > 1) {
-				List<AvroIdlNamedSchemaDeclaration> otherDuplicates = new ArrayList<>(duplicates);
-				otherDuplicates.remove(schema);
-				AvroIdlNamedSchemaDeclaration anyDuplicate = otherDuplicates.get(0);
-				VirtualFile vFile = PsiUtilCore.getVirtualFile(anyDuplicate);
-				assert vFile != null;
-				final String path = FileUtil.toSystemIndependentName(vFile.getPath());
-				final String schemaLink = "<a href=\"#navigation/" + path + ":" + anyDuplicate.getTextOffset() + "\">" + fullName + "</a>";
+				//noinspection OptionalGetWithoutIsPresent
+				final LookupElement anyDuplicate = duplicates.stream()
+					.filter(dup -> dup.getPsiElement() == null || !psiManager.areElementsEquivalent(dup.getPsiElement(), schema))
+					.findAny().get(); // Always returns something, as we're only filtering out one element
+
+				final PsiElement psiElement = anyDuplicate.getPsiElement();
+				final Object object = anyDuplicate.getObject();
+				final Optional<String> linkToDuplicate = Optional.ofNullable(psiElement)
+					.map(PsiUtilCore::getVirtualFile)
+					.map(VirtualFile::getPath)
+					.map(FileUtil::toSystemIndependentName)
+					.map(path -> path + ":" + psiElement.getTextOffset())
+					.or(() -> Optional.of(object)
+						.filter(o -> o instanceof VirtualFile)
+						.map(o -> ((VirtualFile) o).getPath())
+						.map(FileUtil::toSystemIndependentName)
+						.map(path -> path + ":0"))
+					.map(link -> "<a href=\"#navigation/" + link + "\">" + anyDuplicate.getLookupString() + "</a>");
 
 				final PsiElement nameIdentifier = schema.getNameIdentifier();
 				assert nameIdentifier != null; // fullName!=null, thus nameIdentifier!=null
-				holder.newAnnotation(ERROR, duplicateSchemaMessage(fullName)).range(nameIdentifier)
-					.tooltip("<html>" + duplicateSchemaMessage(schemaLink) + "</html>").create();
+				AnnotationBuilder annotationBuilder = holder.newAnnotation(ERROR, duplicateSchemaMessage(fullName)).range(nameIdentifier);
+				if (linkToDuplicate.isPresent()) {
+					annotationBuilder = annotationBuilder.tooltip("<html>" + duplicateSchemaMessage(linkToDuplicate.get()) + "</html>");
+				}
+				annotationBuilder.create();
 			}
 		}
 	}

@@ -20,10 +20,6 @@ import java.util.Map;
 
 public class AvroIdlDuplicateAnnotationsInspectionTool extends BaseAvroIdlInspectionTool {
 
-	public AvroIdlDuplicateAnnotationsInspectionTool() {
-		super("Duplicate annotations", "Reports occurrences of duplicate annotations on elements. Avro does not support this.");
-	}
-
 	@Override
 	protected void visitElement(@NotNull PsiElement element, @NotNull ProblemsHolder holder,
 								@NotNull LocalInspectionToolSession session) {

@@ -22,6 +22,7 @@ public class AvroIdlSchemaPropertyImpl extends ASTWrapperPsiElement implements A
     visitor.visitSchemaProperty(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof AvroIdlVisitor) accept((AvroIdlVisitor)visitor);
     else super.accept(visitor);
@@ -40,9 +41,8 @@ public class AvroIdlSchemaPropertyImpl extends ASTWrapperPsiElement implements A
   }
 
   @Override
-  @Nullable
   @NonNls
-  public String getName() {
+  public @Nullable String getName() {
     return AvroIdlPsiUtil.getName(this);
   }
 

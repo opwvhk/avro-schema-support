@@ -101,7 +101,7 @@ ProtocolBody ::= (ImportDeclaration | NamedSchemaDeclaration | MessageDeclaratio
 private recoverProtocolBody ::= !(RIGHT_BRACE)
 
 ImportDeclaration ::= IMPORT ImportInnerDeclaration SEMICOLON { pin=1 }
-private ImportInnerDeclaration ::= ImportType STRING_LITERAL { recoverWhile="recoverImportInnerDeclaration"}
+private ImportInnerDeclaration ::= ImportType JsonStringLiteral { recoverWhile="recoverImportInnerDeclaration"}
 ImportType ::= IDL | PROTOCOL | SCHEMA
 private recoverImportInnerDeclaration ::= !(SEMICOLON|FIXED|ENUM|RECORD|ERROR|AT)
 
@@ -207,7 +207,10 @@ ReferenceType ::= (ReferenceType1 | ReferenceType2) { extends=Type
 private ReferenceType1 ::= SchemaProperty+ ReferenceType2 { pin=1 }
 private ReferenceType2 ::= IDENTIFIER
 
-JsonValue ::= (STRING_LITERAL | INT_LITERAL | FLOAT_LITERAL | TRUE | FALSE | NULL | JsonObject | JsonArray) { recoverWhile=recoverJsonValue }
+JsonValue ::= (JsonStringLiteral | INT_LITERAL | FLOAT_LITERAL | TRUE | FALSE | NULL | JsonObject | JsonArray) { recoverWhile=recoverJsonValue }
+JsonStringLiteral ::= STRING_LITERAL { extends=JsonValue
+	methods=[getReference]
+}
 JsonObject ::= LEFT_BRACE [ JsonPair (COMMA JsonPair)* ] RIGHT_BRACE { pin=1 }
 JsonPair ::= STRING_LITERAL COLON JsonValue { pin=2 recoverWhile="recoverJsonPair" }
 JsonArray ::= LEFT_BRACKET JsonElements RIGHT_BRACKET { pin=1 }

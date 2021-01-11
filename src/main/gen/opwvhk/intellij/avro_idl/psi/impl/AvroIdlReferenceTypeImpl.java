@@ -17,10 +17,12 @@ public class AvroIdlReferenceTypeImpl extends AvroIdlTypeImpl implements AvroIdl
     super(node);
   }
 
+  @Override
   public void accept(@NotNull AvroIdlVisitor visitor) {
     visitor.visitReferenceType(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof AvroIdlVisitor) accept((AvroIdlVisitor)visitor);
     else super.accept(visitor);
@@ -33,8 +35,7 @@ public class AvroIdlReferenceTypeImpl extends AvroIdlTypeImpl implements AvroIdl
   }
 
   @Override
-  @Nullable
-  public AvroIdlNamedSchemaReference getReference() {
+  public @Nullable AvroIdlNamedSchemaReference getReference() {
     return AvroIdlPsiUtil.getReference(this);
   }
 

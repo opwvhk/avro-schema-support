@@ -16,10 +16,12 @@ public class AvroIdlResultTypeImpl extends AvroIdlTypeImpl implements AvroIdlRes
     super(node);
   }
 
+  @Override
   public void accept(@NotNull AvroIdlVisitor visitor) {
     visitor.visitResultType(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof AvroIdlVisitor) accept((AvroIdlVisitor)visitor);
     else super.accept(visitor);

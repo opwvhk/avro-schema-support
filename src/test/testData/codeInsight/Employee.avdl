@@ -1,0 +1,9 @@
+@namespace("imports")
+protocol Imported {
+	import schema "ContractType.avsc";
+
+	record Employee {
+		string name;
+		ContractType contract_type;
+	}
+}

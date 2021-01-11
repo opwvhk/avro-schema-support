@@ -19,7 +19,4 @@ public interface AvroIdlJsonValue extends PsiElement {
   @Nullable
   PsiElement getIntLiteral();
 
-  @Nullable
-  PsiElement getStringLiteral();
-
 }

@@ -12,18 +12,15 @@ public interface AvroIdlEnumConstant extends AvroIdlNameIdentifierOwner {
   @NotNull
   PsiElement getIdentifier();
 
-  @Nullable
-  PsiElement getNameIdentifier();
+  @Nullable PsiElement getNameIdentifier();
 
   int getTextOffset();
 
-  @Nullable
   @NonNls
-  String getName();
+  @Nullable String getName();
 
   PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException;
 
-  @NotNull
-  ItemPresentation getPresentation();
+  @NotNull ItemPresentation getPresentation();
 
 }

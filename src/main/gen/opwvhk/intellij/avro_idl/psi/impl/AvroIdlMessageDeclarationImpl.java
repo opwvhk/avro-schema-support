@@ -22,6 +22,7 @@ public class AvroIdlMessageDeclarationImpl extends ASTWrapperPsiElement implemen
     visitor.visitMessageDeclaration(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof AvroIdlVisitor) accept((AvroIdlVisitor)visitor);
     else super.accept(visitor);
@@ -58,8 +59,7 @@ public class AvroIdlMessageDeclarationImpl extends ASTWrapperPsiElement implemen
   }
 
   @Override
-  @Nullable
-  public PsiElement getNameIdentifier() {
+  public @Nullable PsiElement getNameIdentifier() {
     return AvroIdlPsiUtil.getNameIdentifier(this);
   }
 
@@ -69,9 +69,8 @@ public class AvroIdlMessageDeclarationImpl extends ASTWrapperPsiElement implemen
   }
 
   @Override
-  @Nullable
   @NonNls
-  public String getName() {
+  public @Nullable String getName() {
     return AvroIdlPsiUtil.getName(this);
   }
 

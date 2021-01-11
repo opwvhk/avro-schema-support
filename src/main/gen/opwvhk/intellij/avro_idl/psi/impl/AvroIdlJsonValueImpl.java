@@ -21,6 +21,7 @@ public class AvroIdlJsonValueImpl extends ASTWrapperPsiElement implements AvroId
     visitor.visitJsonValue(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof AvroIdlVisitor) accept((AvroIdlVisitor)visitor);
     else super.accept(visitor);
@@ -48,12 +49,6 @@ public class AvroIdlJsonValueImpl extends ASTWrapperPsiElement implements AvroId
   @Nullable
   public PsiElement getIntLiteral() {
     return findChildByType(INT_LITERAL);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getStringLiteral() {
-    return findChildByType(STRING_LITERAL);
   }
 
 }

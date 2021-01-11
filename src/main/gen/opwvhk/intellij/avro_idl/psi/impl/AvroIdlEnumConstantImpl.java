@@ -23,6 +23,7 @@ public class AvroIdlEnumConstantImpl extends ASTWrapperPsiElement implements Avr
     visitor.visitEnumConstant(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof AvroIdlVisitor) accept((AvroIdlVisitor)visitor);
     else super.accept(visitor);
@@ -35,8 +36,7 @@ public class AvroIdlEnumConstantImpl extends ASTWrapperPsiElement implements Avr
   }
 
   @Override
-  @Nullable
-  public PsiElement getNameIdentifier() {
+  public @Nullable PsiElement getNameIdentifier() {
     return AvroIdlPsiUtil.getNameIdentifier(this);
   }
 
@@ -46,9 +46,8 @@ public class AvroIdlEnumConstantImpl extends ASTWrapperPsiElement implements Avr
   }
 
   @Override
-  @Nullable
   @NonNls
-  public String getName() {
+  public @Nullable String getName() {
     return AvroIdlPsiUtil.getName(this);
   }
 
@@ -58,8 +57,7 @@ public class AvroIdlEnumConstantImpl extends ASTWrapperPsiElement implements Avr
   }
 
   @Override
-  @NotNull
-  public ItemPresentation getPresentation() {
+  public @NotNull ItemPresentation getPresentation() {
     return AvroIdlPsiUtil.getPresentation(this);
   }
 

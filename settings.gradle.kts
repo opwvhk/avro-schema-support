@@ -1,2 +1,2 @@
-rootProject.name = "intellij-plugin-avro-idl"
+rootProject.name = "avro-schema-support"
 

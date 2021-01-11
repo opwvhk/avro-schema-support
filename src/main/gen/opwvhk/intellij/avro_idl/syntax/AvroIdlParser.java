@@ -36,6 +36,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
+    create_token_set_(JSON_STRING_LITERAL, JSON_VALUE),
     create_token_set_(ENUM_DECLARATION, FIXED_DECLARATION, NAMED_SCHEMA_DECLARATION, RECORD_DECLARATION),
     create_token_set_(ARRAY_TYPE, DECIMAL_TYPE, MAP_TYPE, PRIMITIVE_TYPE,
       REFERENCE_TYPE, RESULT_TYPE, TYPE, UNION_TYPE),
@@ -189,7 +190,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "EnumBody")) return false;
     Marker m = enter_section_(b, l, _NONE_, ENUM_BODY, "<enum body>");
     EnumBody_0(b, l + 1);
-    exit_section_(b, l, m, true, false, recoverEnumBody_parser_);
+    exit_section_(b, l, m, true, false, AvroIdlParser::recoverEnumBody);
     return true;
   }
 
@@ -607,7 +608,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_);
     r = consumeTokens(b, 1, FIXED, IDENTIFIER, LEFT_PAREN, INT_LITERAL, RIGHT_PAREN);
     p = r; // pin = 1
-    exit_section_(b, l, m, r, p, recoverFixedInnerDeclaration_parser_);
+    exit_section_(b, l, m, r, p, AvroIdlParser::recoverFixedInnerDeclaration);
     return r || p;
   }
 
@@ -619,7 +620,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, FORMAL_PARAMETER, "<formal parameter>");
     r = FormalParameter1(b, l + 1);
     if (!r) r = FormalParameter2(b, l + 1);
-    exit_section_(b, l, m, r, false, recoverFormalParameter_parser_);
+    exit_section_(b, l, m, r, false, AvroIdlParser::recoverFormalParameter);
     return r;
   }
 
@@ -672,7 +673,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "FormalParameters")) return false;
     Marker m = enter_section_(b, l, _NONE_);
     FormalParameters_0(b, l + 1);
-    exit_section_(b, l, m, true, false, recoverFormalParameters_parser_);
+    exit_section_(b, l, m, true, false, AvroIdlParser::recoverFormalParameters);
     return true;
   }
 
@@ -725,14 +726,14 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ImportType STRING_LITERAL
+  // ImportType JsonStringLiteral
   static boolean ImportInnerDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ImportInnerDeclaration")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_);
     r = ImportType(b, l + 1);
-    r = r && consumeToken(b, STRING_LITERAL);
-    exit_section_(b, l, m, r, false, recoverImportInnerDeclaration_parser_);
+    r = r && JsonStringLiteral(b, l + 1);
+    exit_section_(b, l, m, r, false, AvroIdlParser::recoverImportInnerDeclaration);
     return r;
   }
 
@@ -770,7 +771,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "JsonElements")) return false;
     Marker m = enter_section_(b, l, _NONE_);
     JsonElements_0(b, l + 1);
-    exit_section_(b, l, m, true, false, recoverJsonElements_parser_);
+    exit_section_(b, l, m, true, false, AvroIdlParser::recoverJsonElements);
     return true;
   }
 
@@ -871,17 +872,29 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     r = consumeTokens(b, 2, STRING_LITERAL, COLON);
     p = r; // pin = 2
     r = r && JsonValue(b, l + 1);
-    exit_section_(b, l, m, r, p, recoverJsonPair_parser_);
+    exit_section_(b, l, m, r, p, AvroIdlParser::recoverJsonPair);
     return r || p;
   }
 
   /* ********************************************************** */
-  // STRING_LITERAL | INT_LITERAL | FLOAT_LITERAL | TRUE | FALSE | NULL | JsonObject | JsonArray
+  // STRING_LITERAL
+  public static boolean JsonStringLiteral(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "JsonStringLiteral")) return false;
+    if (!nextTokenIs(b, STRING_LITERAL)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, STRING_LITERAL);
+    exit_section_(b, m, JSON_STRING_LITERAL, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // JsonStringLiteral | INT_LITERAL | FLOAT_LITERAL | TRUE | FALSE | NULL | JsonObject | JsonArray
   public static boolean JsonValue(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "JsonValue")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, JSON_VALUE, "<json value>");
-    r = consumeToken(b, STRING_LITERAL);
+    Marker m = enter_section_(b, l, _COLLAPSE_, JSON_VALUE, "<json value>");
+    r = JsonStringLiteral(b, l + 1);
     if (!r) r = consumeToken(b, INT_LITERAL);
     if (!r) r = consumeToken(b, FLOAT_LITERAL);
     if (!r) r = consumeToken(b, TRUE);
@@ -889,7 +902,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     if (!r) r = consumeToken(b, NULL);
     if (!r) r = JsonObject(b, l + 1);
     if (!r) r = JsonArray(b, l + 1);
-    exit_section_(b, l, m, r, false, recoverJsonValue_parser_);
+    exit_section_(b, l, m, r, false, AvroIdlParser::recoverJsonValue);
     return r;
   }
 
@@ -1077,7 +1090,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     r = r && FormalParameters(b, l + 1);
     r = r && consumeToken(b, RIGHT_PAREN);
     r = r && MessageSignature_4(b, l + 1);
-    exit_section_(b, l, m, r, false, recoverMessageSignature_parser_);
+    exit_section_(b, l, m, r, false, AvroIdlParser::recoverMessageSignature);
     return r;
   }
 
@@ -1173,7 +1186,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
       if (!ProtocolBody_0(b, l + 1)) break;
       if (!empty_element_parsed_guard_(b, "ProtocolBody", c)) break;
     }
-    exit_section_(b, l, m, true, false, recoverProtocolBody_parser_);
+    exit_section_(b, l, m, true, false, AvroIdlParser::recoverProtocolBody);
     return true;
   }
 
@@ -1513,7 +1526,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "UnionContents")) return false;
     Marker m = enter_section_(b, l, _NONE_);
     UnionContents_0(b, l + 1);
-    exit_section_(b, l, m, true, false, recoverUnionContents_parser_);
+    exit_section_(b, l, m, true, false, AvroIdlParser::recoverUnionContents);
     return true;
   }
 
@@ -1574,7 +1587,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     r = VariableDeclarator1(b, l + 1);
     if (!r) r = VariableDeclarator2(b, l + 1);
     if (!r) r = VariableDeclarator3(b, l + 1);
-    exit_section_(b, l, m, r, false, recoverVariableDeclarator_parser_);
+    exit_section_(b, l, m, r, false, AvroIdlParser::recoverVariableDeclarator);
     return r;
   }
 
@@ -1982,64 +1995,4 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  static final Parser recoverEnumBody_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return recoverEnumBody(b, l + 1);
-    }
-  };
-  static final Parser recoverFixedInnerDeclaration_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return recoverFixedInnerDeclaration(b, l + 1);
-    }
-  };
-  static final Parser recoverFormalParameter_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return recoverFormalParameter(b, l + 1);
-    }
-  };
-  static final Parser recoverFormalParameters_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return recoverFormalParameters(b, l + 1);
-    }
-  };
-  static final Parser recoverImportInnerDeclaration_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return recoverImportInnerDeclaration(b, l + 1);
-    }
-  };
-  static final Parser recoverJsonElements_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return recoverJsonElements(b, l + 1);
-    }
-  };
-  static final Parser recoverJsonPair_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return recoverJsonPair(b, l + 1);
-    }
-  };
-  static final Parser recoverJsonValue_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return recoverJsonValue(b, l + 1);
-    }
-  };
-  static final Parser recoverMessageSignature_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return recoverMessageSignature(b, l + 1);
-    }
-  };
-  static final Parser recoverProtocolBody_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return recoverProtocolBody(b, l + 1);
-    }
-  };
-  static final Parser recoverUnionContents_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return recoverUnionContents(b, l + 1);
-    }
-  };
-  static final Parser recoverVariableDeclarator_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return recoverVariableDeclarator(b, l + 1);
-    }
-  };
 }

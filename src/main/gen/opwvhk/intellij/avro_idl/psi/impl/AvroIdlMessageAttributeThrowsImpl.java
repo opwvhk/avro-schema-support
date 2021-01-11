@@ -22,6 +22,7 @@ public class AvroIdlMessageAttributeThrowsImpl extends ASTWrapperPsiElement impl
     visitor.visitMessageAttributeThrows(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof AvroIdlVisitor) accept((AvroIdlVisitor)visitor);
     else super.accept(visitor);
@@ -34,8 +35,7 @@ public class AvroIdlMessageAttributeThrowsImpl extends ASTWrapperPsiElement impl
   }
 
   @Override
-  @NotNull
-  public AvroIdlNamedSchemaReference getReference() {
+  public @NotNull AvroIdlNamedSchemaReference getReference() {
     return AvroIdlPsiUtil.getReference(this);
   }
 

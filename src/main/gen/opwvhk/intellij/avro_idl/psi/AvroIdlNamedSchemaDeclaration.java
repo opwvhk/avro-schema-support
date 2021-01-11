@@ -9,23 +9,19 @@ import com.intellij.util.IncorrectOperationException;
 
 public interface AvroIdlNamedSchemaDeclaration extends AvroIdlNamespacedNameIdentifierOwner {
 
-  @Nullable
-  PsiElement getNameIdentifier();
+  @Nullable PsiElement getNameIdentifier();
 
   int getTextOffset();
 
-  @Nullable
   @NonNls
-  String getName();
+  @Nullable String getName();
 
   PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException;
 
-  @Nullable
   @NonNls
-  String getFullName();
+  @Nullable String getFullName();
 
-  @NotNull
-  ItemPresentation getPresentation();
+  @NotNull ItemPresentation getPresentation();
 
   boolean isErrorType();
 

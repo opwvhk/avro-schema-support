@@ -1,0 +1,20 @@
+{
+	"namespace": "imports",
+	"protocol": "HelloWorld",
+	"types": [
+		{"name": "Input", "type": "record", "fields": [
+			{"name": "message", "type": "string"}]},
+		{"name": "Output", "type": "record", "fields": [
+			{"name": "message", "type": "string"}]},
+		{"name": "Failure", "type": "error", "fields": [
+			{"name": "message", "type": "string"}]}
+	],
+	"messages": {
+		"doStuff": {
+			"doc": "Do something",
+			"request": [{"name": "input", "type": "Input" }],
+			"response": "Output",
+			"errors": ["Failure"]
+		}
+	}
+}
