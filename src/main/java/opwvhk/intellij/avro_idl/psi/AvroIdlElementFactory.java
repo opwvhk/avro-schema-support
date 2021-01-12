@@ -2,12 +2,11 @@ package opwvhk.intellij.avro_idl.psi;
 
 import com.intellij.json.psi.JsonFile;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import opwvhk.intellij.avro_idl.AvroIdlFileType;
 import org.jetbrains.annotations.NotNull;
-import org.jf.util.StringUtils;
 
 public class AvroIdlElementFactory {
 	private final Project myProject;
@@ -26,7 +25,7 @@ public class AvroIdlElementFactory {
 	}
 
 	public @NotNull AvroIdlJsonStringLiteral createJsonStringLiteral(@NotNull String text) {
-		final AvroIdlFile file = createDummyFile(String.format("protocol Foo { import idl \"%s\"; }", StringUtils.escapeString(text)));
+		final AvroIdlFile file = createDummyFile(String.format("protocol Foo { import idl \"%s\"; }", StringUtil.escapeStringCharacters(text)));
 		final AvroIdlProtocolDeclaration protocol = (AvroIdlProtocolDeclaration) file.getFirstChild();
 		final AvroIdlProtocolBody protocolBody = protocol.getProtocolBody();
 		assert protocolBody != null;
