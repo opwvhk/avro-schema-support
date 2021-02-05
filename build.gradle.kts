@@ -32,6 +32,10 @@ tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml
 	untilBuild("203.*")
 	changeNotes(
 		"""
+		<p>Version ???:</p>
+		<ul>
+		<li>Add Avro Schema and Avro Protocol languages, allowing language injection</li>
+		</ul>
 		<p>Version 0.2.0:</p>
 		<ul>
 		<li>Add support for imports</li>
