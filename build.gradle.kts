@@ -54,22 +54,9 @@ tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml
 	)
 }
 tasks.getByName<org.jetbrains.intellij.tasks.RunPluginVerifierTask>("runPluginVerifier") {
-	ideVersions(listOf("IC-2019.3.5", "IU-2019.3.5", "IC-2020.2.4", "IU-2020.2.4"))
-	//version = "2019.3"
-	//localPaths(listOf("/Applications/IntelliJ IDEA.app"))
-	failureLevel = EnumSet.of(
-		//FailureLevel.COMPATIBILITY_WARNINGS,
-		//FailureLevel.COMPATIBILITY_PROBLEMS,
-		FailureLevel.DEPRECATED_API_USAGES,
-		FailureLevel.EXPERIMENTAL_API_USAGES,
-		FailureLevel.INTERNAL_API_USAGES,
-		//FailureLevel.OVERRIDE_ONLY_API_USAGES,
-		//FailureLevel.NON_EXTENDABLE_API_USAGES,
-		//FailureLevel.PLUGIN_STRUCTURE_WARNINGS,
-		FailureLevel.MISSING_DEPENDENCIES,
-		FailureLevel.INVALID_PLUGIN,
-		FailureLevel.NOT_DYNAMIC
-	)
+	ideVersions(listOf("2020.2.4", "2020.3", "2020.3.2"))
+
+	failureLevel = EnumSet.complementOf(EnumSet.of(FailureLevel.DEPRECATED_API_USAGES))
 }
 
 sourceSets["main"].java.srcDirs("src/main/gen")

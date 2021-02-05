@@ -14,7 +14,7 @@ public class AvroSchemaFileType extends LanguageFileType {
 	public static final AvroSchemaFileType INSTANCE = new AvroSchemaFileType();
 
 	protected AvroSchemaFileType() {
-		super(Json5Language.INSTANCE);
+		super(AvroSchemaLanguage.INSTANCE);
 	}
 
 	@NotNull
