@@ -14,7 +14,7 @@ public class AvroProtocolFileType extends LanguageFileType {
 	public static final AvroProtocolFileType INSTANCE = new AvroProtocolFileType();
 
 	protected AvroProtocolFileType() {
-		super(Json5Language.INSTANCE);
+		super(AvroProtocolLanguage.INSTANCE);
 	}
 
 	@NotNull
