@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "net.sf.opk"
-version = "0.2.1-SNAPSHOT"
+version = "0.2.1"
 
 repositories {
 	mavenCentral()
@@ -32,7 +32,7 @@ tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml
 	untilBuild("203.*")
 	changeNotes(
 		"""
-		<p>Version ???:</p>
+		<p>Version 0.2.1:</p>
 		<ul>
 		<li>Add Avro Schema and Avro Protocol languages, allowing language injection</li>
 		</ul>
@@ -58,7 +58,7 @@ tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml
 	)
 }
 tasks.getByName<org.jetbrains.intellij.tasks.RunPluginVerifierTask>("runPluginVerifier") {
-	ideVersions(listOf("2020.2.4", "2020.3", "2020.3.2"))
+	ideVersions(listOf("2020.2.4", "2020.3.2")) // Versions ranging from Summer 2020 and latest release
 
 	failureLevel = EnumSet.complementOf(EnumSet.of(FailureLevel.DEPRECATED_API_USAGES))
 }
