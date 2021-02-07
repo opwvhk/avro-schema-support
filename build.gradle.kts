@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "net.sf.opk"
-version = "0.2.1"
+version = "203.0.0-SNAPSHOT"
 
 repositories {
 	mavenCentral()
@@ -23,15 +23,20 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-	version = "2020.2"
-	setPlugins("com.intellij.java", "PsiViewer:202-SNAPSHOT.3") // Add the java plugin here to satisfy test dependencies.
+	version = "2020.3"
+	setPlugins("com.intellij.java", "PsiViewer:203-SNAPSHOT") // Add the java plugin here to satisfy test dependencies.
 }
 tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml") {
 	version(project.version)
-	sinceBuild("202")
-	untilBuild("203.*")
+	sinceBuild("203")
+	untilBuild("211.*")
 	changeNotes(
 		"""
+		<p>Version 203.0.0:</p>
+		<ul>
+		<li>Changed version number to match IntelliJ builds</li>
+		<li>Migrated away from deprecated API: minimum supported version is now 2020.3</li>
+		</ul>
 		<p>Version 0.2.1:</p>
 		<ul>
 		<li>Add Avro Schema and Avro Protocol languages, allowing language injection</li>
@@ -58,7 +63,7 @@ tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml
 	)
 }
 tasks.getByName<org.jetbrains.intellij.tasks.RunPluginVerifierTask>("runPluginVerifier") {
-	ideVersions(listOf("2020.2.4", "2020.3.2")) // Versions ranging from Summer 2020 and latest release
+	ideVersions(listOf("2020.3.2")) // Versions ranging from Fall 2020 and latest release
 
 	failureLevel = EnumSet.complementOf(EnumSet.of(FailureLevel.DEPRECATED_API_USAGES))
 }

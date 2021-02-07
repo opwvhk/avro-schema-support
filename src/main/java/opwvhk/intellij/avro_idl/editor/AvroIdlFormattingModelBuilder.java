@@ -112,7 +112,9 @@ public class AvroIdlFormattingModelBuilder implements FormattingModelBuilder {
 
 	@NotNull
 	@Override
-	public FormattingModel createModel(PsiElement psiElement, CodeStyleSettings codeStyleSettings) {
+	public FormattingModel createModel(@NotNull FormattingContext formattingContext) {
+		PsiElement psiElement = formattingContext.getPsiElement();
+		CodeStyleSettings codeStyleSettings = formattingContext.getCodeStyleSettings();
 		Wrap normalWrap = Wrap.createWrap(WrapType.NORMAL, false);
 		Alignment alignment = null;//Alignment.createAlignment();
 		final Indent indent = Indent.getNoneIndent();
