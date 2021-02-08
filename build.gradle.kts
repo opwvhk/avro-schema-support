@@ -63,7 +63,11 @@ tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml
 	)
 }
 tasks.getByName<org.jetbrains.intellij.tasks.RunPluginVerifierTask>("runPluginVerifier") {
-	ideVersions(listOf("2020.3.2")) // Versions ranging from Fall 2020 and latest release
+	fun forIdes(vararg ides: String): (String) -> List<String> { return { version -> ides.map { "$it-$version" } } }
+	// IntelliJ Community, IntelliJ Ultimate, PyCharm Community &, PYcharm professional editions with versions ranging from Fall 2020 to the latest release
+	val intelijVersions = listOf("2020.3.2", "2021.1").flatMap(forIdes("IC", "IU"))
+	val pycharmVersions = listOf("2020.3.3", "2021.1").flatMap(forIdes("PCC", "PY"))
+	ideVersions(intelijVersions + pycharmVersions)
 
 	failureLevel = EnumSet.complementOf(EnumSet.of(FailureLevel.DEPRECATED_API_USAGES))
 }
