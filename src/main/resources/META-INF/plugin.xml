@@ -84,4 +84,25 @@
 	<extensions defaultExtensionNs="com.intellij.json">
 		<jsonLikePsiWalkerFactory implementation="opwvhk.intellij.avro_idl.json_schema.AvroJsonSchemaPsiWalkerFactory"/>
 	</extensions>
+	<actions>
+		<action id="avroidl-idltoprotocol" text="Convert Avro IDL to Avro Protocol" description="Convert Avro IDL file to an Avro protocol file."
+				class="opwvhk.intellij.avro_idl.actions.AvroIdlToProtocolAction">
+			<add-to-group group-id="RefactoringMenu" anchor="last"/>
+		</action>
+		<action id="avroidl-idltoschema" text="Convert Avro IDL to Avro Schema" description="Convert Avro IDL file to a minimal number of Avro schema files."
+				class="opwvhk.intellij.avro_idl.actions.AvroIdlToSchemaAction">
+			<add-to-group group-id="RefactoringMenu" anchor="last"/>
+		</action>
+		<action id="avroidl-protocoltoidl" text="Convert Avro Protocol to Avro IDL" description="Convert Avro protocol file an Avro IDL file."
+				class="opwvhk.intellij.avro_idl.actions.AvroProtocolToIdlAction">
+			<add-to-group group-id="RefactoringMenu" anchor="last"/>
+		</action>
+		<action id="avroidl-schematoidl" text="Convert Avro Schema to Avro IDL" description="Convert Avro schema file an Avro IDL file."
+				class="opwvhk.intellij.avro_idl.actions.AvroSchemaToIdlAction">
+			<add-to-group group-id="RefactoringMenu" anchor="last"/>
+		</action>
+	</actions>
+	<extensions defaultExtensionNs="com.intellij">
+		<notificationGroup id="Avro IDL" displayType="BALLOON"/>
+	</extensions>
 </idea-plugin>

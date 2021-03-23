@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-	implementation("org.apache.avro", "avro", "1.10.1").exclude("org.slf4j")
+	implementation("org.apache.avro", "avro-compiler", "1.10.2").exclude("org.slf4j")
 	testImplementation("junit", "junit", "4.12")
 	testImplementation("org.assertj", "assertj-core", "3.18.1")
 }
@@ -36,6 +36,8 @@ tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml
 		<ul>
 		<li>Changed version number to match IntelliJ builds</li>
 		<li>Migrated away from deprecated API: minimum supported version is now 2020.3</li>
+		<li>Added refactoring actions to convert Avro IDL to and from Avro schemas and Avro protocols.</li>
+		<li>Added file icon variant for dark mode</li>
 		</ul>
 		<p>Version 0.2.1:</p>
 		<ul>
