@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "net.sf.opk"
-version = "203.0.0-SNAPSHOT"
+version = "203.0.0"
 
 repositories {
 	mavenCentral()
