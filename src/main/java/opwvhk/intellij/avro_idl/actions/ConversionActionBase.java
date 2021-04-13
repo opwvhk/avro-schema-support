@@ -83,7 +83,11 @@ abstract class ConversionActionBase extends AnAction implements DumbAware {
 
 	public boolean canConvert(@NotNull VirtualFile file) {
 		// We can process any file in a writable directory (not injected) that is of the right type.
-		return !file.isDirectory() && file.getParent().isWritable() && !(file instanceof VirtualFileWindow) && file.getFileType() == sourceFileType;
+		return !file.isDirectory() && isInWritableDirectory(file) && !(file instanceof VirtualFileWindow) && file.getFileType() == sourceFileType;
+	}
+
+	private boolean isInWritableDirectory(@NotNull VirtualFile file) {
+		return file.getParent() != null && file.getParent().isWritable();
 	}
 
 	@Override

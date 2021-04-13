@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "net.sf.opk"
-version = "203.0.0"
+version = "203.0.1-SNAPSHOT"
 
 repositories {
 	mavenCentral()
@@ -32,6 +32,10 @@ tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml
 	untilBuild("211.*")
 	changeNotes(
 		"""
+		<p>Version 203.0.1:</p>
+		<ul>
+		<li>Fixed NPE upon file traversal for plugin actions (issue #9).</li>
+		</ul>
 		<p>Version 203.0.0:</p>
 		<ul>
 		<li>Changed version number to match IntelliJ builds</li>
