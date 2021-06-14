@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "net.sf.opk"
-version = "203.0.1-SNAPSHOT"
+version = "203.0.1"
 
 repositories {
 	mavenCentral()
@@ -34,7 +34,8 @@ tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml
 		"""
 		<p>Version 203.0.1:</p>
 		<ul>
-		<li>Fixed NPE upon file traversal for plugin actions (issue #9).</li>
+		<li>Fixed NPEs upon file traversal for plugin actions (issue #9, #11).</li>
+		<li>Renamed defined languages to prevant name clashes.</li>
 		</ul>
 		<p>Version 203.0.0:</p>
 		<ul>
