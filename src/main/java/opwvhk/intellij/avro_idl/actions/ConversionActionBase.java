@@ -68,7 +68,7 @@ abstract class ConversionActionBase extends AnAction implements DumbAware {
 		}
 	}
 
-	public boolean canProcessAny(@NotNull Project project, @NotNull VirtualFile[] virtualFiles) {
+	public boolean canProcessAny(@NotNull Project project, VirtualFile[] virtualFiles) {
 		final Ref<Boolean> canProcessAny = Ref.create(false);
 		final VirtualFileVisitor<Void> fileVisitor = createFileVisitor(project, file -> {
 			if (canConvert(file)) {
@@ -76,7 +76,9 @@ abstract class ConversionActionBase extends AnAction implements DumbAware {
 			}
 		});
 		for (VirtualFile file : virtualFiles) {
-			VfsUtilCore.visitChildrenRecursively(file, fileVisitor);
+			if (file != null) {
+				VfsUtilCore.visitChildrenRecursively(file, fileVisitor);
+			}
 		}
 		return canProcessAny.get();
 	}
@@ -109,7 +111,9 @@ abstract class ConversionActionBase extends AnAction implements DumbAware {
 			}
 		});
 		for (VirtualFile file : virtualFiles) {
-			VfsUtilCore.visitChildrenRecursively(file, fileVisitor);
+			if (file != null) {
+				VfsUtilCore.visitChildrenRecursively(file, fileVisitor);
+			}
 		}
 	}
 
