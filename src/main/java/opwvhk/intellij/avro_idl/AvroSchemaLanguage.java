@@ -14,6 +14,6 @@ public class AvroSchemaLanguage extends JsonLanguage {
 	public static final AvroSchemaLanguage INSTANCE = new AvroSchemaLanguage();
 
 	protected AvroSchemaLanguage() {
-		super("AvroSchema", "text/vnd.apache.avro-schema");
+		super("Avro Schema", "text/vnd.apache.avro-schema");
 	}
 }

@@ -27,56 +27,56 @@
 
 	<extensions defaultExtensionNs="com.intellij">
 		<!-- File type & Language -->
-		<fileType name="Avro IDL" fieldName="INSTANCE" language="AvroIDL" extensions="avdl" implementationClass="opwvhk.intellij.avro_idl.AvroIdlFileType"/>
-		<lang.parserDefinition language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroIdlParserDefinition"/>
-		<annotator language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlAnnotator"/>
-		<lang.namesValidator language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlNamesValidator"/>
+		<fileType name="Avro IDL" fieldName="INSTANCE" language="Avro IDL" extensions="avdl" implementationClass="opwvhk.intellij.avro_idl.AvroIdlFileType"/>
+		<lang.parserDefinition language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroIdlParserDefinition"/>
+		<annotator language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlAnnotator"/>
+		<lang.namesValidator language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlNamesValidator"/>
 		<lang.elementManipulator forClass="opwvhk.intellij.avro_idl.psi.AvroIdlJsonStringLiteral"
 								 implementationClass="opwvhk.intellij.avro_idl.psi.AvroIdlJsonStringLiteralManipulator"/>
 		<!-- Syntax highlighting & color definitions -->
-		<lang.syntaxHighlighter language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroIdlSyntaxHighlighter"/>
+		<lang.syntaxHighlighter language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroIdlSyntaxHighlighter"/>
 		<colorSettingsPage implementation="opwvhk.intellij.avro_idl.editor.AvroIdlColorSettingsPage"/>
 		<!-- Code completion (additional to type references) -->
-		<completion.contributor language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlCompletionContributor"/>
+		<completion.contributor language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlCompletionContributor"/>
 		<!-- References, navigation & editor actions -->
-		<lang.findUsagesProvider language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlFindUsagesProvider"/>
+		<lang.findUsagesProvider language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlFindUsagesProvider"/>
 		<gotoSymbolContributor implementation="opwvhk.intellij.avro_idl.language.AvroIdlChooseByNameContributor"/>
-		<lang.refactoringSupport language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlRefactoringSupportProvider"/>
-		<lang.commenter language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlCommenter"/>
-		<lang.braceMatcher language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlPairedBraceMatcher"/>
+		<lang.refactoringSupport language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlRefactoringSupportProvider"/>
+		<lang.commenter language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlCommenter"/>
+		<lang.braceMatcher language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlPairedBraceMatcher"/>
 		<!--<declarationRangeHandler key="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
 								 implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlDeclarationRangeHandler"/>-->
 		<!-- Structure view -->
-		<lang.psiStructureViewFactory language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlStructureViewFactory"/>
+		<lang.psiStructureViewFactory language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlStructureViewFactory"/>
 		<!-- Formatting & code style -->
-		<lang.foldingBuilder language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlFoldingBuilder"/>
-		<lang.formatter language="AvroIDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlFormattingModelBuilder"/>
+		<lang.foldingBuilder language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlFoldingBuilder"/>
+		<lang.formatter language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlFormattingModelBuilder"/>
 		<codeStyleSettingsProvider implementation="opwvhk.intellij.avro_idl.editor.AvroIdlCodeStyleSettingsProvider"/>
 		<langCodeStyleSettingsProvider implementation="opwvhk.intellij.avro_idl.editor.AvroIdlLanguageCodeStyleSettingsProvider"/>
 		<!-- Inspections (can be turned off) -->
-		<localInspection language="AvroIDL" groupName="Avro IDL" displayName="Duplicate annotations" enabledByDefault="true" level="WARNING"
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Duplicate annotations" enabledByDefault="true" level="WARNING"
 						 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlDuplicateAnnotationsInspectionTool"/>
 		<!-- TODO: Inspect naming conventions, implementing com.intellij.codeInspection.LocalInspectionTool
 		     See com.intellij.codeInspection.naming.AbstractNamingConventionInspection
-		<localInspection language="AvroIDL" groupName="Avro IDL" displayName="Namespace naming convention" enabledByDefault="false" level="ERROR|WARNING|WEAK_WARNING|INFORMATION"
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Namespace naming convention" enabledByDefault="false" level="ERROR|WARNING|WEAK_WARNING|INFORMATION"
 						 implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlNamespaceNamingInspectionTool"/>
-		<localInspection language="AvroIDL" groupName="Avro IDL" displayName="Protocol naming convention" enabledByDefault="false" level="ERROR|WARNING|WEAK_WARNING|INFORMATION"
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Protocol naming convention" enabledByDefault="false" level="ERROR|WARNING|WEAK_WARNING|INFORMATION"
 						 implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlProtocolNamingInspectionTool"/>
-		<localInspection language="AvroIDL" groupName="Avro IDL" displayName="Schema naming convention" enabledByDefault="false" level="ERROR|WARNING|WEAK_WARNING|INFORMATION"
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Schema naming convention" enabledByDefault="false" level="ERROR|WARNING|WEAK_WARNING|INFORMATION"
 						 implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlSchemaNamingInspectionTool"/>
-		<localInspection language="AvroIDL" groupName="Avro IDL" displayName="Field naming convention" enabledByDefault="false" level="ERROR|WARNING|WEAK_WARNING|INFORMATION"
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Field naming convention" enabledByDefault="false" level="ERROR|WARNING|WEAK_WARNING|INFORMATION"
 						 implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlFieldNamingInspectionTool"/>
-		<localInspection language="AvroIDL" groupName="Avro IDL" displayName="Method naming convention" enabledByDefault="false" level="ERROR|WARNING|WEAK_WARNING|INFORMATION"
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Method naming convention" enabledByDefault="false" level="ERROR|WARNING|WEAK_WARNING|INFORMATION"
 						 implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlMethodNamingInspectionTool"/>
 		-->
 
 		<!-- Avro Schema & Protocol files (JSON derivative) -->
-		<fileType name="Avro Schema" fieldName="INSTANCE" language="AvroSchema" extensions="avsc"
+		<fileType name="Avro Schema" fieldName="INSTANCE" language="Avro Schema" extensions="avsc"
 				  implementationClass="opwvhk.intellij.avro_idl.AvroSchemaFileType"/>
-		<lang.parserDefinition language="AvroSchema" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroSchemaParserDefinition"/>
-		<fileType name="Avro Protocol" fieldName="INSTANCE" language="AvroProtocol" extensions="avpr"
+		<lang.parserDefinition language="Avro Schema" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroSchemaParserDefinition"/>
+		<fileType name="Avro Protocol" fieldName="INSTANCE" language="Avro Protocol" extensions="avpr"
 				  implementationClass="opwvhk.intellij.avro_idl.AvroProtocolFileType"/>
-		<lang.parserDefinition language="AvroProtocol" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroProtocolParserDefinition"/>
+		<lang.parserDefinition language="Avro Protocol" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroProtocolParserDefinition"/>
 	</extensions>
 	<extensions defaultExtensionNs="JavaScript">
 		<JsonSchema.ProviderFactory implementation="opwvhk.intellij.avro_idl.json_schema.AvroJsonSchemaProviderFactory"/>

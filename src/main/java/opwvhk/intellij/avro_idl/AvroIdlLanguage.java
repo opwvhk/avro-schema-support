@@ -14,6 +14,6 @@ public class AvroIdlLanguage extends Language {
     public static final AvroIdlLanguage INSTANCE = new AvroIdlLanguage();
 
     protected AvroIdlLanguage() {
-        super("AvroIDL", "text/vnd.apache.avro-avro_idl");
+        super("Avro IDL", "text/vnd.apache.avro-avro_idl");
     }
 }

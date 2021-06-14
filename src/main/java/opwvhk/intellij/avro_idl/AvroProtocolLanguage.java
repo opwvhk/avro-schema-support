@@ -14,6 +14,6 @@ public class AvroProtocolLanguage extends JsonLanguage {
 	public static final AvroProtocolLanguage INSTANCE = new AvroProtocolLanguage();
 
 	protected AvroProtocolLanguage() {
-		super("AvroProtocol", "text/vnd.apache.avro-protocol");
+		super("Avro Protocol", "text/vnd.apache.avro-protocol");
 	}
 }

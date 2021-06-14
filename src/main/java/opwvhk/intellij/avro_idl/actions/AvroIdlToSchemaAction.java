@@ -26,7 +26,7 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 	private static final Logger LOGGER = Logger.getInstance(AvroIdlToSchemaAction.class);
 
 	public AvroIdlToSchemaAction() {
-		super("Convert to AvroSchema", AvroIdlFileType.INSTANCE, AvroSchemaFileType.INSTANCE);
+		super("Convert to Avro Schema", AvroIdlFileType.INSTANCE, AvroSchemaFileType.INSTANCE);
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 			if (schemasToWrite.size() == 1) {
 				final byte[] schemaBytes = schemasToWrite.get(0).toString(true).getBytes(StandardCharsets.UTF_8);
 				final VirtualFile destinationFile = writeSiblingFile(file,schemaBytes);
-				info(project, "Converted Avro IDL in %s to AvroSchema in %s", file.getPresentableName(), destinationFile.getPresentableName());
+				info(project, "Converted Avro IDL in %s to Avro Schema in %s", file.getPresentableName(), destinationFile.getPresentableName());
 			} else {
 				List<String> resultingFileNames = new ArrayList<>();
 				for (Schema schema : schemasToWrite) {
@@ -103,10 +103,10 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 				}
 				final StringJoiner stringJoiner = new StringJoiner(" ");
 				resultingFileNames.forEach(stringJoiner::add);
-				info(project, "Converted Avro IDL in %s to AvroSchema in %s", file.getPresentableName(), stringJoiner);
+				info(project, "Converted Avro IDL in %s to Avro Schema in %s", file.getPresentableName(), stringJoiner);
 			}
 		} catch (IOException e) {
-			LOGGER.warn("Failed to write AvroProtocol", e);
+			LOGGER.warn("Failed to write Avro Protocol", e);
 			error(project, "Failed to write AvroProtocol. See the idea log for more details.");
 		}
 	}
