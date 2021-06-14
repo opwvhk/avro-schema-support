@@ -80,7 +80,7 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 				final Schema schema = schemaAndDependencies.get(0);
 				if (missingSchemas.containsKey(schema)) {
 					schemasToWrite.add(schema);
-					missingSchemas.keySet().removeAll(schemaAndDependencies);
+					schemaAndDependencies.forEach(missingSchemas.keySet()::remove);
 				}
 			}
 		} catch (IOException | ParseException e) {
