@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "net.sf.opk"
-version = "203.0.1"
+version = "203.0.2"
 
 repositories {
 	mavenCentral()
@@ -32,6 +32,10 @@ tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml
 	untilBuild("211.*")
 	changeNotes(
 		"""
+		<p>Version 203.0.2:</p>
+		<ul>
+		<li>IDL parser now also allows annotations before doc comments (issue #12).</li>
+		</ul>
 		<p>Version 203.0.1:</p>
 		<ul>
 		<li>Fixed NPEs upon file traversal for plugin actions (issue #9, #11).</li>
@@ -72,8 +76,8 @@ tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml
 tasks.getByName<org.jetbrains.intellij.tasks.RunPluginVerifierTask>("runPluginVerifier") {
 	fun forIdes(vararg ides: String): (String) -> List<String> { return { version -> ides.map { "$it-$version" } } }
 	// IntelliJ Community, IntelliJ Ultimate, PyCharm Community &, PYcharm professional editions with versions ranging from Fall 2020 to the latest release
-	val intelijVersions = listOf("2020.3.2", "2021.1").flatMap(forIdes("IC", "IU"))
-	val pycharmVersions = listOf("2020.3.3", "2021.1").flatMap(forIdes("PCC", "PY"))
+	val intelijVersions = listOf("2020.3.2", "2021.1", "2021.1.2").flatMap(forIdes("IC", "IU"))
+	val pycharmVersions = listOf("2020.3.3", "2021.1", "2021.1.2").flatMap(forIdes("PCC", "PY"))
 	ideVersions(intelijVersions + pycharmVersions)
 
 	failureLevel = EnumSet.complementOf(EnumSet.of(FailureLevel.DEPRECATED_API_USAGES))

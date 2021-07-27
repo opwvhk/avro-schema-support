@@ -1,12 +1,12 @@
 <idea-plugin>
 	<id>net.sf.opk.avro-schema-support</id>
 	<name>Apache Avro IDL Schema Support</name>
-	<vendor email="oscar@westravanholthe.nl" url="http://www.github.com/opwvhk/avro-schema-support">
+	<vendor email="oscar@westravanholthe.nl" url="https://www.github.com/opwvhk/avro-schema-support">
 		Oscar Westra van Holthe - Kind
 	</vendor>
 
 	<description><![CDATA[
-	<p>A plugin to support Avro schema files in IDL format (.avdl).</p>
+	<p>A plugin to support Avro schemas and protocols in IDL format (.avdl) and JSON (.avsc and .avpr).</p>
 	<p>Features include:<ul>
 		<li>Full parsing of Avro <code>.avdl</code> files, including new logical types like <code>local_timestamp_ms</code></li>
 		<li>Syntax highlighting & formatting</li>
@@ -23,9 +23,9 @@
 	<!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html on how to target different products -->
 	<depends>com.intellij.modules.platform</depends>
 	<depends>com.intellij.modules.lang</depends>
-	<!--<depends>com.intellij.java</depends>-->
 
 	<extensions defaultExtensionNs="com.intellij">
+		<notificationGroup id="Avro IDL" displayType="BALLOON"/>
 		<!-- File type & Language -->
 		<fileType name="Avro IDL" fieldName="INSTANCE" language="Avro IDL" extensions="avdl" implementationClass="opwvhk.intellij.avro_idl.AvroIdlFileType"/>
 		<lang.parserDefinition language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroIdlParserDefinition"/>
@@ -102,7 +102,4 @@
 			<add-to-group group-id="RefactoringMenu" anchor="last"/>
 		</action>
 	</actions>
-	<extensions defaultExtensionNs="com.intellij">
-		<notificationGroup id="Avro IDL" displayType="BALLOON"/>
-	</extensions>
 </idea-plugin>

@@ -8,25 +8,25 @@ import com.intellij.openapi.options.colors.AttributesDescriptor;
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
 
 public interface AvroIdlSyntaxColors {
-	TextAttributesKey DOC_COMMENT = createTextAttributesKey("AVROIDL_DOC_COMMENT", DefaultLanguageHighlighterColors.DOC_COMMENT);
-	TextAttributesKey BLOCK_COMMENT = createTextAttributesKey("AVROIDL_BLOCK_COMMENT", DefaultLanguageHighlighterColors.BLOCK_COMMENT);
-	TextAttributesKey LINE_COMMENT = createTextAttributesKey("AVROIDL_LINE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT);
-	TextAttributesKey BAD_CHAR = createTextAttributesKey("AVROIDL_BAD_CHAR", HighlighterColors.BAD_CHARACTER);
+	TextAttributesKey DOC_COMMENT = createTextAttributesKey("AVRO_IDL_DOC_COMMENT", DefaultLanguageHighlighterColors.DOC_COMMENT);
+	TextAttributesKey BLOCK_COMMENT = createTextAttributesKey("AVRO_IDL_BLOCK_COMMENT", DefaultLanguageHighlighterColors.BLOCK_COMMENT);
+	TextAttributesKey LINE_COMMENT = createTextAttributesKey("AVRO_IDL_LINE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT);
+	TextAttributesKey BAD_CHAR = createTextAttributesKey("AVRO_IDL_BAD_CHAR", HighlighterColors.BAD_CHARACTER);
 
-	TextAttributesKey STRING = createTextAttributesKey("AVROIDL_STRING", DefaultLanguageHighlighterColors.STRING);
-	TextAttributesKey NUMBER = createTextAttributesKey("AVROIDL_NUMBER", DefaultLanguageHighlighterColors.NUMBER);
+	TextAttributesKey STRING = createTextAttributesKey("AVRO_IDL_STRING", DefaultLanguageHighlighterColors.STRING);
+	TextAttributesKey NUMBER = createTextAttributesKey("AVRO_IDL_NUMBER", DefaultLanguageHighlighterColors.NUMBER);
 
-	TextAttributesKey BRACES = createTextAttributesKey("AVROIDL_BRACES", DefaultLanguageHighlighterColors.BRACES);
-	TextAttributesKey PARENTHESES = createTextAttributesKey("AVROIDL_PARENTHESES", DefaultLanguageHighlighterColors.PARENTHESES);
-	TextAttributesKey BRACKETS = createTextAttributesKey("AVROIDL_BRACKETS", DefaultLanguageHighlighterColors.BRACKETS);
+	TextAttributesKey BRACES = createTextAttributesKey("AVRO_IDL_BRACES", DefaultLanguageHighlighterColors.BRACES);
+	TextAttributesKey PARENTHESES = createTextAttributesKey("AVRO_IDL_PARENTHESES", DefaultLanguageHighlighterColors.PARENTHESES);
+	TextAttributesKey BRACKETS = createTextAttributesKey("AVRO_IDL_BRACKETS", DefaultLanguageHighlighterColors.BRACKETS);
 
-	TextAttributesKey SEMICOLON = createTextAttributesKey("AVROIDL_SEMICOLON", DefaultLanguageHighlighterColors.SEMICOLON);
-	TextAttributesKey COMMA = createTextAttributesKey("AVROIDL_COMMA", DefaultLanguageHighlighterColors.COMMA);
-	TextAttributesKey EQUALS = createTextAttributesKey("AVROIDL_EQUALS", DefaultLanguageHighlighterColors.OPERATION_SIGN);
+	TextAttributesKey SEMICOLON = createTextAttributesKey("AVRO_IDL_SEMICOLON", DefaultLanguageHighlighterColors.SEMICOLON);
+	TextAttributesKey COMMA = createTextAttributesKey("AVRO_IDL_COMMA", DefaultLanguageHighlighterColors.COMMA);
+	TextAttributesKey EQUALS = createTextAttributesKey("AVRO_IDL_EQUALS", DefaultLanguageHighlighterColors.OPERATION_SIGN);
 
-	TextAttributesKey KEYWORD = createTextAttributesKey("AVROIDL_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD);
-	TextAttributesKey TYPE = createTextAttributesKey("AVROIDL_TYPE", DefaultLanguageHighlighterColors.KEYWORD);
-	TextAttributesKey ANNOTATION = createTextAttributesKey("AVROIDL_ANNOTATION", DefaultLanguageHighlighterColors.METADATA);
+	TextAttributesKey KEYWORD = createTextAttributesKey("AVRO_IDL_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD);
+	TextAttributesKey TYPE = createTextAttributesKey("AVRO_IDL_TYPE", DefaultLanguageHighlighterColors.KEYWORD);
+	TextAttributesKey ANNOTATION = createTextAttributesKey("AVRO_IDL_ANNOTATION", DefaultLanguageHighlighterColors.METADATA);
 
 	TextAttributesKey[] DOC_COMMENT_KEYS = new TextAttributesKey[]{DOC_COMMENT};
 	TextAttributesKey[] BLOCK_COMMENT_KEYS = new TextAttributesKey[]{BLOCK_COMMENT};

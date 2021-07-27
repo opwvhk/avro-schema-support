@@ -95,7 +95,7 @@ ProtocolDeclaration ::= ProtocolDeclaration1 | ProtocolDeclaration2 | ProtocolDe
 // Without parsing errors, Documentation* SchemaProperty* would be a better start. But by splitting in alternatives with a required start,
 // we can pin to start the ProtocolDeclaration early. We'll repeat this for other documented and/or annotated constructs.
 private ProtocolDeclaration1 ::= Documentation+ SchemaProperty* PROTOCOL IDENTIFIER LEFT_BRACE ProtocolBody RIGHT_BRACE { pin=1 }
-private ProtocolDeclaration2 ::= SchemaProperty+ PROTOCOL IDENTIFIER LEFT_BRACE ProtocolBody RIGHT_BRACE { pin=1 }
+private ProtocolDeclaration2 ::= SchemaProperty+ Documentation* PROTOCOL IDENTIFIER LEFT_BRACE ProtocolBody RIGHT_BRACE { pin=1 }
 private ProtocolDeclaration3 ::= PROTOCOL IDENTIFIER LEFT_BRACE ProtocolBody RIGHT_BRACE { pin=1 }
 ProtocolBody ::= (ImportDeclaration | NamedSchemaDeclaration | MessageDeclaration)* { recoverWhile="recoverProtocolBody" }
 private recoverProtocolBody ::= !(RIGHT_BRACE)
@@ -113,7 +113,7 @@ NamedSchemaDeclaration ::= ( FixedDeclaration | EnumDeclaration | RecordDeclarat
 // Always start all options with a required element to ensure the declarations are recognized correctly, but don't pin to prevent unintended paths.
 FixedDeclaration ::= FixedDeclaration1 | FixedDeclaration2 | FixedDeclaration3 { extends=NamedSchemaDeclaration }
 private FixedDeclaration1 ::= Documentation+ SchemaProperty* FixedInnerDeclaration SEMICOLON
-private FixedDeclaration2 ::= SchemaProperty+ FixedInnerDeclaration SEMICOLON
+private FixedDeclaration2 ::= SchemaProperty+ Documentation* FixedInnerDeclaration SEMICOLON
 private FixedDeclaration3 ::= FixedInnerDeclaration SEMICOLON
 private FixedInnerDeclaration ::= FIXED IDENTIFIER LEFT_PAREN INT_LITERAL RIGHT_PAREN { pin=1 recoverWhile="recoverFixedInnerDeclaration" }
 private recoverFixedInnerDeclaration ::= !(SEMICOLON|FIXED|ENUM|RECORD|ERROR|AT)
@@ -121,7 +121,7 @@ private recoverFixedInnerDeclaration ::= !(SEMICOLON|FIXED|ENUM|RECORD|ERROR|AT)
 // Always start all options with a required element to ensure the declarations are recognized correctly, but don't pin to prevent unintended paths.
 EnumDeclaration ::= EnumDeclaration1 | EnumDeclaration2 | EnumDeclaration3 { extends=NamedSchemaDeclaration }
 private EnumDeclaration1 ::= Documentation+ SchemaProperty* EnumInnerDeclaration
-private EnumDeclaration2 ::= SchemaProperty+ EnumInnerDeclaration
+private EnumDeclaration2 ::= SchemaProperty+ Documentation* EnumInnerDeclaration
 private EnumDeclaration3 ::= EnumInnerDeclaration
 private EnumInnerDeclaration ::= ENUM IDENTIFIER LEFT_BRACE EnumBody RIGHT_BRACE [ EnumDefaultValueAssignment ] { pin=1 }
 EnumBody ::= [ EnumConstant (COMMA EnumConstant)* ] { recoverWhile="recoverEnumBody" }
@@ -138,7 +138,7 @@ private recoverEnumBody ::= !(RIGHT_BRACE)
 // Always start all options with a required element to ensure the declarations are recognized correctly, but don't pin to prevent unintended paths.
 RecordDeclaration ::= RecordDeclaration1 | RecordDeclaration2 | RecordDeclaration3 { extends=NamedSchemaDeclaration }
 private RecordDeclaration1 ::= Documentation+ SchemaProperty* RecordInnerDeclaration
-private RecordDeclaration2 ::= SchemaProperty+ RecordInnerDeclaration
+private RecordDeclaration2 ::= SchemaProperty+ Documentation* RecordInnerDeclaration
 private RecordDeclaration3 ::= RecordInnerDeclaration
 private RecordInnerDeclaration ::= RecordType IDENTIFIER LEFT_BRACE RecordBody RIGHT_BRACE { pin=1 }
 private RecordType ::= RECORD | ERROR
@@ -157,7 +157,7 @@ VariableDeclarator ::= VariableDeclarator1 | VariableDeclarator2 | VariableDecla
 	methods=[getNameIdentifier getTextOffset getName setName]
 }
 private VariableDeclarator1 ::= Documentation+ SchemaProperty* IDENTIFIER [ EQUALS JsonValue ] { pin=1 }
-private VariableDeclarator2 ::= SchemaProperty+ IDENTIFIER [ EQUALS JsonValue ] { pin=1 }
+private VariableDeclarator2 ::= SchemaProperty+ Documentation* IDENTIFIER [ EQUALS JsonValue ] { pin=1 }
 private VariableDeclarator3 ::= IDENTIFIER [ EQUALS JsonValue ] { pin=1 }
 private recoverVariableDeclarator ::= !(SEMICOLON|RIGHT_BRACE|RIGHT_PAREN|COMMA)
 
@@ -166,7 +166,7 @@ MessageDeclaration ::= MessageDeclaration1 | MessageDeclaration2 {
 	methods=[getNameIdentifier getTextOffset getName setName]
 }
 private MessageDeclaration1 ::= Documentation+ ResultType MessageSignature SEMICOLON { pin=1 }
-private MessageDeclaration2 ::= ResultType MessageSignature SEMICOLON { pin=1 }
+private MessageDeclaration2 ::= ResultType Documentation* MessageSignature SEMICOLON { pin=1 }
 ResultType ::= VOID | Type { extends=Type }
 private MessageSignature ::= IDENTIFIER LEFT_PAREN FormalParameters RIGHT_PAREN [ MessageAttributes ] { recoverWhile=recoverMessageSignature }
 private FormalParameters ::= [ FormalParameter (COMMA FormalParameter)* ] { recoverWhile="recoverFormalParameters" }
