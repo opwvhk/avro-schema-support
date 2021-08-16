@@ -33,6 +33,10 @@ tasks {
 		untilBuild.set("212.*")
 		changeNotes.set(
 			"""
+			<p>Version 203.0.3:</p>
+			<ul>
+			<li>Added startup check for incompatibilities (i.e. is the other Avro plugin active?)</li>
+			</ul>
 			<p>Version 203.0.2:</p>
 			<ul>
 			<li>IDL parser now also allows annotations before doc comments (issue #12).</li>

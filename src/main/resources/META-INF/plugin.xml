@@ -26,6 +26,9 @@
 
 	<extensions defaultExtensionNs="com.intellij">
 		<notificationGroup id="Avro IDL" displayType="BALLOON"/>
+		<notificationGroup id="Avro IDL Important" displayType="STICKY_BALLOON" />
+		<postStartupActivity implementation="opwvhk.intellij.avro_idl.AvroIdlCompatibilityCheck"/>
+		<preloadingActivity implementation="opwvhk.intellij.avro_idl.AvroIdlCompatibilityCheck"/>
 		<!-- File type & Language -->
 		<fileType name="Avro IDL" fieldName="INSTANCE" language="Avro IDL" extensions="avdl" implementationClass="opwvhk.intellij.avro_idl.AvroIdlFileType"/>
 		<lang.parserDefinition language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroIdlParserDefinition"/>
