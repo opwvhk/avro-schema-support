@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "net.sf.opk"
-version = "203.0.3"
+version = "203.1.0"
 
 repositories {
 	mavenCentral()
@@ -33,6 +33,11 @@ tasks {
 		untilBuild.set("212.*")
 		changeNotes.set(
 			"""
+			<p>Version 203.1.0:</p>
+			<ul>
+			<li>Adjusted IDL parsing to allow dangling doc comments</li>
+			<li>Added warnings for dangling doc comments (the Avro IDL compiler ignores these)</li>
+			</ul>
 			<p>Version 203.0.3:</p>
 			<ul>
 			<li>Added startup check for incompatibilities (i.e. is the other Avro plugin active?)</li>

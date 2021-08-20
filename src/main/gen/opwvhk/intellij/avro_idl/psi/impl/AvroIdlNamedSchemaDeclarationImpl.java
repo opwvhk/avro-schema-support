@@ -40,8 +40,7 @@ public abstract class AvroIdlNamedSchemaDeclarationImpl extends ASTWrapperPsiEle
   }
 
   @Override
-  @NonNls
-  public @Nullable String getName() {
+  public @Nullable @NonNls String getName() {
     return AvroIdlPsiUtil.getName(this);
   }
 
@@ -51,8 +50,7 @@ public abstract class AvroIdlNamedSchemaDeclarationImpl extends ASTWrapperPsiEle
   }
 
   @Override
-  @NonNls
-  public @Nullable String getFullName() {
+  public @Nullable @NonNls String getFullName() {
     return AvroIdlPsiUtil.getFullName(this);
   }
 

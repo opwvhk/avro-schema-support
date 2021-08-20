@@ -1,7 +1,9 @@
+/** Dangling documentation 1 */
+@namespace("12 monkeys")
+/** Dangling documentation 2 */
 /**
  * A simple test case.
  */
-@namespace("12 monkeys")
 protocol Many.Mistakes {
 	@namespace("hashes")
 	fixed MD5(16);
@@ -34,26 +36,49 @@ protocol Many.Mistakes {
 	null firstCorrectOnewayMessage() oneway;
 	void secondCorrectOnewayMessage() oneway;
 
+	/** Dangling documentation 1 */
+	@correct(1)
+	/** Dangling documentation 2 */
+	/** Documentation */
 	enum Status { ON, OFF }
+	/** Dangling documentation 1 */
+	@correct(1)
+	/** Dangling documentation 2 */
+	/** Documentation */
 	fixed Status(1);
 
+	/** Dangling documentation 1 */
 	@namespace(12)
-	fixed foo.bar(16);
+	/** Dangling documentation 2 */
+		fixed
+		/** Dangling documentation 3 */
+		foo.bar
+		/** Dangling documentation 4 */
+		(
+		/** Dangling documentation 5 */
+		16
+		/** Dangling documentation 6 */
+		)/** Documentation */;
+	/** Dangling documentation 1 */
 	@aliases(["even-more-wrong"])
+	/** Dangling documentation 2 */
+	/** Documentation */
 	enum also-wrong { A, B } = C;
 	record my-data {
 		@namespace("unused")
 		Letters @logicalType("character") one-letter;
 
+		/** Dangling documentation 1 */
 		@namespace("on.type")
 		@aliases(["for_type"])
+		/** Dangling documentation 2 */
 		@order("ignore")
 		@logicalType(23)
-		long @order(34) notLogic1;
+		long /** Dangling documentation 3 */ @order(34) /** Documentation */ notLogic1a, /** Documentation */ notLogic1b;
 		@logicalType("date")
 		string @order("wrong") notLogic2;
 		@logicalType("time-millis")
-		string @aliases(45) notLogic3;
+		string /** Dangling documentation 1 */ @aliases(45) /** Dangling documentation 2 */ /** Documentation */ notLogic3;
 		@logicalType("timestamp-millis")
 		string @aliases([56, "invites-failure"]) notLogic4;
 		@logicalType("local-timestamp-millis")
@@ -90,11 +115,23 @@ protocol Many.Mistakes {
 		@scale(0)
 		hashes.MD5 notLogic14;
 	}
+	/** Dangling documentation 1 */
 	@aliases(67)
+	/** Dangling documentation 2 */
 	@aliases([78, "her-failure"])
+	/** Dangling documentation 3 */
+	/** Documentation */
 	error his-failure {}
 
-	Whatever do-stuff(Something one) throws SomeError, hashes.MD5;
+	/** Dangling documentation 1 */
+	/** Documentation */
+	Whatever
+		do-stuff(
+			/** Dangling documentation 1 */
+			Something
+				/** Dangling documentation 2 */
+				/** Documentation */
+				one) throws SomeError, hashes.MD5;
 
 	string onewayMessagesMustUseVoid() oneway;
 }

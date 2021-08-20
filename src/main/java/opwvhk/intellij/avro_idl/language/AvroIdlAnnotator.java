@@ -1,6 +1,7 @@
 package opwvhk.intellij.avro_idl.language;
 
 import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.lang.ASTNode;
 import com.intellij.lang.annotation.AnnotationBuilder;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
@@ -10,7 +11,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.impl.source.tree.TreeUtil;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import opwvhk.intellij.avro_idl.psi.*;
@@ -22,8 +25,8 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import static com.intellij.lang.annotation.HighlightSeverity.*;
-import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.NULL;
-import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.VOID;
+import static com.intellij.lang.annotation.HighlightSeverity.ERROR;
+import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
 public class AvroIdlAnnotator implements Annotator {
 	private static final String identifier = "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
@@ -33,6 +36,7 @@ public class AvroIdlAnnotator implements Annotator {
 	private static final Predicate<String> VALID_ORDER = order -> order != null && VALID_ORDER_NAMES.contains(order.toUpperCase());
 	private static final Predicate<String> VALID_IDENTIFIER = Pattern.compile("`" + identifier + "`|" + identifier,
 		Pattern.UNICODE_CHARACTER_CLASS).asMatchPredicate();
+	public static final @NotNull TokenSet DOCUMENTATION_TOKENS = TokenSet.create(DOCUMENTATION);
 
 
 	@Override
@@ -48,6 +52,8 @@ public class AvroIdlAnnotator implements Annotator {
 			} else if (parent instanceof AvroIdlNameIdentifierOwner) {
 				annotateIdentifierName(element, holder);
 			}
+		} else if (element instanceof AvroIdlDocumentation) {
+			annotateDocumentation((AvroIdlDocumentation) element, holder);
 		} else if (element instanceof AvroIdlSchemaProperty) {
 			annotateSchemaProperty((AvroIdlSchemaProperty) element, holder);
 		} else if (element instanceof AvroIdlFile) {
@@ -113,6 +119,23 @@ public class AvroIdlAnnotator implements Annotator {
 	@NotNull
 	private String invalidIdentifierMessage(@NotNull String suffix, @NotNull String invalidIdentifier) {
 		return "Not a valid identifier" + suffix + ": " + invalidIdentifier;
+	}
+
+	private void annotateDocumentation(@NotNull AvroIdlDocumentation element, @NotNull AnnotationHolder holder) {
+
+		final ASTNode astNode = element.getNode();
+		boolean isLastDocumentation = TreeUtil.findSibling(astNode.getTreeNext(), DOCUMENTATION) == null;
+
+		if (isLastDocumentation) {
+			final ASTNode nextSibling = element.getParent() instanceof AvroIdlType ? astNode.getTreeParent() : astNode.getTreeNext();
+			final ASTNode firstVariableDeclarator = TreeUtil.findSibling(nextSibling, VARIABLE_DECLARATOR);
+			isLastDocumentation = firstVariableDeclarator == null ||
+				TreeUtil.findSibling(firstVariableDeclarator.getFirstChildNode(), DOCUMENTATION_TOKENS) == null;
+		}
+
+		if (!isLastDocumentation) {
+			holder.newAnnotation(WARNING, "Dangling documentation comment").create();
+		}
 	}
 
 	private void annotateSchemaProperty(@NotNull AvroIdlSchemaProperty element, @NotNull AnnotationHolder holder) {
@@ -398,7 +421,6 @@ public class AvroIdlAnnotator implements Annotator {
 			final IElementType primitiveType = findPrimitiveType(((AvroIdlMessageDeclaration) messageDeclaration).getType());
 			if (primitiveType != VOID && primitiveType != NULL) {
 				holder.newAnnotation(ERROR, "Oneway messages must have a void or null return type").create();
-
 			}
 		}
 	}

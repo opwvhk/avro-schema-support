@@ -46,8 +46,7 @@ public class AvroIdlEnumConstantImpl extends ASTWrapperPsiElement implements Avr
   }
 
   @Override
-  @NonNls
-  public @Nullable String getName() {
+  public @Nullable @NonNls String getName() {
     return AvroIdlPsiUtil.getName(this);
   }
 

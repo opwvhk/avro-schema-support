@@ -69,8 +69,7 @@ public class AvroIdlMessageDeclarationImpl extends ASTWrapperPsiElement implemen
   }
 
   @Override
-  @NonNls
-  public @Nullable String getName() {
+  public @Nullable @NonNls String getName() {
     return AvroIdlPsiUtil.getName(this);
   }
 

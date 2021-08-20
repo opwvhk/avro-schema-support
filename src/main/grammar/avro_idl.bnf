@@ -72,7 +72,7 @@
         UUID='uuid'
 
 		// Use this to debug the grammar with the PSI preview
-        IDENTIFIER="regexp:(`\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}`)|\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*([.-]\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*)*"
+        IDENTIFIER="regexp:(`\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*`)|\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*([.-]\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*)*"
 		// Use this when generating the lexer
         //IDENTIFIER="regexp:(`[:jletter:][:jletterdigit:]*`)|([:jletter:][:jletterdigit:]*)([.-][:jletter:][:jletterdigit:]*)*"
     ]
@@ -94,9 +94,9 @@ ProtocolDeclaration ::= ProtocolDeclaration1 | ProtocolDeclaration2 | ProtocolDe
 }
 // Without parsing errors, Documentation* SchemaProperty* would be a better start. But by splitting in alternatives with a required start,
 // we can pin to start the ProtocolDeclaration early. We'll repeat this for other documented and/or annotated constructs.
-private ProtocolDeclaration1 ::= Documentation+ SchemaProperty* PROTOCOL IDENTIFIER LEFT_BRACE ProtocolBody RIGHT_BRACE { pin=1 }
-private ProtocolDeclaration2 ::= SchemaProperty+ Documentation* PROTOCOL IDENTIFIER LEFT_BRACE ProtocolBody RIGHT_BRACE { pin=1 }
-private ProtocolDeclaration3 ::= PROTOCOL IDENTIFIER LEFT_BRACE ProtocolBody RIGHT_BRACE { pin=1 }
+private ProtocolDeclaration1 ::= Documentation (SchemaProperty|Documentation)* ProtocolDeclaration3 { pin=1 }
+private ProtocolDeclaration2 ::= SchemaProperty (SchemaProperty|Documentation)* ProtocolDeclaration3 { pin=1 }
+private ProtocolDeclaration3 ::= PROTOCOL Documentation* IDENTIFIER LEFT_BRACE ProtocolBody RIGHT_BRACE { pin=1 }
 ProtocolBody ::= (ImportDeclaration | NamedSchemaDeclaration | MessageDeclaration)* { recoverWhile="recoverProtocolBody" }
 private recoverProtocolBody ::= !(RIGHT_BRACE)
 
@@ -112,16 +112,16 @@ NamedSchemaDeclaration ::= ( FixedDeclaration | EnumDeclaration | RecordDeclarat
 
 // Always start all options with a required element to ensure the declarations are recognized correctly, but don't pin to prevent unintended paths.
 FixedDeclaration ::= FixedDeclaration1 | FixedDeclaration2 | FixedDeclaration3 { extends=NamedSchemaDeclaration }
-private FixedDeclaration1 ::= Documentation+ SchemaProperty* FixedInnerDeclaration SEMICOLON
-private FixedDeclaration2 ::= SchemaProperty+ Documentation* FixedInnerDeclaration SEMICOLON
+private FixedDeclaration1 ::= Documentation (SchemaProperty|Documentation)* FixedInnerDeclaration SEMICOLON
+private FixedDeclaration2 ::= SchemaProperty (SchemaProperty|Documentation)* FixedInnerDeclaration SEMICOLON
 private FixedDeclaration3 ::= FixedInnerDeclaration SEMICOLON
-private FixedInnerDeclaration ::= FIXED IDENTIFIER LEFT_PAREN INT_LITERAL RIGHT_PAREN { pin=1 recoverWhile="recoverFixedInnerDeclaration" }
+private FixedInnerDeclaration ::= FIXED Documentation* IDENTIFIER Documentation* LEFT_PAREN Documentation* INT_LITERAL Documentation* RIGHT_PAREN Documentation* { pin=1 recoverWhile="recoverFixedInnerDeclaration" }
 private recoverFixedInnerDeclaration ::= !(SEMICOLON|FIXED|ENUM|RECORD|ERROR|AT)
 
 // Always start all options with a required element to ensure the declarations are recognized correctly, but don't pin to prevent unintended paths.
 EnumDeclaration ::= EnumDeclaration1 | EnumDeclaration2 | EnumDeclaration3 { extends=NamedSchemaDeclaration }
-private EnumDeclaration1 ::= Documentation+ SchemaProperty* EnumInnerDeclaration
-private EnumDeclaration2 ::= SchemaProperty+ Documentation* EnumInnerDeclaration
+private EnumDeclaration1 ::= Documentation (SchemaProperty|Documentation)* EnumInnerDeclaration
+private EnumDeclaration2 ::= SchemaProperty (SchemaProperty|Documentation)* EnumInnerDeclaration
 private EnumDeclaration3 ::= EnumInnerDeclaration
 private EnumInnerDeclaration ::= ENUM IDENTIFIER LEFT_BRACE EnumBody RIGHT_BRACE [ EnumDefaultValueAssignment ] { pin=1 }
 EnumBody ::= [ EnumConstant (COMMA EnumConstant)* ] { recoverWhile="recoverEnumBody" }
@@ -137,8 +137,8 @@ private recoverEnumBody ::= !(RIGHT_BRACE)
 
 // Always start all options with a required element to ensure the declarations are recognized correctly, but don't pin to prevent unintended paths.
 RecordDeclaration ::= RecordDeclaration1 | RecordDeclaration2 | RecordDeclaration3 { extends=NamedSchemaDeclaration }
-private RecordDeclaration1 ::= Documentation+ SchemaProperty* RecordInnerDeclaration
-private RecordDeclaration2 ::= SchemaProperty+ Documentation* RecordInnerDeclaration
+private RecordDeclaration1 ::= Documentation (SchemaProperty|Documentation)* RecordInnerDeclaration
+private RecordDeclaration2 ::= SchemaProperty (SchemaProperty|Documentation)* RecordInnerDeclaration
 private RecordDeclaration3 ::= RecordInnerDeclaration
 private RecordInnerDeclaration ::= RecordType IDENTIFIER LEFT_BRACE RecordBody RIGHT_BRACE { pin=1 }
 private RecordType ::= RECORD | ERROR
@@ -147,8 +147,8 @@ FieldDeclaration ::= FieldDeclaration1 | FieldDeclaration2 { //recoverWhile="rec
 //	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
 //	methods=[getNameIdentifier getTextOffset getName setName]
 }
-private FieldDeclaration1 ::= Type VariableDeclarator ( COMMA VariableDeclarator )* SEMICOLON { pin=1 }
-private FieldDeclaration2 ::= Documentation+ Type VariableDeclarator ( COMMA VariableDeclarator )* SEMICOLON { pin=1 }
+private FieldDeclaration1 ::= Documentation+ Type VariableDeclarator ( COMMA VariableDeclarator )* SEMICOLON { pin=1 }
+private FieldDeclaration2 ::= Type VariableDeclarator ( COMMA VariableDeclarator )* SEMICOLON { pin=1 }
 //private recoverFieldDeclaration ::= !(RIGHT_BRACE)
 
 // Reused in FormalParameter
@@ -156,8 +156,8 @@ VariableDeclarator ::= VariableDeclarator1 | VariableDeclarator2 | VariableDecla
 	implements="opwvhk.intellij.avro_idl.psi.AvroIdlAnnotatedNameIdentifierOwner"
 	methods=[getNameIdentifier getTextOffset getName setName]
 }
-private VariableDeclarator1 ::= Documentation+ SchemaProperty* IDENTIFIER [ EQUALS JsonValue ] { pin=1 }
-private VariableDeclarator2 ::= SchemaProperty+ Documentation* IDENTIFIER [ EQUALS JsonValue ] { pin=1 }
+private VariableDeclarator1 ::= Documentation (SchemaProperty|Documentation)* IDENTIFIER [ EQUALS JsonValue ] { pin=1 }
+private VariableDeclarator2 ::= SchemaProperty (SchemaProperty|Documentation)* IDENTIFIER [ EQUALS JsonValue ] { pin=1 }
 private VariableDeclarator3 ::= IDENTIFIER [ EQUALS JsonValue ] { pin=1 }
 private recoverVariableDeclarator ::= !(SEMICOLON|RIGHT_BRACE|RIGHT_PAREN|COMMA)
 
@@ -183,8 +183,9 @@ private recoverFormalParameters ::= !(RIGHT_PAREN)
 private recoverFormalParameter ::= !(RIGHT_PAREN|COMMA)
 //private recoverMessageAttributes ::= !(SEMICOLON)
 
-fake TypeProperties ::= SchemaProperty*
+fake TypeProperties ::= SchemaProperty* (Documentation | SchemaProperty)*
 Type ::= (ArrayType | MapType | UnionType | PrimitiveType | ReferenceType) { extends=TypeProperties }
+//Type ::= (Documentation | SchemaProperty)* (ArrayType | MapType | UnionType | PrimitiveType | ReferenceType)
 ArrayType ::= (ArrayType1 | ArrayType2) { extends=Type }
 private ArrayType1 ::= SchemaProperty+ ArrayType2
 private ArrayType2 ::= ARRAY AngleType { pin=1 }
@@ -195,17 +196,19 @@ private MapType2 ::= MAP AngleType { pin=1 }
 UnionType ::= UNION LEFT_BRACE UnionContents RIGHT_BRACE { pin=1 extends=Type } // Unions have no schema properties
 private UnionContents ::= [ Type (COMMA Type)* ] { recoverWhile="recoverUnionContents" }
 private recoverUnionContents ::= !(RIGHT_BRACE)
-PrimitiveType ::= (PrimitiveType1 | PrimitiveType2) { extends=Type }
-private PrimitiveType1 ::= SchemaProperty+ PrimitiveType2
-private PrimitiveType2 ::= BOOLEAN | BYTES | INT | STRING | FLOAT | DOUBLE | LONG | NULL | DATE | TIME_MS | TIMESTAMP_MS| LOCAL_TIMESTAMP_MS | DecimalType | UUID
+PrimitiveType ::= (PrimitiveType1 | PrimitiveType2 | PrimitiveType3) { extends=Type }
+private PrimitiveType1 ::= SchemaProperty (Documentation | SchemaProperty)* PrimitiveType3
+private PrimitiveType2 ::= Documentation (Documentation | SchemaProperty)* PrimitiveType3
+private PrimitiveType3 ::= BOOLEAN | BYTES | INT | STRING | FLOAT | DOUBLE | LONG | NULL | DATE | TIME_MS | TIMESTAMP_MS| LOCAL_TIMESTAMP_MS | DecimalType | UUID
 DecimalType ::= (DecimalType1 | DecimalType2) { extends=PrimitiveType }
 private DecimalType1 ::= SchemaProperty+ DecimalType2
 private DecimalType2 ::= DECIMAL LEFT_PAREN INT_LITERAL COMMA INT_LITERAL RIGHT_PAREN { pin=1 }
-ReferenceType ::= (ReferenceType1 | ReferenceType2) { extends=Type
+ReferenceType ::= (ReferenceType1 | ReferenceType2 | ReferenceType3) { extends=Type
 	methods=[getReference]
 }
-private ReferenceType1 ::= SchemaProperty+ ReferenceType2 { pin=1 }
-private ReferenceType2 ::= IDENTIFIER
+private ReferenceType1 ::= SchemaProperty (Documentation | SchemaProperty)* ReferenceType3 { pin=1 }
+private ReferenceType2 ::= Documentation (Documentation | SchemaProperty)* ReferenceType3 { pin=1 }
+private ReferenceType3 ::= IDENTIFIER
 
 JsonValue ::= (JsonStringLiteral | INT_LITERAL | FLOAT_LITERAL | TRUE | FALSE | NULL | JsonObject | JsonArray) { recoverWhile=recoverJsonValue }
 JsonStringLiteral ::= STRING_LITERAL { extends=JsonValue

@@ -13,13 +13,11 @@ public interface AvroIdlNamedSchemaDeclaration extends AvroIdlNamespacedNameIden
 
   int getTextOffset();
 
-  @NonNls
-  @Nullable String getName();
+  @Nullable @NonNls String getName();
 
   PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException;
 
-  @NonNls
-  @Nullable String getFullName();
+  @Nullable @NonNls String getFullName();
 
   @NotNull ItemPresentation getPresentation();
 

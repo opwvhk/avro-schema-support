@@ -22,36 +22,54 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		myFixture.configureByFiles("AllErrors.avdl");
 		final List<Highlight> highlight = Highlight.fromHighlightInfoList(myFixture.doHighlighting());
 		// Note: because we're cutting out the text offsets, all error texts should be unique enough to be identified.
-		// Luckily, the highlights will be returned in the order they are in the file.
-		assertContainsOrdered(highlight,
+		// Luckily, the method returns highlights in the order they are in the file.
+		assertOrderedEquals(highlight,
+			Highlight.warning("/** Dangling documentation 1 */", "Dangling documentation comment"),
 			Highlight.warning("\"12 monkeys\"", "The namespace is not composed of valid identifiers"),
+			Highlight.warning("/** Dangling documentation 2 */", "Dangling documentation comment"),
 			Highlight.error("Many.Mistakes", "Not a valid identifier: Many.Mistakes"),
+			Highlight.warning("/** Dangling documentation 1 */", "Dangling documentation comment"),
+			Highlight.warning("/** Dangling documentation 2 */", "Dangling documentation comment"),
 			Highlight.error("Status", "Schema '12 monkeys.Status' is already defined"),
+			Highlight.warning("/** Dangling documentation 1 */", "Dangling documentation comment"),
+			Highlight.warning("/** Dangling documentation 2 */", "Dangling documentation comment"),
 			Highlight.error("Status", "Schema '12 monkeys.Status' is already defined"),
+			Highlight.warning("/** Dangling documentation 1 */", "Dangling documentation comment"),
 			Highlight.error("12", "@namespace annotations must contain a string"),
+			Highlight.warning("/** Dangling documentation 2 */", "Dangling documentation comment"),
+			Highlight.warning("/** Dangling documentation 3 */", "Dangling documentation comment"),
 			Highlight.error("foo.bar", "Not a valid identifier: foo.bar"),
+			Highlight.warning("/** Dangling documentation 4 */", "Dangling documentation comment"),
+			Highlight.warning("/** Dangling documentation 5 */", "Dangling documentation comment"),
+			Highlight.warning("/** Dangling documentation 6 */", "Dangling documentation comment"),
+			Highlight.warning("/** Dangling documentation 1 */", "Dangling documentation comment"),
 			Highlight.error("\"even-more-wrong\"", "Not a valid identifier (with namespace): even-more-wrong"),
+			Highlight.warning("/** Dangling documentation 2 */", "Dangling documentation comment"),
 			Highlight.error("also-wrong", "Not a valid identifier: also-wrong"),
 			Highlight.error("C", "Enum default must be one of the enum constants"),
 			Highlight.error("my-data", "Not a valid identifier: my-data"),
 			Highlight.weakWarning("@namespace(\"unused\")", "A @namespace annotation has no effect here"),
 			Highlight.weakWarning("@logicalType(\"character\")", "A @logicalType annotation has no effect here"),
 			Highlight.error("one-letter", "Not a valid identifier: one-letter"),
+			Highlight.warning("/** Dangling documentation 1 */", "Dangling documentation comment"),
 			Highlight.weakWarning("@namespace(\"on.type\")", "A @namespace annotation has no effect here"),
 			Highlight.weakWarning("@aliases([\"for_type\"])", "An @aliases annotation has no effect here"),
+			Highlight.warning("/** Dangling documentation 2 */", "Dangling documentation comment"),
 			Highlight.weakWarning("@order(\"ignore\")", "An @order annotation has no effect here"),
 			Highlight.error("23", "@logicalType annotation must contain a string naming the logical type"),
+			Highlight.warning("/** Dangling documentation 3 */", "Dangling documentation comment"),
 			Highlight.error("34", "@order annotation must contain one of: \"ascending\", \"descending\", \"ignore\""),
 			Highlight.error("@logicalType(\"date\")", "The logical type 'date' requires the underlying type int"),
 			Highlight.error("\"wrong\"", "@order annotation must contain one of: \"ascending\", \"descending\", \"ignore\""),
 			Highlight.error("@logicalType(\"time-millis\")", "The logical type 'time-millis' requires the underlying type int"),
+			Highlight.warning("/** Dangling documentation 1 */", "Dangling documentation comment"),
 			Highlight.error("45", "@aliases annotations must contain an array of identifiers (strings)"),
+			Highlight.warning("/** Dangling documentation 2 */", "Dangling documentation comment"),
 			Highlight.error("@logicalType(\"timestamp-millis\")", "The logical type 'timestamp-millis' requires the underlying type long"),
 			Highlight.error("56", "@aliases elements must be strings"),
 			Highlight.error("\"invites-failure\"", "Not a valid identifier: invites-failure"),
 			Highlight.error("@logicalType(\"local-timestamp-millis\")", "The logical type 'local-timestamp-millis' requires the underlying type long"),
-			Highlight
-				.error("@logicalType(\"decimal\")", "@logicalType(\"decimal\") requires a sibling @precision annotation with a number between 1 and 2^31-1"),
+			Highlight.error("@logicalType(\"decimal\")", "@logicalType(\"decimal\") requires a sibling @precision annotation with a number between 1 and 2^31-1"),
 			Highlight.error("true", "@precision must contain a number between 1 and 2^31-1"),
 			Highlight.error("-1", "@precision must contain a number between 1 and 2^31-1"),
 			Highlight.error("4294967296", "@precision must contain a number between 1 and 2^31-1"),
@@ -59,14 +77,21 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 			Highlight.error("-2", "@scale must contain a non-negative number of at most the value of @precision"),
 			Highlight.error("@logicalType(\"decimal\")", "The logical type 'decimal' requires the underlying type bytes or fixed"),
 			Highlight.error("8", "@scale must contain a non-negative number of at most the value of @precision"),
+			Highlight.error("@logicalType(\"decimal\")", "The logical type 'decimal' requires the underlying type bytes or fixed"),
 			Highlight.error("40", "hashes.MD5, a fixed(16), cannot store 40 digits (max 38)"),
+			Highlight.warning("/** Dangling documentation 1 */", "Dangling documentation comment"),
 			Highlight.error("67", "@aliases annotations must contain an array of identifiers (strings)"),
+			Highlight.warning("/** Dangling documentation 2 */", "Dangling documentation comment"),
 			Highlight.error("78", "@aliases elements must be strings"),
 			Highlight.error("\"her-failure\"", "Not a valid identifier (with namespace): her-failure"),
+			Highlight.warning("/** Dangling documentation 3 */", "Dangling documentation comment"),
 			Highlight.error("his-failure", "Not a valid identifier: his-failure"),
+			Highlight.warning("/** Dangling documentation 1 */", "Dangling documentation comment"),
 			Highlight.error("Whatever", "Unknown schema: Whatever"),
 			Highlight.error("do-stuff", "Not a valid identifier: do-stuff"),
+			Highlight.warning("/** Dangling documentation 1 */", "Dangling documentation comment"),
 			Highlight.error("Something", "Unknown schema: Something"),
+			Highlight.warning("/** Dangling documentation 2 */", "Dangling documentation comment"),
 			Highlight.error("SomeError", "Unknown schema: SomeError"),
 			Highlight.error("hashes.MD5", "Not an error: hashes.MD5"),
 			Highlight.error("oneway", "Oneway messages must have a void or null return type")
@@ -77,7 +102,7 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		myFixture.configureByFiles("ImportsAndReferences.avdl", "Employee.avdl", "ContractType.avsc", "HelloWorld.avpr");
 		final List<Highlight> highlight = Highlight.fromHighlightInfoList(myFixture.doHighlighting());
 		// Note: because we're cutting out the text offsets, all error texts should be unique enough to be identified.
-		// Luckily, the highlights will be returned in the order they are in the file.
+		// Luckily, the method returns highlights in the order they are in the file.
 		assertContainsOrdered(highlight,
 			Highlight.error("NotAnError", "Not an error: NotAnError")
 		);
@@ -85,7 +110,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 
 	public void testInspectionForDuplicateAnnotations() {
 		myFixture.configureByFiles("DuplicateAnnotations.avdl");
-		//noinspection unchecked
 		myFixture.enableInspections(AvroIdlDuplicateAnnotationsInspectionTool.class);
 		final List<HighlightInfo> highlightInfoList = myFixture.doHighlighting();
 		final List<Highlight> highlight = Highlight.fromHighlightInfoList(highlightInfoList);
@@ -97,7 +121,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 	}
 
 	public void testQuickFixForDuplicateAnnotations() {
-		//noinspection unchecked
 		myFixture.enableInspections(AvroIdlDuplicateAnnotationsInspectionTool.class);
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("DuplicateAnnotations.avdl");
 		assertEquals(3, quickFixes.size());
