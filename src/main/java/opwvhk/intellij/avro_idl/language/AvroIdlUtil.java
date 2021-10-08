@@ -79,13 +79,13 @@ public class AvroIdlUtil {
 
 	@NotNull
 	public static Stream<LookupElement> findAllSchemaNamesAvailableInProtocol(@NotNull AvroIdlProtocolDeclaration protocol, boolean errorsOnly,
-																			  @NotNull String currentNamespace) {
+	                                                                          @NotNull String currentNamespace) {
 		return findAllSchemaNamesAvailableInProtocol(protocol, errorsOnly, currentNamespace, new Schema.Parser());
 	}
 
 	@NotNull
 	private static Stream<LookupElement> findAllSchemaNamesAvailableInProtocol(@NotNull AvroIdlProtocolDeclaration protocol, boolean errorsOnly,
-																			   @NotNull String currentNamespace, @NotNull Schema.Parser avroSchemaParser) {
+	                                                                           @NotNull String currentNamespace, @NotNull Schema.Parser avroSchemaParser) {
 		final Module module = ModuleUtil.findModuleForPsiElement(protocol);
 		return Stream.ofNullable(protocol.getProtocolBody())
 			.flatMap(body -> Stream.concat(
@@ -94,13 +94,13 @@ public class AvroIdlUtil {
 					.filter(namedSchema -> !errorsOnly || namedSchema.isErrorType())
 					.map(namedSchema -> lookupElement(namedSchema, currentNamespace)),
 				body.getImportDeclarationList().stream().flatMap(
-						importDeclaration -> findAllSchemaNamesAvailableFromImport(module, importDeclaration, errorsOnly, currentNamespace, avroSchemaParser))
+					importDeclaration -> findAllSchemaNamesAvailableFromImport(module, importDeclaration, errorsOnly, currentNamespace, avroSchemaParser))
 			));
 	}
 
 	@NotNull
 	private static Stream<LookupElement> findAllSchemaNamesAvailableFromImport(Module module, AvroIdlImportDeclaration importDeclaration, boolean errorsOnly,
-																			   @NotNull String currentNamespace, @NotNull Schema.Parser avroSchemaParser) {
+	                                                                           @NotNull String currentNamespace, @NotNull Schema.Parser avroSchemaParser) {
 		AvroIdlImportType importType = importDeclaration.getImportType();
 		final AvroIdlJsonStringLiteral importedFileReferenceElement = importDeclaration.getJsonStringLiteral();
 		final String importedFileReference = getJsonString(importedFileReferenceElement);
@@ -108,7 +108,11 @@ public class AvroIdlUtil {
 			return Stream.empty();
 		}
 
-		VirtualFile referencedFile = importDeclaration.getContainingFile().getVirtualFile().getParent().findFileByRelativePath(importedFileReference);
+		VirtualFile referencedFile = java.util.Optional.of(importDeclaration)
+			.map(PsiElement::getContainingFile)
+			.map(PsiFile::getVirtualFile)
+			.map(VirtualFile::getParent)
+			.map(vFile -> vFile.findFileByRelativePath(importedFileReference)).orElse(null);
 		if (referencedFile == null) {
 			if (module == null) {
 				return Stream.empty();
@@ -152,7 +156,7 @@ public class AvroIdlUtil {
 
 	@NotNull
 	private static LookupElement createLookupElement(@NotNull String namespace, AvroIdlJsonStringLiteral importedFileReferenceElement, PsiManager psiManager,
-													 VirtualFile importedFile, Schema schema) {
+	                                                 VirtualFile importedFile, Schema schema) {
 		final PsiFile psiProtocolFile = psiManager.findFile(importedFile);
 		if (psiProtocolFile instanceof JsonFile) {
 			final PsiElement[] elements = PsiTreeUtil.collectElements(psiProtocolFile,
@@ -213,7 +217,7 @@ public class AvroIdlUtil {
 
 	@NotNull
 	private static LookupElement lookupElement(@NotNull PsiElement psiElement, @NotNull String schemaName, @NotNull String schemaFullName,
-											   @NotNull String namespace, @NotNull String currentNamespace) {
+	                                           @NotNull String namespace, @NotNull String currentNamespace) {
 		if (namespace.isEmpty()) {
 			return LookupElementBuilder.create(psiElement, schemaName);
 		} else if (namespace.equals(currentNamespace)) {

@@ -35,6 +35,7 @@ tasks {
 			"""
 			<p>Version 203.1.1:</p>
 			<ul>
+			<li>Fixed NPE in import resolution (issue #14)</li>
 			<li>Adjusted IDL parsing: improved detection of annotations for messages</li>
 			<li>Adjusted IDL parsing: allows for more dangling doc comments as allowed by the official parser</li>
 			<li>
