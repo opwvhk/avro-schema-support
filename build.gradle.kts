@@ -4,11 +4,11 @@ import java.util.*
 plugins {
 	`java-library`
 	id("java")
-	id("org.jetbrains.intellij") version "1.1.4"
+	id("org.jetbrains.intellij") version "1.2.0"
 }
 
 group = "net.sf.opk"
-version = "203.1.0"
+version = "203.1.1"
 
 repositories {
 	mavenCentral()
@@ -30,9 +30,15 @@ tasks {
 	patchPluginXml {
 		version.set(project.version.toString())
 		sinceBuild.set("203")
-		untilBuild.set("212.*")
+		untilBuild.set("213.*")
 		changeNotes.set(
 			"""
+			<p>Version 203.1.1:</p>
+			<ul>
+			<li>Adjusted IDL parsing: improved detection of annotations for messages</li>
+			<li>Adjusted IDL parsing: allows for more dangling doc comments as allowed by the official parser</li>
+			<li>
+			</ul>
 			<p>Version 203.1.0:</p>
 			<ul>
 			<li>Adjusted IDL parsing to allow dangling doc comments</li>
@@ -49,7 +55,7 @@ tasks {
 			<p>Version 203.0.1:</p>
 			<ul>
 			<li>Fixed NPEs upon file traversal for plugin actions (issue #9, #11).</li>
-			<li>Renamed defined languages to prevant name clashes.</li>
+			<li>Renamed defined languages to prevent name clashes.</li>
 			</ul>
 			<p>Version 203.0.0:</p>
 			<ul>
@@ -86,10 +92,11 @@ tasks {
 
 	runPluginVerifier {
 		fun forIdes(vararg ides: String): (String) -> List<String> { return { version -> ides.map { "$it-$version" } } }
-		// IntelliJ Community, IntelliJ Ultimate, PyCharm Community &, PYcharm professional editions with versions ranging from Fall 2020 to the latest release
-		val intelijVersions = listOf("2020.3.2", "2021.1", "2021.1.2", "2021.2").flatMap(forIdes("IC", "IU"))
+		// IntelliJ Community (IC), IntelliJ Ultimate (IU), PyCharm Community (PCC) &, PyCharm professional (PY) editions
+		// with versions ranging from Fall 2020 to the latest release
+		val intellijVersions = listOf("2020.3.2", "2021.1", "2021.1.2", "2021.2").flatMap(forIdes("IC", "IU"))
 		val pycharmVersions = listOf("2020.3.3", "2021.1", "2021.1.2", "2021.2").flatMap(forIdes("PCC", "PY"))
-		ideVersions.set(intelijVersions + pycharmVersions)
+		ideVersions.set(intellijVersions + pycharmVersions)
 		failureLevel.set(EnumSet.complementOf(EnumSet.of(FailureLevel.DEPRECATED_API_USAGES)))
 	}
 }

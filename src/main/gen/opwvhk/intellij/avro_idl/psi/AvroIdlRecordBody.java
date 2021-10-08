@@ -8,6 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface AvroIdlRecordBody extends PsiElement {
 
   @NotNull
+  List<AvroIdlDocumentation> getDocumentationList();
+
+  @NotNull
   List<AvroIdlFieldDeclaration> getFieldDeclarationList();
 
 }

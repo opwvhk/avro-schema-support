@@ -17,6 +17,9 @@ public interface AvroIdlMessageDeclaration extends AvroIdlNameIdentifierOwner {
   @Nullable
   AvroIdlMessageAttributes getMessageAttributes();
 
+  @NotNull
+  List<AvroIdlSchemaProperty> getSchemaPropertyList();
+
   @Nullable
   AvroIdlType getType();
 

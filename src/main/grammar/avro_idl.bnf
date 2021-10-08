@@ -112,9 +112,9 @@ NamedSchemaDeclaration ::= ( FixedDeclaration | EnumDeclaration | RecordDeclarat
 
 // Always start all options with a required element to ensure the declarations are recognized correctly, but don't pin to prevent unintended paths.
 FixedDeclaration ::= FixedDeclaration1 | FixedDeclaration2 | FixedDeclaration3 { extends=NamedSchemaDeclaration }
-private FixedDeclaration1 ::= Documentation (SchemaProperty|Documentation)* FixedInnerDeclaration SEMICOLON
-private FixedDeclaration2 ::= SchemaProperty (SchemaProperty|Documentation)* FixedInnerDeclaration SEMICOLON
-private FixedDeclaration3 ::= FixedInnerDeclaration SEMICOLON
+private FixedDeclaration1 ::= Documentation (SchemaProperty|Documentation)* FixedInnerDeclaration SEMICOLON { pin = 3 }
+private FixedDeclaration2 ::= SchemaProperty (SchemaProperty|Documentation)* FixedInnerDeclaration SEMICOLON { pin = 3 }
+private FixedDeclaration3 ::= FixedInnerDeclaration SEMICOLON { pin = 1 }
 private FixedInnerDeclaration ::= FIXED Documentation* IDENTIFIER Documentation* LEFT_PAREN Documentation* INT_LITERAL Documentation* RIGHT_PAREN Documentation* { pin=1 recoverWhile="recoverFixedInnerDeclaration" }
 private recoverFixedInnerDeclaration ::= !(SEMICOLON|FIXED|ENUM|RECORD|ERROR|AT)
 
@@ -123,9 +123,9 @@ EnumDeclaration ::= EnumDeclaration1 | EnumDeclaration2 | EnumDeclaration3 { ext
 private EnumDeclaration1 ::= Documentation (SchemaProperty|Documentation)* EnumInnerDeclaration
 private EnumDeclaration2 ::= SchemaProperty (SchemaProperty|Documentation)* EnumInnerDeclaration
 private EnumDeclaration3 ::= EnumInnerDeclaration
-private EnumInnerDeclaration ::= ENUM IDENTIFIER LEFT_BRACE EnumBody RIGHT_BRACE [ EnumDefaultValueAssignment ] { pin=1 }
-EnumBody ::= [ EnumConstant (COMMA EnumConstant)* ] { recoverWhile="recoverEnumBody" }
-private EnumDefaultValueAssignment ::= EQUALS EnumDefault SEMICOLON { pin=1 }
+private EnumInnerDeclaration ::= ENUM Documentation* IDENTIFIER Documentation* LEFT_BRACE [ EnumBody] RIGHT_BRACE [ EnumDefaultValueAssignment ] { pin=1 }
+EnumBody ::= Documentation* EnumConstant Documentation* (COMMA Documentation* EnumConstant Documentation*)* { recoverWhile="recoverEnumBody" }
+private EnumDefaultValueAssignment ::= Documentation* EQUALS Documentation* EnumDefault Documentation* SEMICOLON { pin=2 }
 EnumConstant ::= IDENTIFIER {
 	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
 	methods=[getNameIdentifier getTextOffset getName setName getPresentation]
@@ -140,14 +140,14 @@ RecordDeclaration ::= RecordDeclaration1 | RecordDeclaration2 | RecordDeclaratio
 private RecordDeclaration1 ::= Documentation (SchemaProperty|Documentation)* RecordInnerDeclaration
 private RecordDeclaration2 ::= SchemaProperty (SchemaProperty|Documentation)* RecordInnerDeclaration
 private RecordDeclaration3 ::= RecordInnerDeclaration
-private RecordInnerDeclaration ::= RecordType IDENTIFIER LEFT_BRACE RecordBody RIGHT_BRACE { pin=1 }
+private RecordInnerDeclaration ::= RecordType Documentation* IDENTIFIER Documentation* LEFT_BRACE RecordBody RIGHT_BRACE { pin=1 }
 private RecordType ::= RECORD | ERROR
-RecordBody ::= FieldDeclaration*
+RecordBody ::= FieldDeclaration* Documentation*
 FieldDeclaration ::= FieldDeclaration1 | FieldDeclaration2 { //recoverWhile="recoverFieldDeclaration"
 //	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
 //	methods=[getNameIdentifier getTextOffset getName setName]
 }
-private FieldDeclaration1 ::= Documentation+ Type VariableDeclarator ( COMMA VariableDeclarator )* SEMICOLON { pin=1 }
+private FieldDeclaration1 ::= Documentation+ Type VariableDeclarator ( COMMA VariableDeclarator )* SEMICOLON { pin=2 }
 private FieldDeclaration2 ::= Type VariableDeclarator ( COMMA VariableDeclarator )* SEMICOLON { pin=1 }
 //private recoverFieldDeclaration ::= !(RIGHT_BRACE)
 
@@ -156,25 +156,26 @@ VariableDeclarator ::= VariableDeclarator1 | VariableDeclarator2 | VariableDecla
 	implements="opwvhk.intellij.avro_idl.psi.AvroIdlAnnotatedNameIdentifierOwner"
 	methods=[getNameIdentifier getTextOffset getName setName]
 }
-private VariableDeclarator1 ::= Documentation (SchemaProperty|Documentation)* IDENTIFIER [ EQUALS JsonValue ] { pin=1 }
-private VariableDeclarator2 ::= SchemaProperty (SchemaProperty|Documentation)* IDENTIFIER [ EQUALS JsonValue ] { pin=1 }
-private VariableDeclarator3 ::= IDENTIFIER [ EQUALS JsonValue ] { pin=1 }
+private VariableDeclarator1 ::= Documentation (SchemaProperty|Documentation)* IDENTIFIER Documentation* [ EQUALS Documentation* JsonValue ] Documentation* { pin=1 }
+private VariableDeclarator2 ::= SchemaProperty (SchemaProperty|Documentation)* IDENTIFIER Documentation* [ EQUALS Documentation* JsonValue ] Documentation* { pin=1 }
+private VariableDeclarator3 ::= IDENTIFIER Documentation* [ EQUALS Documentation* JsonValue ] Documentation* { pin=1 }
 private recoverVariableDeclarator ::= !(SEMICOLON|RIGHT_BRACE|RIGHT_PAREN|COMMA)
 
-MessageDeclaration ::= MessageDeclaration1 | MessageDeclaration2 {
+MessageDeclaration ::= MessageDeclaration1 | MessageDeclaration2 | MessageDeclaration3 {
 	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
 	methods=[getNameIdentifier getTextOffset getName setName]
 }
-private MessageDeclaration1 ::= Documentation+ ResultType MessageSignature SEMICOLON { pin=1 }
-private MessageDeclaration2 ::= ResultType Documentation* MessageSignature SEMICOLON { pin=1 }
+private MessageDeclaration1 ::= Documentation (SchemaProperty|Documentation)* ResultType Documentation* MessageSignature SEMICOLON { pin=1 }
+private MessageDeclaration2 ::= SchemaProperty (SchemaProperty|Documentation)* ResultType Documentation* MessageSignature SEMICOLON { pin=1 }
+private MessageDeclaration3 ::= ResultType Documentation* MessageSignature SEMICOLON { pin=1 }
 ResultType ::= VOID | Type { extends=Type }
-private MessageSignature ::= IDENTIFIER LEFT_PAREN FormalParameters RIGHT_PAREN [ MessageAttributes ] { recoverWhile=recoverMessageSignature }
+private MessageSignature ::= IDENTIFIER Documentation* LEFT_PAREN FormalParameters RIGHT_PAREN [ MessageAttributes ] { recoverWhile=recoverMessageSignature }
 private FormalParameters ::= [ FormalParameter (COMMA FormalParameter)* ] { recoverWhile="recoverFormalParameters" }
 FormalParameter ::= FormalParameter1 | FormalParameter2 { recoverWhile="recoverFormalParameter" }
 private FormalParameter1 ::= Type VariableDeclarator { pin=1 }
 private FormalParameter2 ::= Documentation+ Type VariableDeclarator { pin=1 }
-MessageAttributes ::= ONEWAY | MessageAttributeThrowsList
-private MessageAttributeThrowsList ::= THROWS MessageAttributeThrows (COMMA MessageAttributeThrows)* { pin=1 }//recoverWhile=recoverMessageAttributes }
+MessageAttributes ::= Documentation* ONEWAY Documentation* | MessageAttributeThrowsList
+private MessageAttributeThrowsList ::= Documentation* THROWS Documentation* MessageAttributeThrows Documentation* (COMMA Documentation* MessageAttributeThrows Documentation* )* { pin=2 }//recoverWhile=recoverMessageAttributes }
 MessageAttributeThrows ::= IDENTIFIER {
 	methods=[getReference]
 }
@@ -203,12 +204,11 @@ private PrimitiveType3 ::= BOOLEAN | BYTES | INT | STRING | FLOAT | DOUBLE | LON
 DecimalType ::= (DecimalType1 | DecimalType2) { extends=PrimitiveType }
 private DecimalType1 ::= SchemaProperty+ DecimalType2
 private DecimalType2 ::= DECIMAL LEFT_PAREN INT_LITERAL COMMA INT_LITERAL RIGHT_PAREN { pin=1 }
-ReferenceType ::= (ReferenceType1 | ReferenceType2 | ReferenceType3) { extends=Type
+ReferenceType ::= (ReferenceType1 | ReferenceType2) { extends=Type
 	methods=[getReference]
 }
-private ReferenceType1 ::= SchemaProperty (Documentation | SchemaProperty)* ReferenceType3 { pin=1 }
-private ReferenceType2 ::= Documentation (Documentation | SchemaProperty)* ReferenceType3 { pin=1 }
-private ReferenceType3 ::= IDENTIFIER
+private ReferenceType1 ::= Documentation* SchemaProperty (Documentation | SchemaProperty)* IDENTIFIER { pin=2 }
+private ReferenceType2 ::= (Documentation | SchemaProperty)* IDENTIFIER { pin=2 }
 
 JsonValue ::= (JsonStringLiteral | INT_LITERAL | FLOAT_LITERAL | TRUE | FALSE | NULL | JsonObject | JsonArray) { recoverWhile=recoverJsonValue }
 JsonStringLiteral ::= STRING_LITERAL { extends=JsonValue

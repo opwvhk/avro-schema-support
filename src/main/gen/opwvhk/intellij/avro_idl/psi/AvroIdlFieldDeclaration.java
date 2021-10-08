@@ -10,7 +10,7 @@ public interface AvroIdlFieldDeclaration extends PsiElement {
   @NotNull
   List<AvroIdlDocumentation> getDocumentationList();
 
-  @Nullable
+  @NotNull
   AvroIdlType getType();
 
   @NotNull

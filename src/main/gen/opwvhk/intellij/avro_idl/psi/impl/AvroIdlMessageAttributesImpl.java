@@ -29,6 +29,12 @@ public class AvroIdlMessageAttributesImpl extends ASTWrapperPsiElement implement
 
   @Override
   @NotNull
+  public List<AvroIdlDocumentation> getDocumentationList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlDocumentation.class);
+  }
+
+  @Override
+  @NotNull
   public List<AvroIdlMessageAttributeThrows> getMessageAttributeThrowsList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlMessageAttributeThrows.class);
   }

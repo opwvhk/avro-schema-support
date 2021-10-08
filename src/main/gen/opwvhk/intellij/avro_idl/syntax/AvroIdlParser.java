@@ -185,46 +185,85 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // [ EnumConstant (COMMA EnumConstant)* ]
+  // Documentation* EnumConstant Documentation* (COMMA Documentation* EnumConstant Documentation*)*
   public static boolean EnumBody(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "EnumBody")) return false;
-    Marker m = enter_section_(b, l, _NONE_, ENUM_BODY, "<enum body>");
-    EnumBody_0(b, l + 1);
-    exit_section_(b, l, m, true, false, AvroIdlParser::recoverEnumBody);
-    return true;
-  }
-
-  // EnumConstant (COMMA EnumConstant)*
-  private static boolean EnumBody_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "EnumBody_0")) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = EnumConstant(b, l + 1);
-    r = r && EnumBody_0_1(b, l + 1);
-    exit_section_(b, m, null, r);
+    Marker m = enter_section_(b, l, _NONE_, ENUM_BODY, "<enum body>");
+    r = EnumBody_0(b, l + 1);
+    r = r && EnumConstant(b, l + 1);
+    r = r && EnumBody_2(b, l + 1);
+    r = r && EnumBody_3(b, l + 1);
+    exit_section_(b, l, m, r, false, AvroIdlParser::recoverEnumBody);
     return r;
   }
 
-  // (COMMA EnumConstant)*
-  private static boolean EnumBody_0_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "EnumBody_0_1")) return false;
+  // Documentation*
+  private static boolean EnumBody_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EnumBody_0")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!EnumBody_0_1_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "EnumBody_0_1", c)) break;
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "EnumBody_0", c)) break;
     }
     return true;
   }
 
-  // COMMA EnumConstant
-  private static boolean EnumBody_0_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "EnumBody_0_1_0")) return false;
+  // Documentation*
+  private static boolean EnumBody_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EnumBody_2")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "EnumBody_2", c)) break;
+    }
+    return true;
+  }
+
+  // (COMMA Documentation* EnumConstant Documentation*)*
+  private static boolean EnumBody_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EnumBody_3")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!EnumBody_3_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "EnumBody_3", c)) break;
+    }
+    return true;
+  }
+
+  // COMMA Documentation* EnumConstant Documentation*
+  private static boolean EnumBody_3_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EnumBody_3_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, COMMA);
+    r = r && EnumBody_3_0_1(b, l + 1);
     r = r && EnumConstant(b, l + 1);
+    r = r && EnumBody_3_0_3(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
+  }
+
+  // Documentation*
+  private static boolean EnumBody_3_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EnumBody_3_0_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "EnumBody_3_0_1", c)) break;
+    }
+    return true;
+  }
+
+  // Documentation*
+  private static boolean EnumBody_3_0_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EnumBody_3_0_3")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "EnumBody_3_0_3", c)) break;
+    }
+    return true;
   }
 
   /* ********************************************************** */
@@ -339,39 +378,108 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // EQUALS EnumDefault SEMICOLON
+  // Documentation* EQUALS Documentation* EnumDefault Documentation* SEMICOLON
   static boolean EnumDefaultValueAssignment(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "EnumDefaultValueAssignment")) return false;
-    if (!nextTokenIs(b, EQUALS)) return false;
+    if (!nextTokenIs(b, "", DOC_COMMENT, EQUALS)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
-    r = consumeToken(b, EQUALS);
-    p = r; // pin = 1
-    r = r && report_error_(b, EnumDefault(b, l + 1));
+    r = EnumDefaultValueAssignment_0(b, l + 1);
+    r = r && consumeToken(b, EQUALS);
+    p = r; // pin = 2
+    r = r && report_error_(b, EnumDefaultValueAssignment_2(b, l + 1));
+    r = p && report_error_(b, EnumDefault(b, l + 1)) && r;
+    r = p && report_error_(b, EnumDefaultValueAssignment_4(b, l + 1)) && r;
     r = p && consumeToken(b, SEMICOLON) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
+  // Documentation*
+  private static boolean EnumDefaultValueAssignment_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EnumDefaultValueAssignment_0")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "EnumDefaultValueAssignment_0", c)) break;
+    }
+    return true;
+  }
+
+  // Documentation*
+  private static boolean EnumDefaultValueAssignment_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EnumDefaultValueAssignment_2")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "EnumDefaultValueAssignment_2", c)) break;
+    }
+    return true;
+  }
+
+  // Documentation*
+  private static boolean EnumDefaultValueAssignment_4(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EnumDefaultValueAssignment_4")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "EnumDefaultValueAssignment_4", c)) break;
+    }
+    return true;
+  }
+
   /* ********************************************************** */
-  // ENUM IDENTIFIER LEFT_BRACE EnumBody RIGHT_BRACE [ EnumDefaultValueAssignment ]
+  // ENUM Documentation* IDENTIFIER Documentation* LEFT_BRACE [ EnumBody] RIGHT_BRACE [ EnumDefaultValueAssignment ]
   static boolean EnumInnerDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "EnumInnerDeclaration")) return false;
     if (!nextTokenIs(b, ENUM)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
-    r = consumeTokens(b, 1, ENUM, IDENTIFIER, LEFT_BRACE);
+    r = consumeToken(b, ENUM);
     p = r; // pin = 1
-    r = r && report_error_(b, EnumBody(b, l + 1));
+    r = r && report_error_(b, EnumInnerDeclaration_1(b, l + 1));
+    r = p && report_error_(b, consumeToken(b, IDENTIFIER)) && r;
+    r = p && report_error_(b, EnumInnerDeclaration_3(b, l + 1)) && r;
+    r = p && report_error_(b, consumeToken(b, LEFT_BRACE)) && r;
+    r = p && report_error_(b, EnumInnerDeclaration_5(b, l + 1)) && r;
     r = p && report_error_(b, consumeToken(b, RIGHT_BRACE)) && r;
-    r = p && EnumInnerDeclaration_5(b, l + 1) && r;
+    r = p && EnumInnerDeclaration_7(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
-  // [ EnumDefaultValueAssignment ]
+  // Documentation*
+  private static boolean EnumInnerDeclaration_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EnumInnerDeclaration_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "EnumInnerDeclaration_1", c)) break;
+    }
+    return true;
+  }
+
+  // Documentation*
+  private static boolean EnumInnerDeclaration_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EnumInnerDeclaration_3")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "EnumInnerDeclaration_3", c)) break;
+    }
+    return true;
+  }
+
+  // [ EnumBody]
   private static boolean EnumInnerDeclaration_5(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "EnumInnerDeclaration_5")) return false;
+    EnumBody(b, l + 1);
+    return true;
+  }
+
+  // [ EnumDefaultValueAssignment ]
+  private static boolean EnumInnerDeclaration_7(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EnumInnerDeclaration_7")) return false;
     EnumDefaultValueAssignment(b, l + 1);
     return true;
   }
@@ -421,9 +529,9 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
     r = FieldDeclaration1_0(b, l + 1);
-    p = r; // pin = 1
-    r = r && report_error_(b, Type(b, l + 1));
-    r = p && report_error_(b, VariableDeclarator(b, l + 1)) && r;
+    r = r && Type(b, l + 1);
+    p = r; // pin = 2
+    r = r && report_error_(b, VariableDeclarator(b, l + 1));
     r = p && report_error_(b, FieldDeclaration1_3(b, l + 1)) && r;
     r = p && consumeToken(b, SEMICOLON) && r;
     exit_section_(b, l, m, r, p, null);
@@ -522,14 +630,15 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   static boolean FixedDeclaration1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FixedDeclaration1")) return false;
     if (!nextTokenIs(b, DOC_COMMENT)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
     r = Documentation(b, l + 1);
     r = r && FixedDeclaration1_1(b, l + 1);
     r = r && FixedInnerDeclaration(b, l + 1);
+    p = r; // pin = 3
     r = r && consumeToken(b, SEMICOLON);
-    exit_section_(b, m, null, r);
-    return r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // (SchemaProperty|Documentation)*
@@ -557,14 +666,15 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   static boolean FixedDeclaration2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FixedDeclaration2")) return false;
     if (!nextTokenIs(b, AT)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
     r = SchemaProperty(b, l + 1);
     r = r && FixedDeclaration2_1(b, l + 1);
     r = r && FixedInnerDeclaration(b, l + 1);
+    p = r; // pin = 3
     r = r && consumeToken(b, SEMICOLON);
-    exit_section_(b, m, null, r);
-    return r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // (SchemaProperty|Documentation)*
@@ -592,12 +702,13 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   static boolean FixedDeclaration3(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FixedDeclaration3")) return false;
     if (!nextTokenIs(b, FIXED)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
     r = FixedInnerDeclaration(b, l + 1);
+    p = r; // pin = 1
     r = r && consumeToken(b, SEMICOLON);
-    exit_section_(b, m, null, r);
-    return r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   /* ********************************************************** */
@@ -1038,107 +1149,268 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // THROWS MessageAttributeThrows (COMMA MessageAttributeThrows)*
+  // Documentation* THROWS Documentation* MessageAttributeThrows Documentation* (COMMA Documentation* MessageAttributeThrows Documentation* )*
   static boolean MessageAttributeThrowsList(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "MessageAttributeThrowsList")) return false;
-    if (!nextTokenIs(b, THROWS)) return false;
+    if (!nextTokenIs(b, "", DOC_COMMENT, THROWS)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
-    r = consumeToken(b, THROWS);
-    p = r; // pin = 1
-    r = r && report_error_(b, MessageAttributeThrows(b, l + 1));
-    r = p && MessageAttributeThrowsList_2(b, l + 1) && r;
+    r = MessageAttributeThrowsList_0(b, l + 1);
+    r = r && consumeToken(b, THROWS);
+    p = r; // pin = 2
+    r = r && report_error_(b, MessageAttributeThrowsList_2(b, l + 1));
+    r = p && report_error_(b, MessageAttributeThrows(b, l + 1)) && r;
+    r = p && report_error_(b, MessageAttributeThrowsList_4(b, l + 1)) && r;
+    r = p && MessageAttributeThrowsList_5(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
-  // (COMMA MessageAttributeThrows)*
+  // Documentation*
+  private static boolean MessageAttributeThrowsList_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MessageAttributeThrowsList_0")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "MessageAttributeThrowsList_0", c)) break;
+    }
+    return true;
+  }
+
+  // Documentation*
   private static boolean MessageAttributeThrowsList_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "MessageAttributeThrowsList_2")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!MessageAttributeThrowsList_2_0(b, l + 1)) break;
+      if (!Documentation(b, l + 1)) break;
       if (!empty_element_parsed_guard_(b, "MessageAttributeThrowsList_2", c)) break;
     }
     return true;
   }
 
-  // COMMA MessageAttributeThrows
-  private static boolean MessageAttributeThrowsList_2_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "MessageAttributeThrowsList_2_0")) return false;
+  // Documentation*
+  private static boolean MessageAttributeThrowsList_4(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MessageAttributeThrowsList_4")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "MessageAttributeThrowsList_4", c)) break;
+    }
+    return true;
+  }
+
+  // (COMMA Documentation* MessageAttributeThrows Documentation* )*
+  private static boolean MessageAttributeThrowsList_5(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MessageAttributeThrowsList_5")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!MessageAttributeThrowsList_5_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "MessageAttributeThrowsList_5", c)) break;
+    }
+    return true;
+  }
+
+  // COMMA Documentation* MessageAttributeThrows Documentation*
+  private static boolean MessageAttributeThrowsList_5_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MessageAttributeThrowsList_5_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, COMMA);
+    r = r && MessageAttributeThrowsList_5_0_1(b, l + 1);
     r = r && MessageAttributeThrows(b, l + 1);
+    r = r && MessageAttributeThrowsList_5_0_3(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
+  // Documentation*
+  private static boolean MessageAttributeThrowsList_5_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MessageAttributeThrowsList_5_0_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "MessageAttributeThrowsList_5_0_1", c)) break;
+    }
+    return true;
+  }
+
+  // Documentation*
+  private static boolean MessageAttributeThrowsList_5_0_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MessageAttributeThrowsList_5_0_3")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "MessageAttributeThrowsList_5_0_3", c)) break;
+    }
+    return true;
+  }
+
   /* ********************************************************** */
-  // ONEWAY | MessageAttributeThrowsList
+  // Documentation* ONEWAY Documentation* | MessageAttributeThrowsList
   public static boolean MessageAttributes(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "MessageAttributes")) return false;
-    if (!nextTokenIs(b, "<message attributes>", ONEWAY, THROWS)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, MESSAGE_ATTRIBUTES, "<message attributes>");
-    r = consumeToken(b, ONEWAY);
+    r = MessageAttributes_0(b, l + 1);
     if (!r) r = MessageAttributeThrowsList(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
+  // Documentation* ONEWAY Documentation*
+  private static boolean MessageAttributes_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MessageAttributes_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = MessageAttributes_0_0(b, l + 1);
+    r = r && consumeToken(b, ONEWAY);
+    r = r && MessageAttributes_0_2(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // Documentation*
+  private static boolean MessageAttributes_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MessageAttributes_0_0")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "MessageAttributes_0_0", c)) break;
+    }
+    return true;
+  }
+
+  // Documentation*
+  private static boolean MessageAttributes_0_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MessageAttributes_0_2")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "MessageAttributes_0_2", c)) break;
+    }
+    return true;
+  }
+
   /* ********************************************************** */
-  // MessageDeclaration1 | MessageDeclaration2
+  // MessageDeclaration1 | MessageDeclaration2 | MessageDeclaration3
   public static boolean MessageDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "MessageDeclaration")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, MESSAGE_DECLARATION, "<message declaration>");
     r = MessageDeclaration1(b, l + 1);
     if (!r) r = MessageDeclaration2(b, l + 1);
+    if (!r) r = MessageDeclaration3(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
   /* ********************************************************** */
-  // Documentation+ ResultType MessageSignature SEMICOLON
+  // Documentation (SchemaProperty|Documentation)* ResultType Documentation* MessageSignature SEMICOLON
   static boolean MessageDeclaration1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "MessageDeclaration1")) return false;
     if (!nextTokenIs(b, DOC_COMMENT)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
-    r = MessageDeclaration1_0(b, l + 1);
+    r = Documentation(b, l + 1);
     p = r; // pin = 1
-    r = r && report_error_(b, ResultType(b, l + 1));
+    r = r && report_error_(b, MessageDeclaration1_1(b, l + 1));
+    r = p && report_error_(b, ResultType(b, l + 1)) && r;
+    r = p && report_error_(b, MessageDeclaration1_3(b, l + 1)) && r;
     r = p && report_error_(b, MessageSignature(b, l + 1)) && r;
     r = p && consumeToken(b, SEMICOLON) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
-  // Documentation+
-  private static boolean MessageDeclaration1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "MessageDeclaration1_0")) return false;
+  // (SchemaProperty|Documentation)*
+  private static boolean MessageDeclaration1_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MessageDeclaration1_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!MessageDeclaration1_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "MessageDeclaration1_1", c)) break;
+    }
+    return true;
+  }
+
+  // SchemaProperty|Documentation
+  private static boolean MessageDeclaration1_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MessageDeclaration1_1_0")) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = Documentation(b, l + 1);
-    while (r) {
+    r = SchemaProperty(b, l + 1);
+    if (!r) r = Documentation(b, l + 1);
+    return r;
+  }
+
+  // Documentation*
+  private static boolean MessageDeclaration1_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MessageDeclaration1_3")) return false;
+    while (true) {
       int c = current_position_(b);
       if (!Documentation(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "MessageDeclaration1_0", c)) break;
+      if (!empty_element_parsed_guard_(b, "MessageDeclaration1_3", c)) break;
     }
-    exit_section_(b, m, null, r);
+    return true;
+  }
+
+  /* ********************************************************** */
+  // SchemaProperty (SchemaProperty|Documentation)* ResultType Documentation* MessageSignature SEMICOLON
+  static boolean MessageDeclaration2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MessageDeclaration2")) return false;
+    if (!nextTokenIs(b, AT)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = SchemaProperty(b, l + 1);
+    p = r; // pin = 1
+    r = r && report_error_(b, MessageDeclaration2_1(b, l + 1));
+    r = p && report_error_(b, ResultType(b, l + 1)) && r;
+    r = p && report_error_(b, MessageDeclaration2_3(b, l + 1)) && r;
+    r = p && report_error_(b, MessageSignature(b, l + 1)) && r;
+    r = p && consumeToken(b, SEMICOLON) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  // (SchemaProperty|Documentation)*
+  private static boolean MessageDeclaration2_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MessageDeclaration2_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!MessageDeclaration2_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "MessageDeclaration2_1", c)) break;
+    }
+    return true;
+  }
+
+  // SchemaProperty|Documentation
+  private static boolean MessageDeclaration2_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MessageDeclaration2_1_0")) return false;
+    boolean r;
+    r = SchemaProperty(b, l + 1);
+    if (!r) r = Documentation(b, l + 1);
     return r;
+  }
+
+  // Documentation*
+  private static boolean MessageDeclaration2_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MessageDeclaration2_3")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "MessageDeclaration2_3", c)) break;
+    }
+    return true;
   }
 
   /* ********************************************************** */
   // ResultType Documentation* MessageSignature SEMICOLON
-  static boolean MessageDeclaration2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "MessageDeclaration2")) return false;
+  static boolean MessageDeclaration3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MessageDeclaration3")) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
     r = ResultType(b, l + 1);
     p = r; // pin = 1
-    r = r && report_error_(b, MessageDeclaration2_1(b, l + 1));
+    r = r && report_error_(b, MessageDeclaration3_1(b, l + 1));
     r = p && report_error_(b, MessageSignature(b, l + 1)) && r;
     r = p && consumeToken(b, SEMICOLON) && r;
     exit_section_(b, l, m, r, p, null);
@@ -1146,33 +1418,46 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   // Documentation*
-  private static boolean MessageDeclaration2_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "MessageDeclaration2_1")) return false;
+  private static boolean MessageDeclaration3_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MessageDeclaration3_1")) return false;
     while (true) {
       int c = current_position_(b);
       if (!Documentation(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "MessageDeclaration2_1", c)) break;
+      if (!empty_element_parsed_guard_(b, "MessageDeclaration3_1", c)) break;
     }
     return true;
   }
 
   /* ********************************************************** */
-  // IDENTIFIER LEFT_PAREN FormalParameters RIGHT_PAREN [ MessageAttributes ]
+  // IDENTIFIER Documentation* LEFT_PAREN FormalParameters RIGHT_PAREN [ MessageAttributes ]
   static boolean MessageSignature(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "MessageSignature")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_);
-    r = consumeTokens(b, 0, IDENTIFIER, LEFT_PAREN);
+    r = consumeToken(b, IDENTIFIER);
+    r = r && MessageSignature_1(b, l + 1);
+    r = r && consumeToken(b, LEFT_PAREN);
     r = r && FormalParameters(b, l + 1);
     r = r && consumeToken(b, RIGHT_PAREN);
-    r = r && MessageSignature_4(b, l + 1);
+    r = r && MessageSignature_5(b, l + 1);
     exit_section_(b, l, m, r, false, AvroIdlParser::recoverMessageSignature);
     return r;
   }
 
+  // Documentation*
+  private static boolean MessageSignature_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MessageSignature_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "MessageSignature_1", c)) break;
+    }
+    return true;
+  }
+
   // [ MessageAttributes ]
-  private static boolean MessageSignature_4(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "MessageSignature_4")) return false;
+  private static boolean MessageSignature_5(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MessageSignature_5")) return false;
     MessageAttributes(b, l + 1);
     return true;
   }
@@ -1429,16 +1714,36 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // FieldDeclaration*
+  // FieldDeclaration* Documentation*
   public static boolean RecordBody(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "RecordBody")) return false;
+    boolean r;
     Marker m = enter_section_(b, l, _NONE_, RECORD_BODY, "<record body>");
+    r = RecordBody_0(b, l + 1);
+    r = r && RecordBody_1(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // FieldDeclaration*
+  private static boolean RecordBody_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "RecordBody_0")) return false;
     while (true) {
       int c = current_position_(b);
       if (!FieldDeclaration(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "RecordBody", c)) break;
+      if (!empty_element_parsed_guard_(b, "RecordBody_0", c)) break;
     }
-    exit_section_(b, l, m, true, false, null);
+    return true;
+  }
+
+  // Documentation*
+  private static boolean RecordBody_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "RecordBody_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "RecordBody_1", c)) break;
+    }
     return true;
   }
 
@@ -1530,7 +1835,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // RecordType IDENTIFIER LEFT_BRACE RecordBody RIGHT_BRACE
+  // RecordType Documentation* IDENTIFIER Documentation* LEFT_BRACE RecordBody RIGHT_BRACE
   static boolean RecordInnerDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "RecordInnerDeclaration")) return false;
     if (!nextTokenIs(b, "", ERROR, RECORD)) return false;
@@ -1538,11 +1843,36 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_);
     r = RecordType(b, l + 1);
     p = r; // pin = 1
-    r = r && report_error_(b, consumeTokens(b, -1, IDENTIFIER, LEFT_BRACE));
+    r = r && report_error_(b, RecordInnerDeclaration_1(b, l + 1));
+    r = p && report_error_(b, consumeToken(b, IDENTIFIER)) && r;
+    r = p && report_error_(b, RecordInnerDeclaration_3(b, l + 1)) && r;
+    r = p && report_error_(b, consumeToken(b, LEFT_BRACE)) && r;
     r = p && report_error_(b, RecordBody(b, l + 1)) && r;
     r = p && consumeToken(b, RIGHT_BRACE) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
+  }
+
+  // Documentation*
+  private static boolean RecordInnerDeclaration_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "RecordInnerDeclaration_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "RecordInnerDeclaration_1", c)) break;
+    }
+    return true;
+  }
+
+  // Documentation*
+  private static boolean RecordInnerDeclaration_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "RecordInnerDeclaration_3")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "RecordInnerDeclaration_3", c)) break;
+    }
+    return true;
   }
 
   /* ********************************************************** */
@@ -1557,47 +1887,58 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ReferenceType1 | ReferenceType2 | ReferenceType3
+  // ReferenceType1 | ReferenceType2
   public static boolean ReferenceType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ReferenceType")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, REFERENCE_TYPE, "<reference type>");
     r = ReferenceType1(b, l + 1);
     if (!r) r = ReferenceType2(b, l + 1);
-    if (!r) r = ReferenceType3(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
   /* ********************************************************** */
-  // SchemaProperty (Documentation | SchemaProperty)* ReferenceType3
+  // Documentation* SchemaProperty (Documentation | SchemaProperty)* IDENTIFIER
   static boolean ReferenceType1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ReferenceType1")) return false;
-    if (!nextTokenIs(b, AT)) return false;
+    if (!nextTokenIs(b, "", AT, DOC_COMMENT)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
-    r = SchemaProperty(b, l + 1);
-    p = r; // pin = 1
-    r = r && report_error_(b, ReferenceType1_1(b, l + 1));
-    r = p && ReferenceType3(b, l + 1) && r;
+    r = ReferenceType1_0(b, l + 1);
+    r = r && SchemaProperty(b, l + 1);
+    p = r; // pin = 2
+    r = r && report_error_(b, ReferenceType1_2(b, l + 1));
+    r = p && consumeToken(b, IDENTIFIER) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
-  // (Documentation | SchemaProperty)*
-  private static boolean ReferenceType1_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ReferenceType1_1")) return false;
+  // Documentation*
+  private static boolean ReferenceType1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ReferenceType1_0")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!ReferenceType1_1_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "ReferenceType1_1", c)) break;
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "ReferenceType1_0", c)) break;
+    }
+    return true;
+  }
+
+  // (Documentation | SchemaProperty)*
+  private static boolean ReferenceType1_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ReferenceType1_2")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!ReferenceType1_2_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "ReferenceType1_2", c)) break;
     }
     return true;
   }
 
   // Documentation | SchemaProperty
-  private static boolean ReferenceType1_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ReferenceType1_1_0")) return false;
+  private static boolean ReferenceType1_2_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ReferenceType1_2_0")) return false;
     boolean r;
     r = Documentation(b, l + 1);
     if (!r) r = SchemaProperty(b, l + 1);
@@ -1605,44 +1946,35 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // Documentation (Documentation | SchemaProperty)* ReferenceType3
+  // (Documentation | SchemaProperty)* IDENTIFIER
   static boolean ReferenceType2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ReferenceType2")) return false;
-    if (!nextTokenIs(b, DOC_COMMENT)) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
-    r = Documentation(b, l + 1);
-    p = r; // pin = 1
-    r = r && report_error_(b, ReferenceType2_1(b, l + 1));
-    r = p && ReferenceType3(b, l + 1) && r;
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = ReferenceType2_0(b, l + 1);
+    r = r && consumeToken(b, IDENTIFIER);
+    exit_section_(b, m, null, r);
+    return r;
   }
 
   // (Documentation | SchemaProperty)*
-  private static boolean ReferenceType2_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ReferenceType2_1")) return false;
+  private static boolean ReferenceType2_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ReferenceType2_0")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!ReferenceType2_1_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "ReferenceType2_1", c)) break;
+      if (!ReferenceType2_0_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "ReferenceType2_0", c)) break;
     }
     return true;
   }
 
   // Documentation | SchemaProperty
-  private static boolean ReferenceType2_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ReferenceType2_1_0")) return false;
+  private static boolean ReferenceType2_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ReferenceType2_0_0")) return false;
     boolean r;
     r = Documentation(b, l + 1);
     if (!r) r = SchemaProperty(b, l + 1);
     return r;
-  }
-
-  /* ********************************************************** */
-  // IDENTIFIER
-  static boolean ReferenceType3(PsiBuilder b, int l) {
-    return consumeToken(b, IDENTIFIER);
   }
 
   /* ********************************************************** */
@@ -1759,7 +2091,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // Documentation (SchemaProperty|Documentation)* IDENTIFIER [ EQUALS JsonValue ]
+  // Documentation (SchemaProperty|Documentation)* IDENTIFIER Documentation* [ EQUALS Documentation* JsonValue ] Documentation*
   static boolean VariableDeclarator1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "VariableDeclarator1")) return false;
     if (!nextTokenIs(b, DOC_COMMENT)) return false;
@@ -1769,7 +2101,9 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     p = r; // pin = 1
     r = r && report_error_(b, VariableDeclarator1_1(b, l + 1));
     r = p && report_error_(b, consumeToken(b, IDENTIFIER)) && r;
-    r = p && VariableDeclarator1_3(b, l + 1) && r;
+    r = p && report_error_(b, VariableDeclarator1_3(b, l + 1)) && r;
+    r = p && report_error_(b, VariableDeclarator1_4(b, l + 1)) && r;
+    r = p && VariableDeclarator1_5(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
@@ -1794,26 +2128,60 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // [ EQUALS JsonValue ]
+  // Documentation*
   private static boolean VariableDeclarator1_3(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "VariableDeclarator1_3")) return false;
-    VariableDeclarator1_3_0(b, l + 1);
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "VariableDeclarator1_3", c)) break;
+    }
     return true;
   }
 
-  // EQUALS JsonValue
-  private static boolean VariableDeclarator1_3_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "VariableDeclarator1_3_0")) return false;
+  // [ EQUALS Documentation* JsonValue ]
+  private static boolean VariableDeclarator1_4(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "VariableDeclarator1_4")) return false;
+    VariableDeclarator1_4_0(b, l + 1);
+    return true;
+  }
+
+  // EQUALS Documentation* JsonValue
+  private static boolean VariableDeclarator1_4_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "VariableDeclarator1_4_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, EQUALS);
+    r = r && VariableDeclarator1_4_0_1(b, l + 1);
     r = r && JsonValue(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
+  // Documentation*
+  private static boolean VariableDeclarator1_4_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "VariableDeclarator1_4_0_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "VariableDeclarator1_4_0_1", c)) break;
+    }
+    return true;
+  }
+
+  // Documentation*
+  private static boolean VariableDeclarator1_5(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "VariableDeclarator1_5")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "VariableDeclarator1_5", c)) break;
+    }
+    return true;
+  }
+
   /* ********************************************************** */
-  // SchemaProperty (SchemaProperty|Documentation)* IDENTIFIER [ EQUALS JsonValue ]
+  // SchemaProperty (SchemaProperty|Documentation)* IDENTIFIER Documentation* [ EQUALS Documentation* JsonValue ] Documentation*
   static boolean VariableDeclarator2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "VariableDeclarator2")) return false;
     if (!nextTokenIs(b, AT)) return false;
@@ -1823,7 +2191,9 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     p = r; // pin = 1
     r = r && report_error_(b, VariableDeclarator2_1(b, l + 1));
     r = p && report_error_(b, consumeToken(b, IDENTIFIER)) && r;
-    r = p && VariableDeclarator2_3(b, l + 1) && r;
+    r = p && report_error_(b, VariableDeclarator2_3(b, l + 1)) && r;
+    r = p && report_error_(b, VariableDeclarator2_4(b, l + 1)) && r;
+    r = p && VariableDeclarator2_5(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
@@ -1848,26 +2218,60 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // [ EQUALS JsonValue ]
+  // Documentation*
   private static boolean VariableDeclarator2_3(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "VariableDeclarator2_3")) return false;
-    VariableDeclarator2_3_0(b, l + 1);
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "VariableDeclarator2_3", c)) break;
+    }
     return true;
   }
 
-  // EQUALS JsonValue
-  private static boolean VariableDeclarator2_3_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "VariableDeclarator2_3_0")) return false;
+  // [ EQUALS Documentation* JsonValue ]
+  private static boolean VariableDeclarator2_4(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "VariableDeclarator2_4")) return false;
+    VariableDeclarator2_4_0(b, l + 1);
+    return true;
+  }
+
+  // EQUALS Documentation* JsonValue
+  private static boolean VariableDeclarator2_4_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "VariableDeclarator2_4_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, EQUALS);
+    r = r && VariableDeclarator2_4_0_1(b, l + 1);
     r = r && JsonValue(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
+  // Documentation*
+  private static boolean VariableDeclarator2_4_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "VariableDeclarator2_4_0_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "VariableDeclarator2_4_0_1", c)) break;
+    }
+    return true;
+  }
+
+  // Documentation*
+  private static boolean VariableDeclarator2_5(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "VariableDeclarator2_5")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "VariableDeclarator2_5", c)) break;
+    }
+    return true;
+  }
+
   /* ********************************************************** */
-  // IDENTIFIER [ EQUALS JsonValue ]
+  // IDENTIFIER Documentation* [ EQUALS Documentation* JsonValue ] Documentation*
   static boolean VariableDeclarator3(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "VariableDeclarator3")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
@@ -1875,27 +2279,63 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_);
     r = consumeToken(b, IDENTIFIER);
     p = r; // pin = 1
-    r = r && VariableDeclarator3_1(b, l + 1);
+    r = r && report_error_(b, VariableDeclarator3_1(b, l + 1));
+    r = p && report_error_(b, VariableDeclarator3_2(b, l + 1)) && r;
+    r = p && VariableDeclarator3_3(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
-  // [ EQUALS JsonValue ]
+  // Documentation*
   private static boolean VariableDeclarator3_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "VariableDeclarator3_1")) return false;
-    VariableDeclarator3_1_0(b, l + 1);
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "VariableDeclarator3_1", c)) break;
+    }
     return true;
   }
 
-  // EQUALS JsonValue
-  private static boolean VariableDeclarator3_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "VariableDeclarator3_1_0")) return false;
+  // [ EQUALS Documentation* JsonValue ]
+  private static boolean VariableDeclarator3_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "VariableDeclarator3_2")) return false;
+    VariableDeclarator3_2_0(b, l + 1);
+    return true;
+  }
+
+  // EQUALS Documentation* JsonValue
+  private static boolean VariableDeclarator3_2_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "VariableDeclarator3_2_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, EQUALS);
+    r = r && VariableDeclarator3_2_0_1(b, l + 1);
     r = r && JsonValue(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
+  }
+
+  // Documentation*
+  private static boolean VariableDeclarator3_2_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "VariableDeclarator3_2_0_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "VariableDeclarator3_2_0_1", c)) break;
+    }
+    return true;
+  }
+
+  // Documentation*
+  private static boolean VariableDeclarator3_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "VariableDeclarator3_3")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!Documentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "VariableDeclarator3_3", c)) break;
+    }
+    return true;
   }
 
   /* ********************************************************** */

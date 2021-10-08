@@ -8,6 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface AvroIdlMessageAttributes extends PsiElement {
 
   @NotNull
+  List<AvroIdlDocumentation> getDocumentationList();
+
+  @NotNull
   List<AvroIdlMessageAttributeThrows> getMessageAttributeThrowsList();
 
 }

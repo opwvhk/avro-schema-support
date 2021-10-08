@@ -29,6 +29,12 @@ public class AvroIdlEnumBodyImpl extends ASTWrapperPsiElement implements AvroIdl
 
   @Override
   @NotNull
+  public List<AvroIdlDocumentation> getDocumentationList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlDocumentation.class);
+  }
+
+  @Override
+  @NotNull
   public List<AvroIdlEnumConstant> getEnumConstantList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlEnumConstant.class);
   }

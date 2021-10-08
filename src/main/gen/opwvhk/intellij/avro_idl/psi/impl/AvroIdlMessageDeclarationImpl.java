@@ -47,6 +47,12 @@ public class AvroIdlMessageDeclarationImpl extends ASTWrapperPsiElement implemen
   }
 
   @Override
+  @NotNull
+  public List<AvroIdlSchemaProperty> getSchemaPropertyList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlSchemaProperty.class);
+  }
+
+  @Override
   @Nullable
   public AvroIdlType getType() {
     return findChildByClass(AvroIdlType.class);
