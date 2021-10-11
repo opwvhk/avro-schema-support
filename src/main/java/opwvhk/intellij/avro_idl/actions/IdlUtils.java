@@ -161,7 +161,7 @@ public final class IdlUtils {
 					writer.append(i.next());
 				}
 			} else {
-				throw new IllegalStateException("Enum schema must have at least a symbol " + schema);
+				throw new AvroRuntimeException("Enum schema must have at least a symbol " + schema);
 			}
 			writer.append("}\n");
 		} else /* (type == Schema.Type.FIXED) */ {
@@ -240,7 +240,7 @@ public final class IdlUtils {
 					writeFieldSchema(iterator.next(), writer, jsonGen, alreadyDeclared, toDeclare, recordNameSpace);
 				}
 			} else {
-				throw new IllegalStateException("Union schemas must have member types " + schema);
+				throw new AvroRuntimeException("Union schemas must have member types " + schema);
 			}
 			writer.append('}');
 		} else {

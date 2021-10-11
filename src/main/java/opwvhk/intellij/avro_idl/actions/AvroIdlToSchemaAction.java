@@ -5,6 +5,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import opwvhk.intellij.avro_idl.AvroIdlFileType;
 import opwvhk.intellij.avro_idl.AvroSchemaFileType;
+import org.apache.avro.AvroRuntimeException;
 import org.apache.avro.Protocol;
 import org.apache.avro.Schema;
 import org.apache.avro.compiler.idl.Idl;
@@ -70,10 +71,10 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 					}
 				}));
 			}
-			// Sort by length, largest first
+			// Sort by length, descending
 			schemasWithDependencies.sort(Comparator.comparing((Function<List<Schema>, Integer>) List::size).reversed());
 
-			// Take the minimum number of schemas that (recursively) define all types.
+			// Take the minimal list of schemas that (recursively) define all types.
 			final IdentityHashMap<Schema, Schema> missingSchemas = new IdentityHashMap<>();
 			protocol.getTypes().forEach(s -> missingSchemas.put(s, s));
 			for (List<Schema> schemaAndDependencies : schemasWithDependencies) {
@@ -83,7 +84,7 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 					schemaAndDependencies.forEach(missingSchemas.keySet()::remove);
 				}
 			}
-		} catch (IOException | ParseException e) {
+		} catch (ParseException | IOException e) {
 			LOGGER.warn("Failed to parse Avro IDL in " + file.getPresentableName(), e);
 			error(project, "Failed to parse Avro IDL in %s: please resolve errors first.\n" +
 				"(the error is also written to the idea log)", file.getPresentableName());
@@ -105,7 +106,7 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 				resultingFileNames.forEach(stringJoiner::add);
 				info(project, "Converted Avro IDL in %s to Avro Schema in %s", file.getPresentableName(), stringJoiner);
 			}
-		} catch (IOException e) {
+		} catch (AvroRuntimeException | IOException e) {
 			LOGGER.warn("Failed to write Avro Protocol", e);
 			error(project, "Failed to write AvroProtocol. See the idea log for more details.");
 		}

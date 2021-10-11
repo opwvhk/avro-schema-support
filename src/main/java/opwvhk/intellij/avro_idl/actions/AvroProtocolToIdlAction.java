@@ -5,6 +5,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import opwvhk.intellij.avro_idl.AvroIdlFileType;
 import opwvhk.intellij.avro_idl.AvroProtocolFileType;
+import org.apache.avro.AvroRuntimeException;
 import org.apache.avro.Protocol;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +28,7 @@ public class AvroProtocolToIdlAction extends ConversionActionBase {
 		final Protocol protocol;
 		try {
 			protocol = Protocol.parse(file.toNioPath().toFile());
-		} catch (IOException e) {
+		} catch (AvroRuntimeException | IOException e) {
 			LOGGER.warn("Failed to parse AvroProtocol in " + file.getPresentableName(), e);
 			error(project, "Failed to parse AvroProtocol in %s: please resolve errors first.\n" +
 				"(the error is also written to the idea log)", file.getPresentableName());
@@ -39,7 +40,7 @@ public class AvroProtocolToIdlAction extends ConversionActionBase {
 				IdlUtils.writeIdlProtocol(writer, protocol);
 			}
 			info(project, "Converted AvroProtocol in %s to Avro IDL in %s", file.getPresentableName(), destinationFile.getPresentableName());
-		} catch (IOException e) {
+		} catch (AvroRuntimeException | IOException e) {
 			LOGGER.warn("Failed to write Avro IDL", e);
 			error(project, "Failed to write Avro IDL. See the idea log for more details.");
 		}

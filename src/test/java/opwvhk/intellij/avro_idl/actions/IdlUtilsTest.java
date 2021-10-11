@@ -89,7 +89,7 @@ public class IdlUtilsTest {
     @Test
     public void cannotWriteEmptyEnums() {
         assertThatThrownBy(() -> IdlUtils.writeIdlProtocol(new StringWriter(), "naming", "Error",
-                Schema.createEnum("Single", null, "naming", emptyList()))).isInstanceOf(IllegalStateException.class);
+                Schema.createEnum("Single", null, "naming", emptyList()))).isInstanceOf(AvroRuntimeException.class);
     }
 
     @Test
@@ -97,7 +97,7 @@ public class IdlUtilsTest {
         assertThatThrownBy(() -> IdlUtils.writeIdlProtocol(new StringWriter(), "naming", "Error",
                 Schema.createRecord("Single", null, "naming", false, singletonList(
                         new Schema.Field("field", Schema.createUnion())
-                )))).isInstanceOf(IllegalStateException.class);
+                )))).isInstanceOf(AvroRuntimeException.class);
     }
 
     @Test

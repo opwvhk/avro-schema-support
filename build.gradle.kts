@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "net.sf.opk"
-version = "203.1.1"
+version = "203.1.2-SNAPSHOT"
 
 repositories {
 	mavenCentral()
@@ -33,6 +33,11 @@ tasks {
 		untilBuild.set("213.*")
 		changeNotes.set(
 			"""
+			<p>Version 203.1.2:</p>
+			<ul>
+			<li>Fixed exception when writing a schema as IDL (issue #16)</li>
+			<li>
+			</ul>
 			<p>Version 203.1.1:</p>
 			<ul>
 			<li>Fixed NPE in import resolution (issue #14)</li>
