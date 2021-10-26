@@ -46,7 +46,8 @@ protocol Simple {
   /** method 'add' takes
   @parameter 'arg1'
   @parameter 'arg2' */
-  @specialProp("test") int add(int arg1, int arg2=0);
+  @specialProp("test")
+  int add(int arg1, int arg2=0);
 
   bytes echoBytes(bytes data);
 

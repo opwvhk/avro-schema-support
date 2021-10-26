@@ -36,6 +36,7 @@ tasks {
 			<p>Version 203.1.2:</p>
 			<ul>
 			<li>Fixed exception when writing a schema as IDL (issue #16)</li>
+			<li>Improved formatting of message properties</li>
 			<li>
 			</ul>
 			<p>Version 203.1.1:</p>
