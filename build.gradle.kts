@@ -37,7 +37,7 @@ tasks {
 			<ul>
 			<li>Fixed exception when writing a schema as IDL (issue #16)</li>
 			<li>Improved formatting of message properties</li>
-			<li>Fixed broken file references (completion now also works on file import references)</li>
+			<li>Improved file import references</li>
 			<li>
 			</ul>
 			<p>Version 203.1.1:</p>
