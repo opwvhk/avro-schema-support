@@ -39,4 +39,9 @@ public class AvroIdlJsonStringLiteralImpl extends AvroIdlJsonValueImpl implement
     return AvroIdlPsiUtil.getReference(this);
   }
 
+  @Override
+  public @Nullable PsiFileReference getLastFileReference() {
+    return AvroIdlPsiUtil.getLastFileReference(this);
+  }
+
 }

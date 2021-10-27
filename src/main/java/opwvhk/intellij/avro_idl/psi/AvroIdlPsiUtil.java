@@ -2,13 +2,21 @@ package opwvhk.intellij.avro_idl.psi;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.ElementManipulators;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.CheckUtil;
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceHelper;
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceHelperRegistrar;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiFileReference;
-import com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiFileReferenceHelper;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
+import opwvhk.intellij.avro_idl.AvroIdlFileType;
 import opwvhk.intellij.avro_idl.AvroIdlIcons;
+import opwvhk.intellij.avro_idl.AvroProtocolFileType;
+import opwvhk.intellij.avro_idl.AvroSchemaFileType;
 import opwvhk.intellij.avro_idl.language.AvroIdlEnumConstantReference;
 import opwvhk.intellij.avro_idl.language.AvroIdlNamedSchemaReference;
 import opwvhk.intellij.avro_idl.language.AvroIdlUtil;
@@ -21,7 +29,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.intellij.psi.TokenType.WHITE_SPACE;
-import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.IDENTIFIER;
+import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
 public class AvroIdlPsiUtil {
 	@Nullable
@@ -119,11 +127,36 @@ public class AvroIdlPsiUtil {
 	@Nullable
 	public static PsiFileReference getReference(@NotNull AvroIdlJsonStringLiteral owner) {
 		if (owner.getParent() instanceof AvroIdlImportDeclaration) {
-			final FileReferenceSet fileReferenceSet = FileReferenceSet.createSet(owner, false, false, false);
-			return fileReferenceSet.getLastReference();
+			final Optional<AvroIdlImportType> importType = Optional.ofNullable(((AvroIdlImportDeclaration) owner.getParent()).getImportType());
+			final IElementType importElementType = importType.map(PsiElement::getFirstChild).map(PsiElement::getNode).map(ASTNode::getElementType).orElse(null);
+
+			final FileType[] suitableFileTypes;
+			if (importElementType == IDL) {
+				suitableFileTypes = new FileType[]{AvroIdlFileType.INSTANCE};
+			} else if (importElementType == PROTOCOL) {
+				suitableFileTypes = new FileType[]{AvroProtocolFileType.INSTANCE};
+			} else if (importElementType == SCHEMA) {
+				suitableFileTypes = new FileType[]{AvroSchemaFileType.INSTANCE};
+			} else {
+				suitableFileTypes = new FileType[]{AvroIdlFileType.INSTANCE, AvroProtocolFileType.INSTANCE, AvroSchemaFileType.INSTANCE};
+			}
+
+			// Copied from FileReferenceSet.create(...) to add the suitableFileTypes parameter (omitted methods use the default implementation)
+			final TextRange range = ElementManipulators.getValueTextRange(owner);
+			int offset = range.getStartOffset();
+			String text = range.substring(owner.getText());
+			for (final FileReferenceHelper helper : FileReferenceHelperRegistrar.getHelpers()) {
+				text = helper.trimUrl(text);
+			}
+			return new FileReferenceSet(text, owner, offset, null, true, true, suitableFileTypes).getLastReference();
 		} else {
 			return null;
 		}
+	}
+
+	@Nullable
+	public static PsiFileReference getLastFileReference(@NotNull AvroIdlJsonStringLiteral owner) {
+		return getReference(owner);
 	}
 
 	@NotNull

@@ -212,7 +212,8 @@ private ReferenceType2 ::= (Documentation | SchemaProperty)* IDENTIFIER { pin=2 
 
 JsonValue ::= (JsonStringLiteral | INT_LITERAL | FLOAT_LITERAL | TRUE | FALSE | NULL | JsonObject | JsonArray) { recoverWhile=recoverJsonValue }
 JsonStringLiteral ::= STRING_LITERAL { extends=JsonValue
-	methods=[getReference]
+	implements="com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceOwner"
+	methods=[getReference getLastFileReference]
 }
 JsonObject ::= LEFT_BRACE [ JsonPair (COMMA JsonPair)* ] RIGHT_BRACE { pin=1 }
 JsonPair ::= STRING_LITERAL COLON JsonValue { pin=2 recoverWhile="recoverJsonPair" }

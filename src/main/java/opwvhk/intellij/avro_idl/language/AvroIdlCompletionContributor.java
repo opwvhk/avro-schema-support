@@ -74,7 +74,7 @@ class AvroIdlCompletionContributor extends CompletionContributor {
 
 		// Complete imported schema files
 
-		// TODO: identify string literals in import statements to add file name completion
+		// TODO: identify string literals in import statements to add classpath completion
 	}
 
 	/**
