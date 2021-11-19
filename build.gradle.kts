@@ -38,7 +38,7 @@ tasks {
 			<li>Fixed exception when writing a schema as IDL (issue #16)</li>
 			<li>Improved formatting of message properties</li>
 			<li>Improved file import references</li>
-			<li>
+			<li>Fixed range exception in references</li>
 			</ul>
 			<p>Version 203.1.1:</p>
 			<ul>

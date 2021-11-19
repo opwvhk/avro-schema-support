@@ -28,7 +28,7 @@ public abstract class AvroIdlAbstractReference extends PsiReferenceBase<PsiEleme
 	}
 
 	/**
-	 * @return range in {@link #getElement() element} which is considered a reference,
+	 * @return Range in {@link #getElement() element} that denotes the reference,
 	 * e.g. range of `bar` in `foo.bar` qualified reference expression
 	 */
 	@NotNull
@@ -37,6 +37,8 @@ public abstract class AvroIdlAbstractReference extends PsiReferenceBase<PsiEleme
 		final TextRange rangeInElement = super.getRangeInElement();
 		final String name = myElement.getText();
 		final int offset = name.lastIndexOf(".") + 1;
-		return TextRange.create(rangeInElement.getStartOffset() + offset, rangeInElement.getEndOffset());
+		final int startOffset = rangeInElement.getStartOffset() + offset;
+		final int endOffset = rangeInElement.getEndOffset();
+		return startOffset < endOffset ? TextRange.create(startOffset, endOffset) : rangeInElement;
 	}
 }
