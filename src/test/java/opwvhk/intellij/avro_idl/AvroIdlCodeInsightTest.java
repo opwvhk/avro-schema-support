@@ -1,8 +1,11 @@
 package opwvhk.intellij.avro_idl;
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.lang.annotation.HighlightSeverity;
+import com.intellij.lang.documentation.DocumentationProvider;
+import com.intellij.psi.PsiElement;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import opwvhk.intellij.avro_idl.inspections.AvroIdlDuplicateAnnotationsInspectionTool;
 
@@ -48,7 +51,8 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 			Highlight.error("also-wrong", "Not a valid identifier: also-wrong"),
 			Highlight.error("C", "Enum default must be one of the enum constants"),
 			Highlight.error("my-data", "Not a valid identifier: my-data"),
-			Highlight.weakWarning("@namespace(\"unused\")", "A @namespace annotation has no effect here"),
+			Highlight.error("@namespace(\"unused\")",
+				"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile."),
 			Highlight.weakWarning("@logicalType(\"character\")", "A @logicalType annotation has no effect here"),
 			Highlight.error("one-letter", "Not a valid identifier: one-letter"),
 			Highlight.warning("/** Dangling documentation 1 */", "Dangling documentation comment"),
@@ -69,7 +73,8 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 			Highlight.error("56", "@aliases elements must be strings"),
 			Highlight.error("\"invites-failure\"", "Not a valid identifier: invites-failure"),
 			Highlight.error("@logicalType(\"local-timestamp-millis\")", "The logical type 'local-timestamp-millis' requires the underlying type long"),
-			Highlight.error("@logicalType(\"decimal\")", "@logicalType(\"decimal\") requires a sibling @precision annotation with a number between 1 and 2^31-1"),
+			Highlight.error("@logicalType(\"decimal\")",
+				"@logicalType(\"decimal\") requires a sibling @precision annotation with a number between 1 and 2^31-1"),
 			Highlight.error("true", "@precision must contain a number between 1 and 2^31-1"),
 			Highlight.error("-1", "@precision must contain a number between 1 and 2^31-1"),
 			Highlight.error("4294967296", "@precision must contain a number between 1 and 2^31-1"),
@@ -78,7 +83,12 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 			Highlight.error("@logicalType(\"decimal\")", "The logical type 'decimal' requires the underlying type bytes or fixed"),
 			Highlight.error("8", "@scale must contain a non-negative number of at most the value of @precision"),
 			Highlight.error("@logicalType(\"decimal\")", "The logical type 'decimal' requires the underlying type bytes or fixed"),
+			Highlight.error("@logicalType(\"decimal\")",
+				"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile."),
+			Highlight.error("@precision(40)",
+				"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile."),
 			Highlight.error("40", "hashes.MD5, a fixed(16), cannot store 40 digits (max 38)"),
+			Highlight.error("@scale(0)", "Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile."),
 			Highlight.warning("/** Dangling documentation 1 */", "Dangling documentation comment"),
 			Highlight.error("67", "@aliases annotations must contain an array of identifiers (strings)"),
 			Highlight.warning("/** Dangling documentation 2 */", "Dangling documentation comment"),
@@ -133,6 +143,23 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		myFixture.checkResultByFile("DuplicateAnnotationsFixed.avdl");
 	}
 
+	public void _testDocumentation() {
+		myFixture.configureByFiles("DocumentationTestData.java", "DocumentationTestData.simple");
+		final PsiElement originalElement = myFixture.getElementAtCaret();
+		PsiElement element = DocumentationManager
+			.getInstance(getProject())
+			.findTargetElement(myFixture.getEditor(), originalElement.getContainingFile(), originalElement);
+
+		if (element == null) {
+			element = originalElement;
+		}
+
+		final DocumentationProvider documentationProvider = DocumentationManager.getProviderFromElement(element);
+		final String generateDoc = documentationProvider.generateDoc(element, originalElement);
+		assertNotNull(generateDoc);
+		assertSameLinesWithFile(getTestDataPath() + "/" + "DocumentationTest.html.expected", generateDoc);
+	}
+
 	@SuppressWarnings("SameParameterValue")
 	private static class Highlight {
 		private final HighlightSeverity severity;
@@ -173,7 +200,7 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 			if (o == null || getClass() != o.getClass()) {
 				return false;
 			}
-			Highlight highlight = (Highlight) o;
+			Highlight highlight = (Highlight)o;
 			return severity.equals(highlight.severity) &&
 				text.equals(highlight.text) &&
 				description.equals(highlight.description);

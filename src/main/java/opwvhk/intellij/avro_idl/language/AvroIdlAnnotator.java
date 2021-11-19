@@ -1,14 +1,20 @@
 package opwvhk.intellij.avro_idl.language;
 
 import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.codeInspection.LocalQuickFixAndIntentionActionOnPsiElement;
+import com.intellij.codeInspection.util.IntentionFamilyName;
+import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.annotation.AnnotationBuilder;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.lang.annotation.HighlightSeverity;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.impl.source.tree.TreeUtil;
@@ -66,7 +72,7 @@ public class AvroIdlAnnotator implements Annotator {
 	private void annotateSchemaReference(@NotNull PsiElement element, @NotNull AnnotationHolder holder, boolean mustBeAnError) {
 		final PsiElement parent = element.getParent();
 		final AvroIdlNamedSchemaReference reference = (AvroIdlNamedSchemaReference) parent.getReference();
-		assert reference != null; // Because we've matched on an identifier and our parent is a ReferenceType, MessageAttributeThrows or EnumDefault
+		assert reference != null; // Because we've matched on an identifier, and our parent is a ReferenceType, MessageAttributeThrows or EnumDefault
 		final PsiElement referencedElement = reference.resolve();
 
 		if (referencedElement == null) {
@@ -148,6 +154,13 @@ public class AvroIdlAnnotator implements Annotator {
 		// AvroIdlAnnotatedNameIdentifierOwner
 		// AvroIdlType
 		final PsiElement parent = element.getParent();
+
+		if (parent instanceof AvroIdlReferenceType) {
+			holder.newAnnotation(ERROR,
+					"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile.")
+				.withFix(new RemoveSchemaProperty(element))
+				.create();
+		}
 
 		final String schemaPropertyName = element.getName();
 		if ("namespace".equals(schemaPropertyName)) {
@@ -326,7 +339,7 @@ public class AvroIdlAnnotator implements Annotator {
 			if (intLiteral != null) {
 				long fixedSize = Long.parseLong(intLiteral.getText());
 				if (fixedSize < Integer.MAX_VALUE) {
-					// This calculation is taken from the Avro source code.
+					// This calculation is a copy of the one in the Avro source code.
 					long maxPrecision = Math.round(Math.floor(Math.log10(2) * (8 * (int) fixedSize - 1)));
 					if (precision > maxPrecision) {
 						final String referencedName = fixedDeclaration.getFullName();
@@ -422,6 +435,34 @@ public class AvroIdlAnnotator implements Annotator {
 			if (primitiveType != VOID && primitiveType != NULL) {
 				holder.newAnnotation(ERROR, "Oneway messages must have a void or null return type").create();
 			}
+		}
+	}
+
+	private static class RemoveSchemaProperty extends LocalQuickFixAndIntentionActionOnPsiElement {
+		public RemoveSchemaProperty(@NotNull AvroIdlSchemaProperty element) {
+			super(element);
+		}
+
+		@Override
+		public @NotNull @IntentionFamilyName String getFamilyName() {
+			return "Avro IDL";
+		}
+
+		@Override
+		public @NotNull @IntentionName String getText() {
+			return "Delete annotation from reference.";
+		}
+
+		@Override
+		public void invoke(@NotNull Project project, @NotNull PsiFile file, @NotNull PsiElement startElement,
+		                   @NotNull PsiElement endElement) {
+			startElement.delete();
+		}
+
+		@Override
+		public void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor,
+		                   @NotNull PsiElement startElement, @NotNull PsiElement endElement) {
+			startElement.delete();
 		}
 	}
 }

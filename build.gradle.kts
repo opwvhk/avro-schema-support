@@ -39,6 +39,7 @@ tasks {
 			<li>Improved formatting of message properties</li>
 			<li>Improved file import references</li>
 			<li>Fixed range exception in references</li>
+			<li>Added error for annotations on references (triggers a bug in Avro &lt; 1.11.1, breaks in later Avro versions)</li>
 			</ul>
 			<p>Version 203.1.1:</p>
 			<ul>
