@@ -24,9 +24,8 @@ public class AvroIdlParserDefinition implements ParserDefinition {
     public static final TokenSet WHITE_SPACE = TokenSet.create(TokenType.WHITE_SPACE);
     public static final TokenSet STRING_LITERALS = TokenSet.create(AvroIdlTypes.STRING_LITERAL);
 
-    @NotNull
     @Override
-    public Lexer createLexer(Project project) {
+    public @NotNull Lexer createLexer(Project project) {
         return new AvroIdlLexer();
     }
 
@@ -40,27 +39,23 @@ public class AvroIdlParserDefinition implements ParserDefinition {
         return FILE;
     }
 
-    @NotNull
     @Override
-    public TokenSet getWhitespaceTokens() {
+    public @NotNull TokenSet getWhitespaceTokens() {
         return WHITE_SPACE;
     }
 
-    @NotNull
     @Override
-    public TokenSet getCommentTokens() {
+    public @NotNull TokenSet getCommentTokens() {
         return COMMENTS;
     }
 
-    @NotNull
     @Override
-    public TokenSet getStringLiteralElements() {
+    public @NotNull TokenSet getStringLiteralElements() {
         return STRING_LITERALS;
     }
 
-    @NotNull
     @Override
-    public PsiElement createElement(ASTNode node) {
+    public @NotNull PsiElement createElement(ASTNode node) {
         return AvroIdlTypes.Factory.createElement(node);
     }
 

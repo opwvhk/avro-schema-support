@@ -10,8 +10,7 @@ public class AvroIdlLanguage extends Language {
     /**
      * A shared instance of AvroIdlLanguage.
      */
-    @NotNull
-    public static final AvroIdlLanguage INSTANCE = new AvroIdlLanguage();
+    public static final @NotNull AvroIdlLanguage INSTANCE = new AvroIdlLanguage();
 
     protected AvroIdlLanguage() {
         super("Avro IDL", "text/vnd.apache.avro-avro_idl");

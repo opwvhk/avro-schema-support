@@ -83,8 +83,7 @@ public class AvroIdlBlock extends AbstractBlock {
 		return blocks;
 	}
 
-	@NotNull
-	private Wrap createChildWrap() {
+	private @NotNull Wrap createChildWrap() {
 		final IElementType elementType = myNode.getElementType();
 		if (ELEMENTS_THAT_WRAP_BEFORE_CHILDREN.contains(elementType)) {
 			return Wrap.createChildWrap(myWrap, WrapType.NORMAL, false);
@@ -97,19 +96,16 @@ public class AvroIdlBlock extends AbstractBlock {
 	}
 
 
-	@Nullable
-	protected Indent getPreviousChildIndent(int childNodeIndex) {
+	protected @Nullable Indent getPreviousChildIndent(int childNodeIndex) {
 		return getChildIndent();
 	}
 
-	@Nullable
-	protected Indent getChildIndent(int childNodeIndex) {
+	protected @Nullable Indent getChildIndent(int childNodeIndex) {
 		return getChildIndent();
 	}
 
 	@Override
-	@Nullable
-	protected Indent getChildIndent() {
+    protected @Nullable Indent getChildIndent() {
 		final IElementType myElementType = myNode.getElementType();
 
 		if (DECLARATION_BODIES_WITH_UNINDENTED_CHILDREN.contains(myElementType) || myNode instanceof FileElement) {
@@ -133,9 +129,8 @@ public class AvroIdlBlock extends AbstractBlock {
 		return myIndent;
 	}
 
-	@Nullable
 	@Override
-	public Spacing getSpacing(@Nullable Block child1, @NotNull Block child2) {
+    public @Nullable Spacing getSpacing(@Nullable Block child1, @NotNull Block child2) {
 		return mySpacingBuilder.getSpacing(this, child1, child2);
 	}
 

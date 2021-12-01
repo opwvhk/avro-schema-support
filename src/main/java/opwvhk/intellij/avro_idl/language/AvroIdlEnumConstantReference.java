@@ -15,8 +15,7 @@ public class AvroIdlEnumConstantReference extends AvroIdlAbstractReference {
 
 	private final String name;
 
-	@NotNull
-	public static AvroIdlEnumConstantReference forDefault(@NotNull AvroIdlEnumDefault element) {
+	public static @NotNull AvroIdlEnumConstantReference forDefault(@NotNull AvroIdlEnumDefault element) {
 		return new AvroIdlEnumConstantReference(element);
 	}
 
@@ -26,8 +25,7 @@ public class AvroIdlEnumConstantReference extends AvroIdlAbstractReference {
 	}
 
 	@Override
-	@Nullable
-	public AvroIdlEnumConstant resolve() {
+    public @Nullable AvroIdlEnumConstant resolve() {
 		return findConstants()
 			.filter(enumValue -> name.equals(enumValue.getName()))
 			.findFirst().orElse(null);
@@ -43,9 +41,8 @@ public class AvroIdlEnumConstantReference extends AvroIdlAbstractReference {
 		}
 	}
 
-	@NotNull
 	@Override
-	public Object[] getVariants() {
+    public @NotNull Object[] getVariants() {
 		return findConstants()
 			.filter(enumValue -> enumValue.getName() != null && !enumValue.getName().isBlank())
 			.map(enumValue -> LookupElementBuilder.create(enumValue.getName()).withTypeText(enumValue.getContainingFile().getName(), AvroIdlIcons.FILE, false))

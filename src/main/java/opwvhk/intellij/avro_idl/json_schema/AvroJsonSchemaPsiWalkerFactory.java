@@ -31,9 +31,8 @@ public class AvroJsonSchemaPsiWalkerFactory implements JsonLikePsiWalkerFactory 
 		return language instanceof AvroSchemaLanguage || language instanceof AvroProtocolLanguage;
 	}
 
-	@NotNull
 	@Override
-	public JsonLikePsiWalker create(@NotNull JsonSchemaObject schemaObject) {
+    public @NotNull JsonLikePsiWalker create(@NotNull JsonSchemaObject schemaObject) {
 		return WALKER_INSTANCE;
 	}
 }

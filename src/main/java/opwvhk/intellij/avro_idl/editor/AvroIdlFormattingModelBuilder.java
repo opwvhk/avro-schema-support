@@ -111,9 +111,8 @@ public class AvroIdlFormattingModelBuilder implements FormattingModelBuilder {
 		return spacingBuilder;
 	}
 
-	@NotNull
 	@Override
-	public FormattingModel createModel(@NotNull FormattingContext formattingContext) {
+    public @NotNull FormattingModel createModel(@NotNull FormattingContext formattingContext) {
 		PsiElement psiElement = formattingContext.getPsiElement();
 		CodeStyleSettings codeStyleSettings = formattingContext.getCodeStyleSettings();
 		Wrap normalWrap = Wrap.createWrap(WrapType.NORMAL, false);
@@ -124,9 +123,8 @@ public class AvroIdlFormattingModelBuilder implements FormattingModelBuilder {
 		return FormattingModelProvider.createFormattingModelForPsiFile(psiElement.getContainingFile(), block, codeStyleSettings);
 	}
 
-	@Nullable
 	@Override
-	public TextRange getRangeAffectingIndent(PsiFile psiFile, int i, ASTNode astNode) {
+    public @Nullable TextRange getRangeAffectingIndent(PsiFile psiFile, int i, ASTNode astNode) {
 		return null;
 	}
 

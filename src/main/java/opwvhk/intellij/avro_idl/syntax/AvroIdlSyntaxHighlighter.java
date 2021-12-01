@@ -34,15 +34,13 @@ public class AvroIdlSyntaxHighlighter extends SyntaxHighlighterBase {
 		AvroIdlTypes.ERROR, AvroIdlTypes.ENUM, AvroIdlTypes.FIXED, AvroIdlTypes.THROWS, AvroIdlTypes.ONEWAY,
 		AvroIdlTypes.TRUE, AvroIdlTypes.FALSE);
 
-	@NotNull
 	@Override
-	public Lexer getHighlightingLexer() {
+    public @NotNull Lexer getHighlightingLexer() {
 		return new AvroIdlLexer();
 	}
 
-	@NotNull
 	@Override
-	public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
+    public @NotNull TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
 		if (tokenType.equals(AvroIdlTypes.DOC_COMMENT)) {
 			return DOC_COMMENT_KEYS;
 		}

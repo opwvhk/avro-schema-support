@@ -12,9 +12,8 @@ public class AvroIdlFile extends PsiFileBase {
         super(viewProvider, AvroIdlLanguage.INSTANCE);
     }
 
-    @NotNull
     @Override
-    public FileType getFileType() {
+    public @NotNull FileType getFileType() {
         return AvroIdlFileType.INSTANCE;
     }
 

@@ -94,8 +94,7 @@ public class AvroIdlAnnotator implements Annotator {
 		return !protocolBody.getImportDeclarationList().isEmpty();
 	}
 
-	@NotNull
-	private String getIdentifier(@NotNull PsiElement element) {
+	private @NotNull String getIdentifier(@NotNull PsiElement element) {
 		String text = element.getText();
 		return text.startsWith("`") ? text.substring(1, text.length() - 2) : text;
 	}
@@ -122,8 +121,7 @@ public class AvroIdlAnnotator implements Annotator {
 		}
 	}
 
-	@NotNull
-	private String invalidIdentifierMessage(@NotNull String suffix, @NotNull String invalidIdentifier) {
+	private @NotNull String invalidIdentifierMessage(@NotNull String suffix, @NotNull String invalidIdentifier) {
 		return "Not a valid identifier" + suffix + ": " + invalidIdentifier;
 	}
 
@@ -293,13 +291,11 @@ public class AvroIdlAnnotator implements Annotator {
 		}
 	}
 
-	@Nullable
-	private IElementType findPrimitiveType(@Nullable PsiElement type) {
+	private @Nullable IElementType findPrimitiveType(@Nullable PsiElement type) {
 		return (type instanceof AvroIdlPrimitiveType || type instanceof AvroIdlResultType) ? type.getLastChild().getNode().getElementType() : null;
 	}
 
-	@Nullable
-	private AvroIdlJsonValue findSchemaProperty(@NotNull AvroIdlType type, @NotNull String name) {
+	private @Nullable AvroIdlJsonValue findSchemaProperty(@NotNull AvroIdlType type, @NotNull String name) {
 		for (AvroIdlSchemaProperty schemaProperty : type.getSchemaPropertyList()) {
 			if (name.equals(schemaProperty.getName())) {
 				return schemaProperty.getJsonValue();
@@ -423,8 +419,7 @@ public class AvroIdlAnnotator implements Annotator {
 		}
 	}
 
-	@NotNull
-	private String duplicateSchemaMessage(String schemaName) {
+	private @NotNull String duplicateSchemaMessage(String schemaName) {
 		return String.format("Schema '%s' is already defined", schemaName);
 	}
 

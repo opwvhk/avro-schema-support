@@ -38,8 +38,7 @@ public class AvroIdlUtil {
 	private static final Logger LOG = Logger.getInstance(AvroIdlUtil.class);
 	public static final @NotNull Key<Boolean> IS_ERROR_KEY = Key.create("isError");
 
-	@NotNull
-	public static List<NavigationItem> findNavigableNamedSchemasInProject(Project project) {
+	public static @NotNull List<NavigationItem> findNavigableNamedSchemasInProject(Project project) {
 		List<NavigationItem> result = new ArrayList<>();
 
 		final PsiManager psiManager = PsiManager.getInstance(project);
@@ -72,20 +71,17 @@ public class AvroIdlUtil {
 		return type.isInstance(object) ? Stream.of(type.cast(object)) : Stream.empty();
 	}
 
-	@NotNull
-	public static Stream<LookupElement> findAllSchemaNamesAvailableInProtocol(@NotNull AvroIdlFile protocolFile) {
+	public static @NotNull Stream<LookupElement> findAllSchemaNamesAvailableInProtocol(@NotNull AvroIdlFile protocolFile) {
 		return readProtocol(protocolFile).flatMap(protocol -> findAllSchemaNamesAvailableInProtocol(protocol, false, ""));
 	}
 
-	@NotNull
-	public static Stream<LookupElement> findAllSchemaNamesAvailableInProtocol(@NotNull AvroIdlProtocolDeclaration protocol, boolean errorsOnly,
-	                                                                          @NotNull String currentNamespace) {
+	public static @NotNull Stream<LookupElement> findAllSchemaNamesAvailableInProtocol(@NotNull AvroIdlProtocolDeclaration protocol, boolean errorsOnly,
+                                                                                       @NotNull String currentNamespace) {
 		return findAllSchemaNamesAvailableInProtocol(protocol, errorsOnly, currentNamespace, new Schema.Parser());
 	}
 
-	@NotNull
-	private static Stream<LookupElement> findAllSchemaNamesAvailableInProtocol(@NotNull AvroIdlProtocolDeclaration protocol, boolean errorsOnly,
-	                                                                           @NotNull String currentNamespace, @NotNull Schema.Parser avroSchemaParser) {
+	private static @NotNull Stream<LookupElement> findAllSchemaNamesAvailableInProtocol(@NotNull AvroIdlProtocolDeclaration protocol, boolean errorsOnly,
+                                                                                        @NotNull String currentNamespace, @NotNull Schema.Parser avroSchemaParser) {
 		final Module module = ModuleUtil.findModuleForPsiElement(protocol);
 		return Stream.ofNullable(protocol.getProtocolBody())
 			.flatMap(body -> Stream.concat(
@@ -98,9 +94,8 @@ public class AvroIdlUtil {
 			));
 	}
 
-	@NotNull
-	private static Stream<LookupElement> findAllSchemaNamesAvailableFromImport(Module module, AvroIdlImportDeclaration importDeclaration, boolean errorsOnly,
-	                                                                           @NotNull String currentNamespace, @NotNull Schema.Parser avroSchemaParser) {
+	private static @NotNull Stream<LookupElement> findAllSchemaNamesAvailableFromImport(Module module, AvroIdlImportDeclaration importDeclaration, boolean errorsOnly,
+                                                                                        @NotNull String currentNamespace, @NotNull Schema.Parser avroSchemaParser) {
 		AvroIdlImportType importType = importDeclaration.getImportType();
 		final AvroIdlJsonStringLiteral importedFileReferenceElement = importDeclaration.getJsonStringLiteral();
 		final String importedFileReference = getJsonString(importedFileReferenceElement);
@@ -154,9 +149,8 @@ public class AvroIdlUtil {
 		return Stream.empty();
 	}
 
-	@NotNull
-	private static LookupElement createLookupElement(@NotNull String namespace, AvroIdlJsonStringLiteral importedFileReferenceElement, PsiManager psiManager,
-	                                                 VirtualFile importedFile, Schema schema) {
+	private static @NotNull LookupElement createLookupElement(@NotNull String namespace, AvroIdlJsonStringLiteral importedFileReferenceElement, PsiManager psiManager,
+                                                              VirtualFile importedFile, Schema schema) {
 		final PsiFile psiProtocolFile = psiManager.findFile(importedFile);
 		if (psiProtocolFile instanceof JsonFile) {
 			final PsiElement[] elements = PsiTreeUtil.collectElements(psiProtocolFile,
@@ -197,8 +191,7 @@ public class AvroIdlUtil {
 		return false;
 	}
 
-	@NotNull
-	private static LookupElement lookupElement(@NotNull PsiElement psiElement, @NotNull Schema schema, @NotNull String currentNamespace) {
+	private static @NotNull LookupElement lookupElement(@NotNull PsiElement psiElement, @NotNull Schema schema, @NotNull String currentNamespace) {
 		final String namespace = schema.getNamespace();
 		final String schemaName = schema.getName();
 		final String schemaFullName = schema.getFullName();
@@ -207,17 +200,15 @@ public class AvroIdlUtil {
 		return lookupElement;
 	}
 
-	@NotNull
-	private static LookupElement lookupElement(@NotNull AvroIdlNamedSchemaDeclaration schemaDeclaration, @NotNull String currentNamespace) {
+	private static @NotNull LookupElement lookupElement(@NotNull AvroIdlNamedSchemaDeclaration schemaDeclaration, @NotNull String currentNamespace) {
 		final LookupElement lookupElement = lookupElement(schemaDeclaration, requireNonNull(schemaDeclaration.getName()),
 			requireNonNull(schemaDeclaration.getFullName()), AvroIdlPsiUtil.getNamespace(schemaDeclaration), currentNamespace);
 		lookupElement.putUserData(IS_ERROR_KEY, schemaDeclaration.isErrorType());
 		return lookupElement;
 	}
 
-	@NotNull
-	private static LookupElement lookupElement(@NotNull PsiElement psiElement, @NotNull String schemaName, @NotNull String schemaFullName,
-	                                           @NotNull String namespace, @NotNull String currentNamespace) {
+	private static @NotNull LookupElement lookupElement(@NotNull PsiElement psiElement, @NotNull String schemaName, @NotNull String schemaFullName,
+                                                        @NotNull String namespace, @NotNull String currentNamespace) {
 		if (namespace.isEmpty()) {
 			return LookupElementBuilder.create(psiElement, schemaName);
 		} else if (namespace.equals(currentNamespace)) {

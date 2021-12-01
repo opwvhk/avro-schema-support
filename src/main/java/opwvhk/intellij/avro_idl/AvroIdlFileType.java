@@ -19,27 +19,23 @@ public class AvroIdlFileType extends LanguageFileType {
         super(AvroIdlLanguage.INSTANCE);
     }
 
-    @NotNull
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "Avro IDL";
     }
 
-    @NotNull
     @Override
-    public String getDescription() {
+    public @NotNull String getDescription() {
         return "Apache Avro™ IDL";
     }
 
-    @NotNull
     @Override
-    public String getDefaultExtension() {
+    public @NotNull String getDefaultExtension() {
         return "avdl";
     }
 
-    @Nullable
     @Override
-    public Icon getIcon() {
+    public @Nullable Icon getIcon() {
         return AvroIdlIcons.FILE;
     }
 }

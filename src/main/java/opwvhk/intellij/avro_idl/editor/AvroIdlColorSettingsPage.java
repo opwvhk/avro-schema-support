@@ -17,21 +17,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AvroIdlColorSettingsPage implements ColorSettingsPage {
-    @Nullable
     @Override
-    public Icon getIcon() {
+    public @Nullable Icon getIcon() {
         return AvroIdlIcons.FILE;
     }
 
-    @NotNull
     @Override
-    public SyntaxHighlighter getHighlighter() {
+    public @NotNull SyntaxHighlighter getHighlighter() {
         return new AvroIdlSyntaxHighlighter();
     }
 
-    @NotNull
     @Override
-    public String getDemoText() {
+    public @NotNull String getDemoText() {
         return
         "/**\n" +
         " * An example protocol in Avro IDL\n" +
@@ -75,29 +72,25 @@ public class AvroIdlColorSettingsPage implements ColorSettingsPage {
         "}\n";
     }
 
-    @Nullable
     @Override
-    public Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
+    public @Nullable Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
         Map<String, TextAttributesKey> map = new HashMap<>();
         map.put("annotation", AvroIdlSyntaxColors.ANNOTATION);
         return map;
     }
 
-    @NotNull
     @Override
-    public AttributesDescriptor[] getAttributeDescriptors() {
+    public @NotNull AttributesDescriptor[] getAttributeDescriptors() {
         return AvroIdlSyntaxColors.DESCRIPTORS;
     }
 
-    @NotNull
     @Override
-    public ColorDescriptor[] getColorDescriptors() {
+    public @NotNull ColorDescriptor[] getColorDescriptors() {
         return ColorDescriptor.EMPTY_ARRAY;
     }
 
-    @NotNull
     @Override
-    public String getDisplayName() {
+    public @NotNull String getDisplayName() {
         return AvroIdlLanguage.INSTANCE.getDisplayName();
     }
 }

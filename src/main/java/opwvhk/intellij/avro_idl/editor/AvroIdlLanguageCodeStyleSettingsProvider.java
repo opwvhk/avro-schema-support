@@ -9,9 +9,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class AvroIdlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsProvider {
 
-	@NotNull
 	@Override
-	public Language getLanguage() {
+    public @NotNull Language getLanguage() {
 		return AvroIdlLanguage.INSTANCE;
 	}
 

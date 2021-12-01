@@ -4,7 +4,7 @@ import java.util.*
 plugins {
 	`java-library`
 	id("java")
-	id("org.jetbrains.intellij") version "1.2.0"
+	id("org.jetbrains.intellij") version "1.3.0"
 }
 
 group = "net.sf.opk"
@@ -20,10 +20,16 @@ dependencies {
 	testImplementation("org.assertj", "assertj-core", "3.20.2")
 }
 
+tasks.withType<JavaCompile> {
+	options.compilerArgs.add("-Xlint:unchecked")
+	options.isDeprecation = true
+}
+
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-	version.set("2020.3")
-	plugins.set(listOf("com.intellij.java", "PsiViewer:203-SNAPSHOT")) // Add the java plugin here to satisfy test dependencies.
+	//version.set("2020.3")
+	version.set("2021.2.3")
+	plugins.set(listOf("com.intellij.java", "PsiViewer:212-SNAPSHOT")) // Add the java plugin here to satisfy test dependencies.
 }
 
 tasks {
@@ -40,6 +46,7 @@ tasks {
 			<li>Improved file import references</li>
 			<li>Fixed range exception in references</li>
 			<li>Added error for annotations on references (triggers a bug in Avro &lt; 1.11.1, breaks in later Avro versions)</li>
+			<li>The plugin is now tested with 2021.2.3 instead of 2020.3</li>
 			</ul>
 			<p>Version 203.1.1:</p>
 			<ul>
@@ -103,8 +110,8 @@ tasks {
 		fun forIdes(vararg ides: String): (String) -> List<String> { return { version -> ides.map { "$it-$version" } } }
 		// IntelliJ Community (IC), IntelliJ Ultimate (IU), PyCharm Community (PCC) &, PyCharm professional (PY) editions
 		// with versions ranging from Fall 2020 to the latest release
-		val intellijVersions = listOf("2020.3.2", "2021.1", "2021.1.2", "2021.2").flatMap(forIdes("IC", "IU"))
-		val pycharmVersions = listOf("2020.3.3", "2021.1", "2021.1.2", "2021.2").flatMap(forIdes("PCC", "PY"))
+		val intellijVersions = listOf("2020.3.3", "2021.1", "2021.1.2", "2021.2.3", "2021.3").flatMap(forIdes("IC", "IU"))
+		val pycharmVersions = listOf("2020.3.3", "2021.1", "2021.1.2", "2021.2.3", "2021.3").flatMap(forIdes("PCC", "PY"))
 		ideVersions.set(intellijVersions + pycharmVersions)
 		failureLevel.set(EnumSet.complementOf(EnumSet.of(FailureLevel.DEPRECATED_API_USAGES)))
 	}

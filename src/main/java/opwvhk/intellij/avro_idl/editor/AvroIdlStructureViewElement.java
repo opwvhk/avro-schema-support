@@ -107,13 +107,11 @@ public class AvroIdlStructureViewElement extends PsiTreeElementBase<PsiElement> 
 		return getValue().getNode().getElementType().toString();
 	}
 
-	@NotNull
-	private String text(@Nullable String text) {
+	private @NotNull String text(@Nullable String text) {
 		return text == null || text.isBlank() ? "???" : text;
 	}
 
-	@NotNull
-	private String text(@NotNull String format, @Nullable Object... parameters) {
+	private @NotNull String text(@NotNull String format, @Nullable Object... parameters) {
 		for (Object parameter : parameters) {
 			if (parameter == null) {
 				return "???";
@@ -122,8 +120,7 @@ public class AvroIdlStructureViewElement extends PsiTreeElementBase<PsiElement> 
 		return String.format(format, parameters);
 	}
 
-	@NotNull
-	private String text(@Nullable AvroIdlType type) {
+	private @NotNull String text(@Nullable AvroIdlType type) {
 		if (type instanceof AvroIdlArrayType) {
 			return text("array<%s>", text(((AvroIdlArrayType) type).getType()));
 		} else if (type instanceof AvroIdlMapType) {

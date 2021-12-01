@@ -15,8 +15,7 @@ public class AvroIdlStructureViewModel extends StructureViewModelBase implements
 		super(psiFile, new AvroIdlStructureViewElement(psiFile));
 	}
 
-	@NotNull
-	public Sorter[] getSorters() {
+	public @NotNull Sorter[] getSorters() {
 		return new Sorter[]{Sorter.ALPHA_SORTER};
 	}
 

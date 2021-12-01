@@ -46,7 +46,7 @@ public class AvroIdlCompatibilityCheck extends PreloadingActivity implements Sta
 		final IdeaPluginDescriptor descriptor = PluginManagerCore.getPlugin(OLD_PLUGIN_ID);
 		if (descriptor != null && !PluginManagerCore.isDisabled(OLD_PLUGIN_ID)) {
 
-			// The old Avro plugin by Abigail Buccaneer is installed and enabled. This can cause problems, so offer to disable it.
+			// The old Avro plugin by Abigail Buccaneer is both installed and enabled. This can cause problems, so offer to disable it.
 
 			final String offendingPluginName = descriptor.getName();
 			// Reuses the strings used by the PluginReplacement extension point, but now the other way around.
@@ -55,7 +55,6 @@ public class AvroIdlCompatibilityCheck extends PreloadingActivity implements Sta
 			final NotificationGroup notificationGroup = requireNonNull(NotificationGroup.findRegisteredGroup("Avro IDL Important"));
 
 			// Use a custom implementation to have it be expanded by default.
-			//final Notification notification = notificationGroup.createNotification(message, NotificationType.WARNING);
 			final Notification notification = new FullContentNotification(notificationGroup, title, message, NotificationType.WARNING);
 			notification
 				.addAction(NotificationAction.createSimple(IdeBundle.message("button.disable"), () -> {

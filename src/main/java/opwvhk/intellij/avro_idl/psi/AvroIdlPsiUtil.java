@@ -32,8 +32,7 @@ import static com.intellij.psi.TokenType.WHITE_SPACE;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
 public class AvroIdlPsiUtil {
-	@Nullable
-	public static PsiElement getNameIdentifier(@NotNull AvroIdlNamedType owner) {
+	public static @Nullable PsiElement getNameIdentifier(@NotNull AvroIdlNamedType owner) {
 		ASTNode nameNode = owner.getNode().findChildByType(IDENTIFIER);
 		return nameNode != null ? nameNode.getPsi() : null;
 	}
@@ -44,9 +43,7 @@ public class AvroIdlPsiUtil {
 		return identifierNode.getStartOffset();
 	}
 
-	@Nullable
-	@NonNls
-	public static String getName(@NotNull AvroIdlNamedType owner) {
+	public static @Nullable @NonNls String getName(@NotNull AvroIdlNamedType owner) {
 		PsiElement id = getNameIdentifier(owner);
 		return id != null ? id.getText() : null;
 	}
@@ -66,9 +63,7 @@ public class AvroIdlPsiUtil {
 		return owner;
 	}
 
-	@Nullable
-	@NonNls
-	public static String getFullName(@NotNull AvroIdlNameIdentifierOwner owner) {
+	public static @Nullable @NonNls String getFullName(@NotNull AvroIdlNameIdentifierOwner owner) {
 		String name = getName(owner);
 		if (name == null || name.contains(".")) {
 			return name;
@@ -76,14 +71,12 @@ public class AvroIdlPsiUtil {
 		return getNamespacePrefix(owner) + name;
 	}
 
-	@NotNull
-	public static String getNamespacePrefix(@Nullable PsiElement owner) {
+	public static @NotNull String getNamespacePrefix(@Nullable PsiElement owner) {
 		String namespace = getNamespace(owner);
 		return namespace.isEmpty() ? "" : namespace + ".";
 	}
 
-	@NotNull
-	public static String getNamespace(@Nullable PsiElement owner) {
+	public static @NotNull String getNamespace(@Nullable PsiElement owner) {
 		if (owner == null) {
 			return "";
 		}
@@ -109,23 +102,19 @@ public class AvroIdlPsiUtil {
 		return namedSchemaDeclaration.getNode().findChildByType(AvroIdlTypes.ERROR) != null;
 	}
 
-	@Nullable
-	public static AvroIdlNamedSchemaReference getReference(@NotNull AvroIdlReferenceType owner) {
+	public static @Nullable AvroIdlNamedSchemaReference getReference(@NotNull AvroIdlReferenceType owner) {
 		return AvroIdlNamedSchemaReference.forType(owner);
 	}
 
-	@NotNull
-	public static AvroIdlNamedSchemaReference getReference(@NotNull AvroIdlMessageAttributeThrows owner) {
+	public static @NotNull AvroIdlNamedSchemaReference getReference(@NotNull AvroIdlMessageAttributeThrows owner) {
 		return AvroIdlNamedSchemaReference.forMessageAttribute(owner);
 	}
 
-	@NotNull
-	public static AvroIdlEnumConstantReference getReference(@NotNull AvroIdlEnumDefault owner) {
+	public static @NotNull AvroIdlEnumConstantReference getReference(@NotNull AvroIdlEnumDefault owner) {
 		return AvroIdlEnumConstantReference.forDefault(owner);
 	}
 
-	@Nullable
-	public static PsiFileReference getReference(@NotNull AvroIdlJsonStringLiteral owner) {
+	public static @Nullable PsiFileReference getReference(@NotNull AvroIdlJsonStringLiteral owner) {
 		if (owner.getParent() instanceof AvroIdlImportDeclaration) {
 			final Optional<AvroIdlImportType> importType = Optional.ofNullable(((AvroIdlImportDeclaration) owner.getParent()).getImportType());
 			final IElementType importElementType = importType.map(PsiElement::getFirstChild).map(PsiElement::getNode).map(ASTNode::getElementType).orElse(null);
@@ -154,54 +143,45 @@ public class AvroIdlPsiUtil {
 		}
 	}
 
-	@Nullable
-	public static PsiFileReference getLastFileReference(@NotNull AvroIdlJsonStringLiteral owner) {
+	public static @Nullable PsiFileReference getLastFileReference(@NotNull AvroIdlJsonStringLiteral owner) {
 		return getReference(owner);
 	}
 
-	@NotNull
-	public static ItemPresentation getPresentation(final AvroIdlNamedType element) {
+	public static @NotNull ItemPresentation getPresentation(final AvroIdlNamedType element) {
 		//noinspection ConstantConditions
 		return new ItemPresentation() {
-			@Nullable
 			@Override
-			public String getPresentableText() {
+            public @Nullable String getPresentableText() {
 				return element.getName();
 			}
 
-			@Nullable
 			@Override
-			public String getLocationString() {
+            public @Nullable String getLocationString() {
 				return element.getContainingFile().getName();
 			}
 
-			@Nullable
 			@Override
-			public Icon getIcon(boolean unused) {
+            public @Nullable Icon getIcon(boolean unused) {
 				return AvroIdlIcons.FILE;
 			}
 		};
 	}
 
-	@NotNull
-	public static ItemPresentation getPresentation(final AvroIdlEnumConstant element) {
+	public static @NotNull ItemPresentation getPresentation(final AvroIdlEnumConstant element) {
 		//noinspection ConstantConditions
 		return new ItemPresentation() {
-			@Nullable
 			@Override
-			public String getPresentableText() {
+            public @Nullable String getPresentableText() {
 				return ((AvroIdlEnumDeclaration) element.getParent().getParent()).getName() + "." + element.getName();
 			}
 
-			@Nullable
 			@Override
-			public String getLocationString() {
+            public @Nullable String getLocationString() {
 				return element.getContainingFile().getName();
 			}
 
-			@Nullable
 			@Override
-			public Icon getIcon(boolean unused) {
+            public @Nullable Icon getIcon(boolean unused) {
 				return AvroIdlIcons.FILE;
 			}
 		};

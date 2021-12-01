@@ -17,27 +17,23 @@ public class AvroProtocolFileType extends LanguageFileType {
 		super(AvroProtocolLanguage.INSTANCE);
 	}
 
-	@NotNull
 	@Override
-	public String getName() {
+    public @NotNull String getName() {
 		return "Avro Protocol";
 	}
 
-	@NotNull
 	@Override
-	public String getDescription() {
+    public @NotNull String getDescription() {
 		return "Apache Avro™ Protocol";
 	}
 
-	@NotNull
 	@Override
-	public String getDefaultExtension() {
+    public @NotNull String getDefaultExtension() {
 		return "avpr";
 	}
 
-	@Nullable
 	@Override
-	public Icon getIcon() {
+    public @Nullable Icon getIcon() {
 		return AvroIdlIcons.FILE;
 	}
 }

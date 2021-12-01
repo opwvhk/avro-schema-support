@@ -63,8 +63,7 @@ public class AvroIdlFoldingBuilder implements FoldingBuilder, DumbAware {
 		return document.getLineNumber(range.getStartOffset()) == document.getLineNumber(range.getEndOffset());
 	}
 
-	@Nullable
-	private TextRange getFoldRange(@NotNull ASTNode node) {
+	private @Nullable TextRange getFoldRange(@NotNull ASTNode node) {
 		final IElementType elementType = node.getElementType();
 		if (elementType == BLOCK_COMMENT || elementType == DOC_COMMENT) {
 			return node.getTextRange();
@@ -79,8 +78,7 @@ public class AvroIdlFoldingBuilder implements FoldingBuilder, DumbAware {
 		return null;
 	}
 
-	@Nullable
-	private TextRange getFoldRange(@NotNull ASTNode node, @NotNull IElementType startElementType, @NotNull IElementType endElementType) {
+	private @Nullable TextRange getFoldRange(@NotNull ASTNode node, @NotNull IElementType startElementType, @NotNull IElementType endElementType) {
 		final ASTNode foldStart = node.findChildByType(startElementType);
 		final ASTNode foldEnd = node.findChildByType(endElementType, foldStart);
 		if (foldStart != null && foldEnd != null) {

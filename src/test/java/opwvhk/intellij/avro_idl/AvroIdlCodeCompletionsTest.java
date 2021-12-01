@@ -108,8 +108,7 @@ public class AvroIdlCodeCompletionsTest extends LightJavaCodeInsightFixtureTestC
 		assertThat(getBasicCompletions("MessageThrowsClause.avdl")).containsExactlyInAnyOrder("Failure");
 	}
 
-	@Nullable
-	private List<String> getBasicCompletions(String... filePaths) {
+	private @Nullable List<String> getBasicCompletions(String... filePaths) {
 		myFixture.configureByFiles(filePaths);
 		myFixture.complete(CompletionType.BASIC, 1);
 		return myFixture.getLookupElementStrings();
