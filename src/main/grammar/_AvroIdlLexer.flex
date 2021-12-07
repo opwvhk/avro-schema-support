@@ -32,7 +32,7 @@ STRING_LITERAL=\"([^\"\\\n\r]|\\([ntbrf\\'\"]|[0-7][0-7]?|[0-3][0-7][0-7]))*\"
 DOC_COMMENT="/"\*\*([^*]|\*+[^/*])*\*+"/"
 LINE_COMMENT="//".*
 BLOCK_COMMENT="/"\*([^*]|\*+[^/*])*\*+"/"
-IDENTIFIER=(`[:jletter:][:jletterdigit:]*`)|([:jletter:][:jletterdigit:]*)([.-][:jletter:][:jletterdigit:]*)*
+IDENTIFIER=(\`[:jletter:][:jletterdigit:]*\`|[:jletter:][:jletterdigit:]*)([.-](\`[:jletter:][:jletterdigit:]*\`|[:jletter:][:jletterdigit:]*))*
 
 %%
 <YYINITIAL> {

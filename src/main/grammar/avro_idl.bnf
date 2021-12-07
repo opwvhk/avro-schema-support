@@ -72,9 +72,9 @@
         UUID='uuid'
 
 		// Use this to debug the grammar with the PSI preview
-        IDENTIFIER="regexp:(`\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*`)|\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*([.-]\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*)*"
+        IDENTIFIER="regexp:(\`\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*\`|\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*)([.-](\`\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*\`|\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*))*"
 		// Use this when generating the lexer
-        //IDENTIFIER="regexp:(`[:jletter:][:jletterdigit:]*`)|([:jletter:][:jletterdigit:]*)([.-][:jletter:][:jletterdigit:]*)*"
+        //IDENTIFIER="regexp:(\`[:jletter:][:jletterdigit:]*\`|[:jletter:][:jletterdigit:]*)([.-](\`[:jletter:][:jletterdigit:]*\`|[:jletter:][:jletterdigit:]*))*"
     ]
 
 	consumeTokenMethod("recover.*")="consumeTokenFast"

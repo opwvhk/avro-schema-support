@@ -25,6 +25,7 @@ protocol Simple {
 	/** A TestRecord. */
 	@my-property({"key": 3})
 	record TestRecord {
+		@avro.java.`string`("String")
 		string @order("ignore") name = "foo";
 
 		/** The kind of record. */

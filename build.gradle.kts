@@ -47,6 +47,7 @@ tasks {
 			<li>Fixed range exception in references</li>
 			<li>Added error for annotations on references (triggers a bug in Avro &lt; 1.11.1, breaks in later Avro versions)</li>
 			<li>The plugin is now tested with 2021.2.3 instead of 2020.3</li>
+			<li>Improve identifier parsing to match the Avro IDL grammar</li>
 			</ul>
 			<p>Version 203.1.1:</p>
 			<ul>
