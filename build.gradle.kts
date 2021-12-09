@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "net.sf.opk"
-version = "203.1.2"
+version = "213.0.0-SNAPSHOT"
 
 repositories {
 	mavenCentral()
@@ -36,9 +36,13 @@ tasks {
 	patchPluginXml {
 		version.set(project.version.toString())
 		sinceBuild.set("203")
-		untilBuild.set("213.*")
+		untilBuild.set("221.*")
 		changeNotes.set(
 			"""
+			<p>Version 213.0.0:</p>
+			<ul>
+			<li>...</li>
+			</ul>
 			<p>Version 203.1.2:</p>
 			<ul>
 			<li>Fixed exception when writing a schema as IDL (issue #16)</li>
