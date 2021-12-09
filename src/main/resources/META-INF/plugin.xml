@@ -17,6 +17,7 @@
 		</li>
 		<li>Rename support for schema names (i.e. renaming records/errors, enums and fixed types also updates its references)</li>
 		<li>Recognizes <code>.avsc</code> and <code>.avpr</code> files as JSON5 (i.e. with comments) and supplies JSON schemas for them</li>
+		<li>Refactoring: supports converting Avro IDL files (.avdl) to/from Avro Schema/Protocol files (.avsc and .avpr)</li>
 	</ul></p>
 	]]></description>
 

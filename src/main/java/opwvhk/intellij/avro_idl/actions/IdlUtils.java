@@ -39,6 +39,7 @@ public final class IdlUtils {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	static <T> T getFieldValue(java.lang.reflect.Field field, Object owner) {
 		try {
 			return (T) field.get(owner);
@@ -57,6 +58,7 @@ public final class IdlUtils {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	static <T> T invokeMethod(Method method, Object owner, Object... parameters) {
 		try {
 			return (T) method.invoke(owner, parameters);
@@ -89,9 +91,9 @@ public final class IdlUtils {
 		writeIdlProtocol(writer, protocol, protocolNameSpace, protocolFullName.substring(lastDotPos + 1), protocol.getTypes(), protocol.getMessages().values());
 	}
 
-	public static void writeIdlProtocol(Writer writer, String protocolNameSpace, String protocolName, Schema... schemas) throws IOException {
+	public static void writeIdlProtocol(Writer writer, String protocolNameSpace, String protocolName, Schema schema) throws IOException {
 		final JsonProperties emptyProperties = Schema.create(Schema.Type.NULL);
-		writeIdlProtocol(writer, emptyProperties, protocolNameSpace, protocolName, Arrays.asList(schemas), Collections.emptyList());
+		writeIdlProtocol(writer, emptyProperties, protocolNameSpace, protocolName, List.of(schema), Collections.emptyList());
 	}
 
 	public static void writeIdlProtocol(Writer writer, JsonProperties properties, String protocolNameSpace, String protocolName, Collection<Schema> schemas,
@@ -130,7 +132,7 @@ public final class IdlUtils {
 									Set<Schema> toDeclare) throws IOException {
 		Schema.Type type = schema.getType();
 		writeSchemaAttributes(schema, writer, jsonGen);
-		String namespace = schema.getNamespace(); // Fails for unnamed schema types (i.e. other then record, enum & fixed)
+		String namespace = schema.getNamespace(); // Fails for unnamed schema types (other types than record, enum & fixed)
 		if (!Objects.equals(namespace, protocolNameSpace)) {
 			writer.append("    @namespace(\"").append(namespace).append("\")\n");
 		}
@@ -309,7 +311,7 @@ public final class IdlUtils {
 			generator.writeNull();
 		} else if (datum instanceof Map) { // record, map
 			generator.writeStartObject();
-			for (Map.Entry<Object, Object> entry : ((Map<Object, Object>) datum).entrySet()) {
+			for (Map.Entry<?,?> entry : ((Map<?,?>)datum).entrySet()) {
 				generator.writeFieldName(entry.getKey().toString());
 				toJson(entry.getValue(), generator);
 			}

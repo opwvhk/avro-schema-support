@@ -118,9 +118,10 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testInspectionForDuplicateAnnotations() {
-		myFixture.configureByFiles("DuplicateAnnotations.avdl");
 		myFixture.enableInspections(AvroIdlDuplicateAnnotationsInspectionTool.class);
+		myFixture.configureByFiles("DuplicateAnnotations.avdl");
 		final List<HighlightInfo> highlightInfoList = myFixture.doHighlighting();
 		final List<Highlight> highlight = Highlight.fromHighlightInfoList(highlightInfoList);
 		assertContainsOrdered(highlight,
@@ -130,6 +131,7 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testQuickFixForDuplicateAnnotations() {
 		myFixture.enableInspections(AvroIdlDuplicateAnnotationsInspectionTool.class);
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("DuplicateAnnotations.avdl");
@@ -143,6 +145,7 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		myFixture.checkResultByFile("DuplicateAnnotationsFixed.avdl");
 	}
 
+	@SuppressWarnings("unused")
 	public void _testDocumentation() {
 		myFixture.configureByFiles("DocumentationTestData.java", "DocumentationTestData.simple");
 		final PsiElement originalElement = myFixture.getElementAtCaret();
