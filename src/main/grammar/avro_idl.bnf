@@ -1,3 +1,4 @@
+//noinspection RegExpRedundantEscapeForFile
 {
     parserClass = "opwvhk.intellij.avro_idl.syntax.AvroIdlParser"
     extends = "com.intellij.extapi.psi.ASTWrapperPsiElement"
