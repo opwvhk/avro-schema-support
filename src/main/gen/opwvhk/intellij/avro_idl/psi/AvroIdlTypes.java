@@ -30,6 +30,7 @@ public interface AvroIdlTypes {
   IElementType MESSAGE_ATTRIBUTE_THROWS = new AvroIdlElementType("MESSAGE_ATTRIBUTE_THROWS");
   IElementType MESSAGE_DECLARATION = new AvroIdlElementType("MESSAGE_DECLARATION");
   IElementType NAMED_SCHEMA_DECLARATION = new AvroIdlElementType("NAMED_SCHEMA_DECLARATION");
+  IElementType NULLABLE_TYPE = new AvroIdlElementType("NULLABLE_TYPE");
   IElementType PRIMITIVE_TYPE = new AvroIdlElementType("PRIMITIVE_TYPE");
   IElementType PROTOCOL_BODY = new AvroIdlElementType("PROTOCOL_BODY");
   IElementType PROTOCOL_DECLARATION = new AvroIdlElementType("PROTOCOL_DECLARATION");
@@ -76,6 +77,7 @@ public interface AvroIdlTypes {
   IElementType NULL = new AvroIdlTokenType("null");
   IElementType ONEWAY = new AvroIdlTokenType("oneway");
   IElementType PROTOCOL = new AvroIdlTokenType("protocol");
+  IElementType QUESTION_MARK = new AvroIdlTokenType("?");
   IElementType RECORD = new AvroIdlTokenType("record");
   IElementType RIGHT_ANGLE = new AvroIdlTokenType(">");
   IElementType RIGHT_BRACE = new AvroIdlTokenType("}");
@@ -158,6 +160,9 @@ public interface AvroIdlTypes {
       }
       else if (type == MESSAGE_DECLARATION) {
         return new AvroIdlMessageDeclarationImpl(node);
+      }
+      else if (type == NULLABLE_TYPE) {
+        return new AvroIdlNullableTypeImpl(node);
       }
       else if (type == PRIMITIVE_TYPE) {
         return new AvroIdlPrimitiveTypeImpl(node);

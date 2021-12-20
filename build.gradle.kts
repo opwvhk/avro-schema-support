@@ -49,6 +49,7 @@ tasks {
 			<li>Refactoring actions (converting IDL from/to schema/protocol files) now use the build tool window</li>
 			<li>Report changes upon startup after installation</li>
 			<li>Miscellaneous refactoring and small cosmetic changes</li>
+			<li>Added support for Kotlin style nullable types (Avro &ge; 1.11.1)</li>
 			</ul>
 			<p>Version 203.1.2:</p>
 			<ul data-version="203.1.2">

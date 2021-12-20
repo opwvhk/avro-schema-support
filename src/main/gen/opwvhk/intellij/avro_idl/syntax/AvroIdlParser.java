@@ -38,8 +38,9 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
     create_token_set_(JSON_STRING_LITERAL, JSON_VALUE),
     create_token_set_(ENUM_DECLARATION, FIXED_DECLARATION, NAMED_SCHEMA_DECLARATION, RECORD_DECLARATION),
-    create_token_set_(ARRAY_TYPE, DECIMAL_TYPE, MAP_TYPE, PRIMITIVE_TYPE,
-      REFERENCE_TYPE, RESULT_TYPE, TYPE, UNION_TYPE),
+    create_token_set_(ARRAY_TYPE, DECIMAL_TYPE, MAP_TYPE, NULLABLE_TYPE,
+      PRIMITIVE_TYPE, REFERENCE_TYPE, RESULT_TYPE, TYPE,
+      UNION_TYPE),
   };
 
   /* ********************************************************** */
@@ -1476,11 +1477,39 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // (PrimitiveType | ReferenceType) [ QUESTION_MARK ]
+  public static boolean NullableType(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "NullableType")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _COLLAPSE_, NULLABLE_TYPE, "<nullable type>");
+    r = NullableType_0(b, l + 1);
+    r = r && NullableType_1(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // PrimitiveType | ReferenceType
+  private static boolean NullableType_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "NullableType_0")) return false;
+    boolean r;
+    r = PrimitiveType(b, l + 1);
+    if (!r) r = ReferenceType(b, l + 1);
+    return r;
+  }
+
+  // [ QUESTION_MARK ]
+  private static boolean NullableType_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "NullableType_1")) return false;
+    consumeToken(b, QUESTION_MARK);
+    return true;
+  }
+
+  /* ********************************************************** */
   // PrimitiveType1 | PrimitiveType2 | PrimitiveType3
   public static boolean PrimitiveType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "PrimitiveType")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _COLLAPSE_, PRIMITIVE_TYPE, "<primitive type>");
+    Marker m = enter_section_(b, l, _COLLAPSE_ | _UPPER_, PRIMITIVE_TYPE, "<primitive type>");
     r = PrimitiveType1(b, l + 1);
     if (!r) r = PrimitiveType2(b, l + 1);
     if (!r) r = PrimitiveType3(b, l + 1);
@@ -1891,7 +1920,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   public static boolean ReferenceType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ReferenceType")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, REFERENCE_TYPE, "<reference type>");
+    Marker m = enter_section_(b, l, _UPPER_, REFERENCE_TYPE, "<reference type>");
     r = ReferenceType1(b, l + 1);
     if (!r) r = ReferenceType2(b, l + 1);
     exit_section_(b, l, m, r, false, null);
@@ -2005,7 +2034,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ArrayType | MapType | UnionType | PrimitiveType | ReferenceType
+  // ArrayType | MapType | UnionType | NullableType
   public static boolean Type(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Type")) return false;
     boolean r;
@@ -2013,8 +2042,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     r = ArrayType(b, l + 1);
     if (!r) r = MapType(b, l + 1);
     if (!r) r = UnionType(b, l + 1);
-    if (!r) r = PrimitiveType(b, l + 1);
-    if (!r) r = ReferenceType(b, l + 1);
+    if (!r) r = NullableType(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }

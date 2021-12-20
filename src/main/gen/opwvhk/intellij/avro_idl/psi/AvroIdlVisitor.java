@@ -97,8 +97,12 @@ public class AvroIdlVisitor extends PsiElementVisitor {
     visitNamespacedNameIdentifierOwner(o);
   }
 
-  public void visitPrimitiveType(@NotNull AvroIdlPrimitiveType o) {
+  public void visitNullableType(@NotNull AvroIdlNullableType o) {
     visitType(o);
+  }
+
+  public void visitPrimitiveType(@NotNull AvroIdlPrimitiveType o) {
+    visitNullableType(o);
   }
 
   public void visitProtocolBody(@NotNull AvroIdlProtocolBody o) {
@@ -118,7 +122,7 @@ public class AvroIdlVisitor extends PsiElementVisitor {
   }
 
   public void visitReferenceType(@NotNull AvroIdlReferenceType o) {
-    visitType(o);
+    visitNullableType(o);
   }
 
   public void visitResultType(@NotNull AvroIdlResultType o) {

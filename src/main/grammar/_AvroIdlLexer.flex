@@ -51,6 +51,7 @@ IDENTIFIER=(\`[:jletter:][:jletterdigit:]*\`|[:jletter:][:jletterdigit:]*)([.-](
   ";"                       { return SEMICOLON; }
   ":"                       { return COLON; }
   "="                       { return EQUALS; }
+  "?"                       { return QUESTION_MARK; }
   "array"                   { return ARRAY; }
   "boolean"                 { return BOOLEAN; }
   "double"                  { return DOUBLE; }

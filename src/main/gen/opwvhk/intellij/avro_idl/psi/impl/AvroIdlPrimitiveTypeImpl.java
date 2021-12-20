@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 import opwvhk.intellij.avro_idl.psi.*;
 
-public class AvroIdlPrimitiveTypeImpl extends AvroIdlTypeImpl implements AvroIdlPrimitiveType {
+public class AvroIdlPrimitiveTypeImpl extends AvroIdlNullableTypeImpl implements AvroIdlPrimitiveType {
 
   public AvroIdlPrimitiveTypeImpl(@NotNull ASTNode node) {
     super(node);

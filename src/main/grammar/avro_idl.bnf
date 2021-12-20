@@ -40,6 +40,7 @@
         SEMICOLON=';'
         COLON=':'
         EQUALS='='
+        QUESTION_MARK='?'
 
         ARRAY='array'
         BOOLEAN='boolean'
@@ -186,7 +187,9 @@ private recoverFormalParameter ::= !(RIGHT_PAREN|COMMA)
 //private recoverMessageAttributes ::= !(SEMICOLON)
 
 fake TypeProperties ::= SchemaProperty* (Documentation | SchemaProperty)*
-Type ::= (ArrayType | MapType | UnionType | PrimitiveType | ReferenceType) { extends=TypeProperties }
+Type ::= (ArrayType | MapType | UnionType | NullableType) { extends=TypeProperties }
+// Should never be part of the AST (all children should be 'upper' productions), but marking it private breaks the generated parser
+NullableType ::= (PrimitiveType | ReferenceType) [ QUESTION_MARK ] { extends=Type }
 //Type ::= (Documentation | SchemaProperty)* (ArrayType | MapType | UnionType | PrimitiveType | ReferenceType)
 ArrayType ::= (ArrayType1 | ArrayType2) { extends=Type }
 private ArrayType1 ::= SchemaProperty+ ArrayType2
@@ -198,14 +201,16 @@ private MapType2 ::= MAP AngleType { pin=1 }
 UnionType ::= UNION LEFT_BRACE UnionContents RIGHT_BRACE { pin=1 extends=Type } // Unions have no schema properties
 private UnionContents ::= [ Type (COMMA Type)* ] { recoverWhile="recoverUnionContents" }
 private recoverUnionContents ::= !(RIGHT_BRACE)
-PrimitiveType ::= (PrimitiveType1 | PrimitiveType2 | PrimitiveType3) { extends=Type }
+// 'upper' is needed because NullableType has extra content; this way, it's included in the PrimitiveType
+upper PrimitiveType ::= (PrimitiveType1 | PrimitiveType2 | PrimitiveType3) { extends=NullableType }
 private PrimitiveType1 ::= SchemaProperty (Documentation | SchemaProperty)* PrimitiveType3
 private PrimitiveType2 ::= Documentation (Documentation | SchemaProperty)* PrimitiveType3
 private PrimitiveType3 ::= BOOLEAN | BYTES | INT | STRING | FLOAT | DOUBLE | LONG | NULL | DATE | TIME_MS | TIMESTAMP_MS| LOCAL_TIMESTAMP_MS | DecimalType | UUID
 DecimalType ::= (DecimalType1 | DecimalType2) { extends=PrimitiveType }
 private DecimalType1 ::= SchemaProperty+ DecimalType2
 private DecimalType2 ::= DECIMAL LEFT_PAREN INT_LITERAL COMMA INT_LITERAL RIGHT_PAREN { pin=1 }
-ReferenceType ::= (ReferenceType1 | ReferenceType2) { extends=Type
+// 'upper' is needed; see PrimitiveType
+upper ReferenceType ::= (ReferenceType1 | ReferenceType2) { extends=NullableType
 	methods=[getReference]
 }
 private ReferenceType1 ::= Documentation* SchemaProperty (Documentation | SchemaProperty)* IDENTIFIER { pin=2 }

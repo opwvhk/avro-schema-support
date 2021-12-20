@@ -6,7 +6,7 @@ import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 import opwvhk.intellij.avro_idl.language.AvroIdlNamedSchemaReference;
 
-public interface AvroIdlReferenceType extends AvroIdlType {
+public interface AvroIdlReferenceType extends AvroIdlNullableType {
 
   @Nullable
   PsiElement getIdentifier();

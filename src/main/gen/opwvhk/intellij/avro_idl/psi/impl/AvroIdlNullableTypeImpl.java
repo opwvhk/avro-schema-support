@@ -9,34 +9,22 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 import opwvhk.intellij.avro_idl.psi.*;
-import opwvhk.intellij.avro_idl.language.AvroIdlNamedSchemaReference;
 
-public class AvroIdlReferenceTypeImpl extends AvroIdlNullableTypeImpl implements AvroIdlReferenceType {
+public class AvroIdlNullableTypeImpl extends AvroIdlTypeImpl implements AvroIdlNullableType {
 
-  public AvroIdlReferenceTypeImpl(@NotNull ASTNode node) {
+  public AvroIdlNullableTypeImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull AvroIdlVisitor visitor) {
-    visitor.visitReferenceType(this);
+    visitor.visitNullableType(this);
   }
 
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof AvroIdlVisitor) accept((AvroIdlVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getIdentifier() {
-    return findChildByType(IDENTIFIER);
-  }
-
-  @Override
-  public @Nullable AvroIdlNamedSchemaReference getReference() {
-    return AvroIdlPsiUtil.getReference(this);
   }
 
 }
