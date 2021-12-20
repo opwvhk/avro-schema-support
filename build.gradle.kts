@@ -41,7 +41,7 @@ tasks {
 			"""
 			<p>Version 213.0.0:</p>
 			<ul>
-			<li>...</li>
+			<li>Refactoring actions (converting IDL from/to schema/protocol files) now use the build tool window</li>
 			</ul>
 			<p>Version 203.1.2:</p>
 			<ul>

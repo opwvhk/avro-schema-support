@@ -1,8 +1,11 @@
 package opwvhk.intellij.avro_idl.actions;
 
-import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.execution.filters.OpenFileHyperlinkInfo;
+import com.intellij.execution.ui.ConsoleView;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileWrapper;
 import opwvhk.intellij.avro_idl.AvroIdlFileType;
 import opwvhk.intellij.avro_idl.AvroProtocolFileType;
 import org.apache.avro.AvroRuntimeException;
@@ -13,36 +16,53 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
-import static opwvhk.intellij.avro_idl.actions.AvroIdlNotifications.error;
-import static opwvhk.intellij.avro_idl.actions.AvroIdlNotifications.info;
+import static com.intellij.execution.ui.ConsoleViewContentType.*;
 
 public class AvroProtocolToIdlAction extends ConversionActionBase {
-	private static final Logger LOGGER = Logger.getInstance(AvroProtocolToIdlAction.class);
-
 	public AvroProtocolToIdlAction() {
 		super("Convert to Avro IDL", AvroProtocolFileType.INSTANCE, AvroIdlFileType.INSTANCE);
 	}
 
 	@Override
-	protected void convertFile(@NotNull Project project, @NotNull VirtualFile file) {
+	protected void convertFile(@NotNull Project project, @NotNull ConsoleView console, @NotNull VirtualFile file) {
+		console.print("Converting " + AvroProtocolFileType.INSTANCE.getDisplayName() + " file ", SYSTEM_OUTPUT);
+		console.printHyperlink(file.getName(), new OpenFileHyperlinkInfo(project, file, 0));
+		console.print(" to an " + AvroIdlFileType.INSTANCE.getDisplayName() + " file\n", SYSTEM_OUTPUT);
+
+		console.print("Parsing Avro Protocol file\n", NORMAL_OUTPUT);
 		final Protocol protocol;
 		try {
 			protocol = Protocol.parse(file.toNioPath().toFile());
 		} catch (AvroRuntimeException | IOException e) {
-			LOGGER.warn("Failed to parse AvroProtocol in " + file.getPresentableName(), e);
-			error(project, "Failed to parse AvroProtocol in %s: please resolve errors first.\n" +
-				"(the error is also written to the idea log)", file.getPresentableName());
+			console.print("Failed to parse AvroProtocol in " + file.getName() + "; please resolve errors first.\n", ERROR_OUTPUT);
+			writeStackTrace(console, e);
 			return;
 		}
-		try {
-			final VirtualFile destinationFile = createSiblingFile(file);
-			try (Writer writer = new OutputStreamWriter(destinationFile.getOutputStream(this))) {
-				IdlUtils.writeIdlProtocol(writer, protocol);
+
+		console.print("Asking for file to write Avro IDL to...\n", NORMAL_OUTPUT);
+		final VirtualFileWrapper wrapper = askForTargetFile(project, "Save as Avro IDL", "Choose the filename to save to",
+			AvroIdlFileType.INSTANCE, file.getParent(), file.getNameWithoutExtension());
+		if (wrapper != null) {
+			final VirtualFile virtualFile = wrapper.getVirtualFile(true);
+			if (virtualFile != null) {
+				console.print("Writing Avro IDL to ", NORMAL_OUTPUT);
+				console.printHyperlink(virtualFile.getName(), new OpenFileHyperlinkInfo(project, virtualFile, 0));
+				console.print("\n", NORMAL_OUTPUT);
+				WriteCommandAction.runWriteCommandAction(project, actionTitle, "AvroIDL", () -> {
+					try (Writer writer = new OutputStreamWriter(virtualFile.getOutputStream(this))) {
+						IdlUtils.writeIdlProtocol(writer, protocol);
+
+						console.print("Wrote Avro IDL \"", NORMAL_OUTPUT);
+						console.print(protocol.getName(), NORMAL_OUTPUT);
+						console.print("\" to ", NORMAL_OUTPUT);
+						console.printHyperlink(virtualFile.getName(), new OpenFileHyperlinkInfo(project, virtualFile, 0));
+						console.print("\n", NORMAL_OUTPUT);
+					} catch (RuntimeException | IOException e) {
+						console.print("Failed to write the Avro IDL to " + virtualFile.getName() + "\n" + e.getLocalizedMessage(), ERROR_OUTPUT);
+						writeStackTrace(console, e);
+					}
+				});
 			}
-			info(project, "Converted AvroProtocol in %s to Avro IDL in %s", file.getPresentableName(), destinationFile.getPresentableName());
-		} catch (AvroRuntimeException | IOException e) {
-			LOGGER.warn("Failed to write Avro IDL", e);
-			error(project, "Failed to write Avro IDL. See the idea log for more details.");
 		}
 	}
 }

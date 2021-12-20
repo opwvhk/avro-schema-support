@@ -1,48 +1,68 @@
 package opwvhk.intellij.avro_idl.actions;
 
-import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.execution.filters.OpenFileHyperlinkInfo;
+import com.intellij.execution.ui.ConsoleView;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileWrapper;
 import opwvhk.intellij.avro_idl.AvroIdlFileType;
 import opwvhk.intellij.avro_idl.AvroProtocolFileType;
-import org.apache.avro.AvroRuntimeException;
 import org.apache.avro.Protocol;
 import org.apache.avro.compiler.idl.Idl;
 import org.apache.avro.compiler.idl.ParseException;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
-import static opwvhk.intellij.avro_idl.actions.AvroIdlNotifications.error;
-import static opwvhk.intellij.avro_idl.actions.AvroIdlNotifications.info;
+import static com.intellij.execution.ui.ConsoleViewContentType.*;
 
 public class AvroIdlToProtocolAction extends ConversionActionBase {
-	private static final Logger LOGGER = Logger.getInstance(AvroIdlToProtocolAction.class);
-
 	public AvroIdlToProtocolAction() {
-		super("Convert to AvroProtocol", AvroIdlFileType.INSTANCE, AvroProtocolFileType.INSTANCE);
+		super("Convert to Avro Protocol", AvroIdlFileType.INSTANCE, AvroProtocolFileType.INSTANCE);
 	}
 
 	@Override
-	protected void convertFile(@NotNull Project project, @NotNull VirtualFile file) {
-		final String protocolAsJson;
+	protected void convertFile(@NotNull Project project, @NotNull ConsoleView console, @NotNull VirtualFile file) {
+		console.print("Converting " + AvroIdlFileType.INSTANCE.getDisplayName() + " file ", SYSTEM_OUTPUT);
+		console.printHyperlink(file.getName(), new OpenFileHyperlinkInfo(project, file, 0));
+		console.print(" to an " + AvroProtocolFileType.INSTANCE.getDisplayName() + " file\n", SYSTEM_OUTPUT);
+
+		console.print("Parsing IDL file\n", NORMAL_OUTPUT);
+		final Protocol protocol;
 		try {
-			final Protocol protocol = new Idl(file.toNioPath().toFile()).CompilationUnit();
-			protocolAsJson = protocol.toString(true);
-		} catch (ParseException | IOException e) {
-			LOGGER.warn("Failed to parse Avro IDL in " + file.getPresentableName(), e);
-			error(project, "Failed to parse Avro IDL in %s: please resolve errors first.\n" +
-				"(the error is also written to the idea log)", file.getPresentableName());
+			final Idl idl = new Idl(file.toNioPath().toFile());
+			protocol = idl.CompilationUnit();
+		} catch (RuntimeException | ParseException | IOException e) {
+			console.print("Failed to parse " + file.getName() + "; please resolve errors first.\n", ERROR_OUTPUT);
+			writeStackTrace(console, e);
 			return;
 		}
-		try {
-			final byte[] jsonBytes = protocolAsJson.getBytes(StandardCharsets.UTF_8);
-			final VirtualFile destinationFile = writeSiblingFile(file, jsonBytes);
-			info(project, "Converted Avro IDL in %s to AvroProtocol in %s", file.getPresentableName(), destinationFile.getPresentableName());
-		} catch (AvroRuntimeException | IOException e) {
-			LOGGER.warn("Failed to write AvroProtocol", e);
-			error(project, "Failed to write AvroProtocol. See the idea log for more details.");
+
+		console.print("Asking for file to write Avro Protocol to...\n", NORMAL_OUTPUT);
+		final VirtualFileWrapper wrapper = askForTargetFile(project, "Save as Avro Protocol", "Choose the filename to save to",
+			AvroProtocolFileType.INSTANCE, file.getParent(), file.getNameWithoutExtension());
+		if (wrapper != null) {
+			final VirtualFile virtualFile = wrapper.getVirtualFile(true);
+			if (virtualFile != null) {
+				console.print("Writing Avro Protocol to ", NORMAL_OUTPUT);
+				console.printHyperlink(virtualFile.getName(), new OpenFileHyperlinkInfo(project, virtualFile, 0));
+				console.print("\n", NORMAL_OUTPUT);
+				WriteCommandAction.runWriteCommandAction(project, actionTitle, "AvroIDL", () -> {
+					try {
+						VfsUtil.saveText(virtualFile, protocol.toString(true));
+						console.print("Wrote Avro Protocol \"", NORMAL_OUTPUT);
+						console.print(protocol.getName(), NORMAL_OUTPUT);
+						console.print("\" to ", NORMAL_OUTPUT);
+						console.printHyperlink(virtualFile.getName(), new OpenFileHyperlinkInfo(project, virtualFile, 0));
+						console.print("\n", NORMAL_OUTPUT);
+					} catch (RuntimeException | IOException e) {
+						console.print("Failed to write the AvroProtocol to " + virtualFile.getName() + "\n" + e.getLocalizedMessage(), ERROR_OUTPUT);
+						writeStackTrace(console, e);
+					}
+				});
+			}
 		}
 	}
 }

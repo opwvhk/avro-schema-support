@@ -96,6 +96,11 @@ public final class IdlUtils {
 		writeIdlProtocol(writer, emptyProperties, protocolNameSpace, protocolName, List.of(schema), Collections.emptyList());
 	}
 
+	public static void writeIdlProtocol(Writer writer, String protocolNameSpace, String protocolName, Collection<Schema> schemas) throws IOException {
+		final JsonProperties emptyProperties = Schema.create(Schema.Type.NULL);
+		writeIdlProtocol(writer, emptyProperties, protocolNameSpace, protocolName, schemas, Collections.emptyList());
+	}
+
 	public static void writeIdlProtocol(Writer writer, JsonProperties properties, String protocolNameSpace, String protocolName, Collection<Schema> schemas,
 										Collection<Protocol.Message> messages) throws IOException {
 		try (JsonGenerator jsonGen = SCHEMA_FACTORY.createGenerator(writer)) {
