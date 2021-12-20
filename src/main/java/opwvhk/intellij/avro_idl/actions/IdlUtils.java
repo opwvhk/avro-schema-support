@@ -15,12 +15,16 @@ import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.util.Objects.requireNonNull;
 
 public final class IdlUtils {
 	static final JsonFactory SCHEMA_FACTORY;
 	private static final Function<Field, JsonNode> DEFAULT_VALUE;
+	private static final Pattern NEWLINE_PATTERN = Pattern.compile("(?U)\\R");
+	private static final String NEWLINE = System.lineSeparator();
 
 	static {
 		SCHEMA_FACTORY = getFieldValue(getField(Schema.class, "FACTORY"), null);
@@ -105,17 +109,17 @@ public final class IdlUtils {
 										Collection<Protocol.Message> messages) throws IOException {
 		try (JsonGenerator jsonGen = SCHEMA_FACTORY.createGenerator(writer)) {
 			if (protocolNameSpace != null) {
-				writer.append("@namespace(\"").append(protocolNameSpace).append("\")\n");
+				writer.append("@namespace(\"").append(protocolNameSpace).append("\")").append(NEWLINE);
 			}
 			writeJsonProperties(properties, Collections.singleton("namespace"), writer, jsonGen, "");
-			writer.append("protocol ").append(requireNonNull(protocolName)).append(" {\n");
+			writer.append("protocol ").append(requireNonNull(protocolName)).append(" {").append(NEWLINE);
 
 			Set<String> alreadyDeclared = new HashSet<>(4);
 			Set<Schema> toDeclare = new LinkedHashSet<>(schemas);
 			boolean first = true;
 			while (!toDeclare.isEmpty()) {
 				if (!first) {
-					writer.append("\n");
+					writer.append(NEWLINE);
 				}
 				Iterator<Schema> iterator = toDeclare.iterator();
 				Schema schema = iterator.next();
@@ -124,12 +128,12 @@ public final class IdlUtils {
 				first = false;
 			}
 			if (!schemas.isEmpty() && !messages.isEmpty()) {
-				writer.append('\n');
+				writer.append(NEWLINE);
 			}
 			for (Protocol.Message message : messages) {
 				writeMessage(message, writer, jsonGen, protocolNameSpace, alreadyDeclared);
 			}
-			writer.append("}\n");
+			writer.append("}").append(NEWLINE);
 		}
 	}
 
@@ -139,7 +143,7 @@ public final class IdlUtils {
 		writeSchemaAttributes(schema, writer, jsonGen);
 		String namespace = schema.getNamespace(); // Fails for unnamed schema types (other types than record, enum & fixed)
 		if (!Objects.equals(namespace, protocolNameSpace)) {
-			writer.append("    @namespace(\"").append(namespace).append("\")\n");
+			writer.append("    @namespace(\"").append(namespace).append("\")").append(NEWLINE);
 		}
 		Set<String> schemaAliases = schema.getAliases();
 		if (!schemaAliases.isEmpty()) {
@@ -147,16 +151,16 @@ public final class IdlUtils {
 			toJson(schemaAliases, jsonGen);
 			jsonGen.flush();
 			resetContext(jsonGen.getOutputContext());
-			writer.append(")\n");
+			writer.append(")").append(NEWLINE);
 		}
 		if (type == Schema.Type.RECORD) {
-			writer.append("    ").append(schema.isError() ? "error" : "record").append(" ").append(schema.getName()).append(" {\n");
+			writer.append("    ").append(schema.isError() ? "error" : "record").append(" ").append(schema.getName()).append(" {").append(NEWLINE);
 			alreadyDeclared.add(schema.getFullName());
 			for (Field field : schema.getFields()) {
 				writeField(schema.getNamespace(), field, writer, jsonGen, alreadyDeclared, toDeclare, true);
-				writer.append(";\n");
+				writer.append(";").append(NEWLINE);
 			}
-			writer.append("    }\n");
+			writer.append("    }").append(NEWLINE);
 		} else if (type == Schema.Type.ENUM) {
 			writer.append("    enum ").append(schema.getName()).append(" {");
 			alreadyDeclared.add(schema.getFullName());
@@ -170,21 +174,18 @@ public final class IdlUtils {
 			} else {
 				throw new AvroRuntimeException("Enum schema must have at least a symbol " + schema);
 			}
-			writer.append("}\n");
+			writer.append("}").append(NEWLINE);
 		} else /* (type == Schema.Type.FIXED) */ {
 			writer.append("    fixed ").append(schema.getName()).append('(')
-				.append(Integer.toString(schema.getFixedSize())).append(");\n");
+				.append(Integer.toString(schema.getFixedSize())).append(");").append(NEWLINE);
 			alreadyDeclared.add(schema.getFullName());
 		}
 	}
 
 	private static void writeField(String namespace, Field field, Writer writer, JsonGenerator jsonGen, Set<String> alreadyDeclared, Set<Schema> toDeclare,
 								   boolean indentField) throws IOException {
-		// Note: indentField should be true if any field has documentation
-		String fDoc = field.doc();
-		if (fDoc != null && !fDoc.isBlank()) {
-			writer.append("        /** ").append(fDoc.replace("\n", "\n        ")).append(" */\n");
-		}
+		// Note: indentField should be true if any field of the containing record has documentation
+		writeDocumentation(writer, "        ", field.doc());
 		if (indentField) {
 			writer.append("        ");
 		}
@@ -213,6 +214,37 @@ public final class IdlUtils {
 		}
 	}
 
+	private static void writeDocumentation(Writer writer, String indent, String doc) throws IOException {
+		if (doc == null || doc.isBlank()) {
+			return;
+		}
+		writer.append(formatDocumentationComment(indent, doc));
+	}
+
+	private static String formatDocumentationComment(String indent, String doc) {
+		assert !doc.isBlank() : "There must be documentation to format!";
+
+		StringBuilder buffer = new StringBuilder();
+		buffer.append(indent).append("/** ");
+		boolean foundMatch = false;
+		final Matcher matcher = NEWLINE_PATTERN.matcher(doc);
+		final String newlinePlusIndent = NEWLINE + indent + " * ";
+		while (matcher.find()) {
+			if (!foundMatch) {
+				buffer.append(newlinePlusIndent);
+				foundMatch = true;
+			}
+			matcher.appendReplacement(buffer, newlinePlusIndent);
+		}
+		if (foundMatch) {
+			matcher.appendTail(buffer);
+			buffer.append(NEWLINE).append(indent).append(" */").append(NEWLINE);
+		} else {
+			buffer.append(doc).append(" */").append(NEWLINE);
+		}
+		return buffer.toString();
+	}
+
 	private static void writeFieldSchema(Schema schema, Writer writer, JsonGenerator jsonGen, Set<String> alreadyDeclared, Set<Schema> toDeclare,
 										 String recordNameSpace) throws IOException {
 		Schema.Type type = schema.getType();
@@ -236,20 +268,26 @@ public final class IdlUtils {
 			writeFieldSchema(schema.getValueType(), writer, jsonGen, alreadyDeclared, toDeclare, recordNameSpace);
 			writer.append('>');
 		} else if (type == Schema.Type.UNION) {
-			writeJsonProperties(schema, writer, jsonGen, null);
-			writer.append("union{");
+			// Note: unions cannot have properties
 			List<Schema> types = schema.getTypes();
-			Iterator<Schema> iterator = types.iterator();
-			if (iterator.hasNext()) {
-				writeFieldSchema(iterator.next(), writer, jsonGen, alreadyDeclared, toDeclare, recordNameSpace);
-				while (iterator.hasNext()) {
-					writer.append(", ");
-					writeFieldSchema(iterator.next(), writer, jsonGen, alreadyDeclared, toDeclare, recordNameSpace);
-				}
+			if (schema.isNullable() && types.size() == 2) {
+				Schema nonNullSchema = !types.get(0).isNullable() ? types.get(0) : types.get(1);
+				writeFieldSchema(nonNullSchema, writer, jsonGen, alreadyDeclared, toDeclare, recordNameSpace);
+				writer.append('?');
 			} else {
-				throw new AvroRuntimeException("Union schemas must have member types " + schema);
+				writer.append("union{");
+				Iterator<Schema> iterator = types.iterator();
+				if (iterator.hasNext()) {
+					writeFieldSchema(iterator.next(), writer, jsonGen, alreadyDeclared, toDeclare, recordNameSpace);
+					while (iterator.hasNext()) {
+						writer.append(", ");
+						writeFieldSchema(iterator.next(), writer, jsonGen, alreadyDeclared, toDeclare, recordNameSpace);
+					}
+				} else {
+					throw new AvroRuntimeException("Union schemas must have member types " + schema);
+				}
+				writer.append('}');
 			}
-			writer.append('}');
 		} else {
 			Set<String> propertiesToSkip;
 			String typeName;
@@ -282,10 +320,7 @@ public final class IdlUtils {
 	}
 
 	private static void writeSchemaAttributes(Schema schema, Writer writer, JsonGenerator jsonGen) throws IOException {
-		String doc = schema.getDoc();
-		if (doc != null) {
-			writer.append("    /** ").append(doc.replace("\n", "\n    ")).append(" */\n");
-		}
+		writeDocumentation(writer, "    ", schema.getDoc());
 		writeJsonProperties(schema, writer, jsonGen, "    ");
 	}
 
@@ -350,7 +385,7 @@ public final class IdlUtils {
 	private static void writeMessage(Protocol.Message message, Writer writer, JsonGenerator jsonGen, String protocolNameSpace, Set<String> alreadyDeclared)
 		throws IOException {
 		writeMessageAttributes(message, writer, jsonGen);
-		final Set<Schema> toDeclare = Collections.unmodifiableSet(new HashSet<>()); // Crash is a type hasn't been declared yet.
+		final Set<Schema> toDeclare = Collections.unmodifiableSet(new HashSet<>()); // Crash if a type hasn't been declared yet.
 		writer.append("    ");
 		writeFieldSchema(message.getResponse(), writer, jsonGen, alreadyDeclared, toDeclare, protocolNameSpace);
 		writer.append(' ');
@@ -405,10 +440,7 @@ public final class IdlUtils {
 	}
 
 	private static void writeMessageAttributes(Protocol.Message message, Writer writer, JsonGenerator jsonGen) throws IOException {
-		String doc = message.getDoc();
-		if (doc != null) {
-			writer.append("    /** ").append(doc.replace("\n", "\n    ")).append(" */\n");
-		}
+		writeDocumentation(writer, "    ", message.getDoc());
 		writeJsonProperties(message, writer, jsonGen, "    ");
 	}
 }
