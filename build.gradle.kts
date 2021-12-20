@@ -13,6 +13,11 @@ version = "213.0.0-SNAPSHOT"
 repositories {
 	mavenCentral()
 }
+java {
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(11))
+	}
+}
 
 dependencies {
 	implementation("org.apache.avro", "avro-compiler", "1.10.2").exclude("org.slf4j")
@@ -40,11 +45,13 @@ tasks {
 		changeNotes.set(
 			"""
 			<p>Version 213.0.0:</p>
-			<ul>
+			<ul data-version="213.0.0">
 			<li>Refactoring actions (converting IDL from/to schema/protocol files) now use the build tool window</li>
+			<li>Report changes upon startup after installation</li>
+			<li>Miscellaneous refactoring and small cosmetic changes</li>
 			</ul>
 			<p>Version 203.1.2:</p>
-			<ul>
+			<ul data-version="203.1.2">
 			<li>Fixed exception when writing a schema as IDL (issue #16)</li>
 			<li>Improved formatting of message properties</li>
 			<li>Improved file import references</li>
@@ -54,52 +61,51 @@ tasks {
 			<li>Improve identifier parsing to match the Avro IDL grammar</li>
 			</ul>
 			<p>Version 203.1.1:</p>
-			<ul>
+			<ul data-version="203.1.1">
 			<li>Fixed NPE in import resolution (issue #14)</li>
 			<li>Adjusted IDL parsing: improved detection of annotations for messages</li>
 			<li>Adjusted IDL parsing: allows for more dangling doc comments as allowed by the official parser</li>
-			<li>
 			</ul>
 			<p>Version 203.1.0:</p>
-			<ul>
+			<ul data-version="203.1.0">
 			<li>Adjusted IDL parsing to allow dangling doc comments</li>
 			<li>Added warnings for dangling doc comments (the Avro IDL compiler ignores these)</li>
 			</ul>
 			<p>Version 203.0.3:</p>
-			<ul>
+			<ul data-version="203.0.3">
 			<li>Added startup check for incompatibilities (i.e. is the other Avro plugin active?)</li>
 			</ul>
 			<p>Version 203.0.2:</p>
-			<ul>
+			<ul data-version="203.0.2">
 			<li>IDL parser now also allows annotations before doc comments (issue #12).</li>
 			</ul>
 			<p>Version 203.0.1:</p>
-			<ul>
+			<ul data-version="203.0.1">
 			<li>Fixed NPEs upon file traversal for plugin actions (issue #9, #11).</li>
 			<li>Renamed defined languages to prevent name clashes.</li>
 			</ul>
 			<p>Version 203.0.0:</p>
-			<ul>
+			<ul data-version="203.0.0">
 			<li>Changed version number to match IntelliJ builds</li>
 			<li>Migrated away from deprecated API: minimum supported version is now 2020.3</li>
 			<li>Added refactoring actions to convert Avro IDL to and from Avro schemas and Avro protocols.</li>
 			<li>Added file icon variant for dark mode</li>
 			</ul>
 			<p>Version 0.2.1:</p>
-			<ul>
+			<ul data-version="0.2.1">
 			<li>Add Avro Schema and Avro Protocol languages, allowing language injection</li>
 			</ul>
 			<p>Version 0.2.0:</p>
-			<ul>
+			<ul data-version="0.2.0">
 			<li>Add support for imports</li>
 			<li>Add file types and JSON schemas for <code>.avsc</code> &amp; <code>.avpr</code></li>
 			</ul>
 			<p>Version 0.1.1:</p>
-			<ul>
+			<ul data-version="0.1.1">
 			<li>Extra build for IntelliJ 2020.3</li>
 			</ul>
 			<p>Version 0.1.0:</p>
-	        <ul>
+	        <ul data-version="0.1.0">
 			<li>Initial release</li>
 			<li>Full parsing of Avro .avdl files, based on Avro 1.10 syntax</li>
 			<li>Syntax highlighting & formatting</li>

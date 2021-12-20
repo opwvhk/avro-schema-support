@@ -1,6 +1,5 @@
 package opwvhk.intellij.avro_idl.psi;
 
-import com.intellij.json.psi.JsonFile;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
@@ -16,7 +15,7 @@ public class AvroIdlElementFactory {
 	}
 
 	public @NotNull PsiElement createIdentifier(@NotNull String name) {
-		// Yes, in theory this can cause syntax errors. We're assuming the name has been vetted by AvroIdlNamesValidator
+		// Yes, in theory this can cause syntax errors. We're assuming the name has been vetted by AvroIdlNamesValidator.
 		final AvroIdlFile file = createDummyFile(String.format("protocol %s {}", name));
 		final AvroIdlProtocolDeclaration protocol = (AvroIdlProtocolDeclaration) file.getFirstChild();
 		final PsiElement nameIdentifier = protocol.getNameIdentifier();
@@ -36,7 +35,7 @@ public class AvroIdlElementFactory {
 	}
 
 	/**
-	 * Create lightweight in-memory {@link JsonFile} filled with {@code content}.
+	 * Create lightweight in-memory {@link AvroIdlFile} filled with {@code content}.
 	 *
 	 * @param content content of the file to be created
 	 * @return created file

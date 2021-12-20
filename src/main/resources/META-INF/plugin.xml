@@ -7,7 +7,11 @@
 
 	<description><![CDATA[
 	<p>A plugin to support Avro schemas and protocols in IDL format (.avdl) and JSON (.avsc and .avpr).</p>
-	<p>Features include:<ul>
+	<p>
+		Provides full support for IDL files (see below), and recognizes <code>.avsc</code> and <code>.avpr</code> files as JSON and supplies JSON schemas for
+		them. Additionally, allows converting Avro IDL files (.avdl) to/from Avro Schema/Protocol files (.avsc and .avpr).
+	</p>
+	<p>IDL features include:<ul>
 		<li>Full parsing of Avro <code>.avdl</code> files, including new logical types like <code>local_timestamp_ms</code></li>
 		<li>Syntax highlighting & formatting</li>
 		<li>Code completion based on syntax and supported references</li>
@@ -16,8 +20,6 @@
 			and <code>@order</code> annotations
 		</li>
 		<li>Rename support for schema names (i.e. renaming records/errors, enums and fixed types also updates its references)</li>
-		<li>Recognizes <code>.avsc</code> and <code>.avpr</code> files as JSON5 (i.e. with comments) and supplies JSON schemas for them</li>
-		<li>Refactoring: supports converting Avro IDL files (.avdl) to/from Avro Schema/Protocol files (.avsc and .avpr)</li>
 	</ul></p>
 	]]></description>
 
@@ -26,10 +28,10 @@
 	<depends>com.intellij.modules.lang</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<notificationGroup id="Avro IDL" displayType="BALLOON"/>
-		<notificationGroup id="Avro IDL Important" displayType="STICKY_BALLOON" />
+		<notificationGroup id="Avro IDL" displayType="BALLOON" icon="opwvhk.intellij.avro_idl.AvroIdlIcons.LOGO"/>
+		<notificationGroup id="Avro IDL Important" displayType="STICKY_BALLOON" icon="opwvhk.intellij.avro_idl.AvroIdlIcons.LOGO"/>
 		<postStartupActivity implementation="opwvhk.intellij.avro_idl.AvroIdlCompatibilityCheck"/>
-		<preloadingActivity implementation="opwvhk.intellij.avro_idl.AvroIdlCompatibilityCheck"/>
+		<postStartupActivity implementation="opwvhk.intellij.avro_idl.AvroIdlPluginUpdateStartupActivity"/>
 		<!-- File type & Language -->
 		<fileType name="Avro IDL" fieldName="INSTANCE" language="Avro IDL" extensions="avdl" implementationClass="opwvhk.intellij.avro_idl.AvroIdlFileType"/>
 		<lang.parserDefinition language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroIdlParserDefinition"/>
