@@ -36,11 +36,12 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
+    create_token_set_(NAMESPACE_PROPERTY, SCHEMA_PROPERTY),
     create_token_set_(JSON_STRING_LITERAL, JSON_VALUE),
-    create_token_set_(ENUM_DECLARATION, FIXED_DECLARATION, NAMED_SCHEMA_DECLARATION, RECORD_DECLARATION),
-    create_token_set_(ARRAY_TYPE, DECIMAL_TYPE, MAP_TYPE, NULLABLE_TYPE,
-      PRIMITIVE_TYPE, REFERENCE_TYPE, RESULT_TYPE, TYPE,
-      UNION_TYPE),
+    create_token_set_(ARRAY_TYPE, DECIMAL_TYPE, ENUM_DECLARATION, FIXED_DECLARATION,
+      MAP_TYPE, MESSAGE_DECLARATION, NAMED_SCHEMA_DECLARATION, NULLABLE_TYPE,
+      PRIMITIVE_TYPE, PROTOCOL_DECLARATION, RECORD_DECLARATION, REFERENCE_TYPE,
+      RESULT_TYPE, TYPE, UNION_TYPE, VARIABLE_DECLARATOR),
   };
 
   /* ********************************************************** */
@@ -62,7 +63,6 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   // ArrayType1 | ArrayType2
   public static boolean ArrayType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArrayType")) return false;
-    if (!nextTokenIs(b, "<array type>", ARRAY, AT)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, ARRAY_TYPE, "<array type>");
     r = ArrayType1(b, l + 1);
@@ -75,7 +75,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   // SchemaProperty+ ArrayType2
   static boolean ArrayType1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArrayType1")) return false;
-    if (!nextTokenIs(b, AT)) return false;
+    if (!nextTokenIs(b, "", AT, AT_NAMESPACE)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = ArrayType1_0(b, l + 1);
@@ -123,7 +123,6 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   // DecimalType1 | DecimalType2
   public static boolean DecimalType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "DecimalType")) return false;
-    if (!nextTokenIs(b, "<decimal type>", AT, DECIMAL)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, DECIMAL_TYPE, "<decimal type>");
     r = DecimalType1(b, l + 1);
@@ -136,7 +135,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   // SchemaProperty+ DecimalType2
   static boolean DecimalType1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "DecimalType1")) return false;
-    if (!nextTokenIs(b, AT)) return false;
+    if (!nextTokenIs(b, "", AT, AT_NAMESPACE)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = DecimalType1_0(b, l + 1);
@@ -330,7 +329,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   // SchemaProperty (SchemaProperty|Documentation)* EnumInnerDeclaration
   static boolean EnumDeclaration2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "EnumDeclaration2")) return false;
-    if (!nextTokenIs(b, AT)) return false;
+    if (!nextTokenIs(b, "", AT, AT_NAMESPACE)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = SchemaProperty(b, l + 1);
@@ -486,40 +485,15 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // FieldDeclaration1 | FieldDeclaration2 { //recoverWhile="recoverFieldDeclaration"
-  // //	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
-  // //	methods=[getNameIdentifier getTextOffset getName setName]
-  // }
+  // FieldDeclaration1 | FieldDeclaration2
   public static boolean FieldDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FieldDeclaration")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, FIELD_DECLARATION, "<field declaration>");
     r = FieldDeclaration1(b, l + 1);
-    if (!r) r = FieldDeclaration_1(b, l + 1);
+    if (!r) r = FieldDeclaration2(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
-  }
-
-  // FieldDeclaration2 { //recoverWhile="recoverFieldDeclaration"
-  // //	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
-  // //	methods=[getNameIdentifier getTextOffset getName setName]
-  // }
-  private static boolean FieldDeclaration_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "FieldDeclaration_1")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = FieldDeclaration2(b, l + 1);
-    r = r && FieldDeclaration_1_1(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // { //recoverWhile="recoverFieldDeclaration"
-  // //	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
-  // //	methods=[getNameIdentifier getTextOffset getName setName]
-  // }
-  private static boolean FieldDeclaration_1_1(PsiBuilder b, int l) {
-    return true;
   }
 
   /* ********************************************************** */
@@ -666,7 +640,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   // SchemaProperty (SchemaProperty|Documentation)* FixedInnerDeclaration SEMICOLON
   static boolean FixedDeclaration2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FixedDeclaration2")) return false;
-    if (!nextTokenIs(b, AT)) return false;
+    if (!nextTokenIs(b, "", AT, AT_NAMESPACE)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
     r = SchemaProperty(b, l + 1);
@@ -1086,7 +1060,6 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   // MapType1 | MapType2
   public static boolean MapType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "MapType")) return false;
-    if (!nextTokenIs(b, "<map type>", AT, MAP)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, MAP_TYPE, "<map type>");
     r = MapType1(b, l + 1);
@@ -1099,7 +1072,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   // SchemaProperty+ MapType2
   static boolean MapType1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "MapType1")) return false;
-    if (!nextTokenIs(b, AT)) return false;
+    if (!nextTokenIs(b, "", AT, AT_NAMESPACE)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = MapType1_0(b, l + 1);
@@ -1297,7 +1270,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   public static boolean MessageDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "MessageDeclaration")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, MESSAGE_DECLARATION, "<message declaration>");
+    Marker m = enter_section_(b, l, _COLLAPSE_, MESSAGE_DECLARATION, "<message declaration>");
     r = MessageDeclaration1(b, l + 1);
     if (!r) r = MessageDeclaration2(b, l + 1);
     if (!r) r = MessageDeclaration3(b, l + 1);
@@ -1358,7 +1331,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   // SchemaProperty (SchemaProperty|Documentation)* ResultType Documentation* MessageSignature SEMICOLON
   static boolean MessageDeclaration2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "MessageDeclaration2")) return false;
-    if (!nextTokenIs(b, AT)) return false;
+    if (!nextTokenIs(b, "", AT, AT_NAMESPACE)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
     r = SchemaProperty(b, l + 1);
@@ -1477,6 +1450,21 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // AT_NAMESPACE LEFT_PAREN JsonValue RIGHT_PAREN
+  public static boolean NamespaceProperty(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "NamespaceProperty")) return false;
+    if (!nextTokenIs(b, AT_NAMESPACE)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, NAMESPACE_PROPERTY, null);
+    r = consumeTokens(b, 1, AT_NAMESPACE, LEFT_PAREN);
+    p = r; // pin = 1
+    r = r && report_error_(b, JsonValue(b, l + 1));
+    r = p && consumeToken(b, RIGHT_PAREN) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  /* ********************************************************** */
   // (PrimitiveType | ReferenceType) [ QUESTION_MARK ]
   public static boolean NullableType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "NullableType")) return false;
@@ -1521,7 +1509,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   // SchemaProperty (Documentation | SchemaProperty)* PrimitiveType3
   static boolean PrimitiveType1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "PrimitiveType1")) return false;
-    if (!nextTokenIs(b, AT)) return false;
+    if (!nextTokenIs(b, "", AT, AT_NAMESPACE)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = SchemaProperty(b, l + 1);
@@ -1683,7 +1671,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   // SchemaProperty (SchemaProperty|Documentation)* ProtocolDeclaration3
   static boolean ProtocolDeclaration2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ProtocolDeclaration2")) return false;
-    if (!nextTokenIs(b, AT)) return false;
+    if (!nextTokenIs(b, "", AT, AT_NAMESPACE)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
     r = SchemaProperty(b, l + 1);
@@ -1827,7 +1815,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   // SchemaProperty (SchemaProperty|Documentation)* RecordInnerDeclaration
   static boolean RecordDeclaration2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "RecordDeclaration2")) return false;
-    if (!nextTokenIs(b, AT)) return false;
+    if (!nextTokenIs(b, "", AT, AT_NAMESPACE)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = SchemaProperty(b, l + 1);
@@ -1931,7 +1919,6 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   // Documentation* SchemaProperty (Documentation | SchemaProperty)* IDENTIFIER
   static boolean ReferenceType1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ReferenceType1")) return false;
-    if (!nextTokenIs(b, "", AT, DOC_COMMENT)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
     r = ReferenceType1_0(b, l + 1);
@@ -2019,12 +2006,25 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // AT IDENTIFIER LEFT_PAREN JsonValue RIGHT_PAREN
+  // NamespaceProperty | SimpleSchemaProperty
   public static boolean SchemaProperty(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "SchemaProperty")) return false;
+    if (!nextTokenIs(b, "<schema property>", AT, AT_NAMESPACE)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _COLLAPSE_, SCHEMA_PROPERTY, "<schema property>");
+    r = NamespaceProperty(b, l + 1);
+    if (!r) r = SimpleSchemaProperty(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // AT IDENTIFIER LEFT_PAREN JsonValue RIGHT_PAREN
+  static boolean SimpleSchemaProperty(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "SimpleSchemaProperty")) return false;
     if (!nextTokenIs(b, AT)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, SCHEMA_PROPERTY, null);
+    Marker m = enter_section_(b, l, _NONE_);
     r = consumeTokens(b, 1, AT, IDENTIFIER, LEFT_PAREN);
     p = r; // pin = 1
     r = r && report_error_(b, JsonValue(b, l + 1));
@@ -2212,7 +2212,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   // SchemaProperty (SchemaProperty|Documentation)* IDENTIFIER Documentation* [ EQUALS Documentation* JsonValue ] Documentation*
   static boolean VariableDeclarator2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "VariableDeclarator2")) return false;
-    if (!nextTokenIs(b, AT)) return false;
+    if (!nextTokenIs(b, "", AT, AT_NAMESPACE)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
     r = SchemaProperty(b, l + 1);

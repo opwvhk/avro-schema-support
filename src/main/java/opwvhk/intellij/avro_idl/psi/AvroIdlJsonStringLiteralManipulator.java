@@ -8,11 +8,18 @@ import org.jetbrains.annotations.NotNull;
 public class AvroIdlJsonStringLiteralManipulator extends AbstractElementManipulator<AvroIdlJsonStringLiteral> {
 	@Override
 	public AvroIdlJsonStringLiteral handleContentChange(@NotNull AvroIdlJsonStringLiteral element,
-														@NotNull TextRange range, String newContent) throws IncorrectOperationException {
-		assert new TextRange(0, element.getTextLength()).contains(range);
+	                                                    @NotNull TextRange range, String newContent) throws IncorrectOperationException {
+		assert new TextRange(0, element.getTextLength()).contains(range); // Building the replacement works because of this assertion.
+
+		final String originalString = element.getText();
+		final TextRange contentRange = getRangeInElement(element);
+
+		final String beginning = originalString.substring(contentRange.getStartOffset(), range.getStartOffset());
+		final String ending = originalString.substring(range.getEndOffset(), contentRange.getEndOffset());
+		final String replacement = beginning + newContent + ending;
+
 		final AvroIdlElementFactory generator = new AvroIdlElementFactory(element.getProject());
-		final String replacement = "\"" + newContent + "\"";
-		return (AvroIdlJsonStringLiteral) element.replace(generator.createJsonStringLiteral(replacement));
+		return (AvroIdlJsonStringLiteral)element.replace(generator.createJsonStringLiteral(replacement));
 	}
 
 	@Override

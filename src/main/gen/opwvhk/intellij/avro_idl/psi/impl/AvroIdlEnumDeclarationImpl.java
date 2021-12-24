@@ -28,12 +28,6 @@ public class AvroIdlEnumDeclarationImpl extends AvroIdlNamedSchemaDeclarationImp
   }
 
   @Override
-  @NotNull
-  public List<AvroIdlDocumentation> getDocumentationList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlDocumentation.class);
-  }
-
-  @Override
   @Nullable
   public AvroIdlEnumBody getEnumBody() {
     return findChildByClass(AvroIdlEnumBody.class);
@@ -43,12 +37,6 @@ public class AvroIdlEnumDeclarationImpl extends AvroIdlNamedSchemaDeclarationImp
   @Nullable
   public AvroIdlEnumDefault getEnumDefault() {
     return findChildByClass(AvroIdlEnumDefault.class);
-  }
-
-  @Override
-  @NotNull
-  public List<AvroIdlSchemaProperty> getSchemaPropertyList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlSchemaProperty.class);
   }
 
   @Override

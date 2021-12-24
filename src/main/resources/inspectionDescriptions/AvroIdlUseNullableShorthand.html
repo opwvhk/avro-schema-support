@@ -1,0 +1,24 @@
+<html>
+<body>
+Identifies unions that can be simplified using the new syntax in Avro 1.11.1.
+<!-- tooltip end -->
+<p><strong>Example:</strong></p>
+<pre><code>record MyData {
+    union { string, null } name = "Anonymous";
+    union { null, string } description = null;
+}
+</code></pre>
+<p>
+	The quick fix replaces these unions with the new shorthand syntax.
+</p>
+<p>
+	Result after applying both:
+</p>
+<pre><code>record MyData {
+    string? name = "Anonymous";
+    string? description = null;
+}
+</code></pre>
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+#* @vtlvariable name="NAME" type="java.lang.String" *#
+#* @vtlvariable name="END" type="java.lang.String" *#
+/*
+ * Comment for license information.
+ */
+
+/**
+ * Doc comment.
+ */
+protocol ${NAME} {
+	// Insert your protocol elements here
+	#[[$END$]]#
+
+}

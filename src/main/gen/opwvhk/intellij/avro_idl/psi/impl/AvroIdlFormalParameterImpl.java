@@ -34,15 +34,19 @@ public class AvroIdlFormalParameterImpl extends ASTWrapperPsiElement implements 
   }
 
   @Override
-  @Nullable
-  public AvroIdlType getType() {
-    return findChildByClass(AvroIdlType.class);
+  @NotNull
+  public List<AvroIdlWithSchemaProperties> getWithSchemaPropertiesList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlWithSchemaProperties.class);
   }
 
   @Override
-  @Nullable
-  public AvroIdlVariableDeclarator getVariableDeclarator() {
-    return findChildByClass(AvroIdlVariableDeclarator.class);
+  public @NotNull AvroIdlType getType() {
+    return AvroIdlPsiUtil.getType(this);
+  }
+
+  @Override
+  public @Nullable AvroIdlVariableDeclarator getVariableDeclarator() {
+    return AvroIdlPsiUtil.getVariableDeclarator(this);
   }
 
 }

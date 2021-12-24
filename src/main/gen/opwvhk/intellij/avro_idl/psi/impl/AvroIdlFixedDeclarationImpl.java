@@ -28,18 +28,6 @@ public class AvroIdlFixedDeclarationImpl extends AvroIdlNamedSchemaDeclarationIm
   }
 
   @Override
-  @NotNull
-  public List<AvroIdlDocumentation> getDocumentationList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlDocumentation.class);
-  }
-
-  @Override
-  @NotNull
-  public List<AvroIdlSchemaProperty> getSchemaPropertyList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlSchemaProperty.class);
-  }
-
-  @Override
   @Nullable
   public PsiElement getIdentifier() {
     return findChildByType(IDENTIFIER);

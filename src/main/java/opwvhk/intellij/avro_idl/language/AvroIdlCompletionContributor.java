@@ -31,15 +31,15 @@ class AvroIdlCompletionContributor extends CompletionContributor {
 
 		// Complete declaration types
 
-		// Identifiers in a protocol are identified as message return types until proven to be something else; hence the withSuperParent(2, ...).
+		// Identifiers in a protocol parse as message return types until proven to be something else; hence the withSuperParent(2, ...).
 		// Also note that due to the syntax tree, message arguments are at a different level than the return type (otherwise this would also match there).
-		// Completions include declarations and the extra return type 'void'
+		// Completions include declarations, and the extra return type 'void'.
 		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER).withParent(AvroIdlReferenceType.class).withSuperParent(2, AvroIdlMessageDeclaration.class),
 			"import ", "record ", "error ", "enum ", "fixed ", "void ");
 
 		// Complete primitive types, logical types and anonymous types
 
-		// Identifiers at a type location are identified as Reference type until proven to be something else
+		// Identifiers at a type location are Reference type until proven to be something else
 		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER).withParent(AvroIdlReferenceType.class),
 			"boolean ", "bytes ", "int ", "string ", "float ", "double ", "long ",
 			"null ",
@@ -64,17 +64,13 @@ class AvroIdlCompletionContributor extends CompletionContributor {
 			'@', "aliases([\"\u0000\"])", "order(\"\u0000\")");
 		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER).withParents(AvroIdlSchemaProperty.class, AvroIdlType.class),
 			'@', "logicalType(\"\u0000\")");
-		// Due to missing/present quotes, identifying values of @order annotations is split into (in order): just after the (, and within a string literal
+		// Due to missing/present quotes, identify values of @order annotations by (in order): just after the (, and within a string literal
 		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER).withParent(
-			psiElement(PsiErrorElement.class).withParent(psiElement(AvroIdlSchemaProperty.class).withName("order"))),
+				psiElement(PsiErrorElement.class).withParent(psiElement(AvroIdlSchemaProperty.class).withName("order"))),
 			"\"ascending\"", "\"descending\"", "\"ignore\"");
 		addBasicCompletion(psiElement(AvroIdlTypes.STRING_LITERAL).withParent(AvroIdlJsonValue.class)
 				.withSuperParent(2, psiElement(AvroIdlSchemaProperty.class).withName("order")),
 			"ascending", "descending", "ignore");
-
-		// Complete imported schema files
-
-		// TODO: identify string literals in import statements to add classpath completion
 	}
 
 	/**
@@ -85,8 +81,8 @@ class AvroIdlCompletionContributor extends CompletionContributor {
 	}
 
 	/**
-	 * Add "basic" completions for a pattern. The completions are coded: the completion popup only shows word characters (it removes spaces, parentheses, etc)
-	 * and if the completion contains a null char, it's removed and after inserting the caret is placed there.
+	 * Add "basic" completions for a pattern. The completions have a syntax: the completion popup only shows word characters (without whitespace, parentheses,
+	 * etc.), and the editor places the caret where a null char was (if any), or at the end.
 	 *
 	 * @param pattern       the pattern to complete
 	 * @param skipFirstChar if this string matches the first part of the prefix, skip that

@@ -6,16 +6,10 @@ import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 
-public interface AvroIdlProtocolDeclaration extends AvroIdlNamespacedNameIdentifierOwner {
-
-  @NotNull
-  List<AvroIdlDocumentation> getDocumentationList();
+public interface AvroIdlProtocolDeclaration extends AvroIdlWithSchemaProperties, AvroIdlNamespacedNameIdentifierOwner {
 
   @Nullable
   AvroIdlProtocolBody getProtocolBody();
-
-  @NotNull
-  List<AvroIdlSchemaProperty> getSchemaPropertyList();
 
   @Nullable
   PsiElement getIdentifier();

@@ -7,10 +7,10 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.ElementManipulators;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.CheckUtil;
-import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceHelper;
-import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceHelperRegistrar;
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiFileReference;
+import com.intellij.psi.impl.source.tree.TreeUtil;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import opwvhk.intellij.avro_idl.AvroIdlFileType;
@@ -26,39 +26,93 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.intellij.psi.TokenType.WHITE_SPACE;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
 public class AvroIdlPsiUtil {
+	public static @NotNull List<AvroIdlNamedSchemaDeclaration> getNamedSchemaDeclarationList(@NotNull AvroIdlProtocolBody protocolBody) {
+		return filterList(protocolBody.getWithSchemaPropertiesList(), AvroIdlNamedSchemaDeclaration.class);
+	}
+
+	public static @NotNull List<AvroIdlMessageDeclaration> getMessageDeclarationList(@NotNull AvroIdlProtocolBody protocolBody) {
+		return filterList(protocolBody.getWithSchemaPropertiesList(), AvroIdlMessageDeclaration.class);
+	}
+
+	public static @NotNull List<AvroIdlVariableDeclarator> getVariableDeclaratorList(@NotNull AvroIdlFieldDeclaration fieldDeclaration) {
+		return filterList(fieldDeclaration.getWithSchemaPropertiesList(), AvroIdlVariableDeclarator.class);
+	}
+
+	public static @NotNull AvroIdlType getType(@NotNull AvroIdlFieldDeclaration fieldDeclaration) {
+		// The AvroIdlFieldDeclaration production is pinned on the type, so this is guaranteed to exist.
+		final Optional<AvroIdlType> avroIdlType = filterFirst(fieldDeclaration.getWithSchemaPropertiesList(), AvroIdlType.class);
+		assert avroIdlType.isPresent();
+		return avroIdlType.get();
+	}
+
+	public static @Nullable AvroIdlVariableDeclarator getVariableDeclarator(@NotNull AvroIdlFormalParameter formalParameter) {
+		return filterFirst(formalParameter.getWithSchemaPropertiesList(), AvroIdlVariableDeclarator.class).orElse(null);
+	}
+
+	public static @NotNull AvroIdlType getType(@NotNull AvroIdlFormalParameter formalParameter) {
+		// The AvroIdlFormalParameter production is pinned on the type, so this is guaranteed to exist.
+		final Optional<AvroIdlType> avroIdlType = filterFirst(formalParameter.getWithSchemaPropertiesList(), AvroIdlType.class);
+		assert avroIdlType.isPresent();
+		return avroIdlType.get();
+	}
+
+	private static <T> @NotNull List<T> filterList(@NotNull List<? super T> list, Class<T> clazz) {
+		return list.stream().filter(clazz::isInstance).map(clazz::cast).collect(Collectors.toList());
+	}
+
+	private static <T> @NotNull Optional<T> filterFirst(@NotNull List<? super T> list, Class<T> clazz) {
+		return list.stream().filter(clazz::isInstance).map(clazz::cast).findFirst();
+	}
+
 	public static @Nullable PsiElement getNameIdentifier(@NotNull AvroIdlNamedType owner) {
-		ASTNode nameNode = owner.getNode().findChildByType(IDENTIFIER);
-		return nameNode != null ? nameNode.getPsi() : null;
+		if (owner instanceof AvroIdlNamespaceProperty) {
+			final AvroIdlJsonValue jsonValue = ((AvroIdlNamespaceProperty)owner).getJsonValue();
+			return jsonValue instanceof AvroIdlJsonStringLiteral ? jsonValue : null;
+		} else {
+			ASTNode nameNode = owner.getNode().findChildByType(IDENTIFIER);
+			return nameNode != null ? nameNode.getPsi() : null;
+		}
 	}
 
 	public static int getTextOffset(@NotNull AvroIdlNamedType owner) {
-		final ASTNode nameNode = owner.getNode().findChildByType(IDENTIFIER);
-		final ASTNode identifierNode = (nameNode != null ? nameNode : owner.getNode());
-		return identifierNode.getStartOffset();
+		final PsiElement nameIdentifier = getNameIdentifier(owner);
+		if (nameIdentifier instanceof AvroIdlJsonStringLiteral) {
+			final TextRange range = ElementManipulators.getValueTextRange(nameIdentifier);
+			return nameIdentifier.getStartOffsetInParent() + range.getStartOffset();
+		} else {
+			return Objects.requireNonNullElse(nameIdentifier, owner).getNode().getStartOffset();
+		}
 	}
 
 	public static @Nullable @NonNls String getName(@NotNull AvroIdlNamedType owner) {
-		PsiElement id = getNameIdentifier(owner);
-		return id != null ? id.getText() : null;
+		PsiElement nameIdentifier = getNameIdentifier(owner);
+		if (nameIdentifier instanceof AvroIdlJsonStringLiteral) {
+			return AvroIdlUtil.getJsonString((AvroIdlJsonStringLiteral)nameIdentifier);
+		} else if (nameIdentifier != null) {
+			return nameIdentifier.getText();
+		} else {
+			return null;
+		}
 	}
 
 	public static PsiElement setName(@NotNull AvroIdlNamedType owner, @NonNls @NotNull String name) throws IncorrectOperationException {
-		return replaceChildIdentifier(owner, name);
-	}
-
-	public static PsiElement replaceChildIdentifier(@NotNull PsiElement owner, @NonNls @NotNull String name) throws IncorrectOperationException {
-		final ASTNode identifierNode = owner.getNode().findChildByType(IDENTIFIER);
-		if (identifierNode == null) {
+		final PsiElement oldIdentifier = getNameIdentifier(owner);
+		final PsiElement newNameIdentifier;
+		if (oldIdentifier instanceof AvroIdlJsonStringLiteral) {
+			newNameIdentifier = new AvroIdlElementFactory(owner.getProject()).createJsonStringLiteral(name);
+		} else if (oldIdentifier != null) {
+			newNameIdentifier = new AvroIdlElementFactory(owner.getProject()).createIdentifier(name);
+		} else {
 			throw new IncorrectOperationException();
 		}
-		final PsiElement oldIdentifier = identifierNode.getPsi();
-		final PsiElement newNameIdentifier = new AvroIdlElementFactory(owner.getProject()).createIdentifier(name);
 		oldIdentifier.replace(newNameIdentifier);
 		return owner;
 	}
@@ -83,15 +137,15 @@ public class AvroIdlPsiUtil {
 
 		List<AvroIdlSchemaProperty> schemaProperties = null;
 		if (owner instanceof AvroIdlProtocolDeclaration) {
-			schemaProperties = ((AvroIdlProtocolDeclaration) owner).getSchemaPropertyList();
+			schemaProperties = ((AvroIdlProtocolDeclaration)owner).getSchemaPropertyList();
 		} else if (owner instanceof AvroIdlNamedSchemaDeclaration) {
-			schemaProperties = ((AvroIdlNamedSchemaDeclaration) owner).getSchemaPropertyList();
+			schemaProperties = ((AvroIdlNamedSchemaDeclaration)owner).getSchemaPropertyList();
 		}
 		if (schemaProperties != null) {
 			for (AvroIdlSchemaProperty schemaProperty : schemaProperties) {
-				if ("namespace".equals(schemaProperty.getName())) {
+				if (schemaProperty instanceof AvroIdlNamespaceProperty) {
 					// This may create nonsense namespaces; the AvroIdlAnnotator marks bugs that cause this
-					return Optional.ofNullable(schemaProperty.getJsonValue()).map(AvroIdlUtil::getJsonString).orElse("");
+					return Optional.ofNullable(schemaProperty.getName()).orElse("");
 				}
 			}
 		}
@@ -100,6 +154,14 @@ public class AvroIdlPsiUtil {
 
 	public static boolean isErrorType(@NotNull PsiElement namedSchemaDeclaration) {
 		return namedSchemaDeclaration.getNode().findChildByType(AvroIdlTypes.ERROR) != null;
+	}
+
+	public static boolean isOptional(@NotNull AvroIdlType owner) {
+		return owner instanceof AvroIdlNullableType && TreeUtil.findChildBackward(owner.getNode(), QUESTION_MARK) != null;
+	}
+
+	public static boolean isNull(@NotNull AvroIdlType owner) {
+		return owner instanceof AvroIdlPrimitiveType && TreeUtil.findChildBackward(owner.getNode(), NULL) != null;
 	}
 
 	public static @Nullable AvroIdlNamedSchemaReference getReference(@NotNull AvroIdlReferenceType owner) {
@@ -116,7 +178,7 @@ public class AvroIdlPsiUtil {
 
 	public static @Nullable PsiFileReference getReference(@NotNull AvroIdlJsonStringLiteral owner) {
 		if (owner.getParent() instanceof AvroIdlImportDeclaration) {
-			final Optional<AvroIdlImportType> importType = Optional.ofNullable(((AvroIdlImportDeclaration) owner.getParent()).getImportType());
+			final Optional<AvroIdlImportType> importType = Optional.ofNullable(((AvroIdlImportDeclaration)owner.getParent()).getImportType());
 			final IElementType importElementType = importType.map(PsiElement::getFirstChild).map(PsiElement::getNode).map(ASTNode::getElementType).orElse(null);
 
 			final FileType[] suitableFileTypes;
@@ -130,14 +192,14 @@ public class AvroIdlPsiUtil {
 				suitableFileTypes = new FileType[]{AvroIdlFileType.INSTANCE, AvroProtocolFileType.INSTANCE, AvroSchemaFileType.INSTANCE};
 			}
 
-			// Copied from FileReferenceSet.create(...) to add the suitableFileTypes parameter (omitted methods use the default implementation)
-			final TextRange range = ElementManipulators.getValueTextRange(owner);
+			// Copied from FileReferenceSet(PsiElement) to add the suitableFileTypes parameter
+			TextRange range = ElementManipulators.getValueTextRange(owner);
 			int offset = range.getStartOffset();
 			String text = range.substring(owner.getText());
-			for (final FileReferenceHelper helper : FileReferenceHelperRegistrar.getHelpers()) {
-				text = helper.trimUrl(text);
-			}
-			return new FileReferenceSet(text, owner, offset, null, true, true, suitableFileTypes).getLastReference();
+			final FileReferenceSet fileReferenceSet = new FileReferenceSet(text, owner, offset, null, true, true, suitableFileTypes);
+
+			final FileReference[] allReferences = fileReferenceSet.getAllReferences();
+			return allReferences.length == 0 ? null : allReferences[0];
 		} else {
 			return null;
 		}
@@ -151,18 +213,18 @@ public class AvroIdlPsiUtil {
 		//noinspection ConstantConditions
 		return new ItemPresentation() {
 			@Override
-            public @Nullable String getPresentableText() {
+			public @Nullable String getPresentableText() {
 				return element.getName();
 			}
 
 			@Override
-            public @Nullable String getLocationString() {
+			public @Nullable String getLocationString() {
 				return element.getContainingFile().getName();
 			}
 
 			@Override
-            public @Nullable Icon getIcon(boolean unused) {
-				return AvroIdlIcons.FILE;
+			public @Nullable Icon getIcon(boolean unused) {
+				return AvroIdlIcons.LOGO;
 			}
 		};
 	}
@@ -171,18 +233,18 @@ public class AvroIdlPsiUtil {
 		//noinspection ConstantConditions
 		return new ItemPresentation() {
 			@Override
-            public @Nullable String getPresentableText() {
-				return ((AvroIdlEnumDeclaration) element.getParent().getParent()).getName() + "." + element.getName();
+			public @Nullable String getPresentableText() {
+				return ((AvroIdlEnumDeclaration)element.getParent().getParent()).getName() + "." + element.getName();
 			}
 
 			@Override
-            public @Nullable String getLocationString() {
+			public @Nullable String getLocationString() {
 				return element.getContainingFile().getName();
 			}
 
 			@Override
-            public @Nullable Icon getIcon(boolean unused) {
-				return AvroIdlIcons.FILE;
+			public @Nullable Icon getIcon(boolean unused) {
+				return AvroIdlIcons.LOGO;
 			}
 		};
 	}

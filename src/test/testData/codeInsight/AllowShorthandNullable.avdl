@@ -1,0 +1,6 @@
+@namespace("my.test")
+protocol Simple {
+	record TestRecord {
+		union{null, string} foo;
+	}
+}

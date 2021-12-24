@@ -30,6 +30,7 @@ public interface AvroIdlTypes {
   IElementType MESSAGE_ATTRIBUTE_THROWS = new AvroIdlElementType("MESSAGE_ATTRIBUTE_THROWS");
   IElementType MESSAGE_DECLARATION = new AvroIdlElementType("MESSAGE_DECLARATION");
   IElementType NAMED_SCHEMA_DECLARATION = new AvroIdlElementType("NAMED_SCHEMA_DECLARATION");
+  IElementType NAMESPACE_PROPERTY = new AvroIdlElementType("NAMESPACE_PROPERTY");
   IElementType NULLABLE_TYPE = new AvroIdlElementType("NULLABLE_TYPE");
   IElementType PRIMITIVE_TYPE = new AvroIdlElementType("PRIMITIVE_TYPE");
   IElementType PROTOCOL_BODY = new AvroIdlElementType("PROTOCOL_BODY");
@@ -45,6 +46,7 @@ public interface AvroIdlTypes {
 
   IElementType ARRAY = new AvroIdlTokenType("array");
   IElementType AT = new AvroIdlTokenType("@");
+  IElementType AT_NAMESPACE = new AvroIdlTokenType("@namespace");
   IElementType BLOCK_COMMENT = new AvroIdlTokenType("BLOCK_COMMENT");
   IElementType BOOLEAN = new AvroIdlTokenType("boolean");
   IElementType BYTES = new AvroIdlTokenType("bytes");
@@ -160,6 +162,9 @@ public interface AvroIdlTypes {
       }
       else if (type == MESSAGE_DECLARATION) {
         return new AvroIdlMessageDeclarationImpl(node);
+      }
+      else if (type == NAMESPACE_PROPERTY) {
+        return new AvroIdlNamespacePropertyImpl(node);
       }
       else if (type == NULLABLE_TYPE) {
         return new AvroIdlNullableTypeImpl(node);

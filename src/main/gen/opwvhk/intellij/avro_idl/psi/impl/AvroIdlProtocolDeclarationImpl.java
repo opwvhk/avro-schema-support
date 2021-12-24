@@ -8,16 +8,16 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import opwvhk.intellij.avro_idl.psi.*;
 import com.intellij.util.IncorrectOperationException;
 
-public class AvroIdlProtocolDeclarationImpl extends ASTWrapperPsiElement implements AvroIdlProtocolDeclaration {
+public class AvroIdlProtocolDeclarationImpl extends AvroIdlWithSchemaPropertiesImpl implements AvroIdlProtocolDeclaration {
 
   public AvroIdlProtocolDeclarationImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull AvroIdlVisitor visitor) {
     visitor.visitProtocolDeclaration(this);
   }
@@ -29,21 +29,9 @@ public class AvroIdlProtocolDeclarationImpl extends ASTWrapperPsiElement impleme
   }
 
   @Override
-  @NotNull
-  public List<AvroIdlDocumentation> getDocumentationList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlDocumentation.class);
-  }
-
-  @Override
   @Nullable
   public AvroIdlProtocolBody getProtocolBody() {
     return findChildByClass(AvroIdlProtocolBody.class);
-  }
-
-  @Override
-  @NotNull
-  public List<AvroIdlSchemaProperty> getSchemaPropertyList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlSchemaProperty.class);
   }
 
   @Override

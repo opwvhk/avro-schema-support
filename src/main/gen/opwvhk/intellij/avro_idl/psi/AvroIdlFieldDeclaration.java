@@ -11,9 +11,10 @@ public interface AvroIdlFieldDeclaration extends PsiElement {
   List<AvroIdlDocumentation> getDocumentationList();
 
   @NotNull
-  AvroIdlType getType();
+  List<AvroIdlWithSchemaProperties> getWithSchemaPropertiesList();
 
-  @NotNull
-  List<AvroIdlVariableDeclarator> getVariableDeclaratorList();
+  @NotNull AvroIdlType getType();
+
+  @NotNull List<AvroIdlVariableDeclarator> getVariableDeclaratorList();
 
 }

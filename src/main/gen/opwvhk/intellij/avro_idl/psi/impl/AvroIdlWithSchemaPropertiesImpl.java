@@ -11,14 +11,14 @@ import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import opwvhk.intellij.avro_idl.psi.*;
 
-public class AvroIdlTypePropertiesImpl extends ASTWrapperPsiElement implements AvroIdlTypeProperties {
+public class AvroIdlWithSchemaPropertiesImpl extends ASTWrapperPsiElement implements AvroIdlWithSchemaProperties {
 
-  public AvroIdlTypePropertiesImpl(@NotNull ASTNode node) {
+  public AvroIdlWithSchemaPropertiesImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull AvroIdlVisitor visitor) {
-    visitor.visitTypeProperties(this);
+    visitor.visitWithSchemaProperties(this);
   }
 
   @Override

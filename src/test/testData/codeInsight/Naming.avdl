@@ -1,0 +1,15 @@
+@namespace("Package")
+protocol mis_named {
+	fixed lowerCaseStart(12);
+	enum status {
+		on, off
+	}
+	record struct {
+		string Name;
+	}
+	error failure {
+		string Cause;
+	}
+
+	void Ping() throws failure;
+}

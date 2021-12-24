@@ -1,0 +1,131 @@
+#* @vtlvariable name="NAME" type="java.lang.String" *#
+/*
+ * Comment for licence information.
+ */
+
+/**
+ * Example Avro protocol.
+ */
+protocol ${NAME} {
+	/**
+	 * A simple message.
+	 */
+	record Message {
+		/**
+		 * This text is required.
+		 */
+		string text;
+		/**
+		 * This text is also required, but has a default value.
+		 */
+		string description = "A simple message";
+		/**
+		 * This text is not required (and defaultsa to null).
+		 */
+		string? explanation = null;
+		// You can also (re)use types you defined elsewhere. Forward references are allowed (unlike in .avsc files)
+		PrimitiveTypes? primitiveTypes = null;
+		LogicalTypes? logicalTypes = null;
+		ComplexTypes? complexTypes = null;
+	}
+
+	/**
+	 * Thee fields in this record demonatrate all available primitive types.
+	 */
+	record PrimitiveTypes {
+		boolean trueOrFalse = true;
+		double moreAccurateNumber = 3.141592653589793;
+		float inaccurateNumber = 3.14159;
+		int smallInteger = 42;
+		long largeInteger = 4398046511104;
+		bytes byteArray = [0, 1, 2];
+		string text = "fortytwo";
+		// The null type has only one possible value (null), and exists to make fields optional. See above, and under "unions" below
+		null alwaysNull = null;
+	}
+
+	/**
+	 * The fields in this record demonatrate all hardcoded logical types, and demonstrates how any logical type may be made available.
+	 */
+	record LogicalTypes {
+		// Hardcoded logical types:
+		decimal(6,2)acurateNumber;
+		uuid aUniqueIdentifier;
+		date aDate;
+		time_ms aTimeInMilliseconds;
+		timestamp_ms aTimeInMilliseconds;
+		local_timestamp_ms aTimestamp;
+		// You can apply any logical type to its underlying representation
+		@logicalType("time-micros")
+		long aTimeInMicroseconds;
+		@logicalType("decimal")
+		@precision(6)
+		@scale(2)
+		bytes acurateNumber;
+	}
+
+	/**
+	 * This record demonstrates more comples use cases, including arrays and maps.
+	 */
+	record ComplexTypes {
+		array<string> listOfStrings = [];
+		map<int> mapOfStringToInt = {};
+		// Complex union; probably not useful when generating code. The default value MUST validate as the first type.
+		union{string, date, int} dateDescription = "tomorrow";
+		// Most common unions: make a field optional
+		union{null, string} defaultsToEmpty = null;
+		union{string, null} defaultsToSomeText = "default value";
+		// Alternative, shorthand syntax (since Avro 1.11.1): translates to union{null, ??? } or union{ ??? ,null} depending on the default value
+		string? defaultsToEmptyNew = null;
+		string? defaultsToSomeTextNew = "default value";
+		// The ? syntax automatically places the null type correctly
+		/*
+		 * You can use the types you define as well. Forward references are allowed (unlike in .avsc files).
+		 */
+		Duration threeHundredDays = [0, 0, 0, 0, 1, 44, 0, 0, 0];
+		Duration oneYear = [0, 0, 12, 0, 0, 0, 0, 0, 0];
+		array<Result> results = [];
+		/*
+		 * More complex types are also possible, but not necessarily advisable.
+		 */
+		map<array<string>> namedLists;
+		union{array<int>, map<int>} why;
+		union{null, array<union{null, map<union{null, array<Result?>}>}>} nullPointerInvitation;
+	}
+
+	/**
+	 * A duration; stores 3 ints (32-bit numbers, big-endian): months, days, milliseconds
+	 */
+	@logicalType("duration")
+	fixed Duration(12);
+
+	/**
+	 * An error; behaves exactly like a record, except that it can be thrown from messages (see below).
+	 */
+	error Error {
+		string cause;
+	}
+
+	/**
+	 * An enumeration. This one has a default for schema evolution; if a writer schema contains an unknown enum value, we get Unknown instead of an exception.
+	 */
+	enum Result {
+		SUCCESS, FAILURE, UNKNOWN
+	} = UNKNOWN;
+
+	/**
+	 * Parrot the message back top the user, or throw an error if not possible.
+	 */
+	Message echo(Message msg = {"text": "Hello World!"});
+
+	/**
+	 * Store some data this message returns a Result or an Error (the latter is thrown by the client).
+	 */
+	Result storeData(Message msg) throws Error;
+
+	// void is an alias for null, available for messages only.
+	void ping();
+
+	// Oneway messages can take parameters, but cannot return a value (they must return null/void)
+	void shutdown();
+}

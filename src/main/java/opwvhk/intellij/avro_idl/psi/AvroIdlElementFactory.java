@@ -7,6 +7,8 @@ import com.intellij.psi.PsiFileFactory;
 import opwvhk.intellij.avro_idl.AvroIdlFileType;
 import org.jetbrains.annotations.NotNull;
 
+import static java.util.Objects.requireNonNull;
+
 public class AvroIdlElementFactory {
 	private final Project myProject;
 
@@ -25,13 +27,27 @@ public class AvroIdlElementFactory {
 
 	public @NotNull AvroIdlJsonStringLiteral createJsonStringLiteral(@NotNull String text) {
 		final AvroIdlFile file = createDummyFile(String.format("protocol Foo { import idl \"%s\"; }", StringUtil.escapeStringCharacters(text)));
-		final AvroIdlProtocolDeclaration protocol = (AvroIdlProtocolDeclaration) file.getFirstChild();
-		final AvroIdlProtocolBody protocolBody = protocol.getProtocolBody();
-		assert protocolBody != null;
+		final AvroIdlProtocolBody protocolBody = extractAvroIdlProtocolBody(file);
 		final AvroIdlImportDeclaration avroIdlImportDeclaration = protocolBody.getImportDeclarationList().get(0);
 		final AvroIdlJsonStringLiteral jsonStringLiteral = avroIdlImportDeclaration.getJsonStringLiteral();
 		assert jsonStringLiteral != null;
 		return jsonStringLiteral;
+	}
+
+	private @NotNull AvroIdlProtocolBody extractAvroIdlProtocolBody(AvroIdlFile file) {
+		final AvroIdlProtocolDeclaration protocol = (AvroIdlProtocolDeclaration) file.getFirstChild();
+		return requireNonNull(protocol.getProtocolBody());
+	}
+
+	public @NotNull AvroIdlNullableType makeOptional(@NotNull AvroIdlNullableType type) {
+		if (type.isOptional()) {
+			return type;
+		}
+		final AvroIdlFile file = createDummyFile(String.format("protocol Foo { record Bar { %s? field; } }", type.getText()));
+		final AvroIdlProtocolBody protocolBody = extractAvroIdlProtocolBody(file);
+		final AvroIdlRecordDeclaration recordDeclaration = (AvroIdlRecordDeclaration)protocolBody.getNamedSchemaDeclarationList().get(0);
+		final AvroIdlFieldDeclaration fieldDeclaration = requireNonNull(recordDeclaration.getRecordBody()).getFieldDeclarationList().get(0);
+		return (AvroIdlNullableType)fieldDeclaration.getType();
 	}
 
 	/**

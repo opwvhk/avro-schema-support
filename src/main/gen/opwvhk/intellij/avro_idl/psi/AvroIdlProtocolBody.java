@@ -11,9 +11,10 @@ public interface AvroIdlProtocolBody extends PsiElement {
   List<AvroIdlImportDeclaration> getImportDeclarationList();
 
   @NotNull
-  List<AvroIdlMessageDeclaration> getMessageDeclarationList();
+  List<AvroIdlWithSchemaProperties> getWithSchemaPropertiesList();
 
-  @NotNull
-  List<AvroIdlNamedSchemaDeclaration> getNamedSchemaDeclarationList();
+  @NotNull List<AvroIdlNamedSchemaDeclaration> getNamedSchemaDeclarationList();
+
+  @NotNull List<AvroIdlMessageDeclaration> getMessageDeclarationList();
 
 }

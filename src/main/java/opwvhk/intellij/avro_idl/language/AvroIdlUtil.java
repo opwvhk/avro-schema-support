@@ -10,6 +10,7 @@ import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.ElementManipulators;
 import com.intellij.psi.PsiElement;
@@ -220,9 +221,8 @@ public class AvroIdlUtil {
 
 	public static @Nullable String getJsonString(@Nullable AvroIdlJsonValue jsonValue) {
 		if (jsonValue instanceof AvroIdlJsonStringLiteral) {
-			final PsiElement stringLiteral = ((AvroIdlJsonStringLiteral) jsonValue).getStringLiteral();
-			String escapedLiteralWithQuotes = stringLiteral.getText();
-			String escapedLiteral = escapedLiteralWithQuotes.substring(1, escapedLiteralWithQuotes.length() - 1);
+			final TextRange range = ElementManipulators.getValueTextRange(jsonValue);
+			String escapedLiteral = range.substring(jsonValue.getText());
 			return StringEscapeUtils.unescapeJavaScript(escapedLiteral);
 		}
 		return null;

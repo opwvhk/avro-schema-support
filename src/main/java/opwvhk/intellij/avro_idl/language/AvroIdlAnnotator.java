@@ -30,8 +30,8 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import static com.intellij.lang.annotation.HighlightSeverity.*;
 import static com.intellij.lang.annotation.HighlightSeverity.ERROR;
+import static com.intellij.lang.annotation.HighlightSeverity.*;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
 public class AvroIdlAnnotator implements Annotator {
@@ -151,7 +151,7 @@ public class AvroIdlAnnotator implements Annotator {
 		// Parent is one of:
 		// AvroIdlAnnotatedNameIdentifierOwner
 		// AvroIdlType
-		final PsiElement parent = element.getParent();
+		final AvroIdlWithSchemaProperties parent = (AvroIdlWithSchemaProperties)element.getParent();
 
 		if (parent instanceof AvroIdlReferenceType) {
 			holder.newAnnotation(ERROR,
@@ -161,8 +161,8 @@ public class AvroIdlAnnotator implements Annotator {
 		}
 
 		final String schemaPropertyName = element.getName();
-		if ("namespace".equals(schemaPropertyName)) {
-			annotateNamespaceAnnotation(parent, jsonValue, holder);
+		if (element instanceof AvroIdlNamespaceProperty) {
+			annotateNamespaceAnnotation((AvroIdlNamespaceProperty)element, holder);
 		} else if ("aliases".equals(schemaPropertyName)) {
 			annotateAliasesAnnotation(parent, jsonValue, holder);
 		} else if ("order".equals(schemaPropertyName)) {
@@ -176,14 +176,16 @@ public class AvroIdlAnnotator implements Annotator {
 		}
 	}
 
-	private void annotateNamespaceAnnotation(PsiElement parent, AvroIdlJsonValue jsonValue, @NotNull AnnotationHolder holder) {
+	private void annotateNamespaceAnnotation(@NotNull AvroIdlNamespaceProperty element, @NotNull AnnotationHolder holder) {
+		final PsiElement parent = element.getParent();
 		if (!(parent instanceof AvroIdlProtocolDeclaration) && !(parent instanceof AvroIdlNamedSchemaDeclaration)) {
-			// TODO: Make an inspection out of this.
-			holder.newAnnotation(WEAK_WARNING, "A @namespace annotation has no effect here").create();
+			// This location doesn't recognize the annotation as having a special meaning; treat it as a custom annotation (and thus unchecked).
 			return;
 		}
 
-		String namespace = AvroIdlUtil.getJsonString(jsonValue);
+		final PsiElement jsonValue = element.getJsonValue();
+		assert jsonValue != null : "The caller should have verified jsonValue != null";
+		final String namespace = element.getName();
 		if (namespace == null) {
 			holder.newAnnotation(ERROR, "@namespace annotations must contain a string").range(jsonValue).create();
 		} else if (!VALID_NAMESPACE.test(namespace)) {
@@ -194,8 +196,7 @@ public class AvroIdlAnnotator implements Annotator {
 	private void annotateAliasesAnnotation(PsiElement parent, AvroIdlJsonValue jsonValue, @NotNull AnnotationHolder holder) {
 		if (!(parent instanceof AvroIdlProtocolDeclaration) && !(parent instanceof AvroIdlNamedSchemaDeclaration) &&
 			!(parent instanceof AvroIdlVariableDeclarator)) {
-			// TODO: Make an inspection out of this.
-			holder.newAnnotation(WEAK_WARNING, "An @aliases annotation has no effect here").create();
+			// This location doesn't recognize the annotation as having a special meaning; treat it as a custom annotation (and thus unchecked).
 			return;
 		}
 
@@ -227,8 +228,7 @@ public class AvroIdlAnnotator implements Annotator {
 
 	private void annotateOrderAnnotation(PsiElement parent, AvroIdlJsonValue jsonValue, @NotNull AnnotationHolder holder) {
 		if (!(parent instanceof AvroIdlVariableDeclarator)) {
-			// TODO: Make an inspection out of this.
-			holder.newAnnotation(WEAK_WARNING, "An @order annotation has no effect here").create();
+			// This location doesn't recognize the annotation as having a special meaning; treat it as a custom annotation (and thus unchecked).
 			return;
 		}
 
@@ -238,10 +238,9 @@ public class AvroIdlAnnotator implements Annotator {
 		}
 	}
 
-	private void annotateLogicalTypeAnnotation(PsiElement parent, AvroIdlJsonValue jsonValue, @NotNull AnnotationHolder holder) {
-		if (!(parent instanceof AvroIdlType)) {
-			// TODO: Make an inspection out of this.
-			holder.newAnnotation(WEAK_WARNING, "A @logicalType annotation has no effect here").create();
+	private void annotateLogicalTypeAnnotation(AvroIdlWithSchemaProperties parent, AvroIdlJsonValue jsonValue, @NotNull AnnotationHolder holder) {
+		if (!(parent instanceof AvroIdlType) && !(parent instanceof AvroIdlFixedDeclaration)) {
+			// This location doesn't recognize the annotation as having a special meaning; treat it as a custom annotation (and thus unchecked).
 			return;
 		}
 
@@ -250,14 +249,11 @@ public class AvroIdlAnnotator implements Annotator {
 			holder.newAnnotation(ERROR, "@logicalType annotation must contain a string naming the logical type").range(jsonValue).create();
 			return;
 		}
+
 		switch (logicalType) {
 			case "decimal":
 				boolean isCorrectType;
-				if (parent instanceof AvroIdlReferenceType) {
-					final PsiReference reference = parent.getReference();
-					assert reference != null;
-					isCorrectType = reference.resolve() instanceof AvroIdlFixedDeclaration;
-				} else if (parent instanceof AvroIdlFixedDeclaration) {
+				if (parent instanceof AvroIdlFixedDeclaration) {
 					isCorrectType = true;
 				} else {
 					final IElementType primitiveType = findPrimitiveType(parent);
@@ -267,7 +263,7 @@ public class AvroIdlAnnotator implements Annotator {
 					holder.newAnnotation(ERROR, "The logical type 'decimal' requires the underlying type bytes or fixed").create();
 				}
 
-				AvroIdlJsonValue precisionValue = findSchemaProperty((AvroIdlType) parent, "precision");
+				AvroIdlJsonValue precisionValue = findSchemaProperty(parent, "precision");
 				if (precisionValue == null) {
 					holder.newAnnotation(ERROR, "@logicalType(\"decimal\") requires a sibling @precision annotation with a number between 1 and 2^31-1")
 						.create();
@@ -288,6 +284,16 @@ public class AvroIdlAnnotator implements Annotator {
 					holder.newAnnotation(ERROR, "The logical type '" + logicalType + "' requires the underlying type long").create();
 				}
 				break;
+			case "duration":
+				boolean isCorrectDuration = parent instanceof AvroIdlFixedDeclaration;
+				if (isCorrectDuration) {
+					final PsiElement intLiteral = ((AvroIdlFixedDeclaration)parent).getIntLiteral();
+					isCorrectDuration = intLiteral != null && Integer.parseInt(intLiteral.getText()) == 12;
+				}
+				if (!isCorrectDuration) {
+					holder.newAnnotation(ERROR, "The logical type 'duration' requires the underlying type fixed, of 12 bytes").create();
+				}
+				break;
 		}
 	}
 
@@ -295,7 +301,7 @@ public class AvroIdlAnnotator implements Annotator {
 		return (type instanceof AvroIdlPrimitiveType || type instanceof AvroIdlResultType) ? type.getLastChild().getNode().getElementType() : null;
 	}
 
-	private @Nullable AvroIdlJsonValue findSchemaProperty(@NotNull AvroIdlType type, @NotNull String name) {
+	private @Nullable AvroIdlJsonValue findSchemaProperty(@NotNull AvroIdlWithSchemaProperties type, @NotNull String name) {
 		for (AvroIdlSchemaProperty schemaProperty : type.getSchemaPropertyList()) {
 			if (name.equals(schemaProperty.getName())) {
 				return schemaProperty.getJsonValue();

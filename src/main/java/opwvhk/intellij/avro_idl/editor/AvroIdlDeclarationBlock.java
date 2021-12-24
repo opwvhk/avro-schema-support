@@ -14,7 +14,8 @@ import static com.intellij.psi.TokenType.WHITE_SPACE;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
 public class AvroIdlDeclarationBlock extends AvroIdlBlock {
-	private static final TokenSet DECLARATION_PREAMBLE = TokenSet.create(DOCUMENTATION, SCHEMA_PROPERTY, LINE_COMMENT, DOC_COMMENT, WHITE_SPACE);
+	private static final TokenSet DECLARATION_PREAMBLE = TokenSet.create(DOCUMENTATION, NAMESPACE_PROPERTY, SCHEMA_PROPERTY, LINE_COMMENT, DOC_COMMENT,
+		WHITE_SPACE);
 	private static final TokenSet DECLARATION_BODY_STARTS = TokenSet.create(LEFT_BRACE, LEFT_PAREN);
 	private static final TokenSet DECLARATION_BODY_ENDS = TokenSet.create(RIGHT_BRACE, RIGHT_PAREN);
 
@@ -23,7 +24,7 @@ public class AvroIdlDeclarationBlock extends AvroIdlBlock {
 	private int bodyEndIndex;
 
 	protected AvroIdlDeclarationBlock(@NotNull ASTNode node, @NotNull Wrap wrap, @Nullable Alignment alignment, Indent indent,
-									  @NotNull SpacingBuilder spacingBuilder) {
+	                                  @NotNull SpacingBuilder spacingBuilder) {
 		super(node, wrap, alignment, indent, spacingBuilder);
 
 		headerStartIndex = -1;

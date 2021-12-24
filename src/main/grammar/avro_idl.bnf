@@ -72,6 +72,8 @@
         LOCAL_TIMESTAMP_MS='local_timestamp_ms'
         DECIMAL='decimal'
         UUID='uuid'
+        // The namespace annotation is treated as a special annotation, to allow applying naming conventions to the the namespace
+        AT_NAMESPACE='@namespace'
 
 		// Use this to debug the grammar with the PSI preview
         IDENTIFIER="regexp:(\`\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*\`|\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*)([.-](\`\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*\`|\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*))*"
@@ -84,13 +86,21 @@
 
 CompilationUnit ::= ProtocolDeclaration
 
-SchemaProperty ::= AT IDENTIFIER LEFT_PAREN JsonValue RIGHT_PAREN { pin=1
-	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNamedType"
+SchemaProperty ::= NamespaceProperty | SimpleSchemaProperty {
+    implements="opwvhk.intellij.avro_idl.psi.AvroIdlNamedType"
 	methods=[getName setName]
 }
+NamespaceProperty ::= AT_NAMESPACE LEFT_PAREN JsonValue RIGHT_PAREN { pin=1
+    extends=SchemaProperty
+	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
+	methods=[getNameIdentifier getTextOffset getName setName]
+}
+private SimpleSchemaProperty ::= AT IDENTIFIER LEFT_PAREN JsonValue RIGHT_PAREN { pin=1 }
 Documentation ::= DOC_COMMENT
+fake WithSchemaProperties ::= SchemaProperty* (Documentation | SchemaProperty)*
 
 ProtocolDeclaration ::= ProtocolDeclaration1 | ProtocolDeclaration2 | ProtocolDeclaration3 {
+	extends=WithSchemaProperties
 	implements=["opwvhk.intellij.avro_idl.psi.AvroIdlNamespacedNameIdentifierOwner"]
 	methods=[getNameIdentifier getTextOffset getName setName getFullName]
 }
@@ -99,7 +109,9 @@ ProtocolDeclaration ::= ProtocolDeclaration1 | ProtocolDeclaration2 | ProtocolDe
 private ProtocolDeclaration1 ::= Documentation (SchemaProperty|Documentation)* ProtocolDeclaration3 { pin=1 }
 private ProtocolDeclaration2 ::= SchemaProperty (SchemaProperty|Documentation)* ProtocolDeclaration3 { pin=1 }
 private ProtocolDeclaration3 ::= PROTOCOL Documentation* IDENTIFIER LEFT_BRACE ProtocolBody RIGHT_BRACE { pin=1 }
-ProtocolBody ::= (ImportDeclaration | NamedSchemaDeclaration | MessageDeclaration)* { recoverWhile="recoverProtocolBody" }
+ProtocolBody ::= (ImportDeclaration | NamedSchemaDeclaration | MessageDeclaration)* { recoverWhile="recoverProtocolBody"
+	methods=[getNamedSchemaDeclarationList getMessageDeclarationList]
+}
 private recoverProtocolBody ::= !(RIGHT_BRACE)
 
 ImportDeclaration ::= IMPORT ImportInnerDeclaration SEMICOLON { pin=1 }
@@ -108,6 +120,7 @@ ImportType ::= IDL | PROTOCOL | SCHEMA
 private recoverImportInnerDeclaration ::= !(SEMICOLON|FIXED|ENUM|RECORD|ERROR|AT)
 
 NamedSchemaDeclaration ::= ( FixedDeclaration | EnumDeclaration | RecordDeclaration ) {
+	extends=WithSchemaProperties
 	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNamespacedNameIdentifierOwner"
 	methods=[getNameIdentifier getTextOffset getName setName getFullName getPresentation isErrorType delete]
 }
@@ -146,8 +159,7 @@ private RecordInnerDeclaration ::= RecordType Documentation* IDENTIFIER Document
 private RecordType ::= RECORD | ERROR
 RecordBody ::= FieldDeclaration* Documentation*
 FieldDeclaration ::= FieldDeclaration1 | FieldDeclaration2 { //recoverWhile="recoverFieldDeclaration"
-//	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
-//	methods=[getNameIdentifier getTextOffset getName setName]
+	methods=[getType getVariableDeclaratorList]
 }
 private FieldDeclaration1 ::= Documentation+ Type VariableDeclarator ( COMMA VariableDeclarator )* SEMICOLON { pin=2 }
 private FieldDeclaration2 ::= Type VariableDeclarator ( COMMA VariableDeclarator )* SEMICOLON { pin=1 }
@@ -155,6 +167,7 @@ private FieldDeclaration2 ::= Type VariableDeclarator ( COMMA VariableDeclarator
 
 // Reused in FormalParameter
 VariableDeclarator ::= VariableDeclarator1 | VariableDeclarator2 | VariableDeclarator3 { recoverWhile=recoverVariableDeclarator
+	extends=WithSchemaProperties
 	implements="opwvhk.intellij.avro_idl.psi.AvroIdlAnnotatedNameIdentifierOwner"
 	methods=[getNameIdentifier getTextOffset getName setName]
 }
@@ -164,6 +177,7 @@ private VariableDeclarator3 ::= IDENTIFIER Documentation* [ EQUALS Documentation
 private recoverVariableDeclarator ::= !(SEMICOLON|RIGHT_BRACE|RIGHT_PAREN|COMMA)
 
 MessageDeclaration ::= MessageDeclaration1 | MessageDeclaration2 | MessageDeclaration3 {
+	extends=WithSchemaProperties
 	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
 	methods=[getNameIdentifier getTextOffset getName setName]
 }
@@ -173,7 +187,9 @@ private MessageDeclaration3 ::= ResultType Documentation* MessageSignature SEMIC
 ResultType ::= VOID | Type { extends=Type }
 private MessageSignature ::= IDENTIFIER Documentation* LEFT_PAREN FormalParameters RIGHT_PAREN [ MessageAttributes ] { recoverWhile=recoverMessageSignature }
 private FormalParameters ::= [ FormalParameter (COMMA FormalParameter)* ] { recoverWhile="recoverFormalParameters" }
-FormalParameter ::= FormalParameter1 | FormalParameter2 { recoverWhile="recoverFormalParameter" }
+FormalParameter ::= FormalParameter1 | FormalParameter2 { recoverWhile="recoverFormalParameter"
+	methods=[getType getVariableDeclarator]
+}
 private FormalParameter1 ::= Type VariableDeclarator { pin=1 }
 private FormalParameter2 ::= Documentation+ Type VariableDeclarator { pin=1 }
 MessageAttributes ::= Documentation* ONEWAY Documentation* | MessageAttributeThrowsList
@@ -186,11 +202,10 @@ private recoverFormalParameters ::= !(RIGHT_PAREN)
 private recoverFormalParameter ::= !(RIGHT_PAREN|COMMA)
 //private recoverMessageAttributes ::= !(SEMICOLON)
 
-fake TypeProperties ::= SchemaProperty* (Documentation | SchemaProperty)*
-Type ::= (ArrayType | MapType | UnionType | NullableType) { extends=TypeProperties }
+Type ::= (ArrayType | MapType | UnionType | NullableType) { extends=WithSchemaProperties methods=[isOptional isNull] }
 // Should never be part of the AST (all children should be 'upper' productions), but marking it private breaks the generated parser
 NullableType ::= (PrimitiveType | ReferenceType) [ QUESTION_MARK ] { extends=Type }
-//Type ::= (Documentation | SchemaProperty)* (ArrayType | MapType | UnionType | PrimitiveType | ReferenceType)
+
 ArrayType ::= (ArrayType1 | ArrayType2) { extends=Type }
 private ArrayType1 ::= SchemaProperty+ ArrayType2
 private ArrayType2 ::= ARRAY AngleType { pin=1 }
@@ -213,6 +228,7 @@ private DecimalType2 ::= DECIMAL LEFT_PAREN INT_LITERAL COMMA INT_LITERAL RIGHT_
 upper ReferenceType ::= (ReferenceType1 | ReferenceType2) { extends=NullableType
 	methods=[getReference]
 }
+// References should have no documentation or annotations, but can have them (this is a bug in Avro <= 1.11.0)
 private ReferenceType1 ::= Documentation* SchemaProperty (Documentation | SchemaProperty)* IDENTIFIER { pin=2 }
 private ReferenceType2 ::= (Documentation | SchemaProperty)* IDENTIFIER { pin=2 }
 

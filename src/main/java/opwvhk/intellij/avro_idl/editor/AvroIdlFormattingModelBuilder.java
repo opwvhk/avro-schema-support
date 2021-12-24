@@ -38,6 +38,9 @@ public class AvroIdlFormattingModelBuilder implements FormattingModelBuilder {
 			// Documentation, annotations
 			.after(LINE_COMMENT).lineBreakInCode()
 			.around(TokenSet.create(BLOCK_COMMENT, DOC_COMMENT, DOCUMENTATION)).lineBreakInCode()
+			.aroundInside(NAMESPACE_PROPERTY, TokenSet.create(
+				PROTOCOL_DECLARATION, RECORD_DECLARATION, ENUM_DECLARATION, FIXED_DECLARATION, MESSAGE_DECLARATION)).lineBreakInCode()
+			.around(NAMESPACE_PROPERTY).spaces(1)
 			.aroundInside(SCHEMA_PROPERTY, TokenSet.create(
 				PROTOCOL_DECLARATION, RECORD_DECLARATION, ENUM_DECLARATION, FIXED_DECLARATION, MESSAGE_DECLARATION)).lineBreakInCode()
 			.around(SCHEMA_PROPERTY).spaces(1)

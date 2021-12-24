@@ -82,6 +82,7 @@ IDENTIFIER=(\`[:jletter:][:jletterdigit:]*\`|[:jletter:][:jletterdigit:]*)([.-](
   "local_timestamp_ms"      { return LOCAL_TIMESTAMP_MS; }
   "decimal"                 { return DECIMAL; }
   "uuid"                    { return UUID; }
+  "@namespace"              { return AT_NAMESPACE; }
 
   {NOT_USED}                { return NOT_USED; }
   {INT_LITERAL}             { return INT_LITERAL; }

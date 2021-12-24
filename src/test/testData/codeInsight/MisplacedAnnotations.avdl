@@ -1,0 +1,12 @@
+@namespace("my.test")
+protocol Simple {
+	record TestRecord {
+		Bool @logicalType("character") toggle;
+		@namespace("on.type")
+		@aliases(["for_type"])
+		@order("ignore")
+		string nonsense;
+	}
+
+	enum Bool {TRUE, FALSE, FILE_NOT_FOUND}
+}

@@ -8,16 +8,16 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import opwvhk.intellij.avro_idl.psi.*;
 import com.intellij.util.IncorrectOperationException;
 
-public class AvroIdlMessageDeclarationImpl extends ASTWrapperPsiElement implements AvroIdlMessageDeclaration {
+public class AvroIdlMessageDeclarationImpl extends AvroIdlWithSchemaPropertiesImpl implements AvroIdlMessageDeclaration {
 
   public AvroIdlMessageDeclarationImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull AvroIdlVisitor visitor) {
     visitor.visitMessageDeclaration(this);
   }
@@ -30,12 +30,6 @@ public class AvroIdlMessageDeclarationImpl extends ASTWrapperPsiElement implemen
 
   @Override
   @NotNull
-  public List<AvroIdlDocumentation> getDocumentationList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlDocumentation.class);
-  }
-
-  @Override
-  @NotNull
   public List<AvroIdlFormalParameter> getFormalParameterList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlFormalParameter.class);
   }
@@ -44,12 +38,6 @@ public class AvroIdlMessageDeclarationImpl extends ASTWrapperPsiElement implemen
   @Nullable
   public AvroIdlMessageAttributes getMessageAttributes() {
     return findChildByClass(AvroIdlMessageAttributes.class);
-  }
-
-  @Override
-  @NotNull
-  public List<AvroIdlSchemaProperty> getSchemaPropertyList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlSchemaProperty.class);
   }
 
   @Override

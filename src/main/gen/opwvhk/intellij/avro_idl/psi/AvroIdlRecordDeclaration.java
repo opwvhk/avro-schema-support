@@ -7,14 +7,8 @@ import com.intellij.psi.PsiElement;
 
 public interface AvroIdlRecordDeclaration extends AvroIdlNamedSchemaDeclaration {
 
-  @NotNull
-  List<AvroIdlDocumentation> getDocumentationList();
-
   @Nullable
   AvroIdlRecordBody getRecordBody();
-
-  @NotNull
-  List<AvroIdlSchemaProperty> getSchemaPropertyList();
 
   @Nullable
   PsiElement getIdentifier();

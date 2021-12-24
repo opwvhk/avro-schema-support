@@ -7,12 +7,6 @@ import com.intellij.psi.PsiElement;
 
 public interface AvroIdlFixedDeclaration extends AvroIdlNamedSchemaDeclaration {
 
-  @NotNull
-  List<AvroIdlDocumentation> getDocumentationList();
-
-  @NotNull
-  List<AvroIdlSchemaProperty> getSchemaPropertyList();
-
   @Nullable
   PsiElement getIdentifier();
 

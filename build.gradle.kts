@@ -20,7 +20,7 @@ java {
 }
 
 dependencies {
-	implementation("org.apache.avro", "avro-compiler", "1.10.2").exclude("org.slf4j")
+	implementation("org.apache.avro", "avro-compiler", "1.11.0").exclude("org.slf4j")
 	testImplementation("junit", "junit", "4.13")
 	testImplementation("org.assertj", "assertj-core", "3.20.2")
 }
@@ -49,6 +49,9 @@ tasks {
 			<li>Refactoring actions (converting IDL from/to schema/protocol files) now use the build tool window</li>
 			<li>Report changes upon startup after installation</li>
 			<li>Miscellaneous refactoring and small cosmetic changes</li>
+			<li>Converted some warnings to inspections</li>
+			<li>Added inspection for naming conventions</li>
+			<li>Add dialog for new IDL files</li>
 			<li>Added support for Kotlin style nullable types (Avro &ge; 1.11.1)</li>
 			</ul>
 			<p>Version 203.1.2:</p>

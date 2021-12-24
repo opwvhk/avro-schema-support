@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 import opwvhk.intellij.avro_idl.psi.*;
 
-public abstract class AvroIdlTypeImpl extends AvroIdlTypePropertiesImpl implements AvroIdlType {
+public abstract class AvroIdlTypeImpl extends AvroIdlWithSchemaPropertiesImpl implements AvroIdlType {
 
   public AvroIdlTypeImpl(@NotNull ASTNode node) {
     super(node);
@@ -25,6 +25,16 @@ public abstract class AvroIdlTypeImpl extends AvroIdlTypePropertiesImpl implemen
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof AvroIdlVisitor) accept((AvroIdlVisitor)visitor);
     else super.accept(visitor);
+  }
+
+  @Override
+  public boolean isOptional() {
+    return AvroIdlPsiUtil.isOptional(this);
+  }
+
+  @Override
+  public boolean isNull() {
+    return AvroIdlPsiUtil.isNull(this);
   }
 
 }

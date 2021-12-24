@@ -8,16 +8,16 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import opwvhk.intellij.avro_idl.psi.*;
 import com.intellij.util.IncorrectOperationException;
 
-public class AvroIdlVariableDeclaratorImpl extends ASTWrapperPsiElement implements AvroIdlVariableDeclarator {
+public class AvroIdlVariableDeclaratorImpl extends AvroIdlWithSchemaPropertiesImpl implements AvroIdlVariableDeclarator {
 
   public AvroIdlVariableDeclaratorImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull AvroIdlVisitor visitor) {
     visitor.visitVariableDeclarator(this);
   }
@@ -29,21 +29,9 @@ public class AvroIdlVariableDeclaratorImpl extends ASTWrapperPsiElement implemen
   }
 
   @Override
-  @NotNull
-  public List<AvroIdlDocumentation> getDocumentationList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlDocumentation.class);
-  }
-
-  @Override
   @Nullable
   public AvroIdlJsonValue getJsonValue() {
     return findChildByClass(AvroIdlJsonValue.class);
-  }
-
-  @Override
-  @NotNull
-  public List<AvroIdlSchemaProperty> getSchemaPropertyList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlSchemaProperty.class);
   }
 
   @Override

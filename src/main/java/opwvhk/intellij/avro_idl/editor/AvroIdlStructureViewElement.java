@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.StringJoiner;
 
-public class AvroIdlStructureViewElement extends PsiTreeElementBase<PsiElement> implements StructureViewTreeElement {
+public class AvroIdlStructureViewElement extends PsiTreeElementBase<PsiElement> {
 
 	private static final Icon ENUM_CONSTANT = new LayeredIcon(AllIcons.Nodes.Field, AllIcons.Nodes.FinalMark, AllIcons.Nodes.StaticMark);
 
@@ -90,7 +90,7 @@ public class AvroIdlStructureViewElement extends PsiTreeElementBase<PsiElement> 
 				for (AvroIdlMessageAttributeThrows attributeThrows : messageAttrs.getMessageAttributeThrowsList()) {
 					buffer.add(text(attributeThrows.getText()));
 				}
-				messageAttributes = " " + messageAttrs.getFirstChild().getText() + buffer.toString();
+				messageAttributes = " " + messageAttrs.getFirstChild().getText() + buffer;
 			}
 			return text("%s(%s)%s", messageName, parameters, messageAttributes);
 		} else if (getValue() instanceof PsiNamedElement) {

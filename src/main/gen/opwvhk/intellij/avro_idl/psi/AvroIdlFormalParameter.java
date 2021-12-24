@@ -10,10 +10,11 @@ public interface AvroIdlFormalParameter extends PsiElement {
   @NotNull
   List<AvroIdlDocumentation> getDocumentationList();
 
-  @Nullable
-  AvroIdlType getType();
+  @NotNull
+  List<AvroIdlWithSchemaProperties> getWithSchemaPropertiesList();
 
-  @Nullable
-  AvroIdlVariableDeclarator getVariableDeclarator();
+  @NotNull AvroIdlType getType();
+
+  @Nullable AvroIdlVariableDeclarator getVariableDeclarator();
 
 }

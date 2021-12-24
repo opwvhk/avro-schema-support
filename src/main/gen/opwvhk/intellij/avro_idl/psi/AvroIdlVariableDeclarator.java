@@ -6,16 +6,10 @@ import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 
-public interface AvroIdlVariableDeclarator extends AvroIdlAnnotatedNameIdentifierOwner {
-
-  @NotNull
-  List<AvroIdlDocumentation> getDocumentationList();
+public interface AvroIdlVariableDeclarator extends AvroIdlWithSchemaProperties, AvroIdlAnnotatedNameIdentifierOwner {
 
   @Nullable
   AvroIdlJsonValue getJsonValue();
-
-  @NotNull
-  List<AvroIdlSchemaProperty> getSchemaPropertyList();
 
   @Nullable
   PsiElement getIdentifier();

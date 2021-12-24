@@ -7,17 +7,11 @@ import com.intellij.psi.PsiElement;
 
 public interface AvroIdlEnumDeclaration extends AvroIdlNamedSchemaDeclaration {
 
-  @NotNull
-  List<AvroIdlDocumentation> getDocumentationList();
-
   @Nullable
   AvroIdlEnumBody getEnumBody();
 
   @Nullable
   AvroIdlEnumDefault getEnumDefault();
-
-  @NotNull
-  List<AvroIdlSchemaProperty> getSchemaPropertyList();
 
   @Nullable
   PsiElement getIdentifier();

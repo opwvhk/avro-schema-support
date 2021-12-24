@@ -5,6 +5,10 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface AvroIdlType extends AvroIdlTypeProperties {
+public interface AvroIdlType extends AvroIdlWithSchemaProperties {
+
+  boolean isOptional();
+
+  boolean isNull();
 
 }

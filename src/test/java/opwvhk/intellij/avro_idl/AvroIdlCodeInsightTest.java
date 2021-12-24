@@ -6,8 +6,12 @@ import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.psi.PsiElement;
+import com.intellij.spellchecker.SpellCheckerSeveritiesProvider;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
-import opwvhk.intellij.avro_idl.inspections.AvroIdlDuplicateAnnotationsInspectionTool;
+import opwvhk.intellij.avro_idl.inspections.AvroIdlDuplicateAnnotationsInspection;
+import opwvhk.intellij.avro_idl.inspections.AvroIdlMisplacedAnnotationsInspection;
+import opwvhk.intellij.avro_idl.inspections.AvroIdlNamingConventionInspection;
+import opwvhk.intellij.avro_idl.inspections.AvroIdlUseNullableShorthandInspection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,13 +57,9 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 			Highlight.error("my-data", "Not a valid identifier: my-data"),
 			Highlight.error("@namespace(\"unused\")",
 				"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile."),
-			Highlight.weakWarning("@logicalType(\"character\")", "A @logicalType annotation has no effect here"),
 			Highlight.error("one-letter", "Not a valid identifier: one-letter"),
 			Highlight.warning("/** Dangling documentation 1 */", "Dangling documentation comment"),
-			Highlight.weakWarning("@namespace(\"on.type\")", "A @namespace annotation has no effect here"),
-			Highlight.weakWarning("@aliases([\"for_type\"])", "An @aliases annotation has no effect here"),
 			Highlight.warning("/** Dangling documentation 2 */", "Dangling documentation comment"),
-			Highlight.weakWarning("@order(\"ignore\")", "An @order annotation has no effect here"),
 			Highlight.error("23", "@logicalType annotation must contain a string naming the logical type"),
 			Highlight.warning("/** Dangling documentation 3 */", "Dangling documentation comment"),
 			Highlight.error("34", "@order annotation must contain one of: \"ascending\", \"descending\", \"ignore\""),
@@ -82,6 +82,7 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 			Highlight.error("-2", "@scale must contain a non-negative number of at most the value of @precision"),
 			Highlight.error("@logicalType(\"decimal\")", "The logical type 'decimal' requires the underlying type bytes or fixed"),
 			Highlight.error("8", "@scale must contain a non-negative number of at most the value of @precision"),
+			Highlight.error("@logicalType(\"decimal\")", "The logical type 'decimal' requires the underlying type bytes or fixed"),
 			Highlight.error("@logicalType(\"decimal\")", "The logical type 'decimal' requires the underlying type bytes or fixed"),
 			Highlight.error("@logicalType(\"decimal\")",
 				"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile."),
@@ -119,8 +120,8 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 	}
 
 	@SuppressWarnings("unchecked")
-	public void testInspectionForDuplicateAnnotations() {
-		myFixture.enableInspections(AvroIdlDuplicateAnnotationsInspectionTool.class);
+	public void testDuplicateAnnotationsInspection() {
+		myFixture.enableInspections(AvroIdlDuplicateAnnotationsInspection.class);
 		myFixture.configureByFiles("DuplicateAnnotations.avdl");
 		final List<HighlightInfo> highlightInfoList = myFixture.doHighlighting();
 		final List<Highlight> highlight = Highlight.fromHighlightInfoList(highlightInfoList);
@@ -132,17 +133,73 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 	}
 
 	@SuppressWarnings("unchecked")
-	public void testQuickFixForDuplicateAnnotations() {
-		myFixture.enableInspections(AvroIdlDuplicateAnnotationsInspectionTool.class);
+	public void testDuplicateAnnotationsInspectionQuickFix() {
+		myFixture.enableInspections(AvroIdlDuplicateAnnotationsInspection.class);
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("DuplicateAnnotations.avdl");
 		assertEquals(3, quickFixes.size());
 		for (IntentionAction quickFix : quickFixes) {
-			assertEquals("Delete all @foo annotations except the last.", quickFix.getText());
+			assertEquals("Delete all @foo annotations except the last", quickFix.getText());
 		}
 
 		int index = new Random().nextInt(quickFixes.size());
 		myFixture.launchAction(quickFixes.get(index));
 		myFixture.checkResultByFile("DuplicateAnnotationsFixed.avdl");
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testUseNullableShorthandInspection() {
+		myFixture.enableInspections(AvroIdlUseNullableShorthandInspection.class);
+		myFixture.configureByFiles("AllowShorthandNullable.avdl");
+		final List<HighlightInfo> highlightInfoList = myFixture.doHighlighting();
+		final List<Highlight> highlight = Highlight.fromHighlightInfoList(highlightInfoList);
+		assertContainsOrdered(highlight,
+			Highlight.weakWarning("union{null, string}", "Union can be simplified")
+		);
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testUseNullableShorthandInspectionQuickFix() {
+		myFixture.enableInspections(AvroIdlUseNullableShorthandInspection.class);
+		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("AllowShorthandNullable.avdl");
+		assertEquals(1, quickFixes.size());
+		IntentionAction quickFix = quickFixes.get(0);
+		assertEquals("Replace union with shorthand notation", quickFix.getText());
+		myFixture.launchAction(quickFix);
+		myFixture.checkResultByFile("AllowShorthandNullableFixed.avdl");
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testMisplacedAnnotationsInspection() {
+		myFixture.enableInspections(AvroIdlMisplacedAnnotationsInspection.class);
+		myFixture.configureByFiles("MisplacedAnnotations.avdl");
+		final List<HighlightInfo> highlightInfoList = myFixture.doHighlighting();
+		final List<Highlight> highlight = Highlight.fromHighlightInfoList(highlightInfoList);
+		assertContainsOrdered(highlight,
+			Highlight.warning("@logicalType(\"character\")", "The @logicalType annotation has no effect here"),
+			Highlight.warning("@namespace(\"on.type\")", "The @namespace annotation has no effect here"),
+			Highlight.warning("@aliases([\"for_type\"])", "The @aliases annotation has no effect here"),
+			Highlight.warning("@order(\"ignore\")", "The @order annotation has no effect here")
+		);
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testNamingInspection() {
+		myFixture.enableInspections(AvroIdlNamingConventionInspection.class);
+		myFixture.configureByFiles("Naming.avdl");
+		final List<HighlightInfo> highlightInfoList = myFixture.doHighlighting();
+		final List<Highlight> highlight = Highlight.fromHighlightInfoList(highlightInfoList);
+		assertContainsOrdered(highlight,
+			Highlight.typo("\"Package\"", "Namespace name '\"Package\"' doesn't match regex '[a-z][a-z0-9_]*[a-z0-9](\\.[a-z][a-z0-9_]*[a-z0-9])*'"),
+			Highlight.typo("mis_named", "Protocol name 'mis_named' doesn't match regex '[A-Z][a-zA-Z0-9]*'"),
+			Highlight.typo("lowerCaseStart", "Fixed name 'lowerCaseStart' doesn't match regex '[A-Z][a-zA-Z0-9]*'"),
+			Highlight.typo("status", "Enum name 'status' doesn't match regex '[A-Z][a-zA-Z0-9]*'"),
+			Highlight.typo("on", "Enum constant name 'on' is too short (2 < 3)"),
+			Highlight.typo("off", "Enum constant name 'off' doesn't match regex '[A-Z][A-Z0-9_]*[A-Z0-9]'"),
+			Highlight.typo("Name", "Fixed name 'Name' doesn't match regex '[a-z][a-zA-Z0-9]*'"),
+			Highlight.typo("failure", "Record name 'failure' doesn't match regex '[A-Z][a-zA-Z0-9]*'"),
+			Highlight.typo("Cause", "Fixed name 'Cause' doesn't match regex '[a-z][a-zA-Z0-9]*'"),
+			Highlight.typo("Ping", "Message name 'Ping' doesn't match regex '[a-z][a-zA-Z0-9]*'")
+		);
 	}
 
 	@SuppressWarnings("unused")
@@ -179,6 +236,10 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 
 		static Highlight weakWarning(String text, String description) {
 			return new Highlight(HighlightSeverity.WEAK_WARNING, text, description);
+		}
+
+		static Highlight typo(String text, String description) {
+			return new Highlight(SpellCheckerSeveritiesProvider.TYPO, text, description);
 		}
 
 		static List<Highlight> fromHighlightInfoList(List<HighlightInfo> highlightInfoList) {

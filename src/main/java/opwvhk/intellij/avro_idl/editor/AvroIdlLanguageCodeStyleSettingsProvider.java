@@ -28,16 +28,16 @@ public class AvroIdlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleS
 		commonSettings.SPACE_AROUND_ASSIGNMENT_OPERATORS = true;
 		commonSettings.SPACE_AFTER_COMMA = true;
 		commonSettings.SPACE_AFTER_COMMA_IN_TYPE_ARGUMENTS = true;
-		commonSettings.KEEP_LINE_BREAKS = false;
+		commonSettings.KEEP_LINE_BREAKS = true; // Keep programmer in charge of line breaks; reformatting twice overrides this anyway.
 		commonSettings.KEEP_BLANK_LINES_IN_CODE = 0;
-		commonSettings.KEEP_BLANK_LINES_IN_DECLARATIONS = 0;
+		commonSettings.KEEP_BLANK_LINES_IN_DECLARATIONS = 1;
 		commonSettings.BLANK_LINES_BEFORE_IMPORTS = 1;
 		commonSettings.BLANK_LINES_AFTER_IMPORTS = 1;
 		commonSettings.BLANK_LINES_AROUND_CLASS = 1;
 		commonSettings.BLANK_LINES_AROUND_FIELD = 0;
 		commonSettings.BLANK_LINES_AROUND_METHOD = 1;
 
-		// TODO: Find a way to set these as overrides.
+		// These settings must NOT be named in customizeSettings! They should not be changed. Changing them is possible, but the results are undefined.
 		commonSettings.BLOCK_COMMENT_AT_FIRST_COLUMN = false;
 		commonSettings.LINE_COMMENT_AT_FIRST_COLUMN = false;
 		commonSettings.LINE_COMMENT_ADD_SPACE = false;

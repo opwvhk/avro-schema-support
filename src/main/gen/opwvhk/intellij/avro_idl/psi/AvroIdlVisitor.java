@@ -90,11 +90,18 @@ public class AvroIdlVisitor extends PsiElementVisitor {
   }
 
   public void visitMessageDeclaration(@NotNull AvroIdlMessageDeclaration o) {
-    visitNameIdentifierOwner(o);
+    visitWithSchemaProperties(o);
+    // visitNameIdentifierOwner(o);
   }
 
   public void visitNamedSchemaDeclaration(@NotNull AvroIdlNamedSchemaDeclaration o) {
-    visitNamespacedNameIdentifierOwner(o);
+    visitWithSchemaProperties(o);
+    // visitNamespacedNameIdentifierOwner(o);
+  }
+
+  public void visitNamespaceProperty(@NotNull AvroIdlNamespaceProperty o) {
+    visitSchemaProperty(o);
+    // visitNameIdentifierOwner(o);
   }
 
   public void visitNullableType(@NotNull AvroIdlNullableType o) {
@@ -110,7 +117,8 @@ public class AvroIdlVisitor extends PsiElementVisitor {
   }
 
   public void visitProtocolDeclaration(@NotNull AvroIdlProtocolDeclaration o) {
-    visitNamespacedNameIdentifierOwner(o);
+    visitWithSchemaProperties(o);
+    // visitNamespacedNameIdentifierOwner(o);
   }
 
   public void visitRecordBody(@NotNull AvroIdlRecordBody o) {
@@ -134,11 +142,7 @@ public class AvroIdlVisitor extends PsiElementVisitor {
   }
 
   public void visitType(@NotNull AvroIdlType o) {
-    visitTypeProperties(o);
-  }
-
-  public void visitTypeProperties(@NotNull AvroIdlTypeProperties o) {
-    visitPsiElement(o);
+    visitWithSchemaProperties(o);
   }
 
   public void visitUnionType(@NotNull AvroIdlUnionType o) {
@@ -146,10 +150,11 @@ public class AvroIdlVisitor extends PsiElementVisitor {
   }
 
   public void visitVariableDeclarator(@NotNull AvroIdlVariableDeclarator o) {
-    visitAnnotatedNameIdentifierOwner(o);
+    visitWithSchemaProperties(o);
+    // visitAnnotatedNameIdentifierOwner(o);
   }
 
-  public void visitAnnotatedNameIdentifierOwner(@NotNull AvroIdlAnnotatedNameIdentifierOwner o) {
+  public void visitWithSchemaProperties(@NotNull AvroIdlWithSchemaProperties o) {
     visitPsiElement(o);
   }
 
@@ -158,10 +163,6 @@ public class AvroIdlVisitor extends PsiElementVisitor {
   }
 
   public void visitNamedType(@NotNull AvroIdlNamedType o) {
-    visitPsiElement(o);
-  }
-
-  public void visitNamespacedNameIdentifierOwner(@NotNull AvroIdlNamespacedNameIdentifierOwner o) {
     visitPsiElement(o);
   }
 

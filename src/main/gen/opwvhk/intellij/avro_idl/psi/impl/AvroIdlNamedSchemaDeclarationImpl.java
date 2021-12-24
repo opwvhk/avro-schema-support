@@ -8,17 +8,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import opwvhk.intellij.avro_idl.psi.*;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.util.IncorrectOperationException;
 
-public abstract class AvroIdlNamedSchemaDeclarationImpl extends ASTWrapperPsiElement implements AvroIdlNamedSchemaDeclaration {
+public abstract class AvroIdlNamedSchemaDeclarationImpl extends AvroIdlWithSchemaPropertiesImpl implements AvroIdlNamedSchemaDeclaration {
 
   public AvroIdlNamedSchemaDeclarationImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull AvroIdlVisitor visitor) {
     visitor.visitNamedSchemaDeclaration(this);
   }
