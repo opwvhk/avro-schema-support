@@ -10,4 +10,7 @@ public interface AvroIdlPrimitiveType extends AvroIdlNullableType {
   @Nullable
   AvroIdlDecimalType getDecimalType();
 
+  @NotNull
+  List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList();
+
 }

@@ -11,6 +11,9 @@ public interface AvroIdlJsonPair extends PsiElement {
   AvroIdlJsonValue getJsonValue();
 
   @NotNull
+  List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList();
+
+  @NotNull
   PsiElement getStringLiteral();
 
 }

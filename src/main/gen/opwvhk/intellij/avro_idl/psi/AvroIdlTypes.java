@@ -29,6 +29,7 @@ public interface AvroIdlTypes {
   IElementType MESSAGE_ATTRIBUTES = new AvroIdlElementType("MESSAGE_ATTRIBUTES");
   IElementType MESSAGE_ATTRIBUTE_THROWS = new AvroIdlElementType("MESSAGE_ATTRIBUTE_THROWS");
   IElementType MESSAGE_DECLARATION = new AvroIdlElementType("MESSAGE_DECLARATION");
+  IElementType MISPLACED_DOCUMENTATION = new AvroIdlElementType("MISPLACED_DOCUMENTATION");
   IElementType NAMED_SCHEMA_DECLARATION = new AvroIdlElementType("NAMED_SCHEMA_DECLARATION");
   IElementType NAMESPACE_PROPERTY = new AvroIdlElementType("NAMESPACE_PROPERTY");
   IElementType NULLABLE_TYPE = new AvroIdlElementType("NULLABLE_TYPE");
@@ -162,6 +163,9 @@ public interface AvroIdlTypes {
       }
       else if (type == MESSAGE_DECLARATION) {
         return new AvroIdlMessageDeclarationImpl(node);
+      }
+      else if (type == MISPLACED_DOCUMENTATION) {
+        return new AvroIdlMisplacedDocumentationImpl(node);
       }
       else if (type == NAMESPACE_PROPERTY) {
         return new AvroIdlNamespacePropertyImpl(node);

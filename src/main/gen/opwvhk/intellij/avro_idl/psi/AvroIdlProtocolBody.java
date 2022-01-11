@@ -11,6 +11,9 @@ public interface AvroIdlProtocolBody extends PsiElement {
   List<AvroIdlImportDeclaration> getImportDeclarationList();
 
   @NotNull
+  List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList();
+
+  @NotNull
   List<AvroIdlWithSchemaProperties> getWithSchemaPropertiesList();
 
   @NotNull List<AvroIdlNamedSchemaDeclaration> getNamedSchemaDeclarationList();

@@ -14,7 +14,10 @@ public interface AvroIdlMessageDeclaration extends AvroIdlWithSchemaProperties, 
   @Nullable
   AvroIdlMessageAttributes getMessageAttributes();
 
-  @Nullable
+  @NotNull
+  List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList();
+
+  @NotNull
   AvroIdlType getType();
 
   @Nullable

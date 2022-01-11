@@ -11,6 +11,9 @@ public interface AvroIdlSchemaProperty extends AvroIdlNamedType {
   @Nullable
   AvroIdlJsonValue getJsonValue();
 
+  @NotNull
+  List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList();
+
   @Nullable
   PsiElement getIdentifier();
 

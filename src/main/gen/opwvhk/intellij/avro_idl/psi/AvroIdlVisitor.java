@@ -94,6 +94,10 @@ public class AvroIdlVisitor extends PsiElementVisitor {
     // visitNameIdentifierOwner(o);
   }
 
+  public void visitMisplacedDocumentation(@NotNull AvroIdlMisplacedDocumentation o) {
+    visitDocumentation(o);
+  }
+
   public void visitNamedSchemaDeclaration(@NotNull AvroIdlNamedSchemaDeclaration o) {
     visitWithSchemaProperties(o);
     // visitNamespacedNameIdentifierOwner(o);

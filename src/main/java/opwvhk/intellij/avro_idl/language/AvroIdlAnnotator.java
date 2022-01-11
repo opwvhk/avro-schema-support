@@ -4,7 +4,6 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInspection.LocalQuickFixAndIntentionActionOnPsiElement;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.annotation.AnnotationBuilder;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
@@ -17,9 +16,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.impl.source.tree.TreeUtil;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import opwvhk.intellij.avro_idl.psi.*;
@@ -42,7 +39,6 @@ public class AvroIdlAnnotator implements Annotator {
 	private static final Predicate<String> VALID_ORDER = order -> order != null && VALID_ORDER_NAMES.contains(order.toUpperCase());
 	private static final Predicate<String> VALID_IDENTIFIER = Pattern.compile("`" + identifier + "`|" + identifier,
 		Pattern.UNICODE_CHARACTER_CLASS).asMatchPredicate();
-	public static final @NotNull TokenSet DOCUMENTATION_TOKENS = TokenSet.create(DOCUMENTATION);
 
 
 	@Override
@@ -126,19 +122,18 @@ public class AvroIdlAnnotator implements Annotator {
 	}
 
 	private void annotateDocumentation(@NotNull AvroIdlDocumentation element, @NotNull AnnotationHolder holder) {
-
-		final ASTNode astNode = element.getNode();
-		boolean isLastDocumentation = TreeUtil.findSibling(astNode.getTreeNext(), DOCUMENTATION) == null;
-
-		if (isLastDocumentation) {
-			final ASTNode nextSibling = element.getParent() instanceof AvroIdlType ? astNode.getTreeParent() : astNode.getTreeNext();
-			final ASTNode firstVariableDeclarator = TreeUtil.findSibling(nextSibling, VARIABLE_DECLARATOR);
-			isLastDocumentation = firstVariableDeclarator == null ||
-				TreeUtil.findSibling(firstVariableDeclarator.getFirstChildNode(), DOCUMENTATION_TOKENS) == null;
-		}
-
-		if (!isLastDocumentation) {
-			holder.newAnnotation(WARNING, "Dangling documentation comment").create();
+		if (element instanceof AvroIdlMisplacedDocumentation) {
+			holder.newAnnotation(WARNING,
+				"Misplaced documentation comment: documentation comments should be placed before declarations")
+				.withFix(new DeleteElement(element, "Delete misplaced documentation comment"))
+				.create();
+		} else if (PsiTreeUtil.skipWhitespacesForward(element) instanceof AvroIdlDocumentation) {
+			// The grammar recognizes doc comment sequences to allow the distinction between dangling and misplaced comments.
+			// As a result, misplaced comments can never occur after good or dangling doc comments.
+			holder.newAnnotation(WARNING,
+					"Dangling documentation comment: the next documentation comments causes this one to be ignored")
+				.withFix(new DeleteElement(element, "Delete dangling documentation comment"))
+				.create();
 		}
 	}
 
@@ -156,7 +151,7 @@ public class AvroIdlAnnotator implements Annotator {
 		if (parent instanceof AvroIdlReferenceType) {
 			holder.newAnnotation(ERROR,
 					"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile.")
-				.withFix(new RemoveSchemaProperty(element))
+				.withFix(new DeleteElement(element, "Delete annotation from reference"))
 				.create();
 		}
 
@@ -439,9 +434,12 @@ public class AvroIdlAnnotator implements Annotator {
 		}
 	}
 
-	private static class RemoveSchemaProperty extends LocalQuickFixAndIntentionActionOnPsiElement {
-		public RemoveSchemaProperty(@NotNull AvroIdlSchemaProperty element) {
+	private static class DeleteElement extends LocalQuickFixAndIntentionActionOnPsiElement {
+		private final String text;
+
+		public DeleteElement(@NotNull PsiElement element, @NotNull @IntentionName String text) {
 			super(element);
+			this.text = text;
 		}
 
 		@Override
@@ -451,7 +449,7 @@ public class AvroIdlAnnotator implements Annotator {
 
 		@Override
 		public @NotNull @IntentionName String getText() {
-			return "Delete annotation from reference.";
+			return text;
 		}
 
 		@Override

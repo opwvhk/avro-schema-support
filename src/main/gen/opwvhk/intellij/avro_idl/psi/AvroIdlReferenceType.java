@@ -8,6 +8,9 @@ import opwvhk.intellij.avro_idl.language.AvroIdlNamedSchemaReference;
 
 public interface AvroIdlReferenceType extends AvroIdlNullableType {
 
+  @NotNull
+  List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList();
+
   @Nullable
   PsiElement getIdentifier();
 

@@ -5,12 +5,6 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface AvroIdlEnumBody extends PsiElement {
-
-  @NotNull
-  List<AvroIdlEnumConstant> getEnumConstantList();
-
-  @NotNull
-  List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList();
+public interface AvroIdlMisplacedDocumentation extends AvroIdlDocumentation {
 
 }

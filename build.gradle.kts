@@ -44,8 +44,8 @@ tasks {
 		untilBuild.set("221.*")
 		changeNotes.set(
 			"""
-			<p>Version 213.0.0:</p>
-			<ul data-version="213.0.0">
+			<p>Version 212.0.0:</p>
+			<ul data-version="212.0.0">
 			<li>Refactoring actions (converting IDL from/to schema/protocol files) now use the build tool window</li>
 			<li>Report changes upon startup after installation</li>
 			<li>Miscellaneous refactoring and small cosmetic changes</li>
@@ -53,6 +53,7 @@ tasks {
 			<li>Added inspection for naming conventions</li>
 			<li>Add dialog for new IDL files</li>
 			<li>Added support for Kotlin style nullable types (Avro &ge; 1.11.1)</li>
+			<li>Updated documentation comments to conform to spec (as fixed in Avro &ge; 1.11.1)</li>
 			</ul>
 			<p>Version 203.1.2:</p>
 			<ul data-version="203.1.2">

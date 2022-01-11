@@ -5,7 +5,9 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.TokenSet;
-import opwvhk.intellij.avro_idl.psi.*;
+import opwvhk.intellij.avro_idl.psi.AvroIdlImportDeclaration;
+import opwvhk.intellij.avro_idl.psi.AvroIdlMessageDeclaration;
+import opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,7 +16,8 @@ import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
 public class AvroIdlDeclarationRangeHandler implements DeclarationRangeHandler<AvroIdlNameIdentifierOwner> {
 
-	private static final TokenSet NON_DECLARATION_TYPES = TokenSet.create(WHITE_SPACE, DOCUMENTATION, SCHEMA_PROPERTY, LINE_COMMENT, BLOCK_COMMENT, SEMICOLON);
+	private static final TokenSet NON_DECLARATION_TYPES = TokenSet.create(WHITE_SPACE, DOCUMENTATION, MISPLACED_DOCUMENTATION, SCHEMA_PROPERTY, LINE_COMMENT,
+		BLOCK_COMMENT, SEMICOLON);
 
 	@Override
 	public @Nullable TextRange getDeclarationRange(@NotNull AvroIdlNameIdentifierOwner container) {

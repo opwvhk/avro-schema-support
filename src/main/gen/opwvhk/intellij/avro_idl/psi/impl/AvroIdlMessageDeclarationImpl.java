@@ -41,9 +41,15 @@ public class AvroIdlMessageDeclarationImpl extends AvroIdlWithSchemaPropertiesIm
   }
 
   @Override
-  @Nullable
+  @NotNull
+  public List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlMisplacedDocumentation.class);
+  }
+
+  @Override
+  @NotNull
   public AvroIdlType getType() {
-    return findChildByClass(AvroIdlType.class);
+    return findNotNullChildByClass(AvroIdlType.class);
   }
 
   @Override
