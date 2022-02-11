@@ -67,8 +67,11 @@
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Misplaced annotations" enabledByDefault="true" level="WARNING"
 		                 id="AvroIdlMisplacedAnnotationsInspection" order="after AvroIdlDuplicateAnnotationsInspection"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlMisplacedAnnotationsInspection"/>
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Misplaced annotations" enabledByDefault="true" level="WARNING"
+		                 id="AvroIdlMisplacedDocumentationInspection" order="after AvroIdlMisplacedAnnotationsInspection"
+		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlMisplacedDocumentationInspection"/>
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Union can be simplified" enabledByDefault="true" level="WEAK WARNING"
-		                 id="AvroIdlUseNullableShorthandInspection" order="after AvroIdlMisplacedAnnotationsInspection"
+		                 id="AvroIdlUseNullableShorthandInspection" order="after AvroIdlMisplacedDocumentationInspection"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlUseNullableShorthandInspection"/>
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Naming conventions" enabledByDefault="false" level="TYPO"
 		                 id="AvroIdlNamingConventionInspection" order="after AvroIdlUseNullableShorthandInspection"

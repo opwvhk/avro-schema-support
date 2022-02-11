@@ -1,14 +1,12 @@
 package opwvhk.intellij.avro_idl.language;
 
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInspection.LocalQuickFixAndIntentionActionOnPsiElement;
-import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.lang.annotation.AnnotationBuilder;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -19,6 +17,7 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
+import opwvhk.intellij.avro_idl.inspections.SimpleAvroIdlQuickFixOnPsiElement;
 import opwvhk.intellij.avro_idl.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,9 +26,9 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import static com.intellij.lang.annotation.HighlightSeverity.ERROR;
 import static com.intellij.lang.annotation.HighlightSeverity.*;
-import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
+import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.NULL;
+import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.VOID;
 
 public class AvroIdlAnnotator implements Annotator {
 	private static final String identifier = "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
@@ -54,12 +53,10 @@ public class AvroIdlAnnotator implements Annotator {
 			} else if (parent instanceof AvroIdlNameIdentifierOwner) {
 				annotateIdentifierName(element, holder);
 			}
-		} else if (element instanceof AvroIdlDocumentation) {
-			annotateDocumentation((AvroIdlDocumentation) element, holder);
 		} else if (element instanceof AvroIdlSchemaProperty) {
-			annotateSchemaProperty((AvroIdlSchemaProperty) element, holder);
+			annotateSchemaProperty((AvroIdlSchemaProperty)element, holder);
 		} else if (element instanceof AvroIdlFile) {
-			annotateFile((AvroIdlFile) element, holder);
+			annotateFile((AvroIdlFile)element, holder);
 		} else if (element.getNode().getElementType() == AvroIdlTypes.ONEWAY) {
 			annotateOneWay(element, holder);
 		}
@@ -67,7 +64,7 @@ public class AvroIdlAnnotator implements Annotator {
 
 	private void annotateSchemaReference(@NotNull PsiElement element, @NotNull AnnotationHolder holder, boolean mustBeAnError) {
 		final PsiElement parent = element.getParent();
-		final AvroIdlNamedSchemaReference reference = (AvroIdlNamedSchemaReference) parent.getReference();
+		final AvroIdlNamedSchemaReference reference = (AvroIdlNamedSchemaReference)parent.getReference();
 		assert reference != null; // Because we've matched on an identifier, and our parent is a ReferenceType, MessageAttributeThrows or EnumDefault
 		final PsiElement referencedElement = reference.resolve();
 
@@ -85,7 +82,7 @@ public class AvroIdlAnnotator implements Annotator {
 		do {
 			e = e.getParent();
 		} while (!(e instanceof AvroIdlProtocolBody));
-		final AvroIdlProtocolBody protocolBody = (AvroIdlProtocolBody) e;
+		final AvroIdlProtocolBody protocolBody = (AvroIdlProtocolBody)e;
 
 		return !protocolBody.getImportDeclarationList().isEmpty();
 	}
@@ -96,7 +93,7 @@ public class AvroIdlAnnotator implements Annotator {
 	}
 
 	private void annotateEnumDefault(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
-		AvroIdlEnumDeclaration enumDeclaration = (AvroIdlEnumDeclaration) element.getParent().getParent();
+		AvroIdlEnumDeclaration enumDeclaration = (AvroIdlEnumDeclaration)element.getParent().getParent();
 		final AvroIdlEnumBody enumBody = enumDeclaration.getEnumBody();
 		if (enumBody == null) {
 			return;
@@ -121,22 +118,6 @@ public class AvroIdlAnnotator implements Annotator {
 		return "Not a valid identifier" + suffix + ": " + invalidIdentifier;
 	}
 
-	private void annotateDocumentation(@NotNull AvroIdlDocumentation element, @NotNull AnnotationHolder holder) {
-		if (element instanceof AvroIdlMisplacedDocumentation) {
-			holder.newAnnotation(WARNING,
-				"Misplaced documentation comment: documentation comments should be placed before declarations")
-				.withFix(new DeleteElement(element, "Delete misplaced documentation comment"))
-				.create();
-		} else if (PsiTreeUtil.skipWhitespacesForward(element) instanceof AvroIdlDocumentation) {
-			// The grammar recognizes doc comment sequences to allow the distinction between dangling and misplaced comments.
-			// As a result, misplaced comments can never occur after good or dangling doc comments.
-			holder.newAnnotation(WARNING,
-					"Dangling documentation comment: the next documentation comments causes this one to be ignored")
-				.withFix(new DeleteElement(element, "Delete dangling documentation comment"))
-				.create();
-		}
-	}
-
 	private void annotateSchemaProperty(@NotNull AvroIdlSchemaProperty element, @NotNull AnnotationHolder holder) {
 		final AvroIdlJsonValue jsonValue = element.getJsonValue();
 		if (jsonValue == null) {
@@ -151,7 +132,7 @@ public class AvroIdlAnnotator implements Annotator {
 		if (parent instanceof AvroIdlReferenceType) {
 			holder.newAnnotation(ERROR,
 					"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile.")
-				.withFix(new DeleteElement(element, "Delete annotation from reference"))
+				.withFix(new DeleteSchemaProperty(element, "Delete annotation from reference"))
 				.create();
 		}
 
@@ -310,7 +291,7 @@ public class AvroIdlAnnotator implements Annotator {
 			return;
 		}
 
-		if (!"decimal".equals(AvroIdlUtil.getJsonString(findSchemaProperty((AvroIdlType) parent, "logicalType")))) {
+		if (!"decimal".equals(AvroIdlUtil.getJsonString(findSchemaProperty((AvroIdlType)parent, "logicalType")))) {
 			return;
 		}
 
@@ -322,13 +303,13 @@ public class AvroIdlAnnotator implements Annotator {
 
 		AvroIdlFixedDeclaration fixedDeclaration = null;
 		if (parent instanceof AvroIdlFixedDeclaration) {
-			fixedDeclaration = (AvroIdlFixedDeclaration) parent;
+			fixedDeclaration = (AvroIdlFixedDeclaration)parent;
 		} else if (parent instanceof AvroIdlReferenceType) {
 			final PsiReference reference = parent.getReference();
 			assert reference != null;
 			final PsiElement referencedType = reference.resolve();
 			if (referencedType instanceof AvroIdlFixedDeclaration) {
-				fixedDeclaration = (AvroIdlFixedDeclaration) referencedType;
+				fixedDeclaration = (AvroIdlFixedDeclaration)referencedType;
 			}
 		}
 		if (fixedDeclaration != null) {
@@ -337,7 +318,7 @@ public class AvroIdlAnnotator implements Annotator {
 				long fixedSize = Long.parseLong(intLiteral.getText());
 				if (fixedSize < Integer.MAX_VALUE) {
 					// This calculation is a copy of the one in the Avro source code.
-					long maxPrecision = Math.round(Math.floor(Math.log10(2) * (8 * (int) fixedSize - 1)));
+					long maxPrecision = Math.round(Math.floor(Math.log10(2) * (8 * (int)fixedSize - 1)));
 					if (precision > maxPrecision) {
 						final String referencedName = fixedDeclaration.getFullName();
 						holder.newAnnotation(ERROR, String.format("%s, a fixed(%d), cannot store %d digits (max %d)",
@@ -353,7 +334,7 @@ public class AvroIdlAnnotator implements Annotator {
 			return;
 		}
 
-		if (!"decimal".equals(AvroIdlUtil.getJsonString(findSchemaProperty((AvroIdlType) parent, "logicalType")))) {
+		if (!"decimal".equals(AvroIdlUtil.getJsonString(findSchemaProperty((AvroIdlType)parent, "logicalType")))) {
 			return;
 		}
 
@@ -363,7 +344,7 @@ public class AvroIdlAnnotator implements Annotator {
 		if (scale == null || scale < 0) {
 			isIncorrect = true;
 		} else {
-			Long precision = AvroIdlUtil.getJsonIntValue(findSchemaProperty((AvroIdlType) parent, "precision"));
+			Long precision = AvroIdlUtil.getJsonIntValue(findSchemaProperty((AvroIdlType)parent, "precision"));
 			if (precision != null && scale > precision) {
 				isIncorrect = true;
 			}
@@ -404,7 +385,7 @@ public class AvroIdlAnnotator implements Annotator {
 					.map(path -> path + ":" + psiElement.getTextOffset())
 					.or(() -> Optional.of(object)
 						.filter(o -> o instanceof VirtualFile)
-						.map(o -> ((VirtualFile) o).getPath())
+						.map(o -> ((VirtualFile)o).getPath())
 						.map(FileUtil::toSystemIndependentName)
 						.map(path -> path + ":0"))
 					.map(link -> "<a href=\"#navigation/" + link + "\">" + anyDuplicate.getLookupString() + "</a>");
@@ -427,41 +408,29 @@ public class AvroIdlAnnotator implements Annotator {
 	private void annotateOneWay(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
 		final PsiElement messageDeclaration = element.getParent().getParent();
 		if (messageDeclaration instanceof AvroIdlMessageDeclaration) {
-			final IElementType primitiveType = findPrimitiveType(((AvroIdlMessageDeclaration) messageDeclaration).getType());
+			final IElementType primitiveType = findPrimitiveType(((AvroIdlMessageDeclaration)messageDeclaration).getType());
 			if (primitiveType != VOID && primitiveType != NULL) {
 				holder.newAnnotation(ERROR, "Oneway messages must have a void or null return type").create();
 			}
 		}
 	}
 
-	private static class DeleteElement extends LocalQuickFixAndIntentionActionOnPsiElement {
-		private final String text;
-
-		public DeleteElement(@NotNull PsiElement element, @NotNull @IntentionName String text) {
-			super(element);
-			this.text = text;
+	/**
+	 * Delete a single schema property. This subclass handles write mode itself, to disable the "fix all" option.
+	 */
+	private static class DeleteSchemaProperty extends SimpleAvroIdlQuickFixOnPsiElement<AvroIdlSchemaProperty> {
+		public DeleteSchemaProperty(@NotNull AvroIdlSchemaProperty element, @NotNull @IntentionName String text) {
+			super(element, text);
 		}
 
 		@Override
-		public @NotNull @IntentionFamilyName String getFamilyName() {
-			return "Avro IDL";
+		protected void invoke(@NotNull Project project, @NotNull PsiFile file, @NotNull AvroIdlSchemaProperty element) {
+			ApplicationManager.getApplication().runWriteAction(element::delete);
 		}
 
 		@Override
-		public @NotNull @IntentionName String getText() {
-			return text;
-		}
-
-		@Override
-		public void invoke(@NotNull Project project, @NotNull PsiFile file, @NotNull PsiElement startElement,
-		                   @NotNull PsiElement endElement) {
-			startElement.delete();
-		}
-
-		@Override
-		public void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor,
-		                   @NotNull PsiElement startElement, @NotNull PsiElement endElement) {
-			startElement.delete();
+		public boolean startInWriteAction() {
+			return false;
 		}
 	}
 }
