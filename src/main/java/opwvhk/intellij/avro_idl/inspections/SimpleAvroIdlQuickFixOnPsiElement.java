@@ -34,14 +34,14 @@ public abstract class SimpleAvroIdlQuickFixOnPsiElement<E extends PsiElement> ex
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public boolean isAvailable(@NotNull Project project, @NotNull PsiFile file, @NotNull PsiElement startElement, @NotNull PsiElement endElement) {
-		//noinspection unchecked
 		return isAvailable(project, file, (E)startElement);
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void invoke(@NotNull Project project, @NotNull PsiFile file, @NotNull PsiElement startElement, @NotNull PsiElement endElement) {
-		//noinspection unchecked
 		invoke(project, file, (E)startElement);
 	}
 }
