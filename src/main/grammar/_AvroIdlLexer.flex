@@ -26,8 +26,8 @@ EOL=\R
 WHITE_SPACE=\s+
 
 NOT_USED=[ \t\n\x0B\f\r]+
-INT_LITERAL=-?(0|[1-9][0-9]*)
-FLOAT_LITERAL=-?(NaN|Infinity|(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?)
+INT_LITERAL=[+-]?(0|[1-9][0-9]*|0x[0-9a-fA-F]+|0[0-7]+)[lL]?
+FLOAT_LITERAL=[+-]?(NaN|Infinity|([0-9]+\.[0-9]*|\.[0-9]+)([eE][+-]?[0-9]+)?[fFdD]?|[0-9]+([eE][+-]?[0-9]+[fFdD]?|[fFdD])|0[xX]([0-9a-fA-F]+\.?|[0-9a-fA-F]*\.[0-9a-fA-F]+)[pP][+-]?[0-9]+?[fFdD]?)
 STRING_LITERAL=\"([^\"\\\n\r]|\\([ntbrf\\'\"]|[0-7][0-7]?|[0-3][0-7][0-7]))*\"
 DOC_COMMENT="/"\*\*([^*]|\*+[^/*])*\*+"/"
 LINE_COMMENT="//".*

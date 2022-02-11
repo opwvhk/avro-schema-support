@@ -38,11 +38,16 @@ protocol Simple {
 
 		union {null, MD5} @aliases(["hash", "hsh"]) nullableHash = null;
 
+		float estimate1 = 3.1415927f;
+		float estimate2 = 0xDEAD.F00P2f;
 		double value = NaN;
 		float average = -Infinity;
 		date d = 0;
 		time_ms t = 0;
 
+		int shortNumber = 71253;
+		int octNumber = 056152;
+		int hexNumber = 0xf00ba3;
 		@foo.bar("bar.foo") long l = 0;
 		@foo.foo.bar(42) @foo.foo.foo("3foo") string? prop = null;
 	}
