@@ -15,15 +15,17 @@ protocol
 
   {
 
+
     FOO
 
-         ,
+    ,
 
-         BAR
+    BAR
 
-         ,
+    ,
 
-         BAZ
+    BAZ
+
 
   }
 
@@ -43,15 +45,17 @@ protocol
 
   {
 
+
     A
 
-         ,
+    ,
 
-         B
+    B
 
-         ,
+    ,
 
-         C
+    C
+
 
   }
 

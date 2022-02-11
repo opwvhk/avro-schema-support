@@ -6,10 +6,14 @@
 protocol Simple {
 	/** A kind of record. */
 	@aliases(["org.foo.KindOf"])
-	enum Kind {FOO, BAR, // the bar enum value
-		BAZ}
+	enum Kind {
+		FOO, BAR, // the bar enum value
+		BAZ
+	}
 
-	enum Status {A, B, C} = C;
+	enum Status {
+		A, B, C
+	} = C;
 
 	// The old plugin does not support enum defaults (which allow enum evolution)
 	/** An MD5 hash. */

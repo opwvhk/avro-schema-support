@@ -76,7 +76,7 @@ public class AvroIdlFormattingModelBuilder implements FormattingModelBuilder {
 		spacingBuilder
 			// Record/error or enum declaration
 			.beforeInside(IDENTIFIER, TokenSet.create(RECORD_DECLARATION, ENUM_DECLARATION, FIELD_DECLARATION)).spaces(1)
-			.withinPairInside(LEFT_BRACE, RIGHT_BRACE, ENUM_DECLARATION).spaces(0)
+			.withinPairInside(LEFT_BRACE, RIGHT_BRACE, ENUM_DECLARATION).blankLines(0)
 			.withinPairInside(LEFT_BRACE, RIGHT_BRACE, RECORD_DECLARATION).blankLines(0)
 			.beforeInside(LEFT_BRACE, TokenSet.create(RECORD_DECLARATION, ENUM_DECLARATION)).spaces(1)
 			.afterInside(COMMA, ENUM_BODY).spaceIf(avroIdlSettings.SPACE_AFTER_COMMA)

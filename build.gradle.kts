@@ -56,6 +56,7 @@ tasks {
 			<li>Added support for Kotlin style nullable types (Avro &ge; 1.11.1)</li>
 			<li>Updated documentation comments to conform to spec (as fixed in Avro &ge; 1.11.1)</li>
 			<li>Added syntax for hexadecimal integers and floating point numbers</li>
+			<li>Improved formatting of enum declarations</li>
 			</ul>
 			<p>Version 203.1.2:</p>
 			<ul data-version="203.1.2">

@@ -2,7 +2,9 @@
  * Test case for formatting with empty lines.
  */
 protocol ThreeEmptyLines {
-	enum Kind {FOO, BAR, BAZ}
+	enum Kind {
+		FOO, BAR, BAZ
+	}
 
 
 
@@ -13,7 +15,9 @@ protocol ThreeEmptyLines {
 	import protocol "protocol.avpr";
 
 
-	enum Status {A, B, C} = C;
+	enum Status {
+		A, B, C
+	} = C;
 
 	record TestRecord {
 		string name = "foo";
