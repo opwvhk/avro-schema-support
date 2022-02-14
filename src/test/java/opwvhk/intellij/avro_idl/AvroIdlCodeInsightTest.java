@@ -8,10 +8,7 @@ import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.spellchecker.SpellCheckerSeveritiesProvider;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
-import opwvhk.intellij.avro_idl.inspections.AvroIdlDuplicateAnnotationsInspection;
-import opwvhk.intellij.avro_idl.inspections.AvroIdlMisplacedAnnotationsInspection;
-import opwvhk.intellij.avro_idl.inspections.AvroIdlNamingConventionInspection;
-import opwvhk.intellij.avro_idl.inspections.AvroIdlUseNullableShorthandInspection;
+import opwvhk.intellij.avro_idl.inspections.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,48 +29,25 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		// Note: because we're cutting out the text offsets, all error texts should be unique enough to be identified.
 		// Luckily, the method returns highlights in the order they are in the file.
 
-		final String danglingDocumentationDescription = "Dangling documentation comment: the next documentation comments causes this one to be ignored";
-		final String misplacedDocumentationDescription = "Misplaced documentation comment: documentation comments should be placed before declarations";
 		assertOrderedEquals(highlight,
-			Highlight.warning("/** Dangling documentation 1 */", danglingDocumentationDescription),
 			Highlight.warning("\"12 monkeys\"", "The namespace is not composed of valid identifiers"),
-			Highlight.warning("/** Misplaced documentation 1 */", misplacedDocumentationDescription),
 			Highlight.error("Many.Mistakes", "Not a valid identifier: Many.Mistakes"),
-			Highlight.warning("/** Dangling documentation 2 */", danglingDocumentationDescription),
-			Highlight.warning("/** Misplaced documentation 2 */", misplacedDocumentationDescription),
 			Highlight.error("Status", "Schema '12 monkeys.Status' is already defined"),
-			Highlight.warning("/** Misplaced documentation 3 */", misplacedDocumentationDescription),
-			Highlight.warning("/** Misplaced documentation 4 */", misplacedDocumentationDescription),
 			Highlight.error("Status", "Schema '12 monkeys.Status' is already defined"),
-			Highlight.warning("/** Dangling documentation 3 */", danglingDocumentationDescription),
 			Highlight.error("12", "@namespace annotations must contain a string"),
-			Highlight.warning("/** Misplaced documentation 5 */", misplacedDocumentationDescription),
-			Highlight.warning("/** Misplaced documentation 6 */", misplacedDocumentationDescription),
-			Highlight.warning("/** Misplaced documentation 7 */", misplacedDocumentationDescription),
 			Highlight.error("foo.bar", "Not a valid identifier: foo.bar"),
-			Highlight.warning("/** Misplaced documentation 8 */", misplacedDocumentationDescription),
-			Highlight.warning("/** Misplaced documentation 9 */", misplacedDocumentationDescription),
-			Highlight.warning("/** Misplaced documentation 10 */", misplacedDocumentationDescription),
-			Highlight.warning("/** Misplaced documentation 11 */", misplacedDocumentationDescription),
-			Highlight.warning("/** Dangling documentation 4 */", danglingDocumentationDescription),
 			Highlight.error("\"even-more-wrong\"", "Not a valid identifier (with namespace): even-more-wrong"),
-			Highlight.warning("/** Misplaced documentation 12 */", misplacedDocumentationDescription),
 			Highlight.error("also-wrong", "Not a valid identifier: also-wrong"),
 			Highlight.error("C", "Enum default must be one of the enum constants"),
 			Highlight.error("my-data", "Not a valid identifier: my-data"),
 			Highlight.error("@namespace(\"unused\")", "Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile."),
 			Highlight.error("one-letter", "Not a valid identifier: one-letter"),
-			Highlight.warning("/** Misplaced documentation 13 */", misplacedDocumentationDescription),
 			Highlight.error("23", "@logicalType annotation must contain a string naming the logical type"),
 			Highlight.error("34", "@order annotation must contain one of: \"ascending\", \"descending\", \"ignore\""),
-			Highlight.warning("/** Misplaced documentation 14 */", misplacedDocumentationDescription),
 			Highlight.error("@logicalType(\"date\")", "The logical type 'date' requires the underlying type int"),
 			Highlight.error("\"wrong\"", "@order annotation must contain one of: \"ascending\", \"descending\", \"ignore\""),
 			Highlight.error("@logicalType(\"time-millis\")", "The logical type 'time-millis' requires the underlying type int"),
-			Highlight.warning("/** Dangling documentation 5 */", danglingDocumentationDescription),
 			Highlight.error("45", "@aliases annotations must contain an array of identifiers (strings)"),
-			Highlight.warning("/** Misplaced documentation 15 */", misplacedDocumentationDescription),
-			Highlight.warning("/** Misplaced documentation 16 */", misplacedDocumentationDescription),
 			Highlight.error("@logicalType(\"timestamp-millis\")", "The logical type 'timestamp-millis' requires the underlying type long"),
 			Highlight.error("56", "@aliases elements must be strings"),
 			Highlight.error("\"invites-failure\"", "Not a valid identifier: invites-failure"),
@@ -92,19 +66,13 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 			Highlight.error("@precision(40)", "Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile."),
 			Highlight.error("40", "hashes.MD5, a fixed(16), cannot store 40 digits (max 38)"),
 			Highlight.error("@scale(0)", "Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile."),
-			Highlight.warning("/** Dangling documentation 6 */", danglingDocumentationDescription),
 			Highlight.error("67", "@aliases annotations must contain an array of identifiers (strings)"),
-			Highlight.warning("/** Misplaced documentation 17 */", misplacedDocumentationDescription),
 			Highlight.error("78", "@aliases elements must be strings"),
 			Highlight.error("\"her-failure\"", "Not a valid identifier (with namespace): her-failure"),
-			Highlight.warning("/** Misplaced documentation 18 */", misplacedDocumentationDescription),
-			Highlight.warning("/** Misplaced documentation 19 */", misplacedDocumentationDescription),
 			Highlight.error("his-failure", "Not a valid identifier: his-failure"),
-			Highlight.warning("/** Dangling documentation 7 */", danglingDocumentationDescription),
 			Highlight.error("Whatever", "Unknown schema: Whatever"),
 			Highlight.error("do-stuff", "Not a valid identifier: do-stuff"),
 			Highlight.error("Something", "Unknown schema: Something"),
-			Highlight.warning("/** Dangling documentation 8 */", danglingDocumentationDescription),
 			Highlight.error("SomeError", "Unknown schema: SomeError"),
 			Highlight.error("hashes.MD5", "Not an error: hashes.MD5"),
 			Highlight.error("oneway", "Oneway messages must have a void or null return type")
@@ -181,6 +149,47 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 			Highlight.warning("@namespace(\"on.type\")", "The @namespace annotation has no effect here"),
 			Highlight.warning("@aliases([\"for_type\"])", "The @aliases annotation has no effect here"),
 			Highlight.warning("@order(\"ignore\")", "The @order annotation has no effect here")
+		);
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testMisplacedDocumentationInspection() {
+		myFixture.enableInspections(AvroIdlMisplacedDocumentationInspection.class);
+		myFixture.configureByFiles("MisplacedDocumentation.avdl");
+		final List<Highlight> highlight = Highlight.fromHighlightInfoList(myFixture.doHighlighting());
+
+		// Note: because we're cutting out the text offsets, all error texts should be unique enough to be identified.
+		// Luckily, the method returns highlights in the order they are in the file.
+
+		final String danglingDocumentationDescription = "Dangling documentation comment: the next documentation comments causes this one to be ignored";
+		final String misplacedDocumentationDescription = "Misplaced documentation comment: documentation comments should be placed before declarations";
+		assertOrderedEquals(highlight,
+			Highlight.warning("/** Dangling documentation 1 */", danglingDocumentationDescription),
+			Highlight.warning("/** Misplaced documentation 1 */", misplacedDocumentationDescription),
+			Highlight.warning("/** Dangling documentation 2 */", danglingDocumentationDescription),
+			Highlight.warning("/** Misplaced documentation 2 */", misplacedDocumentationDescription),
+			Highlight.warning("/** Misplaced documentation 3 */", misplacedDocumentationDescription),
+			Highlight.warning("/** Misplaced documentation 4 */", misplacedDocumentationDescription),
+			Highlight.warning("/** Dangling documentation 3 */", danglingDocumentationDescription),
+			Highlight.warning("/** Misplaced documentation 5 */", misplacedDocumentationDescription),
+			Highlight.warning("/** Misplaced documentation 6 */", misplacedDocumentationDescription),
+			Highlight.warning("/** Misplaced documentation 7 */", misplacedDocumentationDescription),
+			Highlight.warning("/** Misplaced documentation 8 */", misplacedDocumentationDescription),
+			Highlight.warning("/** Misplaced documentation 9 */", misplacedDocumentationDescription),
+			Highlight.warning("/** Misplaced documentation 10 */", misplacedDocumentationDescription),
+			Highlight.warning("/** Misplaced documentation 11 */", misplacedDocumentationDescription),
+			Highlight.warning("/** Dangling documentation 4 */", danglingDocumentationDescription),
+			Highlight.warning("/** Misplaced documentation 12 */", misplacedDocumentationDescription),
+			Highlight.warning("/** Misplaced documentation 13 */", misplacedDocumentationDescription),
+			Highlight.warning("/** Misplaced documentation 14 */", misplacedDocumentationDescription),
+			Highlight.warning("/** Dangling documentation 5 */", danglingDocumentationDescription),
+			Highlight.warning("/** Misplaced documentation 15 */", misplacedDocumentationDescription),
+			Highlight.warning("/** Misplaced documentation 16 */", misplacedDocumentationDescription),
+			Highlight.warning("/** Dangling documentation 6 */", danglingDocumentationDescription),
+			Highlight.warning("/** Misplaced documentation 17 */", misplacedDocumentationDescription),
+			Highlight.warning("/** Misplaced documentation 18 */", misplacedDocumentationDescription),
+			Highlight.warning("/** Dangling documentation 7 */", danglingDocumentationDescription),
+			Highlight.warning("/** Dangling documentation 8 */", danglingDocumentationDescription)
 		);
 	}
 
