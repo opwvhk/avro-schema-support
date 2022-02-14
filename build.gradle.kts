@@ -4,7 +4,7 @@ import java.util.*
 plugins {
 	`java-library`
 	id("java")
-	id("org.jetbrains.intellij") version "1.3.1"
+	id("org.jetbrains.intellij") version "1.4.0"
 }
 
 group = "net.sf.opk"
