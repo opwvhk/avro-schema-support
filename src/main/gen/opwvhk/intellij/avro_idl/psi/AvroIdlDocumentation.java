@@ -4,10 +4,16 @@ package opwvhk.intellij.avro_idl.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiDocCommentBase;
+import com.intellij.psi.tree.IElementType;
 
-public interface AvroIdlDocumentation extends PsiElement {
+public interface AvroIdlDocumentation extends PsiDocCommentBase {
 
   @NotNull
   PsiElement getDocComment();
+
+  @Nullable PsiElement getOwner();
+
+  @NotNull IElementType getTokenType();
 
 }

@@ -95,7 +95,10 @@ NamespaceProperty ::= AT_NAMESPACE MisplacedDocumentation* LEFT_PAREN MisplacedD
 	methods=[getNameIdentifier getTextOffset getName setName]
 }
 private SimpleSchemaProperty ::= AT IDENTIFIER MisplacedDocumentation* LEFT_PAREN MisplacedDocumentation* JsonValue MisplacedDocumentation* RIGHT_PAREN { pin=1 }
-Documentation ::= DOC_COMMENT
+Documentation ::= DOC_COMMENT {
+	implements="com.intellij.psi.PsiDocCommentBase"
+	methods=[getOwner getTokenType]
+}
 MisplacedDocumentation ::= DOC_COMMENT { extends=Documentation }
 fake WithSchemaProperties ::= Documentation* SchemaProperty* MisplacedDocumentation*
 

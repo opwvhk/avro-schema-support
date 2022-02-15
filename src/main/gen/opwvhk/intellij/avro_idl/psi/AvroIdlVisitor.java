@@ -4,6 +4,7 @@ package opwvhk.intellij.avro_idl.psi;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiDocCommentBase;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceOwner;
 
 public class AvroIdlVisitor extends PsiElementVisitor {
@@ -17,7 +18,7 @@ public class AvroIdlVisitor extends PsiElementVisitor {
   }
 
   public void visitDocumentation(@NotNull AvroIdlDocumentation o) {
-    visitPsiElement(o);
+    visitPsiDocCommentBase(o);
   }
 
   public void visitEnumBody(@NotNull AvroIdlEnumBody o) {
@@ -160,6 +161,10 @@ public class AvroIdlVisitor extends PsiElementVisitor {
 
   public void visitWithSchemaProperties(@NotNull AvroIdlWithSchemaProperties o) {
     visitPsiElement(o);
+  }
+
+  public void visitPsiDocCommentBase(@NotNull PsiDocCommentBase o) {
+    visitElement(o);
   }
 
   public void visitNameIdentifierOwner(@NotNull AvroIdlNameIdentifierOwner o) {

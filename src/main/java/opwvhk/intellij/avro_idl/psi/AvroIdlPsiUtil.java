@@ -249,6 +249,14 @@ public class AvroIdlPsiUtil {
 		};
 	}
 
+	public static @Nullable PsiElement getOwner(@NotNull AvroIdlDocumentation documentation) {
+		return documentation.getParent();
+	}
+
+	public static @NotNull IElementType getTokenType(@NotNull AvroIdlDocumentation documentation) {
+		return documentation.getFirstChild().getNode().getElementType();
+	}
+
 	public static void delete(@NotNull AvroIdlNamedSchemaDeclaration owner) throws IncorrectOperationException {
 		CheckUtil.checkWritable(owner);
 
