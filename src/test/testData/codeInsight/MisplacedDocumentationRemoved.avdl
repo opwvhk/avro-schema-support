@@ -1,0 +1,41 @@
+/**
+ * A simple test case.
+ */
+@namespace("monkeys")
+protocol Mistakes {
+	/** Documentation */
+	@correct(1)
+	enum Status { ON, OFF }
+	@correct(1)
+	fixed BinaryData(1);
+
+	/** Documentation */
+	@namespace("apes")
+	fixed
+			foo
+	(
+		16
+	);
+
+	/** Documentation */
+	@my-prop("foo")
+	enum LETTERS { A, B, C } = C;
+	record MyData {
+		/** Default documentation */
+		@my-prop("bar")
+		long /** Documentation */ @order("ignore") notLogic1a, notLogic1b;
+		string /** Documentation */ @aliases(["notLogic2"])
+				notLogic3;
+	}
+	/** Documentation */
+	@cause("User Error")
+	error Error {}
+
+	/** Documentation */
+	string
+		doStuff(
+			/** Default documentation */
+			int
+				/** Documentation */
+				one) throws Error;
+}

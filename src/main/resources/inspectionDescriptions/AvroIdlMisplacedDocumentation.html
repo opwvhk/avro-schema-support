@@ -3,9 +3,12 @@
 Highlights documentation comments that are out of place.
 <!-- tooltip end -->
 <p>
-	Highlights documentation comments that don't belong to any declaration. This can be because they are immediately followed by another
-	documentation comment, or because they are out of place (e.g., placed inside a declaration instead of before).
-	Avro ignores such documentation comments, and may fail to parse them in the future.
+	Highlights documentation comments that are not followed by a declaration, for example because they're followed by another documentation
+	comment, placed inside a declaration, etc.
+</p>
+<p>
+	Older Avro versions may ignore such documentation comments, or attach them to a next or previous schema.
+	Newer Avro versions ignore such documentation comments, but may also fail to parse them.
 </p>
 
 </body>

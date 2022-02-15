@@ -2,6 +2,7 @@ package opwvhk.intellij.avro_idl.psi;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileFactory;
 import opwvhk.intellij.avro_idl.AvroIdlFileType;
@@ -32,6 +33,13 @@ public class AvroIdlElementFactory {
 		final AvroIdlJsonStringLiteral jsonStringLiteral = avroIdlImportDeclaration.getJsonStringLiteral();
 		assert jsonStringLiteral != null;
 		return jsonStringLiteral;
+	}
+
+	public @NotNull PsiComment createMultilineComment(@NotNull AvroIdlDocumentation documentation) {
+		final String commentText = documentation.getDocComment().getText();
+		final String commentContent = commentText.substring(3, commentText.length() - 2);
+		final AvroIdlFile file = createDummyFile(String.format("/*%s*/ protocol Foo { }", commentContent));
+		return (PsiComment)file.getFirstChild();
 	}
 
 	private @NotNull AvroIdlProtocolBody extractAvroIdlProtocolBody(AvroIdlFile file) {

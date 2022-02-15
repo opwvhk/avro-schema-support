@@ -64,10 +64,10 @@
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Duplicate annotations" enabledByDefault="true" level="WARNING"
 		                 id="AvroIdlDuplicateAnnotationsInspection" order="first"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlDuplicateAnnotationsInspection"/>
-		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Misplaced annotations" enabledByDefault="true" level="WARNING"
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Misplaced annotations" enabledByDefault="true" level="WEAK WARNING"
 		                 id="AvroIdlMisplacedAnnotationsInspection" order="after AvroIdlDuplicateAnnotationsInspection"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlMisplacedAnnotationsInspection"/>
-		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Misplaced annotations" enabledByDefault="true" level="WARNING"
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Misplaced documentation" enabledByDefault="true" level="WARNING"
 		                 id="AvroIdlMisplacedDocumentationInspection" order="after AvroIdlMisplacedAnnotationsInspection"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlMisplacedDocumentationInspection"/>
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Union can be simplified" enabledByDefault="true" level="WEAK WARNING"
