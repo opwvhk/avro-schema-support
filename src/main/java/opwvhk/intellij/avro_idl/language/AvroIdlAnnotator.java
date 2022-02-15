@@ -27,17 +27,22 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import static com.intellij.lang.annotation.HighlightSeverity.*;
+import static java.util.regex.Pattern.UNICODE_CHARACTER_CLASS;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.NULL;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.VOID;
 
 public class AvroIdlAnnotator implements Annotator {
-	private static final String identifier = "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
-	private static final Predicate<String> VALID_NAMESPACE = Pattern.compile(identifier + "(\\." + identifier + ")*",
-		Pattern.UNICODE_CHARACTER_CLASS).asMatchPredicate();
+	private static final String SIMPLE_NAME_IN_STRING = "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
+	private static final String IDENTIFIER_IN_STRING = SIMPLE_NAME_IN_STRING + "(\\." + SIMPLE_NAME_IN_STRING + ")*";
+	private static final String SIMPLE_NAME = "(`" + SIMPLE_NAME_IN_STRING + "`|" + SIMPLE_NAME_IN_STRING + ")";
+	private static final String IDENTIFIER = SIMPLE_NAME + "(\\." + SIMPLE_NAME + ")*";
 	private static final Set<String> VALID_ORDER_NAMES = Set.of("ASCENDING", "DESCENDING", "IGNORE");
+
+	private static final Predicate<String> VALID_SIMPLE_NAME_IN_STRING = Pattern.compile(SIMPLE_NAME_IN_STRING, UNICODE_CHARACTER_CLASS).asMatchPredicate();
+	private static final Predicate<String> VALID_IDENTIFIER_IN_STRING = Pattern.compile(IDENTIFIER_IN_STRING, UNICODE_CHARACTER_CLASS).asMatchPredicate();
+	private static final Predicate<String> VALID_SIMPLE_NAME = Pattern.compile(SIMPLE_NAME, UNICODE_CHARACTER_CLASS).asMatchPredicate();
+	private static final Predicate<String> VALID_IDENTIFIER = Pattern.compile(IDENTIFIER, UNICODE_CHARACTER_CLASS).asMatchPredicate();
 	private static final Predicate<String> VALID_ORDER = order -> order != null && VALID_ORDER_NAMES.contains(order.toUpperCase());
-	private static final Predicate<String> VALID_IDENTIFIER = Pattern.compile("`" + identifier + "`|" + identifier,
-		Pattern.UNICODE_CHARACTER_CLASS).asMatchPredicate();
 
 
 	@Override
@@ -109,7 +114,8 @@ public class AvroIdlAnnotator implements Annotator {
 
 	private void annotateIdentifierName(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
 		final String identifier = element.getText();
-		if (!VALID_IDENTIFIER.test(identifier)) {
+		final Predicate<String> validName = element.getParent().getParent() instanceof AvroIdlVariableDeclarator ? VALID_SIMPLE_NAME : VALID_IDENTIFIER;
+		if (!validName.test(identifier)) {
 			holder.newAnnotation(ERROR, invalidIdentifierMessage("", identifier)).range(element).create();
 		}
 	}
@@ -164,7 +170,7 @@ public class AvroIdlAnnotator implements Annotator {
 		final String namespace = element.getName();
 		if (namespace == null) {
 			holder.newAnnotation(ERROR, "@namespace annotations must contain a string").range(jsonValue).create();
-		} else if (!VALID_NAMESPACE.test(namespace)) {
+		} else if (!VALID_IDENTIFIER_IN_STRING.test(namespace)) {
 			holder.newAnnotation(WARNING, "The namespace is not composed of valid identifiers").range(jsonValue).create();
 		}
 	}
@@ -187,12 +193,12 @@ public class AvroIdlAnnotator implements Annotator {
 				if (alias == null) {
 					holder.newAnnotation(ERROR, "@aliases elements must be strings").range(jsonArrayElement).create();
 				} else if (parent instanceof AvroIdlVariableDeclarator) {
-					if (!VALID_IDENTIFIER.test(alias)) {
+					if (!VALID_SIMPLE_NAME_IN_STRING.test(alias)) {
 						holder.newAnnotation(ERROR, invalidIdentifierMessage("", alias)).range(jsonArrayElement).create();
 					}
 				} else {
 					// Protocol or named schema
-					if (!VALID_NAMESPACE.test(alias)) {
+					if (!VALID_IDENTIFIER_IN_STRING.test(alias)) {
 						holder.newAnnotation(ERROR, invalidIdentifierMessage(" (with namespace)", alias)).range(jsonArrayElement).create();
 					}
 				}

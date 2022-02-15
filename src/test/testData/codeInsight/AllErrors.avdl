@@ -2,12 +2,13 @@
  * A simple test case.
  */
 @namespace("12 monkeys")
-protocol Many.Mistakes {
+protocol Many-Mistakes {
 	@namespace("hashes")
 	fixed MD5(16);
 	enum Letters { A, B, C } = A;
 
-	@foo.bar({"key": 3})
+	@valid.property({"key": 3})
+	@also-valid({"key": 3})
 	record MyData {
 		Letters @order("ascending") one_letter;
 		Letters @order("descending") another_letter;
