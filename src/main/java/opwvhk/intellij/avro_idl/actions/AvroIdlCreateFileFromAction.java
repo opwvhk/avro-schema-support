@@ -19,9 +19,15 @@ public class AvroIdlCreateFileFromAction extends CreateFileFromTemplateAction im
 	protected void buildDialog(@NotNull Project project,
 	                           @NotNull PsiDirectory directory,
 	                           CreateFileFromTemplateDialog.@NotNull Builder builder) {
+		/*
+		 * Note: the template names are prefixes. IntelliJ takes the first matching prefix. This means with the AsciiDoc plugin installed,
+		 * the template name "Empty" matches the empty AsciiDoc template, not one of this template!
+		 *
+		 * To avoid this kind of bugs, all template files for this plugin have a plugin specific prefix.
+		 */
 		builder.setTitle("New Avro IDL File")
-			.addKind("Empty IDL", AvroIdlIcons.FILE, "Empty")
-			.addKind("Example protocol", AvroIdlIcons.FILE, "ExampleProtocol")
+			.addKind("Empty IDL", AvroIdlIcons.FILE, "AvroIDL_EmptyProtocol")
+			.addKind("Example protocol", AvroIdlIcons.FILE, "AvroIDL_ExampleProtocol")
 			.setValidator(new NonEmptyInputValidator());
 	}
 
