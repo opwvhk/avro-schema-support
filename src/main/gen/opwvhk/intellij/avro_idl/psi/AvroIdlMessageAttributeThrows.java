@@ -9,7 +9,7 @@ import opwvhk.intellij.avro_idl.language.AvroIdlNamedSchemaReference;
 public interface AvroIdlMessageAttributeThrows extends PsiElement {
 
   @NotNull
-  PsiElement getIdentifier();
+  AvroIdlIdentifier getIdentifier();
 
   @NotNull AvroIdlNamedSchemaReference getReference();
 

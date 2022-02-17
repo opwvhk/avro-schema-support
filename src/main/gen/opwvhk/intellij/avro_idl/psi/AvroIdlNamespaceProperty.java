@@ -6,7 +6,7 @@ import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 
-public interface AvroIdlNamespaceProperty extends AvroIdlSchemaProperty, AvroIdlNameIdentifierOwner {
+public interface AvroIdlNamespaceProperty extends AvroIdlSchemaProperty, AvroIdlNamespaceIdentifierOwner {
 
   @Nullable PsiElement getNameIdentifier();
 

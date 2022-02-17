@@ -29,14 +29,14 @@ public class AvroIdlRecordDeclarationImpl extends AvroIdlNamedSchemaDeclarationI
 
   @Override
   @Nullable
-  public AvroIdlRecordBody getRecordBody() {
-    return findChildByClass(AvroIdlRecordBody.class);
+  public AvroIdlIdentifier getIdentifier() {
+    return findChildByClass(AvroIdlIdentifier.class);
   }
 
   @Override
   @Nullable
-  public PsiElement getIdentifier() {
-    return findChildByType(IDENTIFIER);
+  public AvroIdlRecordBody getRecordBody() {
+    return findChildByClass(AvroIdlRecordBody.class);
   }
 
 }

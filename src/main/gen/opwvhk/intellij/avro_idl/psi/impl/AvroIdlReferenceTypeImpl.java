@@ -29,15 +29,15 @@ public class AvroIdlReferenceTypeImpl extends AvroIdlNullableTypeImpl implements
   }
 
   @Override
-  @NotNull
-  public List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlMisplacedDocumentation.class);
+  @Nullable
+  public AvroIdlIdentifier getIdentifier() {
+    return findChildByClass(AvroIdlIdentifier.class);
   }
 
   @Override
-  @Nullable
-  public PsiElement getIdentifier() {
-    return findChildByType(IDENTIFIER);
+  @NotNull
+  public List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlMisplacedDocumentation.class);
   }
 
   @Override

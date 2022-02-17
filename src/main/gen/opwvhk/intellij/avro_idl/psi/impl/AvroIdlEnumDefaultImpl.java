@@ -30,8 +30,8 @@ public class AvroIdlEnumDefaultImpl extends ASTWrapperPsiElement implements Avro
 
   @Override
   @NotNull
-  public PsiElement getIdentifier() {
-    return findNotNullChildByType(IDENTIFIER);
+  public AvroIdlIdentifier getIdentifier() {
+    return findNotNullChildByClass(AvroIdlIdentifier.class);
   }
 
   @Override

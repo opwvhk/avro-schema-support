@@ -2,17 +2,15 @@ package opwvhk.intellij.avro_idl.language;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.psi.PsiElement;
-import opwvhk.intellij.avro_idl.psi.AvroIdlMessageAttributeThrows;
-import opwvhk.intellij.avro_idl.psi.AvroIdlProtocolDeclaration;
-import opwvhk.intellij.avro_idl.psi.AvroIdlPsiUtil;
-import opwvhk.intellij.avro_idl.psi.AvroIdlReferenceType;
+import opwvhk.intellij.avro_idl.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-import java.util.stream.Stream;
 
+import static java.util.Objects.requireNonNull;
 import static opwvhk.intellij.avro_idl.language.AvroIdlUtil.IS_ERROR_KEY;
+import static opwvhk.intellij.avro_idl.language.AvroIdlUtil.ifType;
 
 public class AvroIdlNamedSchemaReference extends AvroIdlAbstractReference {
 
@@ -20,14 +18,15 @@ public class AvroIdlNamedSchemaReference extends AvroIdlAbstractReference {
 	private final boolean matchErrorTypesOnly;
 
 	public static @Nullable AvroIdlNamedSchemaReference forType(@NotNull AvroIdlReferenceType owner) {
-		if (owner.getIdentifier() == null) {
-			return null;
-		}
-		return new AvroIdlNamedSchemaReference(owner, owner.getIdentifier(), false);
+		return Optional.of(owner)
+			.map(AvroIdlReferenceType::getIdentifier)
+			.map(PsiElement::getFirstChild)
+			.map(token -> new AvroIdlNamedSchemaReference(owner, token, false))
+			.orElse(null);
 	}
 
 	public static @NotNull AvroIdlNamedSchemaReference forMessageAttribute(@NotNull AvroIdlMessageAttributeThrows owner) {
-		return new AvroIdlNamedSchemaReference(owner, owner.getIdentifier(), true);
+		return new AvroIdlNamedSchemaReference(owner, requireNonNull(owner.getIdentifier().getIdentifierToken()), true);
 	}
 
 	private AvroIdlNamedSchemaReference(@NotNull PsiElement element, @NotNull PsiElement identifier, boolean matchErrorTypesOnly) {
@@ -43,14 +42,14 @@ public class AvroIdlNamedSchemaReference extends AvroIdlAbstractReference {
 
 	protected Optional<LookupElement> resolve0() {
 		final String namespace = AvroIdlPsiUtil.getNamespace(myElement);
-		return Stream.ofNullable(findProtocol())
-			.flatMap(protocol -> AvroIdlUtil.findAllSchemaNamesAvailableInProtocol(protocol, false, namespace))
+		return ifType(myElement.getContainingFile().getOriginalFile(), AvroIdlFile.class)
+			.flatMap(idlFile -> AvroIdlUtil.findAllSchemaNamesAvailableInIdl(idlFile, false, namespace))
 			.filter(lookupElement -> lookupElement.getAllLookupStrings().contains(fullName))
 			.findFirst();
 	}
 
 	@Override
-    public @Nullable PsiElement resolve() {
+	public @Nullable PsiElement resolve() {
 		return resolve0().map(LookupElement::getPsiElement).orElse(null);
 	}
 
@@ -58,18 +57,11 @@ public class AvroIdlNamedSchemaReference extends AvroIdlAbstractReference {
 		return resolve0().map(lookupElement -> lookupElement.getUserData(IS_ERROR_KEY)).orElse(false);
 	}
 
-	private @NotNull AvroIdlProtocolDeclaration findProtocol() {
-		PsiElement parent = myElement;
-		while (!(parent instanceof AvroIdlProtocolDeclaration)) {
-			parent = parent.getParent();
-		}
-		return (AvroIdlProtocolDeclaration) parent;
-	}
-
 	@Override
-    public @NotNull Object[] getVariants() {
-		final AvroIdlProtocolDeclaration protocol = findProtocol();
+	public @NotNull Object[] getVariants() {
+		final AvroIdlFile idlFile = (AvroIdlFile)myElement.getContainingFile();
+		AvroIdlFile idlFile2 = (AvroIdlFile)idlFile.getOriginalFile();
 		final String namespace = AvroIdlPsiUtil.getNamespace(myElement);
-		return AvroIdlUtil.findAllSchemaNamesAvailableInProtocol(protocol, matchErrorTypesOnly, namespace).toArray();
+		return AvroIdlUtil.findAllSchemaNamesAvailableInIdl(idlFile2, matchErrorTypesOnly, namespace).toArray();
 	}
 }

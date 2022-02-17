@@ -9,10 +9,10 @@ import com.intellij.util.IncorrectOperationException;
 public interface AvroIdlProtocolDeclaration extends AvroIdlWithSchemaProperties, AvroIdlNamespacedNameIdentifierOwner {
 
   @Nullable
-  AvroIdlProtocolBody getProtocolBody();
+  AvroIdlIdentifier getIdentifier();
 
   @Nullable
-  PsiElement getIdentifier();
+  AvroIdlProtocolBody getProtocolBody();
 
   @Nullable PsiElement getNameIdentifier();
 

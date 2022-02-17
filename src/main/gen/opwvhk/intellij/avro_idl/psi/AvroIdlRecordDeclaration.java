@@ -8,9 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface AvroIdlRecordDeclaration extends AvroIdlNamedSchemaDeclaration {
 
   @Nullable
-  AvroIdlRecordBody getRecordBody();
+  AvroIdlIdentifier getIdentifier();
 
   @Nullable
-  PsiElement getIdentifier();
+  AvroIdlRecordBody getRecordBody();
 
 }

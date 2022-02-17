@@ -1,0 +1,6 @@
+/*
+ * Comment for license information.
+ */
+record NoNamespaceRecord {
+	boolean flag;
+}

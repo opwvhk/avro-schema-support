@@ -34,7 +34,7 @@ public class AvroIdlReferencesTest extends LightJavaCodeInsightFixtureTestCase {
 
 		// The element will be an identifier. Ensure it references something.
 		assertNotNull(element);
-		PsiReference reference = element.getParent().getReference();
+		PsiReference reference = element.getParent().getParent().getReference();
 		assertNotNull(reference);
 		final PsiElement resolvedReference = reference.resolve();
 		assertNotNull(resolvedReference);

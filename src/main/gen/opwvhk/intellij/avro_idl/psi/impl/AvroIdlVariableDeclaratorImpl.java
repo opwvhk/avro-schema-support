@@ -30,6 +30,12 @@ public class AvroIdlVariableDeclaratorImpl extends AvroIdlWithSchemaPropertiesIm
 
   @Override
   @Nullable
+  public AvroIdlIdentifier getIdentifier() {
+    return findChildByClass(AvroIdlIdentifier.class);
+  }
+
+  @Override
+  @Nullable
   public AvroIdlJsonValue getJsonValue() {
     return findChildByClass(AvroIdlJsonValue.class);
   }
@@ -38,12 +44,6 @@ public class AvroIdlVariableDeclaratorImpl extends AvroIdlWithSchemaPropertiesIm
   @NotNull
   public List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlMisplacedDocumentation.class);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getIdentifier() {
-    return findChildByType(IDENTIFIER);
   }
 
   @Override

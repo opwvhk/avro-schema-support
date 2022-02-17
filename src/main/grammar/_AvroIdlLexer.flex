@@ -32,7 +32,7 @@ STRING_LITERAL=\"([^\"\\\n\r]|\\([ntbrf\\'\"]|[0-7][0-7]?|[0-3][0-7][0-7]))*\"
 DOC_COMMENT="/"\*\*([^*]|\*+[^/*])*\*+"/"
 LINE_COMMENT="//".*
 BLOCK_COMMENT="/"\*([^*]|\*+[^/*])*\*+"/"
-IDENTIFIER=(\`[:jletter:][:jletterdigit:]*\`|[:jletter:][:jletterdigit:]*)([.-](\`[:jletter:][:jletterdigit:]*\`|[:jletter:][:jletterdigit:]*))*
+IDENTIFIER_TOKEN=(\`[:jletter:][:jletterdigit:]*\`|[:jletter:][:jletterdigit:]*)([.-](\`[:jletter:][:jletterdigit:]*\`|[:jletter:][:jletterdigit:]*))*
 
 %%
 <YYINITIAL> {
@@ -54,6 +54,9 @@ IDENTIFIER=(\`[:jletter:][:jletterdigit:]*\`|[:jletter:][:jletterdigit:]*)([.-](
   "?"                       { return QUESTION_MARK; }
   "array"                   { return ARRAY; }
   "boolean"                 { return BOOLEAN; }
+  "bytes"                   { return BYTES; }
+  "date"                    { return DATE; }
+  "decimal"                 { return DECIMAL; }
   "double"                  { return DOUBLE; }
   "enum"                    { return ENUM; }
   "error"                   { return ERROR; }
@@ -63,25 +66,23 @@ IDENTIFIER=(\`[:jletter:][:jletterdigit:]*\`|[:jletter:][:jletterdigit:]*)([.-](
   "idl"                     { return IDL; }
   "import"                  { return IMPORT; }
   "int"                     { return INT; }
+  "local_timestamp_ms"      { return LOCAL_TIMESTAMP_MS; }
   "long"                    { return LONG; }
   "map"                     { return MAP; }
-  "oneway"                  { return ONEWAY; }
-  "bytes"                   { return BYTES; }
-  "schema"                  { return SCHEMA; }
-  "string"                  { return STRING; }
+  "namespace"               { return NAMESPACE; }
   "null"                    { return NULL; }
+  "oneway"                  { return ONEWAY; }
   "protocol"                { return PROTOCOL; }
   "record"                  { return RECORD; }
+  "schema"                  { return SCHEMA; }
+  "string"                  { return STRING; }
   "throws"                  { return THROWS; }
-  "true"                    { return TRUE; }
-  "union"                   { return UNION; }
-  "void"                    { return VOID; }
-  "date"                    { return DATE; }
   "time_ms"                 { return TIME_MS; }
   "timestamp_ms"            { return TIMESTAMP_MS; }
-  "local_timestamp_ms"      { return LOCAL_TIMESTAMP_MS; }
-  "decimal"                 { return DECIMAL; }
+  "true"                    { return TRUE; }
+  "union"                   { return UNION; }
   "uuid"                    { return UUID; }
+  "void"                    { return VOID; }
   "@namespace"              { return AT_NAMESPACE; }
 
   {NOT_USED}                { return NOT_USED; }
@@ -91,7 +92,7 @@ IDENTIFIER=(\`[:jletter:][:jletterdigit:]*\`|[:jletter:][:jletterdigit:]*)([.-](
   {DOC_COMMENT}             { return DOC_COMMENT; }
   {LINE_COMMENT}            { return LINE_COMMENT; }
   {BLOCK_COMMENT}           { return BLOCK_COMMENT; }
-  {IDENTIFIER}              { return IDENTIFIER; }
+  {IDENTIFIER_TOKEN}        { return IDENTIFIER_TOKEN; }
 
 }
 

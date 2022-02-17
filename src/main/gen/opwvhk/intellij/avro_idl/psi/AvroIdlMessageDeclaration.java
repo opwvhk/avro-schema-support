@@ -12,6 +12,9 @@ public interface AvroIdlMessageDeclaration extends AvroIdlWithSchemaProperties, 
   List<AvroIdlFormalParameter> getFormalParameterList();
 
   @Nullable
+  AvroIdlIdentifier getIdentifier();
+
+  @Nullable
   AvroIdlMessageAttributes getMessageAttributes();
 
   @NotNull
@@ -19,9 +22,6 @@ public interface AvroIdlMessageDeclaration extends AvroIdlWithSchemaProperties, 
 
   @NotNull
   AvroIdlType getType();
-
-  @Nullable
-  PsiElement getIdentifier();
 
   @Nullable PsiElement getNameIdentifier();
 

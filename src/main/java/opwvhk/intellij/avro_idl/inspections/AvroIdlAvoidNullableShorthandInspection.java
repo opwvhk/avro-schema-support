@@ -3,12 +3,14 @@ package opwvhk.intellij.avro_idl.inspections;
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.TreeUtil;
 import opwvhk.intellij.avro_idl.psi.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -47,7 +49,7 @@ public class AvroIdlAvoidNullableShorthandInspection extends BaseAvroIdlInspecti
 		}
 
 		@Override
-		protected void invoke(@NotNull Project project, @NotNull PsiFile file, @NotNull AvroIdlNullableType element) {
+		protected void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor, @NotNull AvroIdlNullableType element) {
 			final ASTNode questionMarkNode = TreeUtil.findChildBackward(element.getNode(), QUESTION_MARK);
 			if (questionMarkNode == null) {
 				// Not an optional type. We could have used AvroIdlType#isOptional(), but we need a reference to the question mark to remove it.

@@ -1,0 +1,29 @@
+#* @vtlvariable name="NAME" type="java.lang.String" *#
+/*
+ * Comment for license information.
+ */
+// The default namespace for all named schemata in the file. Defaults to the null namespace if omitted.
+namespace ${NAME};
+
+// The main schema (optional); any field type is valid. If specified, the file is equivalent to a .avsc file.
+schema array<Message>;
+
+/* Below here you can define named types (record, enum, fixed) and imports, in any order. */
+
+/**
+ * Simple message.
+ */
+record Message {
+	/**
+	 * Optional message title.
+	 */
+	string? title = null;
+	/**
+	 * The message.
+	 */
+	string message;
+	/**
+	 * When the message was created.
+	 */
+	timestamp_ms dateTime;
+}

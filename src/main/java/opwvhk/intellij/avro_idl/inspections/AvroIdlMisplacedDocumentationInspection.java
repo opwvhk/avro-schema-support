@@ -2,6 +2,7 @@ package opwvhk.intellij.avro_idl.inspections;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiFile;
@@ -10,6 +11,7 @@ import opwvhk.intellij.avro_idl.psi.AvroIdlDocumentation;
 import opwvhk.intellij.avro_idl.psi.AvroIdlElementFactory;
 import opwvhk.intellij.avro_idl.psi.AvroIdlMisplacedDocumentation;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class AvroIdlMisplacedDocumentationInspection extends BaseAvroIdlInspection<AvroIdlDocumentation> {
 	public AvroIdlMisplacedDocumentationInspection() {
@@ -34,7 +36,8 @@ public class AvroIdlMisplacedDocumentationInspection extends BaseAvroIdlInspecti
 		}
 
 		@Override
-		protected void invoke(@NotNull Project project, @NotNull PsiFile file, @NotNull AvroIdlDocumentation element) {
+		protected void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor,
+                              @NotNull AvroIdlDocumentation element) {
 			element.delete();
 		}
 	}
@@ -45,7 +48,8 @@ public class AvroIdlMisplacedDocumentationInspection extends BaseAvroIdlInspecti
 		}
 
 		@Override
-		protected void invoke(@NotNull Project project, @NotNull PsiFile file, @NotNull AvroIdlDocumentation element) {
+		protected void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor,
+                              @NotNull AvroIdlDocumentation element) {
 			final AvroIdlElementFactory elementFactory = new AvroIdlElementFactory(project);
 			final PsiComment multilineComment = elementFactory.createMultilineComment(element);
 			element.replace(multilineComment);

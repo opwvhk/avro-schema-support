@@ -46,7 +46,7 @@ public final class IdlUtils {
 	@SuppressWarnings("unchecked")
 	static <T> T getFieldValue(java.lang.reflect.Field field, Object owner) {
 		try {
-			return (T) field.get(owner);
+			return (T)field.get(owner);
 		} catch (IllegalAccessException e) {
 			throw new IllegalStateException("Programmer error", e);
 		}
@@ -65,7 +65,7 @@ public final class IdlUtils {
 	@SuppressWarnings("unchecked")
 	static <T> T invokeMethod(Method method, Object owner, Object... parameters) {
 		try {
-			return (T) method.invoke(owner, parameters);
+			return (T)method.invoke(owner, parameters);
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new IllegalStateException("Programmer error", e);
 		}
@@ -79,6 +79,43 @@ public final class IdlUtils {
 
 	private IdlUtils() {
 		// Utility class: do not instantiate.
+	}
+
+	public static void writeIdlSchema(Writer writer, Schema schema) throws IOException {
+		writeIdlSchemas(writer, schema.getNamespace(), Set.of(schema));
+	}
+
+	public static void writeIdlSchemas(Writer writer, String namespace, Collection<Schema> schemas) throws IOException {
+		if (schemas.isEmpty()) {
+			throw new IllegalArgumentException("Cannot write 0 schemas");
+		}
+		try (JsonGenerator jsonGen = SCHEMA_FACTORY.createGenerator(writer)) {
+			writer.append("namespace ");
+			writer.append(namespace);
+			writer.append(";");
+			writer.append(NEWLINE);
+
+			Set<String> alreadyDeclared = new HashSet<>(4);
+			Set<Schema> toDeclare = new LinkedHashSet<>();
+			if (schemas.size() == 1) {
+				Schema schema = schemas.iterator().next();
+				writer.append(NEWLINE);
+				writer.append("schema ");
+				writeFieldSchema(schema, writer, jsonGen, alreadyDeclared, toDeclare, namespace);
+				writer.append(";");
+				writer.append(NEWLINE);
+			} else {
+				toDeclare.addAll(schemas);
+			}
+
+			while (!toDeclare.isEmpty()) {
+				writer.append(NEWLINE);
+				Iterator<Schema> iterator = toDeclare.iterator();
+				Schema s = iterator.next();
+				iterator.remove();
+				writeSchema(s, writer, jsonGen, namespace, alreadyDeclared, toDeclare);
+			}
+		}
 	}
 
 	public static void writeIdlProtocol(Writer writer, Protocol protocol) throws IOException {
@@ -95,18 +132,13 @@ public final class IdlUtils {
 		writeIdlProtocol(writer, protocol, protocolNameSpace, protocolFullName.substring(lastDotPos + 1), protocol.getTypes(), protocol.getMessages().values());
 	}
 
-	public static void writeIdlProtocol(Writer writer, String protocolNameSpace, String protocolName, Schema schema) throws IOException {
+	public static void writeIdlProtocol(Writer writer, Schema schema) throws IOException {
 		final JsonProperties emptyProperties = Schema.create(Schema.Type.NULL);
-		writeIdlProtocol(writer, emptyProperties, protocolNameSpace, protocolName, List.of(schema), Collections.emptyList());
-	}
-
-	public static void writeIdlProtocol(Writer writer, String protocolNameSpace, String protocolName, Collection<Schema> schemas) throws IOException {
-		final JsonProperties emptyProperties = Schema.create(Schema.Type.NULL);
-		writeIdlProtocol(writer, emptyProperties, protocolNameSpace, protocolName, schemas, Collections.emptyList());
+		writeIdlProtocol(writer, emptyProperties, schema.getNamespace(), "Protocol", List.of(schema), Collections.emptyList());
 	}
 
 	public static void writeIdlProtocol(Writer writer, JsonProperties properties, String protocolNameSpace, String protocolName, Collection<Schema> schemas,
-										Collection<Protocol.Message> messages) throws IOException {
+	                                    Collection<Protocol.Message> messages) throws IOException {
 		try (JsonGenerator jsonGen = SCHEMA_FACTORY.createGenerator(writer)) {
 			if (protocolNameSpace != null) {
 				writer.append("@namespace(\"").append(protocolNameSpace).append("\")").append(NEWLINE);
@@ -137,12 +169,12 @@ public final class IdlUtils {
 		}
 	}
 
-	private static void writeSchema(Schema schema, Writer writer, JsonGenerator jsonGen, String protocolNameSpace, Set<String> alreadyDeclared,
-									Set<Schema> toDeclare) throws IOException {
+	private static void writeSchema(Schema schema, Writer writer, JsonGenerator jsonGen, String defaultNamespace, Set<String> alreadyDeclared,
+	                                Set<Schema> toDeclare) throws IOException {
 		Schema.Type type = schema.getType();
 		writeSchemaAttributes(schema, writer, jsonGen);
 		String namespace = schema.getNamespace(); // Fails for unnamed schema types (other types than record, enum & fixed)
-		if (!Objects.equals(namespace, protocolNameSpace)) {
+		if (!Objects.equals(namespace, defaultNamespace)) {
 			writer.append("    @namespace(\"").append(namespace).append("\")").append(NEWLINE);
 		}
 		Set<String> schemaAliases = schema.getAliases();
@@ -183,7 +215,7 @@ public final class IdlUtils {
 	}
 
 	private static void writeField(String namespace, Field field, Writer writer, JsonGenerator jsonGen, Set<String> alreadyDeclared, Set<Schema> toDeclare,
-								   boolean indentField) throws IOException {
+	                               boolean indentField) throws IOException {
 		// Note: indentField should be true if any field of the containing record has documentation
 		writeDocumentation(writer, "        ", field.doc());
 		if (indentField) {
@@ -246,7 +278,7 @@ public final class IdlUtils {
 	}
 
 	private static void writeFieldSchema(Schema schema, Writer writer, JsonGenerator jsonGen, Set<String> alreadyDeclared, Set<Schema> toDeclare,
-										 String recordNameSpace) throws IOException {
+	                                     String recordNameSpace) throws IOException {
 		Schema.Type type = schema.getType();
 		if (type == Schema.Type.RECORD || type == Schema.Type.ENUM || type == Schema.Type.FIXED) {
 			if (Objects.equals(recordNameSpace, schema.getNamespace())) {
@@ -305,7 +337,7 @@ public final class IdlUtils {
 						break;
 					case "decimal":
 						propertiesToSkip = Set.of("logicalType", "precision", "scale");
-						LogicalTypes.Decimal decimal = (LogicalTypes.Decimal) schema.getLogicalType();
+						LogicalTypes.Decimal decimal = (LogicalTypes.Decimal)schema.getLogicalType();
 						typeName = String.format("decimal(%d,%d)", decimal.getPrecision(), decimal.getScale());
 						break;
 					default:
@@ -351,31 +383,31 @@ public final class IdlUtils {
 			generator.writeNull();
 		} else if (datum instanceof Map) { // record, map
 			generator.writeStartObject();
-			for (Map.Entry<?,?> entry : ((Map<?,?>)datum).entrySet()) {
+			for (Map.Entry<?, ?> entry : ((Map<?, ?>)datum).entrySet()) {
 				generator.writeFieldName(entry.getKey().toString());
 				toJson(entry.getValue(), generator);
 			}
 			generator.writeEndObject();
 		} else if (datum instanceof Collection) { // array
 			generator.writeStartArray();
-			for (Object element : (Collection<?>) datum) {
+			for (Object element : (Collection<?>)datum) {
 				toJson(element, generator);
 			}
 			generator.writeEndArray();
 		} else if (datum instanceof byte[]) { // bytes, fixed
-			generator.writeString(new String((byte[]) datum, StandardCharsets.ISO_8859_1));
+			generator.writeString(new String((byte[])datum, StandardCharsets.ISO_8859_1));
 		} else if (datum instanceof CharSequence || datum instanceof Enum<?>) { // string, enum
 			generator.writeString(datum.toString());
 		} else if (datum instanceof Double) { // double
-			generator.writeNumber((Double) datum);
+			generator.writeNumber((Double)datum);
 		} else if (datum instanceof Float) { // float
-			generator.writeNumber((Float) datum);
+			generator.writeNumber((Float)datum);
 		} else if (datum instanceof Long) { // long
-			generator.writeNumber((Long) datum);
+			generator.writeNumber((Long)datum);
 		} else if (datum instanceof Integer) { // int
-			generator.writeNumber((Integer) datum);
+			generator.writeNumber((Integer)datum);
 		} else if (datum instanceof Boolean) { // boolean
-			generator.writeBoolean((Boolean) datum);
+			generator.writeBoolean((Boolean)datum);
 		} else {
 			throw new AvroRuntimeException("Unknown datum class: " + datum.getClass());
 		}

@@ -1,0 +1,8 @@
+/*
+ * Comment for license information.
+ */
+protocol Dummy {
+	record NoNamespaceRecord {
+		boolean flag;
+	}
+}

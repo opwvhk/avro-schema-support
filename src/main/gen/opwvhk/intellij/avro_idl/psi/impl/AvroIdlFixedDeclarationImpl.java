@@ -29,8 +29,8 @@ public class AvroIdlFixedDeclarationImpl extends AvroIdlNamedSchemaDeclarationIm
 
   @Override
   @Nullable
-  public PsiElement getIdentifier() {
-    return findChildByType(IDENTIFIER);
+  public AvroIdlIdentifier getIdentifier() {
+    return findChildByClass(AvroIdlIdentifier.class);
   }
 
   @Override

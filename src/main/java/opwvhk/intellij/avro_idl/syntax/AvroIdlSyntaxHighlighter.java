@@ -13,9 +13,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static com.intellij.openapi.editor.colors.TextAttributesKey.EMPTY_ARRAY;
-import static opwvhk.intellij.avro_idl.syntax.AvroIdlSyntaxColors.*;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.STRING;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
+import static opwvhk.intellij.avro_idl.syntax.AvroIdlSyntaxColors.*;
 
 public class AvroIdlSyntaxHighlighter extends SyntaxHighlighterBase {
 
@@ -30,8 +30,9 @@ public class AvroIdlSyntaxHighlighter extends SyntaxHighlighterBase {
 		NULL, VOID, ARRAY, MAP, UNION);
 
 	private static final Set<IElementType> KEYWORD_TOKENS = set(
-		AvroIdlTypes.PROTOCOL, AvroIdlTypes.IMPORT, AvroIdlTypes.IDL, AvroIdlTypes.SCHEMA, AvroIdlTypes.RECORD,
-		AvroIdlTypes.ERROR, AvroIdlTypes.ENUM, AvroIdlTypes.FIXED, AvroIdlTypes.THROWS, AvroIdlTypes.ONEWAY,
+		AvroIdlTypes.NAMESPACE, AvroIdlTypes.SCHEMA, AvroIdlTypes.PROTOCOL, AvroIdlTypes.IMPORT, AvroIdlTypes.IDL,
+		AvroIdlTypes.RECORD, AvroIdlTypes.ERROR, AvroIdlTypes.ENUM, AvroIdlTypes.FIXED,
+		AvroIdlTypes.THROWS, AvroIdlTypes.ONEWAY,
 		AvroIdlTypes.TRUE, AvroIdlTypes.FALSE);
 
 	@Override

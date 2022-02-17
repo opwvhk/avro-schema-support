@@ -1,0 +1,6 @@
+/**
+ * Doc comment.
+ */
+@namespace("data")
+protocol DataProtocol {
+}

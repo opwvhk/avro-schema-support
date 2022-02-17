@@ -30,14 +30,14 @@ public class AvroIdlProtocolDeclarationImpl extends AvroIdlWithSchemaPropertiesI
 
   @Override
   @Nullable
-  public AvroIdlProtocolBody getProtocolBody() {
-    return findChildByClass(AvroIdlProtocolBody.class);
+  public AvroIdlIdentifier getIdentifier() {
+    return findChildByClass(AvroIdlIdentifier.class);
   }
 
   @Override
   @Nullable
-  public PsiElement getIdentifier() {
-    return findChildByType(IDENTIFIER);
+  public AvroIdlProtocolBody getProtocolBody() {
+    return findChildByClass(AvroIdlProtocolBody.class);
   }
 
   @Override

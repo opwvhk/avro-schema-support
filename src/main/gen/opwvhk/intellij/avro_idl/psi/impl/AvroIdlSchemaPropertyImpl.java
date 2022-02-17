@@ -30,6 +30,12 @@ public class AvroIdlSchemaPropertyImpl extends ASTWrapperPsiElement implements A
 
   @Override
   @Nullable
+  public AvroIdlIdentifier getIdentifier() {
+    return findChildByClass(AvroIdlIdentifier.class);
+  }
+
+  @Override
+  @Nullable
   public AvroIdlJsonValue getJsonValue() {
     return findChildByClass(AvroIdlJsonValue.class);
   }
@@ -38,12 +44,6 @@ public class AvroIdlSchemaPropertyImpl extends ASTWrapperPsiElement implements A
   @NotNull
   public List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlMisplacedDocumentation.class);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getIdentifier() {
-    return findChildByType(IDENTIFIER);
   }
 
   @Override

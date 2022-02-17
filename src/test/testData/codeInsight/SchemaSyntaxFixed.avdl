@@ -1,0 +1,9 @@
+/*
+ * Comment for license information.
+ */
+@namespace("org.apache.avro.test")
+protocol Dummy {
+	record MyRecord {
+		boolean flag;
+	}
+}

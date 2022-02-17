@@ -1,0 +1,15 @@
+/**
+ * Doc comment.
+ */
+protocol DataProtocol {
+
+	/**
+	 * A message record.
+	 */
+	record Message {
+		/** The message */
+		string text;
+		/** The reason for the message */
+		string? reason = null;
+	}
+}

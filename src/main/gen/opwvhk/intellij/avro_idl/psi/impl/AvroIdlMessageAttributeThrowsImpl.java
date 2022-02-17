@@ -30,8 +30,8 @@ public class AvroIdlMessageAttributeThrowsImpl extends ASTWrapperPsiElement impl
 
   @Override
   @NotNull
-  public PsiElement getIdentifier() {
-    return findNotNullChildByType(IDENTIFIER);
+  public AvroIdlIdentifier getIdentifier() {
+    return findNotNullChildByClass(AvroIdlIdentifier.class);
   }
 
   @Override

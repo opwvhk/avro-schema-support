@@ -1,0 +1,38 @@
+<html>
+<body>
+Detects the schema syntax (since Avro 1.12.0), and offering to replace it with a protocol.
+<!-- tooltip end -->
+<p>Useful if you're using an older version of Avro.</p>
+<p><strong>Example:</strong></p>
+<pre><code>namespace my.name.space;
+schema array&lt;Message&gt;
+
+record Message {
+	string title;
+	string content = "";
+}
+
+enum Status {
+	ON, OFF, UNKNOWN
+} = UNKNOWN;
+</code></pre>
+<p>
+	The quick fix wraps the file content with a protocol, adding a namespace annotation if appropriate. It drops the schema declaration.
+</p>
+<p>
+	Result after applying the fix:
+</p>
+<pre><code>@namespace("my.name.space")
+protocol MessageLess {
+	record Message {
+		string title;
+		string content = "";
+	}
+
+	enum Status {
+		ON, OFF, UNKNOWN
+	} = UNKNOWN;
+}</code></pre>
+
+</body>
+</html>

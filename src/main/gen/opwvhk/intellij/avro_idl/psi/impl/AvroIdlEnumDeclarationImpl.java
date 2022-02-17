@@ -41,8 +41,8 @@ public class AvroIdlEnumDeclarationImpl extends AvroIdlNamedSchemaDeclarationImp
 
   @Override
   @Nullable
-  public PsiElement getIdentifier() {
-    return findChildByType(IDENTIFIER);
+  public AvroIdlIdentifier getIdentifier() {
+    return findChildByClass(AvroIdlIdentifier.class);
   }
 
 }

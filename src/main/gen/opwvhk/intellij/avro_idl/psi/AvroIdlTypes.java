@@ -18,6 +18,7 @@ public interface AvroIdlTypes {
   IElementType FIELD_DECLARATION = new AvroIdlElementType("FIELD_DECLARATION");
   IElementType FIXED_DECLARATION = new AvroIdlElementType("FIXED_DECLARATION");
   IElementType FORMAL_PARAMETER = new AvroIdlElementType("FORMAL_PARAMETER");
+  IElementType IDENTIFIER = new AvroIdlElementType("IDENTIFIER");
   IElementType IMPORT_DECLARATION = new AvroIdlElementType("IMPORT_DECLARATION");
   IElementType IMPORT_TYPE = new AvroIdlElementType("IMPORT_TYPE");
   IElementType JSON_ARRAY = new AvroIdlElementType("JSON_ARRAY");
@@ -25,12 +26,14 @@ public interface AvroIdlTypes {
   IElementType JSON_PAIR = new AvroIdlElementType("JSON_PAIR");
   IElementType JSON_STRING_LITERAL = new AvroIdlElementType("JSON_STRING_LITERAL");
   IElementType JSON_VALUE = new AvroIdlElementType("JSON_VALUE");
+  IElementType MAIN_SCHEMA_DECLARATION = new AvroIdlElementType("MAIN_SCHEMA_DECLARATION");
   IElementType MAP_TYPE = new AvroIdlElementType("MAP_TYPE");
   IElementType MESSAGE_ATTRIBUTES = new AvroIdlElementType("MESSAGE_ATTRIBUTES");
   IElementType MESSAGE_ATTRIBUTE_THROWS = new AvroIdlElementType("MESSAGE_ATTRIBUTE_THROWS");
   IElementType MESSAGE_DECLARATION = new AvroIdlElementType("MESSAGE_DECLARATION");
   IElementType MISPLACED_DOCUMENTATION = new AvroIdlElementType("MISPLACED_DOCUMENTATION");
   IElementType NAMED_SCHEMA_DECLARATION = new AvroIdlElementType("NAMED_SCHEMA_DECLARATION");
+  IElementType NAMESPACE_DECLARATION = new AvroIdlElementType("NAMESPACE_DECLARATION");
   IElementType NAMESPACE_PROPERTY = new AvroIdlElementType("NAMESPACE_PROPERTY");
   IElementType NULLABLE_TYPE = new AvroIdlElementType("NULLABLE_TYPE");
   IElementType PRIMITIVE_TYPE = new AvroIdlElementType("PRIMITIVE_TYPE");
@@ -64,7 +67,7 @@ public interface AvroIdlTypes {
   IElementType FIXED = new AvroIdlTokenType("fixed");
   IElementType FLOAT = new AvroIdlTokenType("float");
   IElementType FLOAT_LITERAL = new AvroIdlTokenType("FLOAT_LITERAL");
-  IElementType IDENTIFIER = new AvroIdlTokenType("IDENTIFIER");
+  IElementType IDENTIFIER_TOKEN = new AvroIdlTokenType("IDENTIFIER_TOKEN");
   IElementType IDL = new AvroIdlTokenType("idl");
   IElementType IMPORT = new AvroIdlTokenType("import");
   IElementType INT = new AvroIdlTokenType("int");
@@ -77,6 +80,7 @@ public interface AvroIdlTypes {
   IElementType LOCAL_TIMESTAMP_MS = new AvroIdlTokenType("local_timestamp_ms");
   IElementType LONG = new AvroIdlTokenType("long");
   IElementType MAP = new AvroIdlTokenType("map");
+  IElementType NAMESPACE = new AvroIdlTokenType("namespace");
   IElementType NULL = new AvroIdlTokenType("null");
   IElementType ONEWAY = new AvroIdlTokenType("oneway");
   IElementType PROTOCOL = new AvroIdlTokenType("protocol");
@@ -131,6 +135,9 @@ public interface AvroIdlTypes {
       else if (type == FORMAL_PARAMETER) {
         return new AvroIdlFormalParameterImpl(node);
       }
+      else if (type == IDENTIFIER) {
+        return new AvroIdlIdentifierImpl(node);
+      }
       else if (type == IMPORT_DECLARATION) {
         return new AvroIdlImportDeclarationImpl(node);
       }
@@ -152,6 +159,9 @@ public interface AvroIdlTypes {
       else if (type == JSON_VALUE) {
         return new AvroIdlJsonValueImpl(node);
       }
+      else if (type == MAIN_SCHEMA_DECLARATION) {
+        return new AvroIdlMainSchemaDeclarationImpl(node);
+      }
       else if (type == MAP_TYPE) {
         return new AvroIdlMapTypeImpl(node);
       }
@@ -166,6 +176,9 @@ public interface AvroIdlTypes {
       }
       else if (type == MISPLACED_DOCUMENTATION) {
         return new AvroIdlMisplacedDocumentationImpl(node);
+      }
+      else if (type == NAMESPACE_DECLARATION) {
+        return new AvroIdlNamespaceDeclarationImpl(node);
       }
       else if (type == NAMESPACE_PROPERTY) {
         return new AvroIdlNamespacePropertyImpl(node);

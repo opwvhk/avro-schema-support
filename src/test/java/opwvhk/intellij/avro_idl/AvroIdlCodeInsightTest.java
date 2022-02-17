@@ -265,6 +265,142 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		);
 	}
 
+	@SuppressWarnings("unchecked")
+	public void testSchemaSyntaxInspectionWithoutNamespaceOrSchema() {
+		myFixture.enableInspections(AvroIdlUseSchemaSyntaxInspection.class);
+		myFixture.configureByFiles("DataProtocol_empty.avdl");
+		final List<Highlight> highlight = Highlight.fromHighlightInfoList(myFixture.doHighlighting());
+
+		// Note: because we're cutting out the text offsets, all error texts should be unique enough to be identified.
+		// Luckily, the method returns highlights in the order they are in the file.
+
+		assertOrderedEquals(highlight,
+			Highlight.weakWarning("protocol", "Schema syntax available")
+		);
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testSchemaSyntaxInspectionWithoutNamespaceOrSchemaQuickFix() {
+		myFixture.enableInspections(AvroIdlUseSchemaSyntaxInspection.class);
+		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("DataProtocol_empty.avdl");
+		assertEquals(1, quickFixes.size());
+		IntentionAction quickFix = quickFixes.get(0);
+		assertEquals("Replace with schema syntax", quickFix.getText());
+		myFixture.launchAction(quickFix);
+		myFixture.checkResultByFile("DataProtocolFixed_empty.avdl");
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testSchemaSyntaxInspectionWithoutSchemaQuickFix() {
+		myFixture.enableInspections(AvroIdlUseSchemaSyntaxInspection.class);
+		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("DataProtocol_ns.avdl");
+		assertEquals(1, quickFixes.size());
+		IntentionAction quickFix = quickFixes.get(0);
+		assertEquals("Replace with schema syntax", quickFix.getText());
+		myFixture.launchAction(quickFix);
+		myFixture.checkResultByFile("DataProtocolFixed_ns.avdl");
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testSchemaSyntaxInspectionForRecordWithoutNamespace() {
+		myFixture.enableInspections(AvroIdlUseSchemaSyntaxInspection.class);
+		myFixture.configureByFiles("DataProtocol_record.avdl");
+		final List<Highlight> highlight = Highlight.fromHighlightInfoList(myFixture.doHighlighting());
+
+		// Note: because we're cutting out the text offsets, all error texts should be unique enough to be identified.
+		// Luckily, the method returns highlights in the order they are in the file.
+
+		assertOrderedEquals(highlight,
+			Highlight.weakWarning("protocol", "Schema syntax available")
+		);
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testSchemaSyntaxInspectionForRecordWithoutNamespaceQuickFix() {
+		myFixture.enableInspections(AvroIdlUseSchemaSyntaxInspection.class);
+		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("DataProtocol_record.avdl");
+		assertEquals(1, quickFixes.size());
+		IntentionAction quickFix = quickFixes.get(0);
+		assertEquals("Replace with schema syntax", quickFix.getText());
+		myFixture.launchAction(quickFix);
+		myFixture.checkResultByFile("DataProtocolFixed_record.avdl");
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testSchemaSyntaxInspectionForRecordWithNamespace() {
+		myFixture.enableInspections(AvroIdlUseSchemaSyntaxInspection.class);
+		myFixture.configureByFiles("DataProtocol_ns_record.avdl");
+		final List<Highlight> highlight = Highlight.fromHighlightInfoList(myFixture.doHighlighting());
+
+		// Note: because we're cutting out the text offsets, all error texts should be unique enough to be identified.
+		// Luckily, the method returns highlights in the order they are in the file.
+
+		assertOrderedEquals(highlight,
+			Highlight.weakWarning("protocol", "Schema syntax available")
+		);
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testSchemaSyntaxInspectionForRecordWithNamespaceQuickFix() {
+		myFixture.enableInspections(AvroIdlUseSchemaSyntaxInspection.class);
+		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("DataProtocol_ns_record.avdl");
+		assertEquals(1, quickFixes.size());
+		IntentionAction quickFix = quickFixes.get(0);
+		assertEquals("Replace with schema syntax", quickFix.getText());
+		myFixture.launchAction(quickFix);
+		myFixture.checkResultByFile("DataProtocolFixed_ns_record.avdl");
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testAvoidSchemaSyntaxInspection() {
+		myFixture.enableInspections(AvroIdlAvoidSchemaSyntaxInspection.class);
+		myFixture.configureByFiles("SchemaSyntax.avdl");
+		final List<Highlight> highlight = Highlight.fromHighlightInfoList(myFixture.doHighlighting());
+
+		// Note: because we're cutting out the text offsets, all error texts should be unique enough to be identified.
+		// Luckily, the method returns highlights in the order they are in the file.
+
+		assertOrderedEquals(highlight,
+			Highlight.error("namespace", "Use of schema syntax")
+		);
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testAvoidSchemaSyntaxInspectionQuickFix() {
+		myFixture.enableInspections(AvroIdlAvoidSchemaSyntaxInspection.class);
+		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("SchemaSyntax.avdl");
+		assertEquals(1, quickFixes.size());
+		IntentionAction quickFix = quickFixes.get(0);
+		assertEquals("Replace with protocol", quickFix.getText());
+		myFixture.launchAction(quickFix);
+		myFixture.checkResultByFile("SchemaSyntaxFixed.avdl");
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testAvoidSchemaSyntaxInspectionWithoutNamespace() {
+		myFixture.enableInspections(AvroIdlAvoidSchemaSyntaxInspection.class);
+		myFixture.configureByFiles("SchemaSyntaxWithoutNamespace.avdl");
+		final List<Highlight> highlight = Highlight.fromHighlightInfoList(myFixture.doHighlighting());
+
+		// Note: because we're cutting out the text offsets, all error texts should be unique enough to be identified.
+		// Luckily, the method returns highlights in the order they are in the file.
+
+		assertOrderedEquals(highlight,
+			Highlight.error("record", "Use of schema syntax")
+		);
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testAvoidSchemaSyntaxInspectionWithoutNamespaceQuickFix() {
+		myFixture.enableInspections(AvroIdlAvoidSchemaSyntaxInspection.class);
+		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("SchemaSyntaxWithoutNamespace.avdl");
+		assertEquals(1, quickFixes.size());
+		IntentionAction quickFix = quickFixes.get(0);
+		assertEquals("Replace with protocol", quickFix.getText());
+		myFixture.launchAction(quickFix);
+		myFixture.checkResultByFile("SchemaSyntaxWithoutNamespaceFixed.avdl");
+	}
+
 	@SuppressWarnings("unused")
 	public void _testDocumentation() {
 		myFixture.configureByFiles("DocumentationTestData.java", "DocumentationTestData.simple");

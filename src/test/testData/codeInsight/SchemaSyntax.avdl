@@ -1,0 +1,8 @@
+/*
+ * Comment for license information.
+ */
+namespace org.apache.avro.test;
+
+record MyRecord {
+	boolean flag;
+}

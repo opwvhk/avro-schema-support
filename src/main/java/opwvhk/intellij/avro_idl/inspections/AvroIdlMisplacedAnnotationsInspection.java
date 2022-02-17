@@ -1,13 +1,14 @@
 package opwvhk.intellij.avro_idl.inspections;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
-import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import opwvhk.intellij.avro_idl.psi.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class AvroIdlMisplacedAnnotationsInspection extends BaseAvroIdlInspection<AvroIdlSchemaProperty> {
 	public AvroIdlMisplacedAnnotationsInspection() {
@@ -72,7 +73,8 @@ public class AvroIdlMisplacedAnnotationsInspection extends BaseAvroIdlInspection
 		}
 
 		@Override
-		protected void invoke(@NotNull Project project, @NotNull PsiFile file, @NotNull AvroIdlSchemaProperty element) {
+		protected void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor,
+                              @NotNull AvroIdlSchemaProperty element) {
 			element.delete();
 		}
 	}

@@ -16,7 +16,20 @@ public class AvroIdlCodeCompletionsTest extends LightJavaCodeInsightFixtureTestC
 	}
 
 	public void testCompletionsInEmptyFile() {
-		assertThat(getBasicCompletions("EmptyFile.avdl")).containsExactlyInAnyOrder("@namespace(\"\")", "protocol ");
+		assertThat(getBasicCompletions("EmptyFile.avdl")).containsExactlyInAnyOrder("@namespace(\"\")", "protocol ", "namespace ", "schema ", "import ",
+			"enum ", "record ", "fixed ");
+	}
+
+	public void testCompletionsAfterNamespaceDeclaration() {
+		assertThat(getBasicCompletions("AfterNamespaceDeclaration.avdl")).containsExactlyInAnyOrder("schema ", "import ", "enum ", "record ", "fixed ");
+	}
+
+	public void testCompletionsAfterMainSchemaDeclaration() {
+		assertThat(getBasicCompletions("AfterMainSchemaDeclaration.avdl")).containsExactlyInAnyOrder("import ", "enum ", "record ", "fixed ");
+	}
+
+	public void testCompletionsAfterOnlyAnnotations() {
+		assertThat(getBasicCompletions("OnlyAnnotationFile.avdl")).containsExactlyInAnyOrder("@namespace(\"\")", "protocol ");
 	}
 
 	public void testCompletionsForAnnotationInProtocol() {
@@ -48,6 +61,20 @@ public class AvroIdlCodeCompletionsTest extends LightJavaCodeInsightFixtureTestC
 		);
 	}
 
+	public void testCompletionsForMainSchemaDeclaration() {
+		assertThat(getBasicCompletions("MainSchemaDeclaration.avdl")).containsExactlyInAnyOrder(
+			"boolean ", "bytes ", "int ", "string ", "float ", "double ", "long ",
+			"null ",
+			"date ", "time_ms ", "local_timestamp_ms ", "timestamp_ms ", "decimal(",
+			"union {", "array<", "map<",
+			"Rec1", "other.namespace.Enum"
+		);
+	}
+
+	public void testCompletionsForImportTypesInProtocol() {
+		assertThat(getBasicCompletions("ImportTypesInProtocol.avdl")).containsExactlyInAnyOrder("idl ", "protocol ", "schema ");
+	}
+
 	public void testCompletionsForImportTypes() {
 		assertThat(getBasicCompletions("ImportTypes.avdl")).containsExactlyInAnyOrder("idl ", "protocol ", "schema ");
 	}
@@ -65,7 +92,8 @@ public class AvroIdlCodeCompletionsTest extends LightJavaCodeInsightFixtureTestC
 	}
 
 	public void testCompletionsForOrderAnnotationStringsOnIncompleteFields() {
-		assertThat(getBasicCompletions("OrderAnnotationStringsOnIncompleteFields.avdl")).containsExactlyInAnyOrder("\"ascending\"", "\"descending\"", "\"ignore\"");
+		assertThat(getBasicCompletions("OrderAnnotationStringsOnIncompleteFields.avdl")).containsExactlyInAnyOrder("\"ascending\"", "\"descending\"",
+			"\"ignore\"");
 	}
 
 	public void testCompletionsForOrderAnnotationStrings() {

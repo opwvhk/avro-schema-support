@@ -3,12 +3,18 @@ package opwvhk.intellij.avro_idl.inspections;
 import com.intellij.codeInspection.LocalQuickFixAndIntentionActionOnPsiElement;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
+import com.intellij.openapi.editor.CaretState;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.LogicalPosition;
+import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public abstract class SimpleAvroIdlQuickFixOnPsiElement<E extends PsiElement> extends LocalQuickFixAndIntentionActionOnPsiElement {
 
@@ -23,7 +29,7 @@ public abstract class SimpleAvroIdlQuickFixOnPsiElement<E extends PsiElement> ex
 		return true;
 	}
 
-	protected abstract void invoke(@NotNull Project project, @NotNull PsiFile file, @NotNull E element);
+	protected abstract void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor, @NotNull E element);
 
 	@Override
 	public @IntentionFamilyName @NotNull String getFamilyName() {
@@ -44,13 +50,24 @@ public abstract class SimpleAvroIdlQuickFixOnPsiElement<E extends PsiElement> ex
 	@Override
 	@SuppressWarnings("unchecked")
 	public void invoke(@NotNull Project project, @NotNull PsiFile file, @NotNull PsiElement startElement, @NotNull PsiElement endElement) {
-		invoke(project, file, (E)startElement);
+		invoke(project, file, (Editor)null, (E)startElement);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor,
 	                   @NotNull PsiElement startElement, @NotNull PsiElement endElement) {
-		invoke(project, file, (E)startElement);
+		invoke(project, file, editor, (E)startElement);
+	}
+
+	protected void selectElement(Editor editor, PsiElement element) {
+		if (editor != null && element != null) {
+			TextRange range = element.getTextRange();
+			// Remove all carets but the "main"
+			LogicalPosition typeStartPosition = editor.offsetToLogicalPosition(range.getStartOffset());
+			LogicalPosition typeEndPosition = editor.offsetToLogicalPosition(range.getEndOffset());
+			editor.getCaretModel().setCaretsAndSelections(List.of(new CaretState(typeStartPosition, typeStartPosition, typeEndPosition)));
+			editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
+		}
 	}
 }

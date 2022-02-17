@@ -58,7 +58,7 @@ public class AvroSchemaToIdlAction extends ConversionActionBase {
 					try (Writer writer = new OutputStreamWriter(virtualFile.getOutputStream(this))) {
 						final String protocolName = virtualFile.getNameWithoutExtension();
 						final String namespace = schemas.get(0).getNamespace(); // Assume the first schema has the correct namespace.
-						IdlUtils.writeIdlProtocol(writer, namespace, protocolName, schemas);
+						IdlUtils.writeIdlSchemas(writer, namespace, schemas);
 
 						console.print("Wrote Avro IDL \"", NORMAL_OUTPUT);
 						console.print(protocolName, NORMAL_OUTPUT);

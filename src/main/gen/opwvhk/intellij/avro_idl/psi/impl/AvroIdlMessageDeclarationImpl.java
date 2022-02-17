@@ -36,6 +36,12 @@ public class AvroIdlMessageDeclarationImpl extends AvroIdlWithSchemaPropertiesIm
 
   @Override
   @Nullable
+  public AvroIdlIdentifier getIdentifier() {
+    return findChildByClass(AvroIdlIdentifier.class);
+  }
+
+  @Override
+  @Nullable
   public AvroIdlMessageAttributes getMessageAttributes() {
     return findChildByClass(AvroIdlMessageAttributes.class);
   }
@@ -50,12 +56,6 @@ public class AvroIdlMessageDeclarationImpl extends AvroIdlWithSchemaPropertiesIm
   @NotNull
   public AvroIdlType getType() {
     return findNotNullChildByClass(AvroIdlType.class);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getIdentifier() {
-    return findChildByType(IDENTIFIER);
   }
 
   @Override

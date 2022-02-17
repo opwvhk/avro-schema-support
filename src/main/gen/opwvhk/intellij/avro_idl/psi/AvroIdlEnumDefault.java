@@ -9,7 +9,7 @@ import opwvhk.intellij.avro_idl.language.AvroIdlEnumConstantReference;
 public interface AvroIdlEnumDefault extends PsiElement {
 
   @NotNull
-  PsiElement getIdentifier();
+  AvroIdlIdentifier getIdentifier();
 
   @NotNull AvroIdlEnumConstantReference getReference();
 

@@ -5,8 +5,8 @@ import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.lang.annotation.AnnotationBuilder;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
-import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -70,26 +70,14 @@ public class AvroIdlAnnotator implements Annotator {
 	private void annotateSchemaReference(@NotNull PsiElement element, @NotNull AnnotationHolder holder, boolean mustBeAnError) {
 		final PsiElement parent = element.getParent();
 		final AvroIdlNamedSchemaReference reference = (AvroIdlNamedSchemaReference)parent.getReference();
-		assert reference != null; // Because we've matched on an identifier, and our parent is a ReferenceType, MessageAttributeThrows or EnumDefault
+		assert reference != null; // Because we've matched on an identifier, and our parent is a ReferenceType or MessageAttributeThrows
 		final PsiElement referencedElement = reference.resolve();
 
 		if (referencedElement == null) {
-			final boolean unsupportedFeatureMayCauseErrors = !(parent instanceof AvroIdlEnumDefault) && protocolContainingElementHasUnsupportedImports(parent);
-			final HighlightSeverity unknownSymbolSeverity = unsupportedFeatureMayCauseErrors ? WEAK_WARNING : ERROR;
-			holder.newAnnotation(unknownSymbolSeverity, "Unknown schema: " + getIdentifier(element)).create();
+			holder.newAnnotation(ERROR, "Unknown schema: " + getIdentifier(element)).create();
 		} else if (mustBeAnError && !reference.resolvesToError()) {
 			holder.newAnnotation(ERROR, "Not an error: " + getIdentifier(element)).create();
 		}
-	}
-
-	private boolean protocolContainingElementHasUnsupportedImports(PsiElement parent) {
-		PsiElement e = parent;
-		do {
-			e = e.getParent();
-		} while (!(e instanceof AvroIdlProtocolBody));
-		final AvroIdlProtocolBody protocolBody = (AvroIdlProtocolBody)e;
-
-		return !protocolBody.getImportDeclarationList().isEmpty();
 	}
 
 	private @NotNull String getIdentifier(@NotNull PsiElement element) {
@@ -366,7 +354,7 @@ public class AvroIdlAnnotator implements Annotator {
 		final PsiManager psiManager = PsiManager.getInstance(element.getProject());
 
 		final Map<String, List<LookupElement>> allTypesByName = new LinkedHashMap<>();
-		AvroIdlUtil.findAllSchemaNamesAvailableInProtocol(element).forEach(lookupElement -> lookupElement.getAllLookupStrings()
+		AvroIdlUtil.findAllSchemaNamesAvailableInIdl(element).forEach(lookupElement -> lookupElement.getAllLookupStrings()
 			.forEach(name -> allTypesByName.computeIfAbsent(name, ignored -> new ArrayList<>()).add(lookupElement)));
 
 		final Collection<AvroIdlNamedSchemaDeclaration> schemasInThisFile = PsiTreeUtil.findChildrenOfType(element, AvroIdlNamedSchemaDeclaration.class);
@@ -430,7 +418,8 @@ public class AvroIdlAnnotator implements Annotator {
 		}
 
 		@Override
-		protected void invoke(@NotNull Project project, @NotNull PsiFile file, @NotNull AvroIdlSchemaProperty element) {
+		protected void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor,
+                              @NotNull AvroIdlSchemaProperty element) {
 			ApplicationManager.getApplication().runWriteAction(element::delete);
 		}
 

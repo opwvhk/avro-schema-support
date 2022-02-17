@@ -1,0 +1,5 @@
+namespace simple;
+
+schema string;
+
+<caret>

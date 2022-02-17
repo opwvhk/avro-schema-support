@@ -40,14 +40,11 @@ public class IdlUtilsTest {
 		}).isInstanceOf(IllegalStateException.class).hasMessage("Programmer error");
 	}
 
-	// TODO: re-enable test after upgrading Avro
+	// TODO: re-enable test after upgrading Avro and rewriting to use IdlReader
 	//@Test
 	public void validateHappyFlowForProtocol() throws ParseException, IOException {
 		final String resourceAsString = getResourceAsString("idl_utils_test_protocol.avdl");
 		Protocol protocol = new Idl(new StringReader(resourceAsString)).CompilationUnit();
-		// Write as JSON and parse again to handle logical types correctly.
-		protocol = Protocol.parse(protocol.toString());
-		Schema newMessageSchema = protocol.getType("naming.NewMessage");
 
 		StringWriter buffer = new StringWriter();
 		IdlUtils.writeIdlProtocol(buffer, protocol);
@@ -67,36 +64,35 @@ public class IdlUtilsTest {
 		return schemaBuffer.toString();
 	}
 
-	// TODO: re-enable test after upgrading Avro
+	// TODO: re-enable test after upgrading Avro, rewriting to use IdlReader and the new schema syntax
 	//@Test
 	public void validateHappyFlowForSingleSchema() throws ParseException, IOException {
 		final String resourceAsString = getResourceAsString("idl_utils_test_schema.avdl");
-		Protocol protocol = new Idl(new StringReader(resourceAsString)).CompilationUnit();
+		Protocol mainSchema = new Idl(new StringReader(resourceAsString)).CompilationUnit();
 		// Write as JSON and parse again to handle logical types correctly.
-		protocol = Protocol.parse(protocol.toString());
-		Schema newMessageSchema = protocol.getType("naming.NewMessage");
+		mainSchema = Protocol.parse(mainSchema.toString());
 
 		StringWriter buffer = new StringWriter();
-		IdlUtils.writeIdlProtocol(buffer, "naming", "HappyFlow", newMessageSchema);
+		IdlUtils.writeIdlSchema(buffer, mainSchema.getTypes().iterator().next());
 
 		assertThat(buffer.toString()).isEqualTo(resourceAsString);
 	}
 
 	@Test
-	public void cannotWriteUnnamedTypes() {
-		assertThatThrownBy(() -> IdlUtils.writeIdlProtocol(new StringWriter(), "naming", "Error",
+	public void cannotWriteProtocolWithUnnamedTypes() {
+		assertThatThrownBy(() -> IdlUtils.writeIdlProtocol(new StringWriter(),
 			Schema.create(Schema.Type.STRING))).isInstanceOf(AvroRuntimeException.class);
 	}
 
 	@Test
 	public void cannotWriteEmptyEnums() {
-		assertThatThrownBy(() -> IdlUtils.writeIdlProtocol(new StringWriter(), "naming", "Error",
+		assertThatThrownBy(() -> IdlUtils.writeIdlProtocol(new StringWriter(),
 			Schema.createEnum("Single", null, "naming", emptyList()))).isInstanceOf(AvroRuntimeException.class);
 	}
 
 	@Test
 	public void cannotWriteEmptyUnionTypes() {
-		assertThatThrownBy(() -> IdlUtils.writeIdlProtocol(new StringWriter(), "naming", "Error",
+		assertThatThrownBy(() -> IdlUtils.writeIdlProtocol(new StringWriter(),
 			Schema.createRecord("Single", null, "naming", false, singletonList(
 				new Schema.Field("field", Schema.createUnion())
 			)))).isInstanceOf(AvroRuntimeException.class);

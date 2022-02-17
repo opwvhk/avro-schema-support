@@ -9,13 +9,13 @@ import com.intellij.util.IncorrectOperationException;
 public interface AvroIdlSchemaProperty extends AvroIdlNamedType {
 
   @Nullable
+  AvroIdlIdentifier getIdentifier();
+
+  @Nullable
   AvroIdlJsonValue getJsonValue();
 
   @NotNull
   List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList();
-
-  @Nullable
-  PsiElement getIdentifier();
 
   @Nullable @NonNls String getName();
 

@@ -10,7 +10,7 @@ import com.intellij.util.IncorrectOperationException;
 public interface AvroIdlEnumConstant extends AvroIdlNameIdentifierOwner {
 
   @NotNull
-  PsiElement getIdentifier();
+  AvroIdlIdentifier getIdentifier();
 
   @Nullable PsiElement getNameIdentifier();
 

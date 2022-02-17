@@ -8,8 +8,14 @@ public class AvroIdlParsingTest extends ParsingTestCase {
 		super("", "avdl", new AvroIdlParserDefinition());
 	}
 
-	public void testTestData() {
-		doTest(true);
+	/*
+	 * The parse result is a tree structure in text. By default, the tree includes whitespace, but no parse ranges.
+	 * We want neither to more easily verify the result (and IDL syntax is not space aware anyway)
+	 */
+
+	@Override
+	protected boolean skipSpaces() {
+		return true;
 	}
 
 	/**
@@ -20,13 +26,15 @@ public class AvroIdlParsingTest extends ParsingTestCase {
 		return "src/test/testData/parsing";
 	}
 
-	@Override
-	protected boolean skipSpaces() {
-		return false;
+	/*
+	 * Test cases. The name of the test (minus the 'test' prefix) is also the name of the data file that is read.
+	 */
+
+	public void testProtocol() {
+		doTest(true);
 	}
 
-	@Override
-	protected boolean includeRanges() {
-		return true;
+	public void testSchema() {
+		doTest(true);
 	}
 }

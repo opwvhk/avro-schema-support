@@ -115,9 +115,15 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ProtocolDeclaration
+  // SchemaFile1 | SchemaFile2 | SchemaFile3 | ProtocolDeclaration
   static boolean CompilationUnit(PsiBuilder b, int l) {
-    return ProtocolDeclaration(b, l + 1);
+    if (!recursion_guard_(b, l, "CompilationUnit")) return false;
+    boolean r;
+    r = SchemaFile1(b, l + 1);
+    if (!r) r = SchemaFile2(b, l + 1);
+    if (!r) r = SchemaFile3(b, l + 1);
+    if (!r) r = ProtocolDeclaration(b, l + 1);
+    return r;
   }
 
   /* ********************************************************** */
@@ -377,14 +383,13 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IDENTIFIER
+  // Identifier
   public static boolean EnumConstant(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "EnumConstant")) return false;
-    if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, IDENTIFIER);
-    exit_section_(b, m, ENUM_CONSTANT, r);
+    Marker m = enter_section_(b, l, _NONE_, ENUM_CONSTANT, "<enum constant>");
+    r = Identifier(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -509,14 +514,13 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IDENTIFIER
+  // Identifier
   public static boolean EnumDefault(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "EnumDefault")) return false;
-    if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, IDENTIFIER);
-    exit_section_(b, m, ENUM_DEFAULT, r);
+    Marker m = enter_section_(b, l, _NONE_, ENUM_DEFAULT, "<enum default>");
+    r = Identifier(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -572,7 +576,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ENUM MisplacedDocumentation* IDENTIFIER MisplacedDocumentation* LEFT_BRACE [ EnumBody] RIGHT_BRACE [ EnumDefaultValueAssignment ]
+  // ENUM MisplacedDocumentation* Identifier MisplacedDocumentation* LEFT_BRACE [ EnumBody] RIGHT_BRACE [ EnumDefaultValueAssignment ]
   static boolean EnumInnerDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "EnumInnerDeclaration")) return false;
     if (!nextTokenIs(b, ENUM)) return false;
@@ -581,7 +585,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, ENUM);
     p = r; // pin = 1
     r = r && report_error_(b, EnumInnerDeclaration_1(b, l + 1));
-    r = p && report_error_(b, consumeToken(b, IDENTIFIER)) && r;
+    r = p && report_error_(b, Identifier(b, l + 1)) && r;
     r = p && report_error_(b, EnumInnerDeclaration_3(b, l + 1)) && r;
     r = p && report_error_(b, consumeToken(b, LEFT_BRACE)) && r;
     r = p && report_error_(b, EnumInnerDeclaration_5(b, l + 1)) && r;
@@ -862,7 +866,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // FIXED MisplacedDocumentation* IDENTIFIER MisplacedDocumentation*
+  // FIXED MisplacedDocumentation* Identifier MisplacedDocumentation*
   //   LEFT_PAREN MisplacedDocumentation* INT_LITERAL MisplacedDocumentation* RIGHT_PAREN MisplacedDocumentation*
   static boolean FixedInnerDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FixedInnerDeclaration")) return false;
@@ -871,7 +875,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, FIXED);
     p = r; // pin = 1
     r = r && report_error_(b, FixedInnerDeclaration_1(b, l + 1));
-    r = p && report_error_(b, consumeToken(b, IDENTIFIER)) && r;
+    r = p && report_error_(b, Identifier(b, l + 1)) && r;
     r = p && report_error_(b, FixedInnerDeclaration_3(b, l + 1)) && r;
     r = p && report_error_(b, consumeToken(b, LEFT_PAREN)) && r;
     r = p && report_error_(b, FixedInnerDeclaration_5(b, l + 1)) && r;
@@ -1033,6 +1037,79 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, COMMA);
     r = r && FormalParameter(b, l + 1);
     exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // IDENTIFIER_TOKEN
+  //  | ARRAY
+  //  | BOOLEAN
+  //  | BYTES
+  //  | DATE
+  //  | DECIMAL
+  //  | DOUBLE
+  //  | ENUM
+  //  | ERROR
+  //  | FALSE
+  //  | FIXED
+  //  | FLOAT
+  //  | IDL
+  //  | IMPORT
+  //  | INT
+  //  | LOCAL_TIMESTAMP_MS
+  //  | LONG
+  //  | MAP
+  //  | NAMESPACE
+  //  | NULL
+  //  | ONEWAY
+  //  | PROTOCOL
+  //  | RECORD
+  //  | SCHEMA
+  //  | STRING
+  //  | THROWS
+  //  | TIMESTAMP_MS
+  //  | TIME_MS
+  //  | TRUE
+  //  | UNION
+  //  | UUID
+  //  | VOID
+  public static boolean Identifier(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Identifier")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, IDENTIFIER, "<identifier>");
+    r = consumeToken(b, IDENTIFIER_TOKEN);
+    if (!r) r = consumeToken(b, ARRAY);
+    if (!r) r = consumeToken(b, BOOLEAN);
+    if (!r) r = consumeToken(b, BYTES);
+    if (!r) r = consumeToken(b, DATE);
+    if (!r) r = consumeToken(b, DECIMAL);
+    if (!r) r = consumeToken(b, DOUBLE);
+    if (!r) r = consumeToken(b, ENUM);
+    if (!r) r = consumeToken(b, ERROR);
+    if (!r) r = consumeToken(b, FALSE);
+    if (!r) r = consumeToken(b, FIXED);
+    if (!r) r = consumeToken(b, FLOAT);
+    if (!r) r = consumeToken(b, IDL);
+    if (!r) r = consumeToken(b, IMPORT);
+    if (!r) r = consumeToken(b, INT);
+    if (!r) r = consumeToken(b, LOCAL_TIMESTAMP_MS);
+    if (!r) r = consumeToken(b, LONG);
+    if (!r) r = consumeToken(b, MAP);
+    if (!r) r = consumeToken(b, NAMESPACE);
+    if (!r) r = consumeToken(b, NULL);
+    if (!r) r = consumeToken(b, ONEWAY);
+    if (!r) r = consumeToken(b, PROTOCOL);
+    if (!r) r = consumeToken(b, RECORD);
+    if (!r) r = consumeToken(b, SCHEMA);
+    if (!r) r = consumeToken(b, STRING);
+    if (!r) r = consumeToken(b, THROWS);
+    if (!r) r = consumeToken(b, TIMESTAMP_MS);
+    if (!r) r = consumeToken(b, TIME_MS);
+    if (!r) r = consumeToken(b, TRUE);
+    if (!r) r = consumeToken(b, UNION);
+    if (!r) r = consumeToken(b, UUID);
+    if (!r) r = consumeToken(b, VOID);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1390,6 +1467,57 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // MisplacedDocumentation* SCHEMA MisplacedDocumentation* Type MisplacedDocumentation* SEMICOLON
+  public static boolean MainSchemaDeclaration(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MainSchemaDeclaration")) return false;
+    if (!nextTokenIs(b, "<main schema declaration>", DOC_COMMENT, SCHEMA)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, MAIN_SCHEMA_DECLARATION, "<main schema declaration>");
+    r = MainSchemaDeclaration_0(b, l + 1);
+    r = r && consumeToken(b, SCHEMA);
+    p = r; // pin = 2
+    r = r && report_error_(b, MainSchemaDeclaration_2(b, l + 1));
+    r = p && report_error_(b, Type(b, l + 1)) && r;
+    r = p && report_error_(b, MainSchemaDeclaration_4(b, l + 1)) && r;
+    r = p && consumeToken(b, SEMICOLON) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  // MisplacedDocumentation*
+  private static boolean MainSchemaDeclaration_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MainSchemaDeclaration_0")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!MisplacedDocumentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "MainSchemaDeclaration_0", c)) break;
+    }
+    return true;
+  }
+
+  // MisplacedDocumentation*
+  private static boolean MainSchemaDeclaration_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MainSchemaDeclaration_2")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!MisplacedDocumentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "MainSchemaDeclaration_2", c)) break;
+    }
+    return true;
+  }
+
+  // MisplacedDocumentation*
+  private static boolean MainSchemaDeclaration_4(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "MainSchemaDeclaration_4")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!MisplacedDocumentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "MainSchemaDeclaration_4", c)) break;
+    }
+    return true;
+  }
+
+  /* ********************************************************** */
   // MapType1 | MapType2
   public static boolean MapType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "MapType")) return false;
@@ -1444,14 +1572,13 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IDENTIFIER
+  // Identifier
   public static boolean MessageAttributeThrows(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "MessageAttributeThrows")) return false;
-    if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, IDENTIFIER);
-    exit_section_(b, m, MESSAGE_ATTRIBUTE_THROWS, r);
+    Marker m = enter_section_(b, l, _NONE_, MESSAGE_ATTRIBUTE_THROWS, "<message attribute throws>");
+    r = Identifier(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1769,12 +1896,12 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IDENTIFIER MisplacedDocumentation* LEFT_PAREN FormalParameters RIGHT_PAREN [ MessageAttributes ]
+  // Identifier MisplacedDocumentation* LEFT_PAREN FormalParameters RIGHT_PAREN [ MessageAttributes ]
   static boolean MessageSignature(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "MessageSignature")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_);
-    r = consumeToken(b, IDENTIFIER);
+    r = Identifier(b, l + 1);
     r = r && MessageSignature_1(b, l + 1);
     r = r && consumeToken(b, LEFT_PAREN);
     r = r && FormalParameters(b, l + 1);
@@ -1825,6 +1952,57 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     if (!r) r = RecordDeclaration(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
+  }
+
+  /* ********************************************************** */
+  // MisplacedDocumentation* NAMESPACE MisplacedDocumentation* Identifier MisplacedDocumentation* SEMICOLON
+  public static boolean NamespaceDeclaration(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "NamespaceDeclaration")) return false;
+    if (!nextTokenIs(b, "<namespace declaration>", DOC_COMMENT, NAMESPACE)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, NAMESPACE_DECLARATION, "<namespace declaration>");
+    r = NamespaceDeclaration_0(b, l + 1);
+    r = r && consumeToken(b, NAMESPACE);
+    p = r; // pin = 2
+    r = r && report_error_(b, NamespaceDeclaration_2(b, l + 1));
+    r = p && report_error_(b, Identifier(b, l + 1)) && r;
+    r = p && report_error_(b, NamespaceDeclaration_4(b, l + 1)) && r;
+    r = p && consumeToken(b, SEMICOLON) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  // MisplacedDocumentation*
+  private static boolean NamespaceDeclaration_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "NamespaceDeclaration_0")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!MisplacedDocumentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "NamespaceDeclaration_0", c)) break;
+    }
+    return true;
+  }
+
+  // MisplacedDocumentation*
+  private static boolean NamespaceDeclaration_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "NamespaceDeclaration_2")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!MisplacedDocumentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "NamespaceDeclaration_2", c)) break;
+    }
+    return true;
+  }
+
+  // MisplacedDocumentation*
+  private static boolean NamespaceDeclaration_4(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "NamespaceDeclaration_4")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!MisplacedDocumentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "NamespaceDeclaration_4", c)) break;
+    }
+    return true;
   }
 
   /* ********************************************************** */
@@ -2072,14 +2250,13 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   static boolean ProtocolDeclaration1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ProtocolDeclaration1")) return false;
     if (!nextTokenIs(b, DOC_COMMENT)) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
+    boolean r;
+    Marker m = enter_section_(b);
     r = ProtocolDeclaration1_0(b, l + 1);
-    p = r; // pin = 1
-    r = r && report_error_(b, ProtocolDeclaration1_1(b, l + 1));
-    r = p && ProtocolDeclaration3(b, l + 1) && r;
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
+    r = r && ProtocolDeclaration1_1(b, l + 1);
+    r = r && ProtocolDeclaration3(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
   }
 
   // Documentation+
@@ -2171,7 +2348,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // PROTOCOL MisplacedDocumentation* IDENTIFIER MisplacedDocumentation* LEFT_BRACE ProtocolBody RIGHT_BRACE
+  // PROTOCOL MisplacedDocumentation* Identifier MisplacedDocumentation* LEFT_BRACE ProtocolBody RIGHT_BRACE
   static boolean ProtocolDeclaration3(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ProtocolDeclaration3")) return false;
     if (!nextTokenIs(b, PROTOCOL)) return false;
@@ -2180,7 +2357,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, PROTOCOL);
     p = r; // pin = 1
     r = r && report_error_(b, ProtocolDeclaration3_1(b, l + 1));
-    r = p && report_error_(b, consumeToken(b, IDENTIFIER)) && r;
+    r = p && report_error_(b, Identifier(b, l + 1)) && r;
     r = p && report_error_(b, ProtocolDeclaration3_3(b, l + 1)) && r;
     r = p && report_error_(b, consumeToken(b, LEFT_BRACE)) && r;
     r = p && report_error_(b, ProtocolBody(b, l + 1)) && r;
@@ -2366,7 +2543,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // RecordType MisplacedDocumentation* IDENTIFIER MisplacedDocumentation* LEFT_BRACE RecordBody RIGHT_BRACE
+  // RecordType MisplacedDocumentation* Identifier MisplacedDocumentation* LEFT_BRACE RecordBody RIGHT_BRACE
   static boolean RecordInnerDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "RecordInnerDeclaration")) return false;
     if (!nextTokenIs(b, "", ERROR, RECORD)) return false;
@@ -2375,7 +2552,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     r = RecordType(b, l + 1);
     p = r; // pin = 1
     r = r && report_error_(b, RecordInnerDeclaration_1(b, l + 1));
-    r = p && report_error_(b, consumeToken(b, IDENTIFIER)) && r;
+    r = p && report_error_(b, Identifier(b, l + 1)) && r;
     r = p && report_error_(b, RecordInnerDeclaration_3(b, l + 1)) && r;
     r = p && report_error_(b, consumeToken(b, LEFT_BRACE)) && r;
     r = p && report_error_(b, RecordBody(b, l + 1)) && r;
@@ -2430,7 +2607,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // MisplacedDocumentation* SchemaProperty (MisplacedDocumentation | SchemaProperty)* IDENTIFIER
+  // MisplacedDocumentation* SchemaProperty (MisplacedDocumentation | SchemaProperty)* Identifier
   static boolean ReferenceType1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ReferenceType1")) return false;
     boolean r, p;
@@ -2439,7 +2616,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     r = r && SchemaProperty(b, l + 1);
     p = r; // pin = 2
     r = r && report_error_(b, ReferenceType1_2(b, l + 1));
-    r = p && consumeToken(b, IDENTIFIER) && r;
+    r = p && Identifier(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
@@ -2476,13 +2653,13 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (MisplacedDocumentation | SchemaProperty)* IDENTIFIER
+  // (MisplacedDocumentation | SchemaProperty)* Identifier
   static boolean ReferenceType2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ReferenceType2")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = ReferenceType2_0(b, l + 1);
-    r = r && consumeToken(b, IDENTIFIER);
+    r = r && Identifier(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -2520,6 +2697,153 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // MisplacedDocumentation* NamespaceDeclaration [MainSchemaDeclaration] (NamedSchemaDeclaration | ImportDeclaration)*
+  static boolean SchemaFile1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "SchemaFile1")) return false;
+    if (!nextTokenIs(b, "", DOC_COMMENT, NAMESPACE)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = SchemaFile1_0(b, l + 1);
+    r = r && NamespaceDeclaration(b, l + 1);
+    p = r; // pin = 2
+    r = r && report_error_(b, SchemaFile1_2(b, l + 1));
+    r = p && SchemaFile1_3(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  // MisplacedDocumentation*
+  private static boolean SchemaFile1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "SchemaFile1_0")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!MisplacedDocumentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "SchemaFile1_0", c)) break;
+    }
+    return true;
+  }
+
+  // [MainSchemaDeclaration]
+  private static boolean SchemaFile1_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "SchemaFile1_2")) return false;
+    MainSchemaDeclaration(b, l + 1);
+    return true;
+  }
+
+  // (NamedSchemaDeclaration | ImportDeclaration)*
+  private static boolean SchemaFile1_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "SchemaFile1_3")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!SchemaFile1_3_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "SchemaFile1_3", c)) break;
+    }
+    return true;
+  }
+
+  // NamedSchemaDeclaration | ImportDeclaration
+  private static boolean SchemaFile1_3_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "SchemaFile1_3_0")) return false;
+    boolean r;
+    r = NamedSchemaDeclaration(b, l + 1);
+    if (!r) r = ImportDeclaration(b, l + 1);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // MisplacedDocumentation* MainSchemaDeclaration (NamedSchemaDeclaration | ImportDeclaration)*
+  static boolean SchemaFile2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "SchemaFile2")) return false;
+    if (!nextTokenIs(b, "", DOC_COMMENT, SCHEMA)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = SchemaFile2_0(b, l + 1);
+    r = r && MainSchemaDeclaration(b, l + 1);
+    p = r; // pin = 2
+    r = r && SchemaFile2_2(b, l + 1);
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  // MisplacedDocumentation*
+  private static boolean SchemaFile2_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "SchemaFile2_0")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!MisplacedDocumentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "SchemaFile2_0", c)) break;
+    }
+    return true;
+  }
+
+  // (NamedSchemaDeclaration | ImportDeclaration)*
+  private static boolean SchemaFile2_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "SchemaFile2_2")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!SchemaFile2_2_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "SchemaFile2_2", c)) break;
+    }
+    return true;
+  }
+
+  // NamedSchemaDeclaration | ImportDeclaration
+  private static boolean SchemaFile2_2_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "SchemaFile2_2_0")) return false;
+    boolean r;
+    r = NamedSchemaDeclaration(b, l + 1);
+    if (!r) r = ImportDeclaration(b, l + 1);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // MisplacedDocumentation* (NamedSchemaDeclaration | ImportDeclaration)+
+  static boolean SchemaFile3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "SchemaFile3")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = SchemaFile3_0(b, l + 1);
+    r = r && SchemaFile3_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // MisplacedDocumentation*
+  private static boolean SchemaFile3_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "SchemaFile3_0")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!MisplacedDocumentation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "SchemaFile3_0", c)) break;
+    }
+    return true;
+  }
+
+  // (NamedSchemaDeclaration | ImportDeclaration)+
+  private static boolean SchemaFile3_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "SchemaFile3_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = SchemaFile3_1_0(b, l + 1);
+    while (r) {
+      int c = current_position_(b);
+      if (!SchemaFile3_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "SchemaFile3_1", c)) break;
+    }
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // NamedSchemaDeclaration | ImportDeclaration
+  private static boolean SchemaFile3_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "SchemaFile3_1_0")) return false;
+    boolean r;
+    r = NamedSchemaDeclaration(b, l + 1);
+    if (!r) r = ImportDeclaration(b, l + 1);
+    return r;
+  }
+
+  /* ********************************************************** */
   // NamespaceProperty | SimpleSchemaProperty
   public static boolean SchemaProperty(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "SchemaProperty")) return false;
@@ -2533,15 +2857,16 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // AT IDENTIFIER MisplacedDocumentation* LEFT_PAREN MisplacedDocumentation* JsonValue MisplacedDocumentation* RIGHT_PAREN
+  // AT Identifier MisplacedDocumentation* LEFT_PAREN MisplacedDocumentation* JsonValue MisplacedDocumentation* RIGHT_PAREN
   static boolean SimpleSchemaProperty(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "SimpleSchemaProperty")) return false;
     if (!nextTokenIs(b, AT)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
-    r = consumeTokens(b, 1, AT, IDENTIFIER);
+    r = consumeToken(b, AT);
     p = r; // pin = 1
-    r = r && report_error_(b, SimpleSchemaProperty_2(b, l + 1));
+    r = r && report_error_(b, Identifier(b, l + 1));
+    r = p && report_error_(b, SimpleSchemaProperty_2(b, l + 1)) && r;
     r = p && report_error_(b, consumeToken(b, LEFT_PAREN)) && r;
     r = p && report_error_(b, SimpleSchemaProperty_4(b, l + 1)) && r;
     r = p && report_error_(b, JsonValue(b, l + 1)) && r;
@@ -2670,7 +2995,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // Documentation+ [SchemaProperty (SchemaProperty|MisplacedDocumentation)*] IDENTIFIER MisplacedDocumentation* DefaultValueAssignment
+  // Documentation+ [SchemaProperty (SchemaProperty|MisplacedDocumentation)*] Identifier MisplacedDocumentation* DefaultValueAssignment
   static boolean VariableDeclarator1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "VariableDeclarator1")) return false;
     if (!nextTokenIs(b, DOC_COMMENT)) return false;
@@ -2679,7 +3004,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     r = VariableDeclarator1_0(b, l + 1);
     r = r && VariableDeclarator1_1(b, l + 1);
     p = r; // pin = 2
-    r = r && report_error_(b, consumeToken(b, IDENTIFIER));
+    r = r && report_error_(b, Identifier(b, l + 1));
     r = p && report_error_(b, VariableDeclarator1_3(b, l + 1)) && r;
     r = p && DefaultValueAssignment(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
@@ -2751,7 +3076,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // SchemaProperty (SchemaProperty|MisplacedDocumentation)* IDENTIFIER MisplacedDocumentation* DefaultValueAssignment
+  // SchemaProperty (SchemaProperty|MisplacedDocumentation)* Identifier MisplacedDocumentation* DefaultValueAssignment
   static boolean VariableDeclarator2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "VariableDeclarator2")) return false;
     if (!nextTokenIs(b, "", AT, AT_NAMESPACE)) return false;
@@ -2760,7 +3085,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     r = SchemaProperty(b, l + 1);
     p = r; // pin = 1
     r = r && report_error_(b, VariableDeclarator2_1(b, l + 1));
-    r = p && report_error_(b, consumeToken(b, IDENTIFIER)) && r;
+    r = p && report_error_(b, Identifier(b, l + 1)) && r;
     r = p && report_error_(b, VariableDeclarator2_3(b, l + 1)) && r;
     r = p && DefaultValueAssignment(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
@@ -2799,13 +3124,12 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IDENTIFIER MisplacedDocumentation* DefaultValueAssignment
+  // Identifier MisplacedDocumentation* DefaultValueAssignment
   static boolean VariableDeclarator3(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "VariableDeclarator3")) return false;
-    if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
-    r = consumeToken(b, IDENTIFIER);
+    r = Identifier(b, l + 1);
     p = r; // pin = 1
     r = r && report_error_(b, VariableDeclarator3_1(b, l + 1));
     r = p && DefaultValueAssignment(b, l + 1) && r;
@@ -2846,7 +3170,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // !(SEMICOLON|FIXED|ENUM|RECORD|ERROR|AT)
+  // !(SEMICOLON|IMPORT|FIXED|ENUM|RECORD|ERROR|AT|AT_NAMESPACE)
   static boolean recoverFixedInnerDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "recoverFixedInnerDeclaration")) return false;
     boolean r;
@@ -2856,16 +3180,18 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // SEMICOLON|FIXED|ENUM|RECORD|ERROR|AT
+  // SEMICOLON|IMPORT|FIXED|ENUM|RECORD|ERROR|AT|AT_NAMESPACE
   private static boolean recoverFixedInnerDeclaration_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "recoverFixedInnerDeclaration_0")) return false;
     boolean r;
     r = consumeTokenFast(b, SEMICOLON);
+    if (!r) r = consumeTokenFast(b, IMPORT);
     if (!r) r = consumeTokenFast(b, FIXED);
     if (!r) r = consumeTokenFast(b, ENUM);
     if (!r) r = consumeTokenFast(b, RECORD);
     if (!r) r = consumeTokenFast(b, ERROR);
     if (!r) r = consumeTokenFast(b, AT);
+    if (!r) r = consumeTokenFast(b, AT_NAMESPACE);
     return r;
   }
 
@@ -2911,7 +3237,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // !(SEMICOLON|FIXED|ENUM|RECORD|ERROR|AT)
+  // !(SEMICOLON|IMPORT|FIXED|ENUM|RECORD|ERROR|AT|AT_NAMESPACE)
   static boolean recoverImportInnerDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "recoverImportInnerDeclaration")) return false;
     boolean r;
@@ -2921,16 +3247,18 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // SEMICOLON|FIXED|ENUM|RECORD|ERROR|AT
+  // SEMICOLON|IMPORT|FIXED|ENUM|RECORD|ERROR|AT|AT_NAMESPACE
   private static boolean recoverImportInnerDeclaration_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "recoverImportInnerDeclaration_0")) return false;
     boolean r;
     r = consumeTokenFast(b, SEMICOLON);
+    if (!r) r = consumeTokenFast(b, IMPORT);
     if (!r) r = consumeTokenFast(b, FIXED);
     if (!r) r = consumeTokenFast(b, ENUM);
     if (!r) r = consumeTokenFast(b, RECORD);
     if (!r) r = consumeTokenFast(b, ERROR);
     if (!r) r = consumeTokenFast(b, AT);
+    if (!r) r = consumeTokenFast(b, AT_NAMESPACE);
     return r;
   }
 
@@ -2976,7 +3304,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // !(RIGHT_PAREN|COMMA|SEMICOLON|FIXED|ENUM|RECORD|ERROR|AT|RIGHT_BRACE|RIGHT_BRACKET)
+  // !(RIGHT_PAREN|COMMA|SEMICOLON|IMPORT|FIXED|ENUM|RECORD|ERROR|AT|AT_NAMESPACE|RIGHT_BRACE|RIGHT_BRACKET)
   static boolean recoverJsonValue(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "recoverJsonValue")) return false;
     boolean r;
@@ -2986,18 +3314,20 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // RIGHT_PAREN|COMMA|SEMICOLON|FIXED|ENUM|RECORD|ERROR|AT|RIGHT_BRACE|RIGHT_BRACKET
+  // RIGHT_PAREN|COMMA|SEMICOLON|IMPORT|FIXED|ENUM|RECORD|ERROR|AT|AT_NAMESPACE|RIGHT_BRACE|RIGHT_BRACKET
   private static boolean recoverJsonValue_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "recoverJsonValue_0")) return false;
     boolean r;
     r = consumeTokenFast(b, RIGHT_PAREN);
     if (!r) r = consumeTokenFast(b, COMMA);
     if (!r) r = consumeTokenFast(b, SEMICOLON);
+    if (!r) r = consumeTokenFast(b, IMPORT);
     if (!r) r = consumeTokenFast(b, FIXED);
     if (!r) r = consumeTokenFast(b, ENUM);
     if (!r) r = consumeTokenFast(b, RECORD);
     if (!r) r = consumeTokenFast(b, ERROR);
     if (!r) r = consumeTokenFast(b, AT);
+    if (!r) r = consumeTokenFast(b, AT_NAMESPACE);
     if (!r) r = consumeTokenFast(b, RIGHT_BRACE);
     if (!r) r = consumeTokenFast(b, RIGHT_BRACKET);
     return r;

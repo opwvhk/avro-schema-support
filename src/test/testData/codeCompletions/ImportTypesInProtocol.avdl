@@ -1,0 +1,4 @@
+@namespace("my.test")
+protocol Proto {
+	import <caret>
+}

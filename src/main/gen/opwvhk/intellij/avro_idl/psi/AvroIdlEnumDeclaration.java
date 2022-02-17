@@ -14,6 +14,6 @@ public interface AvroIdlEnumDeclaration extends AvroIdlNamedSchemaDeclaration {
   AvroIdlEnumDefault getEnumDefault();
 
   @Nullable
-  PsiElement getIdentifier();
+  AvroIdlIdentifier getIdentifier();
 
 }

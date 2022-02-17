@@ -26,7 +26,9 @@ public class AvroIdlCreateFileFromAction extends CreateFileFromTemplateAction im
 		 * To avoid this kind of bugs, all template files for this plugin have a plugin specific prefix.
 		 */
 		builder.setTitle("New Avro IDL File")
-			.addKind("Empty IDL", AvroIdlIcons.FILE, "AvroIDL_EmptyProtocol")
+			.addKind("Empty Schema IDL", AvroIdlIcons.FILE, "AvroIDL_EmptySchema")
+			.addKind("Empty Protocol IDL", AvroIdlIcons.FILE, "AvroIDL_EmptyProtocol")
+			.addKind("Example schema", AvroIdlIcons.FILE, "AvroIDL_ExampleSchema")
 			.addKind("Example protocol", AvroIdlIcons.FILE, "AvroIDL_ExampleProtocol")
 			.setValidator(new NonEmptyInputValidator());
 	}

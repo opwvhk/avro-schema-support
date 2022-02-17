@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement;
 public interface AvroIdlFixedDeclaration extends AvroIdlNamedSchemaDeclaration {
 
   @Nullable
-  PsiElement getIdentifier();
+  AvroIdlIdentifier getIdentifier();
 
   @Nullable
   PsiElement getIntLiteral();

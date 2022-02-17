@@ -1,0 +1,7 @@
+#* @vtlvariable name="NAME" type="java.lang.String" *#
+/*
+ * Comment for license information.
+ */
+namespace ${NAME};
+
+schema #[[$END$]]#;

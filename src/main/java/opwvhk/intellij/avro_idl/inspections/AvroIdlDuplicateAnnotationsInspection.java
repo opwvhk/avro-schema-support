@@ -3,6 +3,7 @@ package opwvhk.intellij.avro_idl.inspections;
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import opwvhk.intellij.avro_idl.psi.AvroIdlAnnotatedNameIdentifierOwner;
@@ -48,7 +49,8 @@ public class AvroIdlDuplicateAnnotationsInspection extends BaseAvroIdlInspection
 		}
 
 		@Override
-		protected void invoke(@NotNull Project project, @NotNull PsiFile file, @NotNull AvroIdlAnnotatedNameIdentifierOwner element) {
+		protected void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor,
+                              @NotNull AvroIdlAnnotatedNameIdentifierOwner element) {
 			final List<AvroIdlSchemaProperty> duplicates = new ArrayList<>();
 			for (AvroIdlSchemaProperty schemaProperty : element.getSchemaPropertyList()) {
 				if (annotationName.equals(getAnnotationName(schemaProperty))) {

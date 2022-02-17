@@ -62,27 +62,21 @@
 		<langCodeStyleSettingsProvider implementation="opwvhk.intellij.avro_idl.editor.AvroIdlLanguageCodeStyleSettingsProvider"/>
 		<!-- Inspections (can be turned off) -->
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Duplicate annotations" enabledByDefault="true" level="WARNING"
-		                 id="AvroIdlDuplicateAnnotationsInspection" order="first"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlDuplicateAnnotationsInspection"/>
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Misplaced annotations" enabledByDefault="true" level="WEAK WARNING"
-		                 id="AvroIdlMisplacedAnnotationsInspection" order="after AvroIdlDuplicateAnnotationsInspection"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlMisplacedAnnotationsInspection"/>
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Misplaced documentation" enabledByDefault="true" level="WARNING"
-		                 id="AvroIdlMisplacedDocumentationInspection" order="after AvroIdlMisplacedAnnotationsInspection"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlMisplacedDocumentationInspection"/>
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Union can be simplified" enabledByDefault="true" level="WEAK WARNING"
-		                 id="AvroIdlUseNullableShorthandInspection" order="after AvroIdlMisplacedDocumentationInspection"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlUseNullableShorthandInspection"/>
-		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Use of optional type" enabledByDefault="true" level="ERROR"
-		                 id="AvroIdlAvoidNullableShorthandInspection" order="after AvroIdlUseNullableShorthandInspection"
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Use of optional type" enabledByDefault="false" level="ERROR"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlAvoidNullableShorthandInspection"/>
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Schema syntax available" enabledByDefault="true" level="WEAK WARNING"
+		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlUseSchemaSyntaxInspection"/>
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Use of schema syntax" enabledByDefault="false" level="ERROR"
+		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlAvoidSchemaSyntaxInspection"/>
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Naming conventions" enabledByDefault="false" level="TYPO"
-		                 id="AvroIdlNamingConventionInspection" order="after AvroIdlAvoidNullableShorthandInspection"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlNamingConventionInspection"/>
-		<!--
-		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="New inspection" enabledByDefault="false" level="ERROR|WARNING|WEAK WARNING|SERVER PROBLEM|INFORMATION"
-						 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlNewInspection"/>
-		-->
 
 		<!-- Avro Schema & Protocol files (JSON derivative) -->
 		<fileType name="Avro Schema" fieldName="INSTANCE" language="Avro Schema" extensions="avsc"
@@ -95,22 +89,14 @@
 	<extensions defaultExtensionNs="opwvhk.avro.idl">
 		<naming.convention id="AvroIdlNamespaceNamingConvention" order="first"
 		                   implementation="opwvhk.intellij.avro_idl.naming.AvroIdlNamespaceNamingConvention"/>
-		<naming.convention id="AvroIdlRecordNamingConvention" order="after AvroIdlNamespaceNamingConvention"
-		                   implementation="opwvhk.intellij.avro_idl.naming.AvroIdlRecordNamingConvention"/>
-		<naming.convention id="AvroIdlErrorNamingConvention" order="after AvroIdlRecordNamingConvention"
-		                   implementation="opwvhk.intellij.avro_idl.naming.AvroIdlErrorNamingConvention"/>
-		<naming.convention id="AvroIdlFieldNamingConvention" order="after AvroIdlErrorNamingConvention"
-		                   implementation="opwvhk.intellij.avro_idl.naming.AvroIdlFieldNamingConvention"/>
-		<naming.convention id="AvroIdlEnumNamingConvention" order="after AvroIdlFieldNamingConvention"
-		                   implementation="opwvhk.intellij.avro_idl.naming.AvroIdlEnumNamingConvention"/>
-		<naming.convention id="AvroIdlEnumConstantNamingConvention" order="after AvroIdlEnumNamingConvention"
-		                   implementation="opwvhk.intellij.avro_idl.naming.AvroIdlEnumConstantNamingConvention"/>
-		<naming.convention id="AvroIdlFixedNamingConvention" order="after AvroIdlEnumConstantNamingConvention"
-		                   implementation="opwvhk.intellij.avro_idl.naming.AvroIdlFixedNamingConvention"/>
-		<naming.convention id="AvroIdlProtocolNamingConvention" order="after AvroIdlFixedNamingConvention"
-		                   implementation="opwvhk.intellij.avro_idl.naming.AvroIdlProtocolNamingConvention"/>
-		<naming.convention id="AvroIdlMessageNamingConvention" order="after AvroIdlProtocolNamingConvention"
-		                   implementation="opwvhk.intellij.avro_idl.naming.AvroIdlMessageNamingConvention"/>
+		<naming.convention id="AvroIdlRecordNamingConvention" implementation="opwvhk.intellij.avro_idl.naming.AvroIdlRecordNamingConvention"/>
+		<naming.convention id="AvroIdlErrorNamingConvention" implementation="opwvhk.intellij.avro_idl.naming.AvroIdlErrorNamingConvention"/>
+		<naming.convention id="AvroIdlFieldNamingConvention" implementation="opwvhk.intellij.avro_idl.naming.AvroIdlFieldNamingConvention"/>
+		<naming.convention id="AvroIdlEnumNamingConvention" implementation="opwvhk.intellij.avro_idl.naming.AvroIdlEnumNamingConvention"/>
+		<naming.convention id="AvroIdlEnumConstantNamingConvention" implementation="opwvhk.intellij.avro_idl.naming.AvroIdlEnumConstantNamingConvention"/>
+		<naming.convention id="AvroIdlFixedNamingConvention" implementation="opwvhk.intellij.avro_idl.naming.AvroIdlFixedNamingConvention"/>
+		<naming.convention id="AvroIdlProtocolNamingConvention" implementation="opwvhk.intellij.avro_idl.naming.AvroIdlProtocolNamingConvention"/>
+		<naming.convention id="AvroIdlMessageNamingConvention" implementation="opwvhk.intellij.avro_idl.naming.AvroIdlMessageNamingConvention"/>
 	</extensions>
 	<extensions defaultExtensionNs="JavaScript">
 		<JsonSchema.ProviderFactory implementation="opwvhk.intellij.avro_idl.json_schema.AvroJsonSchemaProviderFactory"/>

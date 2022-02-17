@@ -1,0 +1,13 @@
+namespace data;
+// Optional: main schema (using it creates a .avsc equivalent file)
+schema Message;
+
+/**
+ * A message record.
+ */
+record Message {
+	/** The message */
+	string text;
+	/** The reason for the message */
+	string? reason = null;
+}

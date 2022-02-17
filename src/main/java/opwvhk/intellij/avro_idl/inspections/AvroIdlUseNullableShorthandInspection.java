@@ -2,6 +2,7 @@ package opwvhk.intellij.avro_idl.inspections;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import opwvhk.intellij.avro_idl.psi.AvroIdlElementFactory;
@@ -53,7 +54,8 @@ public class AvroIdlUseNullableShorthandInspection extends BaseAvroIdlInspection
 		}
 
 		@Override
-		protected void invoke(@NotNull Project project, @NotNull PsiFile file, @NotNull AvroIdlUnionType element) {
+		protected void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor,
+		                      @NotNull AvroIdlUnionType element) {
 			AvroIdlType nonNullType = getNonNullType(element);
 			if (nonNullType instanceof AvroIdlNullableType) {
 				final AvroIdlNullableType optionalType = new AvroIdlElementFactory(project).makeOptional((AvroIdlNullableType)nonNullType);

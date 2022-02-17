@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.intellij.psi.TokenType.WHITE_SPACE;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
@@ -47,7 +48,7 @@ public class AvroIdlPsiUtil {
 	}
 
 	public static @NotNull AvroIdlType getType(@NotNull AvroIdlFieldDeclaration fieldDeclaration) {
-		// The AvroIdlFieldDeclaration production is pinned on the type, so this is guaranteed to exist.
+		// The AvroIdlFieldDeclaration production pins on the type, so this is guaranteed to exist.
 		final Optional<AvroIdlType> avroIdlType = filterFirst(fieldDeclaration.getWithSchemaPropertiesList(), AvroIdlType.class);
 		assert avroIdlType.isPresent();
 		return avroIdlType.get();
@@ -58,7 +59,7 @@ public class AvroIdlPsiUtil {
 	}
 
 	public static @NotNull AvroIdlType getType(@NotNull AvroIdlFormalParameter formalParameter) {
-		// The AvroIdlFormalParameter production is pinned on the type, so this is guaranteed to exist.
+		// The AvroIdlFormalParameter production pins on the type, so this is guaranteed to exist.
 		final Optional<AvroIdlType> avroIdlType = filterFirst(formalParameter.getWithSchemaPropertiesList(), AvroIdlType.class);
 		assert avroIdlType.isPresent();
 		return avroIdlType.get();
@@ -133,6 +134,13 @@ public class AvroIdlPsiUtil {
 	public static @NotNull String getNamespace(@Nullable PsiElement owner) {
 		if (owner == null) {
 			return "";
+		} else if (owner instanceof AvroIdlFile) {
+			return Stream.of(owner.getChildren())
+				.filter(AvroIdlNamespaceDeclaration.class::isInstance)
+				.map(AvroIdlNamespaceDeclaration.class::cast)
+				.findFirst()
+				.map(AvroIdlNamespaceDeclaration::getName)
+				.orElse("");
 		}
 
 		List<AvroIdlSchemaProperty> schemaProperties = null;

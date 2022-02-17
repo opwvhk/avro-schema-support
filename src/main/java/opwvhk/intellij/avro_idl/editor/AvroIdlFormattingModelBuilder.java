@@ -22,15 +22,16 @@ import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 public class AvroIdlFormattingModelBuilder implements FormattingModelBuilder {
 	private SpacingBuilder createSpaceBuilder(CodeStyleSettings settings) {
 		final CommonCodeStyleSettings avroIdlSettings = settings.getCommonSettings(AvroIdlLanguage.INSTANCE.getID());
-		final TokenSet commaAndSemicolon = TokenSet.create(COMMA, SEMICOLON);
 
-		// Spacing rules are applied in order: first match wins
+		// IntelliJ applies spacing rules in order: the first match wins
 
 		final TokenSet allTypes = TokenSet.create(PRIMITIVE_TYPE, ARRAY_TYPE, MAP_TYPE, UNION_TYPE, REFERENCE_TYPE);
 		SpacingBuilder spacingBuilder = new SpacingBuilder(settings, AvroIdlLanguage.INSTANCE)
 			// Universal
-			.beforeInside(SEMICOLON, TokenSet.create(IMPORT_DECLARATION, FIXED_DECLARATION)).spacing(0, 0, 0, false, 0) // Force 1-line import/fixed statement
-			.before(commaAndSemicolon).spaces(0)
+			.beforeInside(SEMICOLON, TokenSet.create(
+				NAMESPACE_DECLARATION, MAIN_SCHEMA_DECLARATION, IMPORT_DECLARATION, FIXED_DECLARATION
+			)).spacing(0, 0, 0, false, 0) // Force 1-line import/fixed statement
+			.before(TokenSet.create(COMMA, SEMICOLON)).spaces(0)
 			.after(SEMICOLON).spaces(1)
 			.around(EQUALS).spaceIf(avroIdlSettings.SPACE_AROUND_ASSIGNMENT_OPERATORS)
 			.after(AT).spacing(0, 0, 0, false, 0) // Force no space: let @ be part of the annotation name
@@ -44,6 +45,13 @@ public class AvroIdlFormattingModelBuilder implements FormattingModelBuilder {
 			.aroundInside(SCHEMA_PROPERTY, TokenSet.create(
 				PROTOCOL_DECLARATION, RECORD_DECLARATION, ENUM_DECLARATION, FIXED_DECLARATION, MESSAGE_DECLARATION)).lineBreakInCode()
 			.around(SCHEMA_PROPERTY).spaces(1)
+
+			// Namespace declaration
+			.beforeInside(IDENTIFIER, NAMESPACE_DECLARATION).spaces(1)
+			.afterInside(NAMESPACE, NAMESPACE_DECLARATION).spaces(1)
+
+			// Main schema declaration
+			.afterInside(SCHEMA, MAIN_SCHEMA_DECLARATION).spaces(1)
 
 			// Protocol definition
 			.beforeInside(LEFT_BRACE, PROTOCOL_DECLARATION).spaces(1)
