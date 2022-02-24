@@ -1,6 +1,6 @@
 <html>
 <body>
-Identifies unions that can be simplified using the new syntax in Avro 1.11.1.
+Offers to use the nullable type syntax (new in Avro 1.11.1), replacing unions of <code>null</code> with one other type.
 <!-- tooltip end -->
 <p><strong>Example:</strong></p>
 <pre><code>record MyData {
@@ -12,7 +12,7 @@ Identifies unions that can be simplified using the new syntax in Avro 1.11.1.
 	The quick fix replaces these unions with the new shorthand syntax.
 </p>
 <p>
-	Result after applying both:
+	Result after applying to both fields:
 </p>
 <pre><code>record MyData {
     string? name = "Anonymous";
