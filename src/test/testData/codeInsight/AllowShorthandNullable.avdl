@@ -1,6 +1,8 @@
 @namespace("my.test")
 protocol Simple {
 	record TestRecord {
-		union{null, string} foo;
+		union{null, string} foo1;
+		union{null, string} foo2 = null;
+		union{string, null} foo3 = "bar";
 	}
 }

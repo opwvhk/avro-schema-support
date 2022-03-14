@@ -1,6 +1,8 @@
 @namespace("my.test")
 protocol Simple {
 	record TestRecord {
-		string? foo;
+		string? foo1;
+		string? foo2 = null;
+		string? foo3 = "bar";
 	}
 }

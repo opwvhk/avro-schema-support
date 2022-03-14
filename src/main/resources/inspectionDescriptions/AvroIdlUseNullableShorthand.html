@@ -4,8 +4,8 @@ Offers to use the nullable type syntax (new in Avro 1.11.1), replacing unions of
 <!-- tooltip end -->
 <p><strong>Example:</strong></p>
 <pre><code>record MyData {
-    union { string, null } name = "Anonymous";
-    union { null, string } description = null;
+    union {string, null} name = "Anonymous";
+    union {null, string} description = null;
 }
 </code></pre>
 <p>

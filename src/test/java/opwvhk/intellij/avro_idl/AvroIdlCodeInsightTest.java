@@ -31,11 +31,10 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 
 		assertOrderedEquals(highlight,
 			Highlight.warning("\"12 monkeys\"", "The namespace is not composed of valid identifiers"),
-			Highlight.error("Many.Mistakes", "Not a valid identifier: Many.Mistakes"),
+			Highlight.error("Many-Mistakes", "Not a valid identifier: Many-Mistakes"),
 			Highlight.error("Status", "Schema '12 monkeys.Status' is already defined"),
 			Highlight.error("Status", "Schema '12 monkeys.Status' is already defined"),
 			Highlight.error("12", "@namespace annotations must contain a string"),
-			Highlight.error("foo.bar", "Not a valid identifier: foo.bar"),
 			Highlight.error("\"even-more-wrong\"", "Not a valid identifier (with namespace): even-more-wrong"),
 			Highlight.error("also-wrong", "Not a valid identifier: also-wrong"),
 			Highlight.error("C", "Enum default must be one of the enum constants"),
@@ -123,7 +122,9 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		final List<HighlightInfo> highlightInfoList = myFixture.doHighlighting();
 		final List<Highlight> highlight = Highlight.fromHighlightInfoList(highlightInfoList);
 		assertContainsOrdered(highlight,
-			Highlight.weakWarning("union{null, string}", "Union can be simplified")
+			Highlight.weakWarning("union{null, string}", "Union can be simplified"),
+			Highlight.weakWarning("union{null, string}", "Union can be simplified"),
+			Highlight.weakWarning("union{string, null}", "Union can be simplified")
 		);
 	}
 
@@ -131,11 +132,37 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 	public void testUseNullableShorthandInspectionQuickFix() {
 		myFixture.enableInspections(AvroIdlUseNullableShorthandInspection.class);
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("AllowShorthandNullable.avdl");
-		assertEquals(1, quickFixes.size());
-		IntentionAction quickFix = quickFixes.get(0);
-		assertEquals("Replace union with shorthand notation", quickFix.getText());
-		myFixture.launchAction(quickFix);
+		assertEquals(3, quickFixes.size());
+		for (IntentionAction quickFix : quickFixes) {
+			assertEquals("Replace union with shorthand notation", quickFix.getText());
+			myFixture.launchAction(quickFix);
+		}
 		myFixture.checkResultByFile("AllowShorthandNullableFixed.avdl");
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testAvoidNullableShorthandInspection() {
+		myFixture.enableInspections(AvroIdlAvoidNullableShorthandInspection.class);
+		myFixture.configureByFiles("AllowShorthandNullableFixed.avdl");
+		final List<HighlightInfo> highlightInfoList = myFixture.doHighlighting();
+		final List<Highlight> highlight = Highlight.fromHighlightInfoList(highlightInfoList);
+		assertContainsOrdered(highlight,
+			Highlight.error("string?", "Use union instead of optional type"),
+			Highlight.error("string?", "Use union instead of optional type"),
+			Highlight.error("string?", "Use union instead of optional type")
+		);
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testAvoidNullableShorthandInspectionQuickFix() {
+		myFixture.enableInspections(AvroIdlAvoidNullableShorthandInspection.class);
+		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("AllowShorthandNullableFixed.avdl");
+		assertEquals(3, quickFixes.size());
+		for (IntentionAction quickFix : quickFixes) {
+			assertEquals("Replace with union of type with null", quickFix.getText());
+			myFixture.launchAction(quickFix);
+		}
+		myFixture.checkResultByFile("AllowShorthandNullable.avdl");
 	}
 
 	@SuppressWarnings("unchecked")

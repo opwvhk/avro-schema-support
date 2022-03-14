@@ -73,8 +73,11 @@
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Union can be simplified" enabledByDefault="true" level="WEAK WARNING"
 		                 id="AvroIdlUseNullableShorthandInspection" order="after AvroIdlMisplacedDocumentationInspection"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlUseNullableShorthandInspection"/>
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Use of optional type" enabledByDefault="true" level="ERROR"
+		                 id="AvroIdlAvoidNullableShorthandInspection" order="after AvroIdlUseNullableShorthandInspection"
+		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlAvoidNullableShorthandInspection"/>
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Naming conventions" enabledByDefault="false" level="TYPO"
-		                 id="AvroIdlNamingConventionInspection" order="after AvroIdlUseNullableShorthandInspection"
+		                 id="AvroIdlNamingConventionInspection" order="after AvroIdlAvoidNullableShorthandInspection"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlNamingConventionInspection"/>
 		<!--
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="New inspection" enabledByDefault="false" level="ERROR|WARNING|WEAK WARNING|SERVER PROBLEM|INFORMATION"

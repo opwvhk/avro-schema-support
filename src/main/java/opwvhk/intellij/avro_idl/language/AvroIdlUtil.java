@@ -68,7 +68,7 @@ public class AvroIdlUtil {
 			.flatMap(child -> ifType(child, AvroIdlProtocolDeclaration.class));
 	}
 
-	private static <T> Stream<T> ifType(@Nullable Object object, @NotNull Class<T> type) {
+	public static <T> Stream<T> ifType(@Nullable Object object, @NotNull Class<T> type) {
 		return type.isInstance(object) ? Stream.of(type.cast(object)) : Stream.empty();
 	}
 

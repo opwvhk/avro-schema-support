@@ -58,6 +58,17 @@ public class AvroIdlElementFactory {
 		return (AvroIdlNullableType)fieldDeclaration.getType();
 	}
 
+	public @NotNull AvroIdlUnionType unionWithNull(@NotNull AvroIdlType type, boolean nullLast) {
+		final AvroIdlFile file = createDummyFile("protocol Foo { record Bar { union { null, null } field; } }");
+		final AvroIdlProtocolBody protocolBody = extractAvroIdlProtocolBody(file);
+		final AvroIdlRecordDeclaration recordDeclaration = (AvroIdlRecordDeclaration)protocolBody.getNamedSchemaDeclarationList().get(0);
+		final AvroIdlFieldDeclaration fieldDeclaration = requireNonNull(recordDeclaration.getRecordBody()).getFieldDeclarationList().get(0);
+		final AvroIdlUnionType unionType = (AvroIdlUnionType)fieldDeclaration.getType();
+
+		unionType.getTypeList().get(nullLast ? 0 : 1).replace(type);
+		return unionType;
+	}
+
 	/**
 	 * Create lightweight in-memory {@link AvroIdlFile} filled with {@code content}.
 	 *
