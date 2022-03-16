@@ -36,9 +36,11 @@ public class AvroIdlFormattingModelBuilder implements FormattingModelBuilder {
 			.around(EQUALS).spaceIf(avroIdlSettings.SPACE_AROUND_ASSIGNMENT_OPERATORS)
 			.after(AT).spacing(0, 0, 0, false, 0) // Force no space: let @ be part of the annotation name
 
-			// Documentation, annotations
+			// Documentation
 			.after(LINE_COMMENT).lineBreakInCode()
-			.around(TokenSet.create(BLOCK_COMMENT, DOC_COMMENT, DOCUMENTATION, MISPLACED_DOCUMENTATION)).lineBreakInCode()
+			.after(TokenSet.create(BLOCK_COMMENT, DOC_COMMENT)).lineBreakInCode()
+
+			// Annotations
 			.aroundInside(NAMESPACE_PROPERTY, TokenSet.create(
 				PROTOCOL_DECLARATION, RECORD_DECLARATION, ENUM_DECLARATION, FIXED_DECLARATION, MESSAGE_DECLARATION)).lineBreakInCode()
 			.around(NAMESPACE_PROPERTY).spaces(1)
@@ -63,12 +65,15 @@ public class AvroIdlFormattingModelBuilder implements FormattingModelBuilder {
 		// Define blank lines in descending order (so the largest wins)
 		SortedSet<Integer> blankLinesDescending = new TreeSet<>(Comparator.reverseOrder());
 		blankLinesDescending.addAll(
-			asList(avroIdlSettings.BLANK_LINES_AROUND_CLASS, avroIdlSettings.BLANK_LINES_AROUND_METHOD, avroIdlSettings.BLANK_LINES_BEFORE_IMPORTS,
-				avroIdlSettings.BLANK_LINES_AFTER_IMPORTS));
+			asList(avroIdlSettings.BLANK_LINES_AFTER_PACKAGE, avroIdlSettings.BLANK_LINES_AROUND_CLASS, avroIdlSettings.BLANK_LINES_AROUND_METHOD,
+				avroIdlSettings.BLANK_LINES_BEFORE_IMPORTS, avroIdlSettings.BLANK_LINES_AFTER_IMPORTS));
 		for (int blankLines : blankLinesDescending) {
+			if (blankLines == avroIdlSettings.BLANK_LINES_AFTER_PACKAGE) {
+				spacingBuilder.after(NAMESPACE_DECLARATION).blankLines(avroIdlSettings.BLANK_LINES_AFTER_PACKAGE);
+			}
 			if (blankLines == avroIdlSettings.BLANK_LINES_AROUND_CLASS) {
-				spacingBuilder.around(TokenSet.create(RECORD_DECLARATION, ENUM_DECLARATION, FIXED_DECLARATION)).blankLines(
-					avroIdlSettings.BLANK_LINES_AROUND_CLASS);
+				spacingBuilder.around(TokenSet.create(MAIN_SCHEMA_DECLARATION, RECORD_DECLARATION, ENUM_DECLARATION, FIXED_DECLARATION))
+					.blankLines(avroIdlSettings.BLANK_LINES_AROUND_CLASS);
 			}
 			if (blankLines == avroIdlSettings.BLANK_LINES_AROUND_METHOD) {
 				spacingBuilder.around(MESSAGE_DECLARATION).blankLines(avroIdlSettings.BLANK_LINES_AROUND_METHOD);
@@ -82,6 +87,8 @@ public class AvroIdlFormattingModelBuilder implements FormattingModelBuilder {
 		}
 
 		spacingBuilder
+			// Documentation
+			.before(TokenSet.create(BLOCK_COMMENT, DOC_COMMENT)).lineBreakInCode()
 			// Record/error or enum declaration
 			.beforeInside(IDENTIFIER, TokenSet.create(RECORD_DECLARATION, ENUM_DECLARATION, FIELD_DECLARATION)).spaces(1)
 			.withinPairInside(LEFT_BRACE, RIGHT_BRACE, ENUM_DECLARATION).blankLines(0)

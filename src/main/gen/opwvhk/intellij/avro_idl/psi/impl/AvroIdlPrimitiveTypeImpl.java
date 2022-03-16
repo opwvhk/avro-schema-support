@@ -33,10 +33,4 @@ public class AvroIdlPrimitiveTypeImpl extends AvroIdlNullableTypeImpl implements
     return findChildByClass(AvroIdlDecimalType.class);
   }
 
-  @Override
-  @NotNull
-  public List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlMisplacedDocumentation.class);
-  }
-
 }

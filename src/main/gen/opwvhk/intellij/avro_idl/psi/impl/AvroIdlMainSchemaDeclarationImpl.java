@@ -28,12 +28,6 @@ public class AvroIdlMainSchemaDeclarationImpl extends ASTWrapperPsiElement imple
   }
 
   @Override
-  @NotNull
-  public List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlMisplacedDocumentation.class);
-  }
-
-  @Override
   @Nullable
   public AvroIdlType getType() {
     return findChildByClass(AvroIdlType.class);

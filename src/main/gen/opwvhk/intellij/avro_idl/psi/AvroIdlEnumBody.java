@@ -10,7 +10,4 @@ public interface AvroIdlEnumBody extends PsiElement {
   @NotNull
   List<AvroIdlEnumConstant> getEnumConstantList();
 
-  @NotNull
-  List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList();
-
 }

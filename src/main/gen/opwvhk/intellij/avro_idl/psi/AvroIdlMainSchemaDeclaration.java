@@ -7,9 +7,6 @@ import com.intellij.psi.PsiElement;
 
 public interface AvroIdlMainSchemaDeclaration extends PsiElement {
 
-  @NotNull
-  List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList();
-
   @Nullable
   AvroIdlType getType();
 

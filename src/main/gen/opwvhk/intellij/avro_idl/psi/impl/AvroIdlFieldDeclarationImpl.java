@@ -29,12 +29,6 @@ public class AvroIdlFieldDeclarationImpl extends ASTWrapperPsiElement implements
 
   @Override
   @NotNull
-  public List<AvroIdlDocumentation> getDocumentationList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlDocumentation.class);
-  }
-
-  @Override
-  @NotNull
   public List<AvroIdlWithSchemaProperties> getWithSchemaPropertiesList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlWithSchemaProperties.class);
   }

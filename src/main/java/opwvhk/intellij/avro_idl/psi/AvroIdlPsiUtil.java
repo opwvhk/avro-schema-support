@@ -5,13 +5,16 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.ElementManipulators;
+import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.impl.CheckUtil;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiFileReference;
 import com.intellij.psi.impl.source.tree.TreeUtil;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import opwvhk.intellij.avro_idl.AvroIdlFileType;
 import opwvhk.intellij.avro_idl.AvroIdlIcons;
@@ -257,14 +260,6 @@ public class AvroIdlPsiUtil {
 		};
 	}
 
-	public static @Nullable PsiElement getOwner(@NotNull AvroIdlDocumentation documentation) {
-		return documentation.getParent();
-	}
-
-	public static @NotNull IElementType getTokenType(@NotNull AvroIdlDocumentation documentation) {
-		return documentation.getFirstChild().getNode().getElementType();
-	}
-
 	public static void delete(@NotNull AvroIdlNamedSchemaDeclaration owner) throws IncorrectOperationException {
 		CheckUtil.checkWritable(owner);
 
@@ -279,5 +274,33 @@ public class AvroIdlPsiUtil {
 			next.getElementType() == WHITE_SPACE) {
 			parentNode.removeChild(next);
 		}
+	}
+
+	/**
+	 * Return the next code leaf, or the next docucmentation comment leaf, whichever comes first.
+	 */
+	public static @Nullable PsiElement nextNonCommentLeaf(@Nullable PsiElement element) {
+		return PsiTreeUtil.skipMatching(element, PsiTreeUtil::nextLeaf, AvroIdlPsiUtil::isWhitespaceOrNonDocComment);
+	}
+
+	/**
+	 * Return the previous code leaf, or the previous docucmentation comment leaf, whichever comes first.
+	 */
+	public static @Nullable PsiElement prevNonCommentLeaf(@Nullable PsiElement element) {
+		return PsiTreeUtil.skipMatching(element, PsiTreeUtil::prevLeaf, AvroIdlPsiUtil::isWhitespaceOrNonDocComment);
+	}
+
+	public static boolean isWhitespaceOrNonDocComment(PsiElement element) {
+		if (element == null) {
+			return false;
+		} else if (element instanceof PsiComment) {
+			return ((PsiComment)element).getTokenType() != DOC_COMMENT;
+		} else {
+			return element instanceof PsiWhiteSpace;
+		}
+	}
+
+	public static boolean isDocComment(PsiElement element) {
+		return element instanceof PsiComment && ((PsiComment)element).getTokenType() == DOC_COMMENT;
 	}
 }

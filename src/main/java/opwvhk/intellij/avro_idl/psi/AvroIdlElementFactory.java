@@ -44,9 +44,8 @@ public class AvroIdlElementFactory {
 		return requireNonNull(protocol.getProtocolBody());
 	}
 
-	public @NotNull PsiComment createMultilineComment(@NotNull AvroIdlDocumentation documentation) {
-		final String commentText = documentation.getDocComment().getText();
-		final String commentContent = commentText.substring(3, commentText.length() - 2);
+	public @NotNull PsiComment createMultilineComment(@NotNull String docCommentTokenText) {
+		final String commentContent = docCommentTokenText.substring(3, docCommentTokenText.length() - 2);
 		final AvroIdlFile file = createDummyFile(String.format("/*%s*/ protocol Foo { }", commentContent));
 		return (PsiComment)file.getFirstChild();
 	}

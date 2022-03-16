@@ -11,9 +11,6 @@ public interface AvroIdlNamespaceDeclaration extends AvroIdlNamespaceIdentifierO
   @Nullable
   AvroIdlIdentifier getIdentifier();
 
-  @NotNull
-  List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList();
-
   @Nullable PsiElement getNameIdentifier();
 
   int getTextOffset();

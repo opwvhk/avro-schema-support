@@ -3,23 +3,23 @@
  * A simple test case.
  */
 @namespace("monkeys")
-		/* Misplaced documentation 1 */
+/* Misplaced documentation 1 */
 protocol Mistakes {
 	/* Dangling documentation 2 */
 	/** Documentation */
 	@correct(1)
-			/* Misplaced documentation 2 */
+	/* Misplaced documentation 2 */
 	enum Status { ON, OFF }
 	@correct(1)
 	/* Misplaced documentation 3 */
-			/* Misplaced documentation 4 */
+	/* Misplaced documentation 4 */
 	fixed BinaryData(1);
 
 	/* Dangling documentation 3 */
 	/** Documentation */
 	@namespace("apes")
-			/* Misplaced documentation 5 */
-			/* Misplaced documentation 6 */
+	/* Misplaced documentation 5 */
+	/* Misplaced documentation 6 */
 	fixed
 			/* Misplaced documentation 7 */
 		foo
@@ -34,26 +34,26 @@ protocol Mistakes {
 	/* Dangling documentation 4 */
 	/** Documentation */
 	@my-prop("foo")
-			/* Misplaced documentation 12 */
+	/* Misplaced documentation 12 */
 	enum LETTERS { A, B, C } = C;
 	record MyData {
 		/** Default documentation */
 		@my-prop("bar")
 		/* Misplaced documentation 13 */
-		long /** Documentation */ @order("ignore")
-				/* Misplaced documentation 14 */
+		long /** Documentation */ @order("ignore") /* Misplaced documentation 14 */
 				notLogic1a, notLogic1b;
-		string /* Dangling documentation 5 */
-				/** Documentation */ @aliases(["notLogic2"])
-						/* Misplaced documentation 15 */
-						/* Misplaced documentation 16 */
-						notLogic3;
+		string
+				/* Dangling documentation 5 */
+				/** Documentation */ @aliases(["notLogic2"]) /* Misplaced documentation 15 */
+				/* Misplaced documentation 16 */
+				notLogic3;
 	}
+
 	/* Dangling documentation 6 */
 	/** Documentation */
 	@cause("User Error")
-			/* Misplaced documentation 17 */
-			/* Misplaced documentation 18 */
+	/* Misplaced documentation 17 */
+	/* Misplaced documentation 18 */
 	error Error {}
 
 	/* Dangling documentation 7 */
@@ -62,7 +62,7 @@ protocol Mistakes {
 		doStuff(
 			/** Default documentation */
 			int
-				/* Dangling documentation 8 */
+					/* Dangling documentation 8 */
 				/** Documentation */
 				one) throws Error;
 }

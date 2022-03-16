@@ -1,28 +1,29 @@
 package opwvhk.intellij.avro_idl.syntax;
 
-import opwvhk.intellij.avro_idl.AvroIdlLanguage;
-import opwvhk.intellij.avro_idl.psi.AvroIdlFile;
-import opwvhk.intellij.avro_idl.psi.AvroIdlTypes;
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.LanguageUtil;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.TokenType;
+import com.intellij.psi.*;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
+import opwvhk.intellij.avro_idl.AvroIdlLanguage;
+import opwvhk.intellij.avro_idl.psi.AvroIdlFile;
+import opwvhk.intellij.avro_idl.psi.AvroIdlTypes;
 import org.jetbrains.annotations.NotNull;
+
+import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
 public class AvroIdlParserDefinition implements ParserDefinition {
 
     public static final IFileElementType FILE = new IFileElementType(AvroIdlLanguage.INSTANCE);
 
-    public static final TokenSet COMMENTS = TokenSet.create(AvroIdlTypes.LINE_COMMENT, AvroIdlTypes.BLOCK_COMMENT);
+	public static final TokenSet COMMENTS = TokenSet.create(LINE_COMMENT, BLOCK_COMMENT, BLOCK_COMMENT_START, INCOMPLETE_BLOCK_COMMENT, DOC_COMMENT,
+		INCOMPLETE_DOC_COMMENT);
     public static final TokenSet WHITE_SPACE = TokenSet.create(TokenType.WHITE_SPACE);
-    public static final TokenSet STRING_LITERALS = TokenSet.create(AvroIdlTypes.STRING_LITERAL);
+    public static final TokenSet STRING_LITERALS = TokenSet.create(STRING_LITERAL);
 
     @Override
     public @NotNull Lexer createLexer(Project project) {
@@ -66,6 +67,12 @@ public class AvroIdlParserDefinition implements ParserDefinition {
 
     @Override
     public SpaceRequirements spaceExistenceTypeBetweenTokens(ASTNode left, ASTNode right) {
-        return SpaceRequirements.MAY;
+	    if (left.getElementType() == AvroIdlTypes.LINE_COMMENT) {
+		    return SpaceRequirements.MUST_LINE_BREAK;
+	    }
+
+		// Return SpaceRequirements.MUST or SpaceRequirements.MAY, depending on whether omitting the space would change tokens.
+	    Lexer lexer = createLexer(null);
+	    return LanguageUtil.canStickTokensTogetherByLexer(left, right, lexer);
     }
 }

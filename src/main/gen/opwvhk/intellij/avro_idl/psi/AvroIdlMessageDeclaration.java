@@ -18,9 +18,6 @@ public interface AvroIdlMessageDeclaration extends AvroIdlWithSchemaProperties, 
   AvroIdlMessageAttributes getMessageAttributes();
 
   @NotNull
-  List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList();
-
-  @NotNull
   AvroIdlType getType();
 
   @Nullable PsiElement getNameIdentifier();

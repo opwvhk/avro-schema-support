@@ -10,7 +10,4 @@ public interface AvroIdlRecordBody extends PsiElement {
   @NotNull
   List<AvroIdlFieldDeclaration> getFieldDeclarationList();
 
-  @NotNull
-  List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList();
-
 }

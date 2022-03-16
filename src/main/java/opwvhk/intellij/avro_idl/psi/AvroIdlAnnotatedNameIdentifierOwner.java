@@ -8,9 +8,5 @@ import java.util.List;
 
 public interface AvroIdlAnnotatedNameIdentifierOwner extends AvroIdlNameIdentifierOwner {
     @NotNull
-    List<AvroIdlDocumentation> getDocumentationList();
-
-    @NotNull
     List<AvroIdlSchemaProperty> getSchemaPropertyList();
-
 }

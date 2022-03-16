@@ -35,12 +35,6 @@ public class AvroIdlProtocolBodyImpl extends ASTWrapperPsiElement implements Avr
 
   @Override
   @NotNull
-  public List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlMisplacedDocumentation.class);
-  }
-
-  @Override
-  @NotNull
   public List<AvroIdlWithSchemaProperties> getWithSchemaPropertiesList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlWithSchemaProperties.class);
   }

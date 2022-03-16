@@ -41,12 +41,6 @@ public class AvroIdlSchemaPropertyImpl extends ASTWrapperPsiElement implements A
   }
 
   @Override
-  @NotNull
-  public List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlMisplacedDocumentation.class);
-  }
-
-  @Override
   public @Nullable @NonNls String getName() {
     return AvroIdlPsiUtil.getName(this);
   }

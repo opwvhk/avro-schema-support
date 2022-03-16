@@ -49,6 +49,8 @@ tasks {
 			<ul data-version="213.1.0">
 			<li>Added IDL syntax for the schema syntax (new in Avro 1.12.0)</li>
 			<li>Added inspection suggesting the schema syntax where appropriate</li>
+			<li>Improved documentation comment handling</li>
+			<li>Extended formatting & syntax highlighting options</li>
 			</ul>
 			<p>Version 213.0.0:</p>
 			<ul data-version="213.0.0">

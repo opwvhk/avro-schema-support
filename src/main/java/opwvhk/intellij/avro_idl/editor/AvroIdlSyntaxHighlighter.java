@@ -1,11 +1,13 @@
-package opwvhk.intellij.avro_idl.syntax;
+package opwvhk.intellij.avro_idl.editor;
 
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 import opwvhk.intellij.avro_idl.psi.AvroIdlTypes;
+import opwvhk.intellij.avro_idl.syntax.AvroIdlLexer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -13,11 +15,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static com.intellij.openapi.editor.colors.TextAttributesKey.EMPTY_ARRAY;
+import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.BLOCK_COMMENT;
+import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.DOC_COMMENT;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.STRING;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
-import static opwvhk.intellij.avro_idl.syntax.AvroIdlSyntaxColors.*;
+import static opwvhk.intellij.avro_idl.editor.AvroIdlSyntaxColors.*;
 
 public class AvroIdlSyntaxHighlighter extends SyntaxHighlighterBase {
+	private static final TokenSet BLOCK_COMMENT_TOKENS = TokenSet.create(BLOCK_COMMENT, BLOCK_COMMENT_START, INCOMPLETE_BLOCK_COMMENT);
+	private static final TokenSet DOC_COMMENT_TOKENS = TokenSet.create(DOC_COMMENT, INCOMPLETE_DOC_COMMENT);
 
 	@SafeVarargs
 	private static <T> Set<T> set(T... elements) {
@@ -42,10 +48,10 @@ public class AvroIdlSyntaxHighlighter extends SyntaxHighlighterBase {
 
 	@Override
     public @NotNull TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
-		if (tokenType.equals(AvroIdlTypes.DOC_COMMENT)) {
+		if (DOC_COMMENT_TOKENS.contains(tokenType)) {
 			return DOC_COMMENT_KEYS;
 		}
-		if (tokenType.equals(AvroIdlTypes.BLOCK_COMMENT)) {
+		if (BLOCK_COMMENT_TOKENS.contains(tokenType)) {
 			return BLOCK_COMMENT_KEYS;
 		}
 		if (tokenType.equals(AvroIdlTypes.LINE_COMMENT)) {

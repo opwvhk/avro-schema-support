@@ -13,7 +13,4 @@ public interface AvroIdlImportDeclaration extends PsiElement {
   @Nullable
   AvroIdlJsonStringLiteral getJsonStringLiteral();
 
-  @NotNull
-  List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList();
-
 }

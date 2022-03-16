@@ -35,12 +35,6 @@ public class AvroIdlJsonPairImpl extends ASTWrapperPsiElement implements AvroIdl
 
   @Override
   @NotNull
-  public List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlMisplacedDocumentation.class);
-  }
-
-  @Override
-  @NotNull
   public PsiElement getStringLiteral() {
     return findNotNullChildByType(STRING_LITERAL);
   }

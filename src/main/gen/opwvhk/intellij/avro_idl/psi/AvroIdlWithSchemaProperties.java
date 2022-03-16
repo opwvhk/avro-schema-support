@@ -8,9 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface AvroIdlWithSchemaProperties extends PsiElement {
 
   @NotNull
-  List<AvroIdlDocumentation> getDocumentationList();
-
-  @NotNull
   List<AvroIdlSchemaProperty> getSchemaPropertyList();
 
 }

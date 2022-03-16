@@ -10,7 +10,6 @@ public interface AvroIdlTypes {
 
   IElementType ARRAY_TYPE = new AvroIdlElementType("ARRAY_TYPE");
   IElementType DECIMAL_TYPE = new AvroIdlElementType("DECIMAL_TYPE");
-  IElementType DOCUMENTATION = new AvroIdlElementType("DOCUMENTATION");
   IElementType ENUM_BODY = new AvroIdlElementType("ENUM_BODY");
   IElementType ENUM_CONSTANT = new AvroIdlElementType("ENUM_CONSTANT");
   IElementType ENUM_DECLARATION = new AvroIdlElementType("ENUM_DECLARATION");
@@ -31,7 +30,6 @@ public interface AvroIdlTypes {
   IElementType MESSAGE_ATTRIBUTES = new AvroIdlElementType("MESSAGE_ATTRIBUTES");
   IElementType MESSAGE_ATTRIBUTE_THROWS = new AvroIdlElementType("MESSAGE_ATTRIBUTE_THROWS");
   IElementType MESSAGE_DECLARATION = new AvroIdlElementType("MESSAGE_DECLARATION");
-  IElementType MISPLACED_DOCUMENTATION = new AvroIdlElementType("MISPLACED_DOCUMENTATION");
   IElementType NAMED_SCHEMA_DECLARATION = new AvroIdlElementType("NAMED_SCHEMA_DECLARATION");
   IElementType NAMESPACE_DECLARATION = new AvroIdlElementType("NAMESPACE_DECLARATION");
   IElementType NAMESPACE_PROPERTY = new AvroIdlElementType("NAMESPACE_PROPERTY");
@@ -52,6 +50,7 @@ public interface AvroIdlTypes {
   IElementType AT = new AvroIdlTokenType("@");
   IElementType AT_NAMESPACE = new AvroIdlTokenType("@namespace");
   IElementType BLOCK_COMMENT = new AvroIdlTokenType("BLOCK_COMMENT");
+  IElementType BLOCK_COMMENT_START = new AvroIdlTokenType("/*");
   IElementType BOOLEAN = new AvroIdlTokenType("boolean");
   IElementType BYTES = new AvroIdlTokenType("bytes");
   IElementType COLON = new AvroIdlTokenType(":");
@@ -70,6 +69,8 @@ public interface AvroIdlTypes {
   IElementType IDENTIFIER_TOKEN = new AvroIdlTokenType("IDENTIFIER_TOKEN");
   IElementType IDL = new AvroIdlTokenType("idl");
   IElementType IMPORT = new AvroIdlTokenType("import");
+  IElementType INCOMPLETE_BLOCK_COMMENT = new AvroIdlTokenType("INCOMPLETE_BLOCK_COMMENT");
+  IElementType INCOMPLETE_DOC_COMMENT = new AvroIdlTokenType("INCOMPLETE_DOC_COMMENT");
   IElementType INT = new AvroIdlTokenType("int");
   IElementType INT_LITERAL = new AvroIdlTokenType("INT_LITERAL");
   IElementType LEFT_ANGLE = new AvroIdlTokenType("<");
@@ -110,9 +111,6 @@ public interface AvroIdlTypes {
       }
       else if (type == DECIMAL_TYPE) {
         return new AvroIdlDecimalTypeImpl(node);
-      }
-      else if (type == DOCUMENTATION) {
-        return new AvroIdlDocumentationImpl(node);
       }
       else if (type == ENUM_BODY) {
         return new AvroIdlEnumBodyImpl(node);
@@ -173,9 +171,6 @@ public interface AvroIdlTypes {
       }
       else if (type == MESSAGE_DECLARATION) {
         return new AvroIdlMessageDeclarationImpl(node);
-      }
-      else if (type == MISPLACED_DOCUMENTATION) {
-        return new AvroIdlMisplacedDocumentationImpl(node);
       }
       else if (type == NAMESPACE_DECLARATION) {
         return new AvroIdlNamespaceDeclarationImpl(node);

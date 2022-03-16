@@ -17,17 +17,17 @@ import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
 public class AvroIdlBlock extends AbstractBlock {
 	/*
-	 * Token sets for all declarations (the obvious like protocols & records, but also (anonymous) field & message return types.
-	 * There are also sets to identify the preamble (annotations & documentation), the actual declaration, the start, content and end of the body (if any), and
+	 * Token sets for all declarations; obvious ones like protocols & records, but also (anonymous) field & message return types.
+	 * Sets to identify the preamble (annotations & documentation), the actual declaration, the start, content and end of the body (if any), and
 	 * anything that comes after that.
 	 *
-	 * We'll be testing for the preamble elements and the body start & end to make the algorithm robust against changes to the types (especially logical types).
+	 * We'll be testing for the preamble elements, and the body start & end to make the algorithm robust against changes to the types (especially logical types).
 	 */
 	protected static final TokenSet DECLARATIONS = TokenSet.create(PROTOCOL_DECLARATION, FIXED_DECLARATION, ENUM_DECLARATION, RECORD_DECLARATION,
 		MESSAGE_DECLARATION, FIELD_DECLARATION, TYPE, RESULT_TYPE, PRIMITIVE_TYPE, ARRAY_TYPE, MAP_TYPE, UNION_TYPE, REFERENCE_TYPE);
 	private static final TokenSet DECLARATION_BODIES_WITH_UNINDENTED_CHILDREN = TokenSet.create(PROTOCOL_BODY, ENUM_BODY, RECORD_BODY);
 
-	private static final TokenSet ELEMENTS_THAT_MAY_CONTAIN_CHILDREN = TokenSet.create(ARRAY_TYPE, DECIMAL_TYPE, MISPLACED_DOCUMENTATION, DOCUMENTATION,
+	private static final TokenSet ELEMENTS_THAT_MAY_CONTAIN_CHILDREN = TokenSet.create(ARRAY_TYPE, DECIMAL_TYPE,
 		ENUM_CONSTANT, ENUM_DECLARATION, ENUM_DEFAULT, FIELD_DECLARATION, FIXED_DECLARATION, FORMAL_PARAMETER, IMPORT_DECLARATION, IMPORT_TYPE, JSON_ARRAY,
 		JSON_OBJECT, JSON_PAIR, JSON_VALUE, MAP_TYPE, MESSAGE_ATTRIBUTES, MESSAGE_ATTRIBUTE_THROWS, MESSAGE_DECLARATION, NAMED_SCHEMA_DECLARATION,
 		PRIMITIVE_TYPE, PROTOCOL_BODY, PROTOCOL_DECLARATION, RECORD_BODY, RECORD_DECLARATION, REFERENCE_TYPE, RESULT_TYPE, SCHEMA_PROPERTY, TYPE, UNION_TYPE,
@@ -118,7 +118,7 @@ public class AvroIdlBlock extends AbstractBlock {
 	@Override
 	public @NotNull ChildAttributes getChildAttributes(int newChildBlockIndex) {
 		if (newSubBlockAttributes.isEmpty()) {
-			// If we get here, we haven't build sub blocks.
+			// If we get here, we have not built sub blocks.
 			return super.getChildAttributes(newChildBlockIndex);
 		}
 		return newSubBlockAttributes.get(newChildBlockIndex);

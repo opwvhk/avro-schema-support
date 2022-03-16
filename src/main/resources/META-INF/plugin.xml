@@ -6,20 +6,19 @@
 	</vendor>
 
 	<description><![CDATA[
-	<p>A plugin to support Avro schemas and protocols in IDL format (.avdl) and JSON (.avsc and .avpr).</p>
 	<p>
-		Provides full support for IDL files (see below), and recognizes <code>.avsc</code> and <code>.avpr</code> files as JSON and supplies JSON schemas for
-		them. Additionally, allows converting Avro IDL files (.avdl) to/from Avro Schema/Protocol files (.avsc and .avpr).
+		Provides full support for IDL (<code>.avdl</code>) files. This includes the <code>.avsc</code> equivalent schema syntax (new in Avro 1.12.0)!
+	</p>
+	<p>
+		Also provides JSON schemas for easier editing of <code>.avsc</code> and <code>.avpr</code> files.
 	</p>
 	<p>IDL features include:<ul>
-		<li>Full parsing of Avro <code>.avdl</code> files, including new logical types like <code>local_timestamp_ms</code></li>
-		<li>Syntax highlighting & formatting</li>
-		<li>Code completion based on syntax and supported references</li>
-		<li>
-			Some semantic checks, like unknown symbols, invalid identifiers, and values for <code>@namespace</code>, <code>@aliases</code>
-			and <code>@order</code> annotations
-		</li>
-		<li>Rename support for schema names (i.e. renaming records/errors, enums and fixed types also updates its references)</li>
+		<li>Syntax & error highlighting</li>
+		<li>Code completion</li>
+		<li>Formatting (configurable)</li>
+		<li>Inspections and quick fixes</li>
+		<li>Refactoring (renaming schemata and enum symbols)</li>
+		<li>Converting Avro schemas/protocols from/to IDL</li>
 	</ul></p>
 	]]></description>
 
@@ -41,7 +40,7 @@
 		<lang.elementManipulator forClass="opwvhk.intellij.avro_idl.psi.AvroIdlJsonStringLiteral"
 		                         implementationClass="opwvhk.intellij.avro_idl.psi.AvroIdlJsonStringLiteralManipulator"/>
 		<!-- Syntax highlighting & color definitions -->
-		<lang.syntaxHighlighter language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroIdlSyntaxHighlighter"/>
+		<lang.syntaxHighlighter language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlSyntaxHighlighter"/>
 		<colorSettingsPage implementation="opwvhk.intellij.avro_idl.editor.AvroIdlColorSettingsPage"/>
 		<!-- Code completion (additional to type references) -->
 		<completion.contributor language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlCompletionContributor"/>

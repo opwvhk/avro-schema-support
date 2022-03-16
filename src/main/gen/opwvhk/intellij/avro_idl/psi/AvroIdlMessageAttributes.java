@@ -10,7 +10,4 @@ public interface AvroIdlMessageAttributes extends PsiElement {
   @NotNull
   List<AvroIdlMessageAttributeThrows> getMessageAttributeThrowsList();
 
-  @NotNull
-  List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList();
-
 }

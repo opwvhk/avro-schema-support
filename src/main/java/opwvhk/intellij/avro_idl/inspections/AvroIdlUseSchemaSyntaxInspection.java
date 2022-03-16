@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -62,6 +63,7 @@ public class AvroIdlUseSchemaSyntaxInspection extends BaseAvroIdlInspection<Avro
 				return;
 			}
 			PsiElement parent = element.getParent();
+			Optional<PsiElement> docComment = Optional.ofNullable(getDocumentationElement(element));
 			AvroIdlProtocolBody protocolBody = element.getProtocolBody();
 			assert protocolBody != null : "Inconsistency with isAvailableFor()";
 
@@ -72,8 +74,10 @@ public class AvroIdlUseSchemaSyntaxInspection extends BaseAvroIdlInspection<Avro
 			}
 			AvroIdlMainSchemaDeclaration mainSchemaDeclaration = PsiTreeUtil.getPrevSiblingOfType(element, AvroIdlMainSchemaDeclaration.class);
 			if (protocolBody.getFirstChild() != null) {
+				Optional.ofNullable(getDocumentationElement(protocolBody.getFirstChild())).ifPresent(e -> parent.addBefore(e, element));
 				parent.addRangeBefore(protocolBody.getFirstChild(), protocolBody.getLastChild(), element);
 			}
+			docComment.ifPresent(e -> parent.deleteChildRange(e, e));
 			parent.deleteChildRange(element, element);
 
 			if (editor != null && mainSchemaDeclaration != null) {
@@ -86,6 +90,11 @@ public class AvroIdlUseSchemaSyntaxInspection extends BaseAvroIdlInspection<Avro
 				editor.getCaretModel().setCaretsAndSelections(List.of(new CaretState(typeStartPosition, typeStartPosition, typeEndPosition)));
 				editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
 			}
+		}
+
+		private PsiElement getDocumentationElement(PsiElement declaration) {
+			PsiElement docComment = AvroIdlPsiUtil.prevNonCommentLeaf(declaration);
+			return AvroIdlPsiUtil.isDocComment(docComment) ? docComment : null;
 		}
 	}
 }

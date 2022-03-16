@@ -200,7 +200,7 @@ public class AvroIdlUtil {
 			.map(PsiFile::getVirtualFile)
 			.map(VirtualFile::getParent)
 			.map(vFile -> vFile.findFileByRelativePath(importedFileReference))
-			.or(() -> Stream.of(module)
+			.or(() -> Stream.ofNullable(module)
 				.map(ModuleRootManager::getInstance)
 				.map(rootMgr -> rootMgr.orderEntries().classes().getRoots())
 				.flatMap(Stream::of)

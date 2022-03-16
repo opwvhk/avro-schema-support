@@ -24,9 +24,10 @@ protocol Mistakes {
 		/** Default documentation */
 		@my-prop("bar")
 		long /** Documentation */ @order("ignore") notLogic1a, notLogic1b;
-		string /** Documentation */ @aliases(["notLogic2"])
-				notLogic3;
+		string
+				/** Documentation */ @aliases(["notLogic2"]) notLogic3;
 	}
+
 	/** Documentation */
 	@cause("User Error")
 	error Error {}
@@ -36,6 +37,6 @@ protocol Mistakes {
 		doStuff(
 			/** Default documentation */
 			int
-				/** Documentation */
+					/** Documentation */
 				one) throws Error;
 }

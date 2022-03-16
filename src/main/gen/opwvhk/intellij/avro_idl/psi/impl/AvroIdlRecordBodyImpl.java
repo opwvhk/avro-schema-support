@@ -33,10 +33,4 @@ public class AvroIdlRecordBodyImpl extends ASTWrapperPsiElement implements AvroI
     return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlFieldDeclaration.class);
   }
 
-  @Override
-  @NotNull
-  public List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlMisplacedDocumentation.class);
-  }
-
 }

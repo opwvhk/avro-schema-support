@@ -16,8 +16,7 @@ import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
 public class AvroIdlDeclarationRangeHandler implements DeclarationRangeHandler<AvroIdlNameIdentifierOwner> {
 
-	private static final TokenSet NON_DECLARATION_TYPES = TokenSet.create(WHITE_SPACE, DOCUMENTATION, MISPLACED_DOCUMENTATION, SCHEMA_PROPERTY, LINE_COMMENT,
-		BLOCK_COMMENT, SEMICOLON);
+	private static final TokenSet NON_DECLARATION_TYPES = TokenSet.create(WHITE_SPACE, SCHEMA_PROPERTY, LINE_COMMENT, BLOCK_COMMENT, SEMICOLON);
 
 	@Override
 	public @Nullable TextRange getDeclarationRange(@NotNull AvroIdlNameIdentifierOwner container) {

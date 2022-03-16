@@ -11,9 +11,6 @@ public interface AvroIdlReferenceType extends AvroIdlNullableType {
   @Nullable
   AvroIdlIdentifier getIdentifier();
 
-  @NotNull
-  List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList();
-
   @Nullable AvroIdlNamedSchemaReference getReference();
 
 }

@@ -8,9 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface AvroIdlFormalParameter extends PsiElement {
 
   @NotNull
-  List<AvroIdlDocumentation> getDocumentationList();
-
-  @NotNull
   List<AvroIdlWithSchemaProperties> getWithSchemaPropertiesList();
 
   @NotNull AvroIdlType getType();

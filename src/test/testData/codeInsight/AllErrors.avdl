@@ -49,6 +49,8 @@ protocol Many-Mistakes {
 		@namespace("unused")
 		Letters @logicalType("character") one-letter;
 
+		@wrong-map("wMap") map<string> mapField = {};
+		@wrong-array("wArr") array<string> arrayField = [];
 		@namespace("on.type")
 		@aliases(["for_type"])
 		@order("ignore")

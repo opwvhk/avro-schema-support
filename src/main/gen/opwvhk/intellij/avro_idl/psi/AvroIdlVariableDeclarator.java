@@ -14,9 +14,6 @@ public interface AvroIdlVariableDeclarator extends AvroIdlWithSchemaProperties, 
   @Nullable
   AvroIdlJsonValue getJsonValue();
 
-  @NotNull
-  List<AvroIdlMisplacedDocumentation> getMisplacedDocumentationList();
-
   @Nullable PsiElement getNameIdentifier();
 
   int getTextOffset();

@@ -31,9 +31,10 @@ public class AvroIdlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleS
 		commonSettings.KEEP_LINE_BREAKS = true; // Keep programmer in charge of line breaks; reformatting twice overrides this anyway.
 		commonSettings.KEEP_BLANK_LINES_IN_CODE = 0;
 		commonSettings.KEEP_BLANK_LINES_IN_DECLARATIONS = 1;
+		commonSettings.BLANK_LINES_AFTER_PACKAGE = 1; // Namespace declaration
 		commonSettings.BLANK_LINES_BEFORE_IMPORTS = 1;
 		commonSettings.BLANK_LINES_AFTER_IMPORTS = 1;
-		commonSettings.BLANK_LINES_AROUND_CLASS = 1;
+		commonSettings.BLANK_LINES_AROUND_CLASS = 1; // Named types & main schema declaration
 		commonSettings.BLANK_LINES_AROUND_FIELD = 0;
 		commonSettings.BLANK_LINES_AROUND_METHOD = 1;
 
@@ -58,12 +59,14 @@ public class AvroIdlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleS
 			consumer.showStandardOptions(
 				"KEEP_BLANK_LINES_IN_CODE"
 				, "KEEP_BLANK_LINES_IN_DECLARATIONS"
+				, "BLANK_LINES_AFTER_PACKAGE"
 				, "BLANK_LINES_AFTER_IMPORTS"
 				, "BLANK_LINES_AROUND_CLASS"
 				, "BLANK_LINES_AROUND_FIELD"
 				, "BLANK_LINES_AROUND_METHOD"
 			);
 			consumer.renameStandardOption("BLANK_LINES_AROUND_CLASS", "Around named type");
+			consumer.renameStandardOption("BLANK_LINES_AFTER_PACKAGE", "After namespace declaration");
 		}
 	}
 
@@ -74,75 +77,57 @@ public class AvroIdlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleS
 
 	@Override
 	public String getCodeSample(@NotNull SettingsType settingsType) {
-		return "@namespace(\"org.example\")\n" +
-			"protocol MyProtocol {\n" +
+		return "namespace org.example;\n" +
 			"\n" +
 			"\n" +
 			"\n" +
-			"    import idl \"simple.avdl\";\n" +
+			"schema array<Employee>;\n" +
 			"\n" +
 			"\n" +
 			"\n" +
-			"    import idl \"reserved_words.avdl\";\n" +
+			"import idl \"simple.avdl\";\n" +
 			"\n" +
 			"\n" +
 			"\n" +
-			"    enum ContractType {\n" +
-			"        TEMPORARY," +
+			"import idl \"reserved_words.avdl\";\n" +
 			"\n" +
 			"\n" +
 			"\n" +
-			"        FIXED\n" +
+			" enum ContractType {\n" +
+			"    TEMPORARY," +
 			"\n" +
 			"\n" +
 			"\n" +
-			"    } = TEMPORARY;\n" +
+			"    FIXED\n" +
 			"\n" +
 			"\n" +
 			"\n" +
-			"    @my-annotation([\"any\", \"json\"])\n" +
-			"    record Employee {\n" +
+			"} = TEMPORARY;\n" +
 			"\n" +
 			"\n" +
 			"\n" +
-			"        string name;\n" +
+			"@my-annotation([\"any\", \"json\"])\n" +
+			"record Employee {\n" +
 			"\n" +
 			"\n" +
 			"\n" +
-			"        union{null, Employee} manager = null;\n" +
+			"    string name;\n" +
 			"\n" +
 			"\n" +
 			"\n" +
-			"        decimal(9, 2) salary;\n" +
+			"    Employee? manager = null;\n" +
 			"\n" +
 			"\n" +
 			"\n" +
-			"        array<string> skills = [];\n" +
+			"    ContractType contract = FIXED;\n" +
 			"\n" +
 			"\n" +
 			"\n" +
-			"    }\n" +
+			"    decimal(9, 2) salary;\n" +
 			"\n" +
 			"\n" +
 			"\n" +
-			"    error LegalObligation {\n" +
-			"\n" +
-			"\n" +
-			"\n" +
-			"        string description;\n" +
-			"\n" +
-			"\n" +
-			"\n" +
-			"    }\n" +
-			"\n" +
-			"\n" +
-			"\n" +
-			"    void paySalary(Employee employee) oneway;\n" +
-			"\n" +
-			"\n" +
-			"\n" +
-			"    /** Fire an employee. Returns associated cost. */\n" +
-			"    decimal(9, 2) fireEmployee(Employee employee) throws LegalObligation;\n" +
+			"    array<string> skills = [];\n" +
 			"\n" +
 			"\n" +
 			"\n" +

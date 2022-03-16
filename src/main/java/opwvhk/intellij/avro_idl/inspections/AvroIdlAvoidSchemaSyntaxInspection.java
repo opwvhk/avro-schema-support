@@ -3,16 +3,13 @@ package opwvhk.intellij.avro_idl.inspections;
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.editor.CaretState;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiWhiteSpace;
+import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.impl.source.tree.TreeUtil;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -20,7 +17,6 @@ import opwvhk.intellij.avro_idl.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -80,15 +76,18 @@ public class AvroIdlAvoidSchemaSyntaxInspection extends BaseAvroIdlInspection<Ps
 			AvroIdlProtocolDeclaration protocol = new AvroIdlElementFactory(project).createDummyProtocol(namespace);
 
 			// Remove the header (also removes comments between the header declarations)
+			PsiElement firstChildToMove = findFirstCodeElement(parent.getFirstChild(), PsiElement::getNextSibling);
+			PsiElement lastChildToMove = findFirstCodeElement(parent.getLastChild(), PsiElement::getPrevSibling);
+
 			final PsiElement firstOfHeader = coalesce(namespaceDeclaration, mainSchemaDeclaration);
 			final PsiElement lastOfHeader = coalesce(mainSchemaDeclaration, namespaceDeclaration);
 			if (firstOfHeader != null) {
+				assert lastOfHeader != null;
+				firstChildToMove = findFirstVisibleElement(lastOfHeader.getNextSibling(), PsiElement::getNextSibling);
 				parent.deleteChildRange(firstOfHeader, lastOfHeader);
 			}
 
-			// Move the content
-			PsiElement firstChildToMove = findFirstCodeSibling(parent.getFirstChild(), PsiElement::getNextSibling);
-			PsiElement lastChildToMove = findFirstCodeSibling(parent.getLastChild(), PsiElement::getPrevSibling);
+			// Move all visible content
 			requireNonNull(protocol.getProtocolBody()).addRange(firstChildToMove, lastChildToMove);
 			parent.addBefore(protocol, firstChildToMove);
 			parent.deleteChildRange(firstChildToMove, lastChildToMove);
@@ -101,6 +100,9 @@ public class AvroIdlAvoidSchemaSyntaxInspection extends BaseAvroIdlInspection<Ps
 			selectElement(editor, Optional.ofNullable(PsiTreeUtil.findChildOfType(file, AvroIdlProtocolDeclaration.class))
 				.map(AvroIdlProtocolDeclaration::getNameIdentifier)
 				.orElse(null));
+
+			// The default indent change breaks formatting of doc (and block?) comments. Triggering a reformat keeps them intact.
+			CodeStyleManager.getInstance(project).reformat(parent);
 		}
 
 		private PsiElement coalesce(PsiElement... items) {
@@ -112,13 +114,20 @@ public class AvroIdlAvoidSchemaSyntaxInspection extends BaseAvroIdlInspection<Ps
 			return null;
 		}
 
-		private PsiElement findFirstCodeSibling(PsiElement start, Function<PsiElement, PsiElement> nextFunction) {
-			PsiElement element = start;
-			while (element != null) {
-				if (!(element instanceof PsiWhiteSpace || element instanceof PsiComment)) {
+		private PsiElement findFirstVisibleElement(PsiElement start, Function<PsiElement, PsiElement> nextFunction) {
+			for (PsiElement element = start; element != null; element = nextFunction.apply(element)) {
+				if (!(element instanceof PsiWhiteSpace)) {
 					return element;
 				}
-				element = nextFunction.apply(element);
+			}
+			return null;
+		}
+
+		private PsiElement findFirstCodeElement(PsiElement start, Function<PsiElement, PsiElement> nextFunction) {
+			for (PsiElement element = start; element != null; element = nextFunction.apply(element)) {
+				if (!(element instanceof PsiWhiteSpace || element instanceof PsiComment && ((PsiComment)element).getTokenType() != DOC_COMMENT)) {
+					return element;
+				}
 			}
 			return null;
 		}

@@ -2,6 +2,8 @@ protocol Commenting {
 	record Unsure {
 		string name;
 		string <selection>description;
+		/* another one */
+		string internalDescription;
 		int </selection>number;
 	}
 }

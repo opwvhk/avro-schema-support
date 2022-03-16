@@ -1,4 +1,5 @@
 namespace data;
+
 // Optional: main schema (using it creates a .avsc equivalent file)
 schema Message;
 

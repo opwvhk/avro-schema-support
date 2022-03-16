@@ -1,4 +1,4 @@
-package opwvhk.intellij.avro_idl.syntax;
+package opwvhk.intellij.avro_idl.editor;
 
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.HighlighterColors;
@@ -6,6 +6,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
+import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.INCOMPLETE_DOC_COMMENT;
 
 public interface AvroIdlSyntaxColors {
 	TextAttributesKey DOC_COMMENT = createTextAttributesKey("AVRO_IDL_DOC_COMMENT", DefaultLanguageHighlighterColors.DOC_COMMENT);

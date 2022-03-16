@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
-import static java.util.Arrays.asList;
 
 class AvroIdlCompletionContributor extends CompletionContributor {
 	@Override
@@ -37,8 +36,10 @@ class AvroIdlCompletionContributor extends CompletionContributor {
 		// After a namespace declaration: schema, record, enum & fixed keywords
 
 		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParent(
-			psiElement(PsiErrorElement.class).afterSiblingSkipping(psiElement().whitespaceCommentOrError(), psiElement(AvroIdlNamespaceDeclaration.class))
+			psiElement(PsiErrorElement.class).withParent(AvroIdlNamespaceDeclaration.class)
+				.afterLeafSkipping(psiElement().whitespaceCommentOrError(), psiElement(AvroIdlTypes.SEMICOLON))
 		), "9schema ", "4import ", "6record ", "enum ", "fixed ");
+
 
 		// Complete declaration types
 
@@ -48,14 +49,17 @@ class AvroIdlCompletionContributor extends CompletionContributor {
 		addBasicCompletion(
 			psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParents(AvroIdlIdentifier.class, AvroIdlReferenceType.class, AvroIdlMessageDeclaration.class),
 			"import ", "9record ", "error ", "7enum ", "7fixed ", "3void ");
-		// Identifiers in the schema syntax are errors
-		for (Class<? extends PsiElement> precedingToplevelElementInSchemaSyntax : asList(
-			AvroIdlMainSchemaDeclaration.class, AvroIdlImportDeclaration.class, AvroIdlNamedSchemaDeclaration.class
-		)) {
-			addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParent(
-				psiElement(PsiErrorElement.class).afterSiblingSkipping(psiElement().whitespaceCommentOrError(), psiElement(precedingToplevelElementInSchemaSyntax))
+		addBasicCompletion(
+			psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParent(
+				psiElement(PsiErrorElement.class).withParent(AvroIdlMainSchemaDeclaration.class)
+					.afterLeafSkipping(psiElement().whitespaceCommentOrError(), psiElement(AvroIdlTypes.SEMICOLON))
 			), "import ", "9record ", "7enum ", "7fixed ");
-		}
+		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParent(
+			psiElement(PsiErrorElement.class).afterSiblingSkipping(psiElement().whitespaceCommentOrError(), psiElement(AvroIdlImportDeclaration.class))
+		), "import ", "9record ", "7enum ", "7fixed ");
+		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParent(
+			psiElement(PsiErrorElement.class).afterSiblingSkipping(psiElement().whitespaceCommentOrError(), psiElement(AvroIdlNamedSchemaDeclaration.class))
+		), "import ", "9record ", "7enum ", "7fixed ");
 
 		// Complete primitive types, logical types and anonymous types
 

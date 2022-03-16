@@ -7,8 +7,6 @@ import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import opwvhk.intellij.avro_idl.AvroIdlLanguage;
-import opwvhk.intellij.avro_idl.syntax.AvroIdlSyntaxColors;
-import opwvhk.intellij.avro_idl.syntax.AvroIdlSyntaxHighlighter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
