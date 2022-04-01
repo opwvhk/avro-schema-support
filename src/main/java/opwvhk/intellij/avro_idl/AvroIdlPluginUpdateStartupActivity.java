@@ -3,6 +3,7 @@ package opwvhk.intellij.avro_idl;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.actions.ShowSettingsUtilImpl;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationAction;
@@ -62,7 +63,7 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 
 			AvroIdlNotifications.showNotification(project, NotificationType.WARNING, true, title, message,
 				notification -> notification.addAction(NotificationAction.createSimple(IdeBundle.message("button.disable"), () -> {
-					PluginManagerCore.disablePlugin(OLD_PLUGIN_ID);
+					PluginManager.disablePlugin(OLD_PLUGIN_ID.getIdString());
 					notification.expire();
 				})).addAction(NotificationAction.createSimple(Messages.getNoButton(), notification::expire)));
 		}

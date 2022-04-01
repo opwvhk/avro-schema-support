@@ -31,6 +31,8 @@ import javax.swing.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -277,17 +279,31 @@ public class AvroIdlPsiUtil {
 	}
 
 	/**
-	 * Return the next code leaf, or the next docucmentation comment leaf, whichever comes first.
+	 * Return the next code leaf, or the next documentation comment leaf, whichever comes first.
 	 */
 	public static @Nullable PsiElement nextNonCommentLeaf(@Nullable PsiElement element) {
-		return PsiTreeUtil.skipMatching(element, PsiTreeUtil::nextLeaf, AvroIdlPsiUtil::isWhitespaceOrNonDocComment);
+		return skipMatching(element, PsiTreeUtil::nextLeaf, AvroIdlPsiUtil::isWhitespaceOrNonDocComment, true);
 	}
 
 	/**
-	 * Return the previous code leaf, or the previous docucmentation comment leaf, whichever comes first.
+	 * Return the previous code leaf, or the previous documentation comment leaf, whichever comes first.
 	 */
 	public static @Nullable PsiElement prevNonCommentLeaf(@Nullable PsiElement element) {
-		return PsiTreeUtil.skipMatching(element, PsiTreeUtil::prevLeaf, AvroIdlPsiUtil::isWhitespaceOrNonDocComment);
+		return skipMatching(element, PsiTreeUtil::prevLeaf, AvroIdlPsiUtil::isWhitespaceOrNonDocComment, true);
+	}
+
+	public static @Nullable PsiElement skipMatching(@Nullable PsiElement element,
+	                                                 @NotNull Function<? super PsiElement, ? extends PsiElement> next,
+	                                                 @NotNull Predicate<? super PsiElement> condition, boolean strict) {
+		if (element == null) {
+			return null;
+		}
+		for (PsiElement e = strict ? next.apply(element) : element; e != null; e = next.apply(e)) {
+			if (!condition.test(e)) {
+				return e;
+			}
+		}
+		return null;
 	}
 
 	public static boolean isWhitespaceOrNonDocComment(PsiElement element) {

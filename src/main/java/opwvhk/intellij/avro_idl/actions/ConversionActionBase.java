@@ -89,7 +89,7 @@ abstract class ConversionActionBase extends DumbAwareAction {
 		final String nonNullDescription = description == null ? IdeBundle.message("label.choose.target.file") : description;
 		final String fileName = suggestedBaseName + "." + destinationFileType.getDefaultExtension();
 
-		Collection<VirtualFile> files = FilenameIndex.getVirtualFilesByName(fileName, ProjectScope.getContentScope(project));
+		Collection<VirtualFile> files = FilenameIndex.getVirtualFilesByName(project, fileName, ProjectScope.getContentScope(project));
 		VirtualFile firstItem = ContainerUtil.getFirstItem(files);
 		VirtualFile baseDir = firstItem != null ? firstItem.getParent() : suggestedTargetDirectory;
 

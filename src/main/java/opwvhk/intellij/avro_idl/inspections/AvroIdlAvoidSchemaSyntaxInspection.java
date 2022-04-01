@@ -115,21 +115,12 @@ public class AvroIdlAvoidSchemaSyntaxInspection extends BaseAvroIdlInspection<Ps
 		}
 
 		private PsiElement findFirstVisibleElement(PsiElement start, Function<PsiElement, PsiElement> nextFunction) {
-			for (PsiElement element = start; element != null; element = nextFunction.apply(element)) {
-				if (!(element instanceof PsiWhiteSpace)) {
-					return element;
-				}
-			}
-			return null;
+			return AvroIdlPsiUtil.skipMatching(start, nextFunction, PsiWhiteSpace.class::isInstance, false);
 		}
 
 		private PsiElement findFirstCodeElement(PsiElement start, Function<PsiElement, PsiElement> nextFunction) {
-			for (PsiElement element = start; element != null; element = nextFunction.apply(element)) {
-				if (!(element instanceof PsiWhiteSpace || element instanceof PsiComment && ((PsiComment)element).getTokenType() != DOC_COMMENT)) {
-					return element;
-				}
-			}
-			return null;
+			return AvroIdlPsiUtil.skipMatching(start, nextFunction, element ->
+				element instanceof PsiWhiteSpace || element instanceof PsiComment && ((PsiComment)element).getTokenType() != DOC_COMMENT, false);
 		}
 	}
 }

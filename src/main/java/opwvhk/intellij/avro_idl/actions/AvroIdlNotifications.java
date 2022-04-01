@@ -36,7 +36,7 @@ public final class AvroIdlNotifications {
 		if (fullContent) {
 			notification = new FullContentNotification(notificationGroup, title, content, type);
 		} else {
-			notification = notificationGroup.createNotification(title, content, type);
+			notification = notificationGroup.createNotification(title, content, type, null);
 		}
 		notification.setIcon(notificationGroup.getIcon());
 		return notification;
