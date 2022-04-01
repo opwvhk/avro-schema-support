@@ -1,10 +1,18 @@
+import org.jetbrains.intellij.tasks.ListProductsReleasesTask.Channel.*
 import org.jetbrains.intellij.tasks.RunPluginVerifierTask.FailureLevel
 import java.util.*
 
 plugins {
 	`java-library`
 	id("java")
-	id("org.jetbrains.intellij") version "1.4.0"
+	id("org.jetbrains.intellij") version "1.5.1"
+}
+
+val lastBuild = provider {
+	file("jetbrains.lastBuild.txt").readLines()
+		.map { it.trim() }
+		.filterNot { it.isEmpty() || it.startsWith("#") }
+		.first() + ".*"
 }
 
 group = "net.sf.opk"
@@ -42,7 +50,10 @@ tasks {
 	patchPluginXml {
 		version.set(project.version.toString())
 		sinceBuild.set("203")
-		untilBuild.set("221.*")
+		// Find last EAP version (the build version until the first dot):
+		// curl 'https://data.services.jetbrains.com/products/releases?code=IIU&code=IIC&code=PCP&code=PCC&latest=true&type=eap' 2>/dev/null|jq -r '.[][0].build'|cut -d . -f 1|sort -r|head -n 1
+		untilBuild.set(lastBuild)
+		//untilBuild.set("221.*")
 		changeNotes.set(
 			"""
 			<p>Version 213.1.0:</p>
@@ -136,10 +147,16 @@ tasks {
 		fun forIdes(vararg ides: String): (String) -> List<String> { return { version -> ides.map { "$it-$version" } } }
 		// IntelliJ Community (IC), IntelliJ Ultimate (IU), PyCharm Community (PCC) &, PyCharm professional (PY) editions
 		// with versions ranging from Fall 2020 to the latest release
-		val intellijVersions = listOf("2020.3.3", "2021.1", "2021.1.2", "2021.2.3", "2021.3").flatMap(forIdes("IC", "IU"))
-		val pycharmVersions = listOf("2020.3.3", "2021.1", "2021.1.2", "2021.2.3", "2021.3").flatMap(forIdes("PCC", "PY"))
+		val intellijVersions = listOf("2020.3.3", "2021.1", "2021.1.2", "2021.2.3", "2021.3", "2022.1").flatMap(forIdes("IC", "IU"))
+		val pycharmVersions = listOf("2020.3.3", "2021.1", "2021.1.2", "2021.2.3", "2021.3", "2022.1").flatMap(forIdes("PCC", "PY"))
 		ideVersions.set(intellijVersions + pycharmVersions)
 		failureLevel.set(EnumSet.complementOf(EnumSet.of(FailureLevel.DEPRECATED_API_USAGES)))
+	}
+
+	listProductsReleases {
+		sinceBuild.set("203")
+		releaseChannels.set(listOf(RELEASE, EAP, PATCH, CANARY, RC))
+		types.set(listOf("IC", "IU", "PC", "PY"))
 	}
 }
 
