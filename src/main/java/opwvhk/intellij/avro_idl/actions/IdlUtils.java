@@ -90,30 +90,36 @@ public final class IdlUtils {
 			throw new IllegalArgumentException("Cannot write 0 schemas");
 		}
 		try (JsonGenerator jsonGen = SCHEMA_FACTORY.createGenerator(writer)) {
-			writer.append("namespace ");
-			writer.append(namespace);
-			writer.append(";");
-			writer.append(NEWLINE);
+			if (namespace != null) {
+				writer.append("namespace ");
+				writer.append(namespace);
+				writer.append(";");
+				writer.append(NEWLINE);
+				writer.append(NEWLINE);
+			}
 
 			Set<String> alreadyDeclared = new HashSet<>(4);
 			Set<Schema> toDeclare = new LinkedHashSet<>();
 			if (schemas.size() == 1) {
 				Schema schema = schemas.iterator().next();
-				writer.append(NEWLINE);
 				writer.append("schema ");
+				// Note: as alreadyDeclared is empty, writeFieldSchema adds schema to toDeclare
 				writeFieldSchema(schema, writer, jsonGen, alreadyDeclared, toDeclare, namespace);
 				writer.append(";");
+				writer.append(NEWLINE);
 				writer.append(NEWLINE);
 			} else {
 				toDeclare.addAll(schemas);
 			}
 
 			while (!toDeclare.isEmpty()) {
-				writer.append(NEWLINE);
+				if (!alreadyDeclared.isEmpty()) {
+					writer.append(NEWLINE);
+				}
 				Iterator<Schema> iterator = toDeclare.iterator();
 				Schema s = iterator.next();
 				iterator.remove();
-				writeSchema(s, writer, jsonGen, namespace, alreadyDeclared, toDeclare);
+				writeSchema(s, false, writer, jsonGen, namespace, alreadyDeclared, toDeclare);
 			}
 		}
 	}
@@ -156,7 +162,7 @@ public final class IdlUtils {
 				Iterator<Schema> iterator = toDeclare.iterator();
 				Schema schema = iterator.next();
 				iterator.remove();
-				writeSchema(schema, writer, jsonGen, protocolNameSpace, alreadyDeclared, toDeclare);
+				writeSchema(schema, true, writer, jsonGen, protocolNameSpace, alreadyDeclared, toDeclare);
 				first = false;
 			}
 			if (!schemas.isEmpty() && !messages.isEmpty()) {
@@ -169,32 +175,35 @@ public final class IdlUtils {
 		}
 	}
 
-	private static void writeSchema(Schema schema, Writer writer, JsonGenerator jsonGen, String defaultNamespace, Set<String> alreadyDeclared,
+	private static void writeSchema(Schema schema, boolean insideProtocol, Writer writer, JsonGenerator jsonGen, String defaultNamespace,
+	                                Set<String> alreadyDeclared,
 	                                Set<Schema> toDeclare) throws IOException {
+		String indent = insideProtocol ? "    " : "";
 		Schema.Type type = schema.getType();
 		writeSchemaAttributes(schema, writer, jsonGen);
 		String namespace = schema.getNamespace(); // Fails for unnamed schema types (other types than record, enum & fixed)
 		if (!Objects.equals(namespace, defaultNamespace)) {
-			writer.append("    @namespace(\"").append(namespace).append("\")").append(NEWLINE);
+			writer.append(indent).append("@namespace(\"").append(namespace).append("\")").append(NEWLINE);
 		}
 		Set<String> schemaAliases = schema.getAliases();
 		if (!schemaAliases.isEmpty()) {
-			writer.append("    @aliases(");
+			writer.append(indent).append("@aliases(");
 			toJson(schemaAliases, jsonGen);
 			jsonGen.flush();
 			resetContext(jsonGen.getOutputContext());
 			writer.append(")").append(NEWLINE);
 		}
 		if (type == Schema.Type.RECORD) {
-			writer.append("    ").append(schema.isError() ? "error" : "record").append(" ").append(schema.getName()).append(" {").append(NEWLINE);
+			writer.append(indent).append("").append(schema.isError() ? "error" : "record").append(" ").append(schema.getName()).append(" {").append(NEWLINE);
 			alreadyDeclared.add(schema.getFullName());
 			for (Field field : schema.getFields()) {
-				writeField(schema.getNamespace(), field, writer, jsonGen, alreadyDeclared, toDeclare, true);
+				writeField(schema.getNamespace(), field, writer, jsonGen, alreadyDeclared, toDeclare,
+					insideProtocol ? FieldIndent.INSIDE_PROTOCOL : FieldIndent.TOPLEVEL_SCHEMA);
 				writer.append(";").append(NEWLINE);
 			}
-			writer.append("    }").append(NEWLINE);
+			writer.append(indent).append("}").append(NEWLINE);
 		} else if (type == Schema.Type.ENUM) {
-			writer.append("    enum ").append(schema.getName()).append(" {");
+			writer.append(indent).append("enum ").append(schema.getName()).append(" {");
 			alreadyDeclared.add(schema.getFullName());
 			Iterator<String> i = schema.getEnumSymbols().iterator();
 			if (i.hasNext()) {
@@ -208,18 +217,24 @@ public final class IdlUtils {
 			}
 			writer.append("}").append(NEWLINE);
 		} else /* (type == Schema.Type.FIXED) */ {
-			writer.append("    fixed ").append(schema.getName()).append('(')
+			writer.append(indent).append("fixed ").append(schema.getName()).append('(')
 				.append(Integer.toString(schema.getFixedSize())).append(");").append(NEWLINE);
 			alreadyDeclared.add(schema.getFullName());
 		}
 	}
 
 	private static void writeField(String namespace, Field field, Writer writer, JsonGenerator jsonGen, Set<String> alreadyDeclared, Set<Schema> toDeclare,
-	                               boolean indentField) throws IOException {
-		// Note: indentField should be true if any field of the containing record has documentation
-		writeDocumentation(writer, "        ", field.doc());
-		if (indentField) {
-			writer.append("        ");
+	                               FieldIndent fieldIndent) throws IOException {
+		// Note: indentField must not be NONE if any field of the containing record/method has documentation
+		switch (fieldIndent) {
+			case TOPLEVEL_SCHEMA:
+				writeDocumentation(writer, "    ", field.doc());
+				writer.append("    ");
+				break;
+			case INSIDE_PROTOCOL:
+				writeDocumentation(writer, "        ", field.doc());
+				writer.append("        ");
+				break;
 		}
 		writeFieldSchema(field.schema(), writer, jsonGen, alreadyDeclared, toDeclare, namespace);
 		writer.append(' ');
@@ -439,7 +454,8 @@ public final class IdlUtils {
 			} else {
 				writer.append(", ");
 			}
-			writeField(protocolNameSpace, field, writer, jsonGen, alreadyDeclared, toDeclare, indentParameters);
+			writeField(protocolNameSpace, field, writer, jsonGen, alreadyDeclared, toDeclare,
+				indentParameters ? FieldIndent.INSIDE_PROTOCOL : FieldIndent.NONE);
 		}
 		if (indentParameters) {
 			writer.append("\n    ");
@@ -474,5 +490,9 @@ public final class IdlUtils {
 	private static void writeMessageAttributes(Protocol.Message message, Writer writer, JsonGenerator jsonGen) throws IOException {
 		writeDocumentation(writer, "    ", message.getDoc());
 		writeJsonProperties(message, writer, jsonGen, "    ");
+	}
+
+	private enum FieldIndent {
+		NONE, TOPLEVEL_SCHEMA, INSIDE_PROTOCOL
 	}
 }

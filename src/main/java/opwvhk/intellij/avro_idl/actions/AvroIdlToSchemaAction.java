@@ -3,6 +3,8 @@ package opwvhk.intellij.avro_idl.actions;
 import com.intellij.execution.filters.OpenFileHyperlinkInfo;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -81,6 +83,7 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 			try {
 				if (rootSchemas.size() == 1) {
 					writeSchema(project, console, destination, rootSchemas.get(0));
+					FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, destination), true);
 				} else {
 					final String suffix = "." + findExtensionFor(AvroSchemaFileType.INSTANCE);
 					for (Schema rootSchema : rootSchemas) {
