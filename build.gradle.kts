@@ -40,10 +40,12 @@ tasks.withType<JavaCompile> {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-	version.set("2021.2.3")
+	version.set("2021.2.4")
 	plugins.set(listOf("com.intellij.java", "PsiViewer:212-SNAPSHOT")) // Add the java plugin here to satisfy test dependencies.
-	//version.set("2021.3")
+	//version.set("2021.3.3")
 	//plugins.set(listOf("com.intellij.java", "PsiViewer:213-SNAPSHOT")) // Add the java plugin here to satisfy test dependencies.
+	//version.set("2022.1")
+	//plugins.set(listOf("com.intellij.java", "PsiViewer:221-SNAPSHOT")) // Add the java plugin here to satisfy test dependencies.
 }
 
 tasks {
@@ -147,8 +149,8 @@ tasks {
 		fun forIdes(vararg ides: String): (String) -> List<String> { return { version -> ides.map { "$it-$version" } } }
 		// IntelliJ Community (IC), IntelliJ Ultimate (IU), PyCharm Community (PCC) &, PyCharm professional (PY) editions
 		// with versions ranging from Fall 2020 to the latest release
-		val intellijVersions = listOf("2020.3.3", "2021.1", "2021.1.2", "2021.2.3", "2021.3", "2022.1").flatMap(forIdes("IC", "IU"))
-		val pycharmVersions = listOf("2020.3.3", "2021.1", "2021.1.2", "2021.2.3", "2021.3", "2022.1").flatMap(forIdes("PCC", "PY"))
+		val intellijVersions = listOf("2020.3.4", "2021.1.3", "2021.2.4", "2021.3.3", "2022.1").flatMap(forIdes("IC", "IU"))
+		val pycharmVersions = listOf("2020.3.5", "2021.1.3", "2021.2.4", "2021.3.3", "2022.1").flatMap(forIdes("PCC", "PY"))
 		ideVersions.set(intellijVersions + pycharmVersions)
 		failureLevel.set(EnumSet.complementOf(EnumSet.of(FailureLevel.DEPRECATED_API_USAGES)))
 	}
