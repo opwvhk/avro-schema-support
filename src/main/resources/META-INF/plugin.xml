@@ -49,7 +49,11 @@
 		<gotoSymbolContributor implementation="opwvhk.intellij.avro_idl.language.AvroIdlChooseByNameContributor"/>
 		<lang.refactoringSupport language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlRefactoringSupportProvider"/>
 		<lang.commenter language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlCommenter"/>
+		<quoteHandler fileType="Avro IDL" className="opwvhk.intellij.avro_idl.editor.AvroIdlTokenSetQuoteHandler"/>
+		<!-- Angle brackets must be handled specially, as generic handling interferes with some languages (XML, Java) -->
 		<lang.braceMatcher language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlPairedBraceMatcher"/>
+		<typedHandler implementation="opwvhk.intellij.avro_idl.editor.AvroIdlAngleBracketTypedHandler"/>
+		<backspaceHandlerDelegate implementation="opwvhk.intellij.avro_idl.editor.AvroIdlAngleBracketBackspaceHandler"/>
 		<!--<declarationRangeHandler key="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
 								 implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlDeclarationRangeHandler"/>-->
 		<!-- Structure view -->
