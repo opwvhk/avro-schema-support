@@ -64,6 +64,8 @@ tasks {
 			<li>Added inspection suggesting the schema syntax where appropriate</li>
 			<li>Improved documentation comment handling</li>
 			<li>Extended formatting & syntax highlighting options</li>
+			<li>Improved quote & brace handling: now supports all "", {}, [] and <> pairs</li>
+			<li>Refactoring conversions now open the generated file (if there's one)</li>
 			</ul>
 			<p>Version 213.0.0:</p>
 			<ul data-version="213.0.0">
