@@ -16,7 +16,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "213.1.0-SNAPSHOT"
+version = "213.0.0-SNAPSHOT"
 
 repositories {
 	mavenCentral()
@@ -58,11 +58,13 @@ tasks {
 		//untilBuild.set("221.*")
 		changeNotes.set(
 			"""
+            <!--
 			<p>Version 213.1.0:</p>
 			<ul data-version="213.1.0">
-			<!--<li>Added IDL syntax for the schema syntax (new in Avro 1.12.0)</li>-->
-			<!--<li>Added inspection suggesting the schema syntax where appropriate</li>-->
+			<li>Added IDL syntax for the schema syntax (new in Avro 1.12.0)</li>
+			<li>Added inspection suggesting the schema syntax where appropriate</li>
 			</ul>
+            -->
 			<p>Version 213.0.0:</p>
 			<ul data-version="213.0.0">
 			<li>Added support for Kotlin style nullable types (new in Avro 1.11.1)</li>
