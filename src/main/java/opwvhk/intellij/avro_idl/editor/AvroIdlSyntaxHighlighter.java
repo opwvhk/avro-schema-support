@@ -69,6 +69,9 @@ public class AvroIdlSyntaxHighlighter extends SyntaxHighlighterBase {
 		if (tokenType.equals(AvroIdlTypes.LEFT_BRACE) || tokenType.equals(AvroIdlTypes.RIGHT_BRACE)) {
 			return BRACES_KEYS;
 		}
+		if (tokenType.equals(AvroIdlTypes.LEFT_ANGLE) || tokenType.equals(AvroIdlTypes.RIGHT_ANGLE)) {
+			return BRACES_KEYS;
+		}
 		if (tokenType.equals(AvroIdlTypes.LEFT_PAREN) || tokenType.equals(AvroIdlTypes.RIGHT_PAREN)) {
 			return PARENTHESES_KEYS;
 		}

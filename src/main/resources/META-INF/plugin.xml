@@ -74,10 +74,13 @@
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlUseNullableShorthandInspection"/>
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Use of optional type" enabledByDefault="false" level="ERROR"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlAvoidNullableShorthandInspection"/>
+		<!-- TODO: Enable when Avro supports the schema syntax -->
+		<!--
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Schema syntax available" enabledByDefault="true" level="WEAK WARNING"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlUseSchemaSyntaxInspection"/>
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Use of schema syntax" enabledByDefault="false" level="ERROR"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlAvoidSchemaSyntaxInspection"/>
+		-->
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Naming conventions" enabledByDefault="false" level="TYPO"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlNamingConventionInspection"/>
 

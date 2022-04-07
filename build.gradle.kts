@@ -60,25 +60,25 @@ tasks {
 			"""
 			<p>Version 213.1.0:</p>
 			<ul data-version="213.1.0">
-			<li>Added IDL syntax for the schema syntax (new in Avro 1.12.0)</li>
-			<li>Added inspection suggesting the schema syntax where appropriate</li>
-			<li>Improved documentation comment handling</li>
-			<li>Extended formatting & syntax highlighting options</li>
-			<li>Improved quote & brace handling: now supports all "", {}, [] and <> pairs</li>
-			<li>Refactoring conversions now open the generated file (if there's one)</li>
+			<!--<li>Added IDL syntax for the schema syntax (new in Avro 1.12.0)</li>-->
+			<!--<li>Added inspection suggesting the schema syntax where appropriate</li>-->
 			</ul>
 			<p>Version 213.0.0:</p>
 			<ul data-version="213.0.0">
+			<li>Added support for Kotlin style nullable types (Avro &ge; 1.11.1)</li>
+			<li>Added inspection for documentation comments to detect and apply fixes for improvements in Avro &ge; 1.11.1</li>
 			<li>Refactoring actions (converting IDL from/to schema/protocol files) now use the build tool window</li>
+			<li>Refactoring actions now open the generated file (if there's only one)</li>
+			<li>Added syntax for hexadecimal integers and floating point numbers</li>
 			<li>Report changes upon startup after installation</li>
 			<li>Miscellaneous refactoring and small cosmetic changes</li>
 			<li>Converted some warnings to inspections</li>
 			<li>Added inspection for naming conventions</li>
 			<li>Add dialog for new IDL files</li>
-			<li>Added support for Kotlin style nullable types (Avro &ge; 1.11.1)</li>
-			<li>Added inspection for documentation comments to detect and apply fixes for improvements in Avro &ge; 1.11.1</li>
-			<li>Added syntax for hexadecimal integers and floating point numbers</li>
 			<li>Improved formatting of enum declarations</li>
+			<li>Improved documentation comment handling</li>
+			<li>Extended formatting & syntax highlighting options</li>
+			<li>Improved quote & brace handling: now supports all "", {}, [] and <> pairs</li>
 			</ul>
 			<p>Version 203.1.2:</p>
 			<ul data-version="203.1.2">
@@ -87,7 +87,7 @@ tasks {
 			<li>Improved file import references</li>
 			<li>Fixed range exception in references</li>
 			<li>Added error for annotations on references (triggers a bug in Avro &lt; 1.11.1, breaks in later Avro versions)</li>
-			<li>The plugin is now tested with 2021.2.3 instead of 2020.3</li>
+			<li>Testing the plugin with IntelliJ 2021.2.4 instead of 2020.3 from now on</li>
 			<li>Improve identifier parsing to match the Avro IDL grammar</li>
 			</ul>
 			<p>Version 203.1.1:</p>

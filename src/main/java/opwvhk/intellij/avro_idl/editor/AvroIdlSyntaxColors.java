@@ -6,7 +6,6 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
-import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.INCOMPLETE_DOC_COMMENT;
 
 public interface AvroIdlSyntaxColors {
 	TextAttributesKey DOC_COMMENT = createTextAttributesKey("AVRO_IDL_DOC_COMMENT", DefaultLanguageHighlighterColors.DOC_COMMENT);
@@ -45,18 +44,18 @@ public interface AvroIdlSyntaxColors {
 	TextAttributesKey[] TYPE_KEYS = new TextAttributesKey[]{TYPE};
 
 	AttributesDescriptor[] DESCRIPTORS = new AttributesDescriptor[]{
-		new AttributesDescriptor("Documentation Comment", DOC_COMMENT),
-		new AttributesDescriptor("Block Comment", BLOCK_COMMENT),
-		new AttributesDescriptor("Line Comment", LINE_COMMENT),
-		new AttributesDescriptor("Bad Character", BAD_CHAR),
+		new AttributesDescriptor("Comments//Documentation comment", DOC_COMMENT),
+		new AttributesDescriptor("Comments//Block comment", BLOCK_COMMENT),
+		new AttributesDescriptor("Comments//Line comment", LINE_COMMENT),
+		new AttributesDescriptor("Bad character", BAD_CHAR),
 		new AttributesDescriptor("String", STRING),
 		new AttributesDescriptor("Number", NUMBER),
-		new AttributesDescriptor("Braces", BRACES),
-		new AttributesDescriptor("Parentheses", PARENTHESES),
-		new AttributesDescriptor("Brackets", BRACKETS),
-		new AttributesDescriptor("Semicolon", SEMICOLON),
-		new AttributesDescriptor("Comma", COMMA),
-		new AttributesDescriptor("Equals", EQUALS),
+		new AttributesDescriptor("Braces and Operators//Braces", BRACES),
+		new AttributesDescriptor("Braces and Operators//Parentheses", PARENTHESES),
+		new AttributesDescriptor("Braces and Operators//Brackets", BRACKETS),
+		new AttributesDescriptor("Braces and Operators//Semicolon", SEMICOLON),
+		new AttributesDescriptor("Braces and Operators//Comma", COMMA),
+		new AttributesDescriptor("Braces and Operators//Equals", EQUALS),
 		new AttributesDescriptor("Keywords", KEYWORD),
 		new AttributesDescriptor("Types", TYPE),
 		new AttributesDescriptor("Annotations", ANNOTATION)

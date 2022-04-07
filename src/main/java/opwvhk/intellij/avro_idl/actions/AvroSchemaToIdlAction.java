@@ -12,6 +12,7 @@ import com.intellij.openapi.vfs.VirtualFileWrapper;
 import opwvhk.intellij.avro_idl.AvroIdlFileType;
 import opwvhk.intellij.avro_idl.AvroSchemaFileType;
 import org.apache.avro.AvroRuntimeException;
+import org.apache.avro.JsonProperties;
 import org.apache.avro.Schema;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.intellij.execution.ui.ConsoleViewContentType.*;
+import static java.util.Collections.emptyList;
 
 public class AvroSchemaToIdlAction extends ConversionActionBase {
 	public AvroSchemaToIdlAction() {
@@ -60,7 +62,10 @@ public class AvroSchemaToIdlAction extends ConversionActionBase {
 					try (Writer writer = new OutputStreamWriter(virtualFile.getOutputStream(this))) {
 						final String protocolName = virtualFile.getNameWithoutExtension();
 						final String namespace = schemas.get(0).getNamespace(); // Assume the first schema has the correct namespace.
-						IdlUtils.writeIdlSchemas(writer, namespace, schemas);
+						// TODO: switch to schemas when Avro supports the schema syntax.
+						//IdlUtils.writeIdlSchemas(writer, namespace, schemas);
+						JsonProperties emptyProperties = Schema.create(Schema.Type.NULL);
+						IdlUtils.writeIdlProtocol(writer, emptyProperties, namespace, protocolName, schemas, emptyList());
 
 						console.print("Wrote Avro IDL \"", NORMAL_OUTPUT);
 						console.print(protocolName, NORMAL_OUTPUT);
