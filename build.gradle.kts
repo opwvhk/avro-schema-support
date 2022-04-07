@@ -40,10 +40,10 @@ tasks.withType<JavaCompile> {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-	version.set("2021.2.4")
-	plugins.set(listOf("com.intellij.java", "PsiViewer:212-SNAPSHOT")) // Add the java plugin here to satisfy test dependencies.
-	//version.set("2021.3.3")
-	//plugins.set(listOf("com.intellij.java", "PsiViewer:213-SNAPSHOT")) // Add the java plugin here to satisfy test dependencies.
+	//version.set("2021.2.4")
+	//plugins.set(listOf("com.intellij.java", "PsiViewer:212-SNAPSHOT")) // Add the java plugin here to satisfy test dependencies.
+	version.set("2021.3.3")
+	plugins.set(listOf("com.intellij.java", "PsiViewer:213-SNAPSHOT")) // Add the java plugin here to satisfy test dependencies.
 	//version.set("2022.1")
 	//plugins.set(listOf("com.intellij.java", "PsiViewer:221-SNAPSHOT")) // Add the java plugin here to satisfy test dependencies.
 }
@@ -65,8 +65,8 @@ tasks {
 			</ul>
 			<p>Version 213.0.0:</p>
 			<ul data-version="213.0.0">
-			<li>Added support for Kotlin style nullable types (Avro &ge; 1.11.1)</li>
-			<li>Added inspection for documentation comments to detect and apply fixes for improvements in Avro &ge; 1.11.1</li>
+			<li>Added support for Kotlin style nullable types (new in Avro 1.11.1)</li>
+			<li>Added inspection for documentation comments to detect and apply fixes for improvements since Avro 1.11.1</li>
 			<li>Refactoring actions (converting IDL from/to schema/protocol files) now use the build tool window</li>
 			<li>Refactoring actions now open the generated file (if there's only one)</li>
 			<li>Added syntax for hexadecimal integers and floating point numbers</li>
@@ -87,7 +87,6 @@ tasks {
 			<li>Improved file import references</li>
 			<li>Fixed range exception in references</li>
 			<li>Added error for annotations on references (triggers a bug in Avro &lt; 1.11.1, breaks in later Avro versions)</li>
-			<li>Testing the plugin with IntelliJ 2021.2.4 instead of 2020.3 from now on</li>
 			<li>Improve identifier parsing to match the Avro IDL grammar</li>
 			</ul>
 			<p>Version 203.1.1:</p>
@@ -103,7 +102,7 @@ tasks {
 			</ul>
 			<p>Version 203.0.3:</p>
 			<ul data-version="203.0.3">
-			<li>Added startup check for incompatibilities (i.e. is the other Avro plugin active?)</li>
+			<li>Added startup check for incompatibilities (i.e., is the other Avro plugin active?)</li>
 			</ul>
 			<p>Version 203.0.2:</p>
 			<ul data-version="203.0.2">
@@ -149,8 +148,8 @@ tasks {
 
 	runPluginVerifier {
 		fun forIdes(vararg ides: String): (String) -> List<String> { return { version -> ides.map { "$it-$version" } } }
-		// IntelliJ Community (IC), IntelliJ Ultimate (IU), PyCharm Community (PCC) &, PyCharm professional (PY) editions
-		// with versions ranging from Fall 2020 to the latest release
+		// IntelliJ Community (IC), IntelliJ Ultimate (IU), PyCharm Community (PCC) &, PyCharm professional (PY) editions for the patch
+		// releases for all minor releases ranging from sinceBuild to untilBuild (see the patchPluginXml task)
 		val intellijVersions = listOf("2020.3.4", "2021.1.3", "2021.2.4", "2021.3.3", "2022.1").flatMap(forIdes("IC", "IU"))
 		val pycharmVersions = listOf("2020.3.5", "2021.1.3", "2021.2.4", "2021.3.3", "2022.1").flatMap(forIdes("PCC", "PY"))
 		ideVersions.set(intellijVersions + pycharmVersions)
