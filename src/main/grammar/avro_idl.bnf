@@ -2,6 +2,10 @@
 {
 	parserClass = "opwvhk.intellij.avro_idl.syntax.AvroIdlParser"
 	extends = "com.intellij.extapi.psi.ASTWrapperPsiElement"
+	/* add this to getReferences in the PsiElement implementation class:
+	   final PsiReference[] fromProviders = ReferenceProvidersRegistry.getReferencesFromProviders(this);
+       return ArrayUtil.prepend(new JsonPropertyNameReference(this), fromProviders);
+	*/
 
 	psiClassPrefix = "AvroIdl"
 	psiImplClassSuffix = "Impl"

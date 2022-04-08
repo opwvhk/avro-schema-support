@@ -39,7 +39,7 @@ public class AvroIdlAnnotator implements Annotator {
 	private static final Set<String> VALID_ORDER_NAMES = Set.of("ASCENDING", "DESCENDING", "IGNORE");
 
 	private static final Predicate<String> VALID_SIMPLE_NAME_IN_STRING = Pattern.compile(SIMPLE_NAME_IN_STRING, UNICODE_CHARACTER_CLASS).asMatchPredicate();
-	private static final Predicate<String> VALID_IDENTIFIER_IN_STRING = Pattern.compile(IDENTIFIER_IN_STRING, UNICODE_CHARACTER_CLASS).asMatchPredicate();
+	public static final Predicate<String> VALID_IDENTIFIER_IN_STRING = Pattern.compile(IDENTIFIER_IN_STRING, UNICODE_CHARACTER_CLASS).asMatchPredicate();
 	private static final Predicate<String> VALID_SIMPLE_NAME = Pattern.compile(SIMPLE_NAME, UNICODE_CHARACTER_CLASS).asMatchPredicate();
 	private static final Predicate<String> VALID_IDENTIFIER = Pattern.compile(IDENTIFIER, UNICODE_CHARACTER_CLASS).asMatchPredicate();
 	private static final Predicate<String> VALID_ORDER = order -> order != null && VALID_ORDER_NAMES.contains(order.toUpperCase());
@@ -158,8 +158,6 @@ public class AvroIdlAnnotator implements Annotator {
 		final String namespace = element.getName();
 		if (namespace == null) {
 			holder.newAnnotation(ERROR, "@namespace annotations must contain a string").range(jsonValue).create();
-		} else if (!VALID_IDENTIFIER_IN_STRING.test(namespace)) {
-			holder.newAnnotation(WARNING, "The namespace is not composed of valid identifiers").range(jsonValue).create();
 		}
 	}
 

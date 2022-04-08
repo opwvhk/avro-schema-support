@@ -57,28 +57,21 @@ tasks {
 		untilBuild.set(lastBuild)
 		//untilBuild.set("221.*")
 		changeNotes.set(
-			"""
-            <!--
+			/*
 			<p>Version 213.1.0:</p>
 			<ul data-version="213.1.0">
 			<li>Added IDL syntax for the schema syntax (new in Avro 1.12.0)</li>
 			<li>Added inspection suggesting the schema syntax where appropriate</li>
-			</ul>
-            -->
-			<p>Version 213.0.0:</p>
-			<ul data-version="213.0.0">
 			<li>Added support for Kotlin style nullable types (new in Avro 1.11.1)</li>
 			<li>Added inspection for documentation comments to detect and apply fixes for improvements since Avro 1.11.1</li>
-			<li>Refactoring actions (converting IDL from/to schema/protocol files) now use the build tool window</li>
-			<li>Refactoring actions now open the generated file (if there's only one)</li>
-			<li>Added syntax for hexadecimal integers and floating point numbers</li>
-			<li>Report changes upon startup after installation</li>
-			<li>Miscellaneous refactoring and small cosmetic changes</li>
-			<li>Converted some warnings to inspections</li>
-			<li>Added inspection for naming conventions</li>
-			<li>Add dialog for new IDL files</li>
-			<li>Improved formatting of enum declarations</li>
-			<li>Improved documentation comment handling</li>
+			</ul>
+			*/
+			"""
+			<p>Version 213.0.0:</p>
+			<ul data-version="213.0.0">
+			<li>New File dialog for IDL files</li>
+			<li>New: inspections for naming conventions and warnings</li>
+			<li>Improved refactoring actions (converting IDL from/to schema/protocol files)</li>
 			<li>Extended formatting & syntax highlighting options</li>
 			<li>Improved quote & brace handling: now supports all "", {}, [] and <> pairs</li>
 			</ul>

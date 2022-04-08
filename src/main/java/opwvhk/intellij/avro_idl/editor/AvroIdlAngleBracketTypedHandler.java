@@ -1,5 +1,6 @@
 package opwvhk.intellij.avro_idl.editor;
 
+import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.editorActions.TypedHandlerDelegate;
 import com.intellij.codeInsight.editorActions.TypedHandlerUtil;
 import com.intellij.openapi.editor.Editor;
@@ -16,7 +17,7 @@ public class AvroIdlAngleBracketTypedHandler extends TypedHandlerDelegate {
 
 	@Override
 	public @NotNull Result charTyped(char c, @NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
-		if (c == '<' && file instanceof AvroIdlFile) {
+		if (c == '<' && CodeInsightSettings.getInstance().AUTOINSERT_PAIR_BRACKET && file instanceof AvroIdlFile) {
 			TypedHandlerUtil.handleAfterGenericLT(editor, AvroIdlTypes.LEFT_ANGLE, AvroIdlTypes.RIGHT_ANGLE, INVALID_INSIDE_ANGLE);
 			return Result.STOP;
 		}

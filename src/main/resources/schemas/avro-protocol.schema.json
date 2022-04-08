@@ -1,10 +1,81 @@
 {
-	"$id": "http://github.com/opwvhk/avro-json-schemas/avro-protocol.schema.json",
+	"$id": "https://github.com/opwvhk/avro-schema-support/blob/master/src/main/resources/schemas/avro-protocol.schema.json",
 	"$schema": "http://json-schema.org/draft-07/schema#",
 	"title": "avro-schema",
 	"description": "JSON Schema for an Apache Avro protocol, version 1.10.1",
 	"$ref": "#/definitions/protocol",
 	"definitions": {
+		"protocol": {
+			"description": "An Avro protocol definition",
+			"type": "object",
+			"required": [ "protocol" ],
+			"properties": {
+				"protocol": { "$ref":  "#/definitions/nameOrNamespace"},
+				"namespace": { "$ref":  "#/definitions/nameOrNamespace"},
+				"doc": { "type":  "string" },
+				"types": {
+					"type":  "array",
+					"uniqueItems": true,
+					"items": { "oneOf": [
+						{ "$ref": "#/definitions/record" },
+						{ "$ref": "#/definitions/enum" },
+						{ "$ref": "#/definitions/fixed" }
+					] }
+				},
+				"messages": {
+					"type": "object",
+					"propertyNames": {
+						"pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+						"uniqueItems": true
+					},
+					"patternProperties": {
+						"^.": { "$ref": "#/definitions/message" }
+					}
+				}
+			}
+		},
+		"message": {
+			"description": "A protocol message description",
+			"type": "object",
+			"required": [ "request", "response" ],
+			"properties": {
+				"doc": { "type": "string" },
+				"request": {
+					"description": "Message request parameters; treated as an anonymous records schema",
+					"type": "array",
+					"items": { "$ref": "#/definitions/field" },
+					"uniqueItems": true
+				},
+				"response": {
+					"description": "Message response type; can be any schema, and void is an alias for the null type",
+					"oneOf": [
+						{
+							"type": "string",
+							"const": "void"
+						},
+						{ "$ref": "#/definitions/schema" }
+					]},
+				"errors": {
+					"description": "Errors that may be the result of the message; must be (references to) 'error' schemas",
+					"type": "array",
+					"uniqueItems": true,
+					"items": {
+						"allOf": [
+							{ "$ref": "#/definitions/record" },
+							{ "properties": {
+								"type": {
+									"enum": ["error"]
+								}
+							}}
+						]
+					}
+				},
+				"one-way": {
+					"description": "Whether the message is one-way only. If true, the response schema MUST be null or void",
+					"type": "boolean"
+				}
+			}
+		},
 		"schema": {
 			"description": "An Avro schema; either a schema name, anonymous (primitive type, annotated primitive type, array, map, union) or named (fixed, enum, record/error)",
 			"oneOf": [
@@ -138,66 +209,6 @@
 					"enum": [ "ascending", "descending", "ignore" ]
 				},
 				"aliases": { "$ref": "#/definitions/aliases" }
-			}
-		},
-		"protocol": {
-			"description": "An Avro protocol definition",
-			"type": "object",
-			"required": [ "protocol" ],
-			"properties": {
-				"protocol": { "$ref":  "#/definitions/nameOrNamespace"},
-				"namespace": { "$ref":  "#/definitions/nameOrNamespace"},
-				"doc": { "type":  "string" },
-				"types": {
-					"type":  "array",
-					"uniqueItems": true,
-					"items": { "oneOf": [
-						{ "$ref": "#/definitions/record" },
-						{ "$ref": "#/definitions/enum" },
-						{ "$ref": "#/definitions/fixed" }
-					] }
-				},
-				"messages": {
-					"type": "object",
-					"propertyNames": {
-						"pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
-						"uniqueItems": true
-					},
-					"patternProperties": {
-						"^.": { "$ref": "#/definitions/messageDescription" }
-					}
-				}
-			}
-		},
-		"messageDescription": {
-			"description": "A protocol message description",
-			"type": "object",
-			"required": [ "request", "response" ],
-			"properties": {
-				"doc": { "type": "string" },
-				"request": {
-					"description": "Message request parameters; treated as an anonymous records schema",
-					"type": "array",
-					"items": { "$ref": "#/definitions/field" },
-					"uniqueItems": true
-				},
-				"response": {
-					"description": "Message response type; can be any schema, and void is an alias for the null type",
-					"oneOf": [
-						{
-							"type": "string",
-							"const": "void"
-						},
-						{ "$ref": "#/definitions/schema" }
-					]},
-				"errors": {
-					"description": "Errors that may be the result of the message; must be (references to) 'error' schemas",
-					"$ref": "#/definitions/schema"
-				},
-				"one-way": {
-					"description": "Whether the message is one-way only. If true, the response schema MUST be null or void",
-					"type": "boolean"
-				}
 			}
 		},
 		"aliases": {

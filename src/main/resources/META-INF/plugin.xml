@@ -5,9 +5,13 @@
 		Oscar Westra van Holthe - Kind
 	</vendor>
 
+	<!--
+	TODO: When Avro 1.12.0 is released, add this to the 1st paragraph:
+	This includes the <code>.avsc</code> equivalent schema syntax (new in Avro 1.12.0)!
+	-->
 	<description><![CDATA[
 	<p>
-		Provides full support for IDL (<code>.avdl</code>) files. This includes the <code>.avsc</code> equivalent schema syntax (new in Avro 1.12.0)!
+		Provides full support for IDL (<code>.avdl</code>) files.
 	</p>
 	<p>
 		Also provides JSON schemas for easier editing of <code>.avsc</code> and <code>.avpr</code> files.
@@ -17,7 +21,7 @@
 		<li>Code completion</li>
 		<li>Formatting (configurable)</li>
 		<li>Inspections and quick fixes</li>
-		<li>Refactoring (renaming schemata and enum symbols)</li>
+		<li>Navigation, renaming, quote/brace pairs, etc.</li>
 		<li>Converting Avro schemas/protocols from/to IDL</li>
 	</ul></p>
 	]]></description>
@@ -68,12 +72,17 @@
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlDuplicateAnnotationsInspection"/>
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Misplaced annotations" enabledByDefault="true" level="WEAK WARNING"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlMisplacedAnnotationsInspection"/>
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Invalid identifier in @namespace annotation" enabledByDefault="true" level="WARNING"
+		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlInvalidNamespaceAnnotationInspection"/>
+		<!-- TODO: Enable when Avro 1.11.1 is released (and added to this plugin) -->
+		<!--
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Misplaced documentation" enabledByDefault="true" level="WARNING"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlMisplacedDocumentationInspection"/>
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Union can be simplified" enabledByDefault="true" level="WEAK WARNING"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlUseNullableShorthandInspection"/>
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Use of optional type" enabledByDefault="false" level="ERROR"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlAvoidNullableShorthandInspection"/>
+		-->
 		<!-- TODO: Enable when Avro supports the schema syntax -->
 		<!--
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Schema syntax available" enabledByDefault="true" level="WEAK WARNING"

@@ -54,9 +54,7 @@ public class AvroIdlToProtocolAction extends ConversionActionBase {
 				WriteCommandAction.runWriteCommandAction(project, actionTitle, "AvroIDL", () -> {
 					try {
 						VfsUtil.saveText(virtualFile, protocol.toString(true));
-						console.print("Wrote Avro Protocol \"", NORMAL_OUTPUT);
-						console.print(protocol.getName(), NORMAL_OUTPUT);
-						console.print("\" to ", NORMAL_OUTPUT);
+						console.print("Wrote Avro Protocol \"" + protocol.getName() + "\" to ", NORMAL_OUTPUT);
 						console.printHyperlink(virtualFile.getName(), new OpenFileHyperlinkInfo(project, virtualFile, 0));
 						console.print("\n", NORMAL_OUTPUT);
 						FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, virtualFile), true);

@@ -45,16 +45,11 @@ abstract class ConversionActionBase extends DumbAwareAction {
 	protected final String actionTitle;
 	private final String consoleTitle;
 
-	protected ConversionActionBase(@NotNull @NlsActions.ActionText String text, @NotNull LanguageFileType sourceFileType,
+	protected ConversionActionBase(@NotNull @NlsActions.ActionText String actionTitle, @NotNull LanguageFileType sourceFileType,
 	                               @NotNull LanguageFileType destinationFileType) {
-		this(text, sourceFileType.getDisplayName() + " to " + destinationFileType.getDisplayName(), sourceFileType, destinationFileType);
-	}
-
-	protected ConversionActionBase(@NotNull @NlsActions.ActionText String text, @NotNull String consoleTitle, @NotNull LanguageFileType sourceFileType,
-	                               @NotNull LanguageFileType destinationFileType) {
-		super(text);
-		this.actionTitle = text;
-		this.consoleTitle = consoleTitle;
+		super((String)null);
+		this.actionTitle = actionTitle;
+		this.consoleTitle = sourceFileType.getDisplayName() + " to " + destinationFileType.getDisplayName();
 		this.sourceFileType = sourceFileType;
 		this.destinationFileType = destinationFileType;
 	}

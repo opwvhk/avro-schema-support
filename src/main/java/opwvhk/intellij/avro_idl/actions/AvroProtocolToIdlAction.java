@@ -54,9 +54,7 @@ public class AvroProtocolToIdlAction extends ConversionActionBase {
 					try (Writer writer = new OutputStreamWriter(virtualFile.getOutputStream(this))) {
 						IdlUtils.writeIdlProtocol(writer, protocol);
 
-						console.print("Wrote Avro IDL \"", NORMAL_OUTPUT);
-						console.print(protocol.getName(), NORMAL_OUTPUT);
-						console.print("\" to ", NORMAL_OUTPUT);
+						console.print("Wrote Avro IDL \"" + protocol.getName() + "\" to ", NORMAL_OUTPUT);
 						console.printHyperlink(virtualFile.getName(), new OpenFileHyperlinkInfo(project, virtualFile, 0));
 						console.print("\n", NORMAL_OUTPUT);
 						FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, virtualFile), true);

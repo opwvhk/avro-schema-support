@@ -254,7 +254,8 @@ public class AvroIdlUtil {
 	}
 
 	private static @NotNull LookupElement lookupElement(@NotNull PsiElement psiElement, @NotNull Schema schema, @NotNull String currentNamespace) {
-		final String namespace = schema.getNamespace();
+		final String namespace0 = schema.getNamespace();
+		final String namespace = namespace0 == null ? "" : namespace0;
 		final String schemaName = schema.getName();
 		final String schemaFullName = schema.getFullName();
 		final LookupElement lookupElement = lookupElement(psiElement, schemaName, schemaFullName, namespace, currentNamespace);
@@ -270,8 +271,8 @@ public class AvroIdlUtil {
 	}
 
 	private static @NotNull LookupElement lookupElement(@NotNull PsiElement psiElement, @NotNull String schemaName, @NotNull String schemaFullName,
-	                                                    @NotNull String namespace, @NotNull String currentNamespace) {
-		if (namespace.isEmpty()) {
+	                                                    @Nullable String namespace, @NotNull String currentNamespace) {
+		if (namespace == null || namespace.isEmpty()) {
 			return LookupElementBuilder.create(psiElement, schemaName);
 		} else if (namespace.equals(currentNamespace)) {
 			return LookupElementBuilder.create(psiElement, schemaName).withLookupString(schemaFullName).withTypeText(namespace);

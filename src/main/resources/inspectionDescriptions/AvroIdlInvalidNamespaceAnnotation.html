@@ -1,0 +1,17 @@
+<html>
+<body>
+Shows @annotation annotations with an invalid identifier.
+<!-- tooltip end -->
+Although valid Avro syntax (a bug/omission), invalid schema namespaces can lead to problems and should be avoided.
+<p><strong>Example:</strong></p>
+<pre><code>@namespace("not an identifier")
+record MyData {
+    /* ... */
+}
+</code></pre>
+<p>
+	The quick fix offers a popup to rename the offending namespace.
+</p>
+
+</body>
+</html>

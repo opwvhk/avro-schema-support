@@ -2,6 +2,7 @@ package opwvhk.intellij.avro_idl.language;
 
 import com.intellij.lang.cacheBuilder.DefaultWordsScanner;
 import com.intellij.lang.cacheBuilder.WordsScanner;
+import com.intellij.lang.findUsages.FindUsagesProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.tree.TokenSet;
@@ -10,13 +11,17 @@ import opwvhk.intellij.avro_idl.syntax.AvroIdlLexer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class AvroIdlFindUsagesProvider implements com.intellij.lang.findUsages.FindUsagesProvider {
+public class AvroIdlFindUsagesProvider implements FindUsagesProvider {
+
+	private static final TokenSet IDENTIFIER_TOKENS = TokenSet.create(AvroIdlTypes.IDENTIFIER);
+	private static final TokenSet COMMENT_TOKENS = TokenSet.create(AvroIdlTypes.DOC_COMMENT, AvroIdlTypes.BLOCK_COMMENT, AvroIdlTypes.LINE_COMMENT,
+		AvroIdlTypes.INCOMPLETE_DOC_COMMENT, AvroIdlTypes.INCOMPLETE_BLOCK_COMMENT);
 
 	@Override
 	public @Nullable WordsScanner getWordsScanner() {
-		final TokenSet identifiers = TokenSet.create(AvroIdlTypes.IDENTIFIER);
-		final TokenSet comments = TokenSet.create(AvroIdlTypes.DOC_COMMENT, AvroIdlTypes.BLOCK_COMMENT, AvroIdlTypes.LINE_COMMENT);
-		return new DefaultWordsScanner(new AvroIdlLexer(), identifiers, comments, TokenSet.EMPTY);
+		final DefaultWordsScanner wordsScanner = new DefaultWordsScanner(new AvroIdlLexer(), IDENTIFIER_TOKENS, COMMENT_TOKENS, TokenSet.EMPTY);
+		wordsScanner.setMayHaveFileRefsInLiterals(true);
+		return wordsScanner;
 	}
 
 	@Override
@@ -32,7 +37,7 @@ public class AvroIdlFindUsagesProvider implements com.intellij.lang.findUsages.F
 	@Override
 	public @NotNull String getType(@NotNull PsiElement element) {
 		if (element instanceof AvroIdlRecordDeclaration) {
-			if (((AvroIdlRecordDeclaration) element).isErrorType()) {
+			if (((AvroIdlRecordDeclaration)element).isErrorType()) {
 				return "error schema";
 			} else {
 				return "record schema";
@@ -44,7 +49,7 @@ public class AvroIdlFindUsagesProvider implements com.intellij.lang.findUsages.F
 		} else if (element instanceof AvroIdlEnumConstant) {
 			return "enum schema";
 		} else if (element instanceof AvroIdlNamedSchemaReference) {
-			final PsiElement resolvedReference = ((AvroIdlNamedSchemaReference) element).resolve();
+			final PsiElement resolvedReference = ((AvroIdlNamedSchemaReference)element).resolve();
 			if (resolvedReference != null) {
 				return getType(resolvedReference);
 			} else {
@@ -64,9 +69,9 @@ public class AvroIdlFindUsagesProvider implements com.intellij.lang.findUsages.F
 	public @NotNull String getNodeText(@NotNull PsiElement element, boolean useFullName) {
 		String name;
 		if (element instanceof AvroIdlNamespacedNameIdentifierOwner) {
-			name = ((AvroIdlNamedSchemaDeclaration) element).getFullName();
+			name = ((AvroIdlNamedSchemaDeclaration)element).getFullName();
 		} else if (element instanceof PsiNamedElement) {
-			name = ((PsiNamedElement) element).getName();
+			name = ((PsiNamedElement)element).getName();
 		} else {
 			name = element.getText();
 		}
@@ -74,7 +79,8 @@ public class AvroIdlFindUsagesProvider implements com.intellij.lang.findUsages.F
 			return "";
 		} else if (useFullName) {
 			return name;
-		} else
-		return name.substring(name.lastIndexOf(".") + 1);
+		} else {
+			return name.substring(name.lastIndexOf(".") + 1);
+		}
 	}
 }

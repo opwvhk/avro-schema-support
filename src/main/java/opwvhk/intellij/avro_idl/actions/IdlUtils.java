@@ -317,11 +317,12 @@ public final class IdlUtils {
 		} else if (type == Schema.Type.UNION) {
 			// Note: unions cannot have properties
 			List<Schema> types = schema.getTypes();
-			if (schema.isNullable() && types.size() == 2) {
-				Schema nonNullSchema = !types.get(0).isNullable() ? types.get(0) : types.get(1);
-				writeFieldSchema(nonNullSchema, writer, jsonGen, alreadyDeclared, toDeclare, recordNameSpace);
-				writer.append('?');
-			} else {
+			// TODO: Uncomment when Avro 1.11.1 is released
+			//if (schema.isNullable() && types.size() == 2) {
+			//	Schema nonNullSchema = !types.get(0).isNullable() ? types.get(0) : types.get(1);
+			//	writeFieldSchema(nonNullSchema, writer, jsonGen, alreadyDeclared, toDeclare, recordNameSpace);
+			//	writer.append('?');
+			//} else {
 				writer.append("union{");
 				Iterator<Schema> iterator = types.iterator();
 				if (iterator.hasNext()) {
@@ -334,7 +335,8 @@ public final class IdlUtils {
 					throw new AvroRuntimeException("Union schemas must have member types " + schema);
 				}
 				writer.append('}');
-			}
+			// TODO: Uncomment when Avro 1.11.1 is released
+			//}
 		} else {
 			Set<String> propertiesToSkip;
 			String typeName;
