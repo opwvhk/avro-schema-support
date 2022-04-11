@@ -113,7 +113,7 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 			@Override
 			protected void hyperlinkActivated(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
 				final String link = event.getDescription();
-				if (link != null && link.contains("#")) {
+				if (link != null && link.contains("#") && !link.contains(":")) {
 					int hashPos = link.indexOf("#");
 					String idToSelect = link.substring(0, hashPos); // link.contains("#"), so hashPos >= 0
 					String searchFilter = link.substring(hashPos + 1);
