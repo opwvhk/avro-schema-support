@@ -58,10 +58,13 @@ tasks {
 		//untilBuild.set("221.*")
 		changeNotes.set(
 			/*
-			<p>Version 213.1.0:</p>
+			<p>Version 213.2.0:</p>
 			<ul data-version="213.1.0">
 			<li>Added IDL syntax for the schema syntax (new in Avro 1.12.0)</li>
 			<li>Added inspection suggesting the schema syntax where appropriate</li>
+			</ul>
+			<p>Version 213.1.0:</p>
+			<ul data-version="213.1.0">
 			<li>Added support for Kotlin style nullable types (new in Avro 1.11.1)</li>
 			<li>Added inspection for documentation comments to detect and apply fixes for improvements since Avro 1.11.1</li>
 			</ul>

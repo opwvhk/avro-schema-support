@@ -86,14 +86,19 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 			}
 			AvroIdlNotifications.showNotification(project, NotificationType.INFORMATION, false,
 				"Avro IDL Support updated to version" + plugin.getVersion(),
-				"All <a href=\"#Avro IDL\">settings are here</a>.<br/><b>This is what has changed:</b><br/><br/>" + changes,
+				"All <a href=\"#Avro IDL\">settings are here</a>.<br/>" +
+					"Please <a href=\"https://github.com/opwvhk/avro-schema-support/issues\">report bugs</a> and " +
+					"<a href=\"https://github.com/opwvhk/avro-schema-support/discussions\">questions</a> via GitHub.<br/><br/>" +
+					"<b>This is what has changed:</b><br/><br/>" + changes,
 				notification -> notification.setListener(createUrlOpeningListener(project)));
 		} else {
 			//noinspection SpellCheckingInspection
 			AvroIdlNotifications.showNotification(project, NotificationType.INFORMATION, true, "Avro IDL Support installed.",
 				plugin.getName() + " version " + plugin.getVersion() + " was successfully installed.<br/>" + "If you like, you can customize " +
 					"<a href=\"reference.settingsdialog.IDE.editor.colors.Avro IDL#\">Colors</a>, " +
-					"<a href=\"preferences.sourceCode.Avro IDL#\">Code Style</a>, and <a href=\"Errors#Avro IDL\">Inspections</a>.",
+					"<a href=\"preferences.sourceCode.Avro IDL#\">Code Style</a>, and <a href=\"Errors#Avro IDL\">Inspections</a>.<br/><br/>" +
+					"Please <a href=\"https://github.com/opwvhk/avro-schema-support/issues\">report bugs</a> and " +
+					"<a href=\"https://github.com/opwvhk/avro-schema-support/discussions\">ask questions</a> via GitHub.",
 				notification -> notification.setListener(createUrlOpeningListener(project)));
 		}
 	}
