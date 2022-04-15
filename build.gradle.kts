@@ -5,7 +5,7 @@ import java.util.*
 plugins {
 	`java-library`
 	id("java")
-	id("org.jetbrains.intellij") version "1.5.2"
+	id("org.jetbrains.intellij") version "1.5.3"
 }
 
 val lastBuild = provider {
@@ -51,7 +51,7 @@ intellij {
 tasks {
 	patchPluginXml {
 		version.set(project.version.toString())
-		sinceBuild.set("213")
+		sinceBuild.set("203")
 		// Find last EAP version (the build version until the first dot):
 		// curl 'https://data.services.jetbrains.com/products/releases?code=IIU&code=IIC&code=PCP&code=PCC&latest=true&type=eap' 2>/dev/null|jq -r '.[][0].build'|cut -d . -f 1|sort -r|head -n 1
 		untilBuild.set(lastBuild)
