@@ -32,6 +32,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbAware {
 	public static final PluginId OLD_PLUGIN_ID = PluginId.getId("claims.bold.intellij.avro");
+	private static final String SNAPSHOT_SUFFIX = "-SNAPSHOT";
 
 	@Override
 	public void runActivity(@NotNull Project project) {
@@ -42,8 +43,19 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 		checkForReplacedPlugin(project, plugin.getName());
 
 		String oldVersion = settings.getPluginVersion();
-		notifyUserOfUpdate(project, plugin, oldVersion);
-		settings.setPluginVersion(plugin.getVersion());
+		String newVersion = versionOf(plugin);
+
+		notifyUserOfUpdate(project, plugin, newVersion, oldVersion);
+		settings.setPluginVersion(newVersion);
+	}
+
+	private @NotNull String versionOf(IdeaPluginDescriptor plugin) {
+		String pluginVersion = plugin.getVersion();
+		if (pluginVersion.endsWith(SNAPSHOT_SUFFIX)) {
+			return pluginVersion.substring(0, pluginVersion.length() - SNAPSHOT_SUFFIX.length());
+		} else {
+			return pluginVersion;
+		}
 	}
 
 	private void checkForReplacedPlugin(@NotNull Project project, String myName) {
@@ -66,39 +78,40 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 	}
 
 
-	private void notifyUserOfUpdate(@NotNull Project project, @NotNull IdeaPluginDescriptor plugin, @Nullable String oldVersion) {
+	private void notifyUserOfUpdate(@NotNull Project project, @NotNull IdeaPluginDescriptor plugin,
+	                                @NotNull String newVersion, @Nullable String oldVersion) {
 		String changeNotes = plugin.getChangeNotes();
-		if (oldVersion != null && changeNotes != null) {
+		if (oldVersion == null || changeNotes == null) {
+			//noinspection SpellCheckingInspection
+			AvroIdlNotifications.showNotification(project, NotificationType.INFORMATION, true, "Avro IDL Support installed.",
+				plugin.getName() + " version " + newVersion + " was successfully installed.<br/>" + "If you like, you can customize " +
+					"<a href=\"reference.settingsdialog.IDE.editor.colors.Avro IDL#\">Colors</a>, " +
+					"<a href=\"preferences.sourceCode.Avro IDL#\">Code Style</a>, and <a href=\"Errors#Avro IDL\">Inspections</a>.<br/><br/>" +
+					"Please <a href=\"https://github.com/opwvhk/avro-schema-support/issues\">report bugs</a> and " +
+					"<a href=\"https://github.com/opwvhk/avro-schema-support/discussions\">ask questions</a> via GitHub.",
+				notification -> notification.setListener(createUrlOpeningListener(project)));
+		} else if (!oldVersion.equals(newVersion)) {
 			// Collect the changes since the previously installed version (but for at most 3 versions).
 			StringBuilder changes = new StringBuilder();
 			Matcher matcher = Pattern.compile("(?s)<ul data-version=\"(?<version>[^\"]+)\">.*?</ul>").matcher(changeNotes);
 			int count = 0;
 			while (matcher.find()) {
-				count++;
-				if (count > 3) {
-					break;
-				}
 				final String version = matcher.group("version");
 				if (version.equals(oldVersion)) {
+					break;
+				}
+				count++;
+				if (count > 3) {
 					break;
 				}
 				changes.append(version).append(":").append(matcher.group());
 			}
 			AvroIdlNotifications.showNotification(project, NotificationType.INFORMATION, false,
-				"Avro IDL Support updated to version" + plugin.getVersion(),
+				"Avro IDL Support updated to version" + newVersion,
 				"All <a href=\"#Avro IDL\">settings are here</a>.<br/>" +
 					"Please <a href=\"https://github.com/opwvhk/avro-schema-support/issues\">report bugs</a> and " +
 					"<a href=\"https://github.com/opwvhk/avro-schema-support/discussions\">questions</a> via GitHub.<br/><br/>" +
 					"<b>This is what has changed:</b><br/><br/>" + changes,
-				notification -> notification.setListener(createUrlOpeningListener(project)));
-		} else {
-			//noinspection SpellCheckingInspection
-			AvroIdlNotifications.showNotification(project, NotificationType.INFORMATION, true, "Avro IDL Support installed.",
-				plugin.getName() + " version " + plugin.getVersion() + " was successfully installed.<br/>" + "If you like, you can customize " +
-					"<a href=\"reference.settingsdialog.IDE.editor.colors.Avro IDL#\">Colors</a>, " +
-					"<a href=\"preferences.sourceCode.Avro IDL#\">Code Style</a>, and <a href=\"Errors#Avro IDL\">Inspections</a>.<br/><br/>" +
-					"Please <a href=\"https://github.com/opwvhk/avro-schema-support/issues\">report bugs</a> and " +
-					"<a href=\"https://github.com/opwvhk/avro-schema-support/discussions\">ask questions</a> via GitHub.",
 				notification -> notification.setListener(createUrlOpeningListener(project)));
 		}
 	}

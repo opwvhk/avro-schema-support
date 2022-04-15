@@ -4,7 +4,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 @Service(Service.Level.APP)
 @State(name = "AvroIdlSettings", storages = @Storage(value = "avro_idl.xml", roamingType = RoamingType.DISABLED))

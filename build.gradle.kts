@@ -16,7 +16,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "213.1.0-SNAPSHOT"
+version = "213.0.1"
 
 repositories {
 	mavenCentral()
@@ -70,6 +70,10 @@ tasks {
 			</ul>
 			*/
 			"""
+			<p>Version 213.0.1:</p>
+			<ul data-version="213.0.1">
+			<li>Fixed issue #22</li>
+			</ul>
 			<p>Version 213.0.0:</p>
 			<ul data-version="213.0.0">
 			<li>New File dialog for IDL files</li>
