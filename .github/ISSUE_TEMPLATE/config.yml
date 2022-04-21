@@ -2,7 +2,7 @@ blank_issues_enabled: false
 contact_links:
   - name: Ask a Question
     url: https://github.com/opwvhk/avro-schema-support/discussions/new?category=q-a
-    about: Ask the community for help
+    about: Unsure how to use the plugin? Whether a feature is supported? Ask the community for help.
   - name: Feature Request
     url: https://github.com/opwvhk/avro-schema-support/discussions/new?category=ideas
-    about: Share ideas for new features
+    about: Do you have a great idea for the plugin? Please share your ideas!
