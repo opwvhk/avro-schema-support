@@ -1,15 +1,16 @@
 // This is a generated file. Not intended for manual editing.
 package opwvhk.intellij.avro_idl.syntax;
 
+import com.intellij.lang.ASTNode;
+import com.intellij.lang.LightPsiParser;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
-import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
-import static com.intellij.lang.parser.GeneratedParserUtilBase.*;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.tree.TokenSet;
 import com.intellij.lang.PsiParser;
-import com.intellij.lang.LightPsiParser;
+import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
+
+import static com.intellij.lang.parser.GeneratedParserUtilBase.*;
+import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
 @SuppressWarnings({"SimplifiableIfStatement", "UnusedAssignment"})
 public class AvroIdlParser implements PsiParser, LightPsiParser {
@@ -198,31 +199,40 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // EnumConstant (COMMA EnumConstant)*
+  // [EnumConstant (COMMA EnumConstant)*]
   public static boolean EnumBody(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "EnumBody")) return false;
-    boolean r;
     Marker m = enter_section_(b, l, _NONE_, ENUM_BODY, "<enum body>");
+    EnumBody_0(b, l + 1);
+    exit_section_(b, l, m, true, false, AvroIdlParser::recoverEnumBody);
+    return true;
+  }
+
+  // EnumConstant (COMMA EnumConstant)*
+  private static boolean EnumBody_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EnumBody_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
     r = EnumConstant(b, l + 1);
-    r = r && EnumBody_1(b, l + 1);
-    exit_section_(b, l, m, r, false, AvroIdlParser::recoverEnumBody);
+    r = r && EnumBody_0_1(b, l + 1);
+    exit_section_(b, m, null, r);
     return r;
   }
 
   // (COMMA EnumConstant)*
-  private static boolean EnumBody_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "EnumBody_1")) return false;
+  private static boolean EnumBody_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EnumBody_0_1")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!EnumBody_1_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "EnumBody_1", c)) break;
+      if (!EnumBody_0_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "EnumBody_0_1", c)) break;
     }
     return true;
   }
 
   // COMMA EnumConstant
-  private static boolean EnumBody_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "EnumBody_1_0")) return false;
+  private static boolean EnumBody_0_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EnumBody_0_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, COMMA);
@@ -315,7 +325,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ENUM Identifier LEFT_BRACE [ EnumBody] RIGHT_BRACE [ EnumDefaultValueAssignment ]
+  // ENUM Identifier LEFT_BRACE EnumBody RIGHT_BRACE [ EnumDefaultValueAssignment ]
   static boolean EnumInnerDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "EnumInnerDeclaration")) return false;
     if (!nextTokenIs(b, ENUM)) return false;
@@ -325,18 +335,11 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     p = r; // pin = 1
     r = r && report_error_(b, Identifier(b, l + 1));
     r = p && report_error_(b, consumeToken(b, LEFT_BRACE)) && r;
-    r = p && report_error_(b, EnumInnerDeclaration_3(b, l + 1)) && r;
+    r = p && report_error_(b, EnumBody(b, l + 1)) && r;
     r = p && report_error_(b, consumeToken(b, RIGHT_BRACE)) && r;
     r = p && EnumInnerDeclaration_5(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
-  }
-
-  // [ EnumBody]
-  private static boolean EnumInnerDeclaration_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "EnumInnerDeclaration_3")) return false;
-    EnumBody(b, l + 1);
-    return true;
   }
 
   // [ EnumDefaultValueAssignment ]

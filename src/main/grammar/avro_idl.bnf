@@ -1,3 +1,4 @@
+//noinspection RegExpSimplifiableForFile
 //noinspection RegExpRedundantEscapeForFile
 {
 	parserClass = "opwvhk.intellij.avro_idl.syntax.AvroIdlParser"
@@ -195,8 +196,8 @@ private recoverFixedInnerDeclaration ::= !(SEMICOLON|IMPORT|FIXED|ENUM|RECORD|ER
 EnumDeclaration ::= EnumDeclaration1 | EnumDeclaration2 { extends=NamedSchemaDeclaration }
 private EnumDeclaration1 ::= SchemaProperty+ EnumInnerDeclaration
 private EnumDeclaration2 ::= EnumInnerDeclaration
-private EnumInnerDeclaration ::= ENUM Identifier LEFT_BRACE [ EnumBody] RIGHT_BRACE [ EnumDefaultValueAssignment ] { pin=1 }
-EnumBody ::= EnumConstant (COMMA EnumConstant)* { recoverWhile="recoverEnumBody" }
+private EnumInnerDeclaration ::= ENUM Identifier LEFT_BRACE EnumBody RIGHT_BRACE [ EnumDefaultValueAssignment ] { pin=1 }
+EnumBody ::= [EnumConstant (COMMA EnumConstant)*] { recoverWhile="recoverEnumBody" }
 private EnumDefaultValueAssignment ::= EQUALS EnumDefault SEMICOLON { pin=1 }
 EnumConstant ::= Identifier {
 	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
