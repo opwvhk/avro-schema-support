@@ -93,11 +93,9 @@ class AvroIdlCompletionContributor extends CompletionContributor {
 		addBasicCompletion(
 			psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParents(AvroIdlIdentifier.class, AvroIdlSchemaProperty.class, AvroIdlProtocolDeclaration.class),
 			'@', "namespace(\"\u0000\")");
-		/*
 		addBasicCompletion(
 			psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParents(AvroIdlIdentifier.class, AvroIdlSchemaProperty.class, AvroIdlNamedSchemaDeclaration.class),
 			'@', "namespace(\"\u0000\")", "aliases([\"\u0000\"])", "logicalType(\"\u0000\")");
-		*/
 		addBasicCompletion(
 			psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParents(AvroIdlIdentifier.class, AvroIdlSchemaProperty.class, AvroIdlVariableDeclarator.class),
 			'@', "aliases([\"\u0000\"])", "order(\"\u0000\")");

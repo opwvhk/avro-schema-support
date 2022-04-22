@@ -33,11 +33,6 @@ dependencies {
 	testImplementation("org.assertj", "assertj-core", "3.20.2")
 }
 
-tasks.withType<JavaCompile> {
-	options.compilerArgs.add("-Xlint:unchecked")
-	options.isDeprecation = true
-}
-
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
 	//version.set("2021.2.4")
@@ -49,6 +44,14 @@ intellij {
 }
 
 tasks {
+	withType<JavaCompile> {
+		options.compilerArgs.add("-Xlint:unchecked")
+		options.isDeprecation = true
+	}
+	test {
+		systemProperty("idea.force.use.core.classloader", "true")
+	}
+
 	patchPluginXml {
 		version.set(project.version.toString())
 		sinceBuild.set("203")

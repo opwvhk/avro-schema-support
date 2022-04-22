@@ -1,0 +1,7 @@
+protocol MissingError {
+	void poke() throws Failure;
+
+	error Failure {
+		
+	}
+}

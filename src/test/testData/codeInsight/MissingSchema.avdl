@@ -1,0 +1,6 @@
+protocol MissingSchema {
+	record Person {
+		string name;
+		Status status;
+	}
+}

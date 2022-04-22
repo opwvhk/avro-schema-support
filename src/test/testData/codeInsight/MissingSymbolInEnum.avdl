@@ -1,0 +1,5 @@
+protocol MissingSymbol {
+	enum Status {
+		ON, OFF
+	} = UNKNOWN;
+}
