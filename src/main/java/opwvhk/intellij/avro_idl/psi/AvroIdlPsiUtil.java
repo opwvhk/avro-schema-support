@@ -222,6 +222,30 @@ public class AvroIdlPsiUtil {
 		return getReference(owner);
 	}
 
+	public static @NotNull List<AvroIdlEnumConstant> getComponents(@NotNull AvroIdlEnumBody enumBody) {
+		return enumBody.getEnumConstantList();
+	}
+
+	public static @NotNull List<AvroIdlVariableDeclarator> getComponents(@NotNull AvroIdlFieldDeclaration fieldDeclaration) {
+		return fieldDeclaration.getVariableDeclaratorList();
+	}
+
+	public static @NotNull List<AvroIdlFormalParameter> getComponents(@NotNull AvroIdlMessageDeclaration messageDeclaration) {
+		return messageDeclaration.getFormalParameterList();
+	}
+
+	public static @NotNull List<AvroIdlType> getComponents(@NotNull AvroIdlUnionType unionType) {
+		return unionType.getTypeList();
+	}
+
+	public static @NotNull List<AvroIdlJsonPair> getComponents(@NotNull AvroIdlJsonObject jsonObject) {
+		return jsonObject.getJsonPairList();
+	}
+
+	public static @NotNull List<AvroIdlJsonValue> getComponents(@NotNull AvroIdlJsonArray jsonArray) {
+		return jsonArray.getJsonValueList();
+	}
+
 	public static @NotNull ItemPresentation getPresentation(final AvroIdlNamedType element) {
 		//noinspection ConstantConditions
 		return new ItemPresentation() {

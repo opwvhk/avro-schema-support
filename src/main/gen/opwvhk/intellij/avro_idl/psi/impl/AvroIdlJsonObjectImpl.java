@@ -33,4 +33,9 @@ public class AvroIdlJsonObjectImpl extends ASTWrapperPsiElement implements AvroI
     return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlJsonPair.class);
   }
 
+  @Override
+  public @NotNull List<AvroIdlJsonPair> getComponents() {
+    return AvroIdlPsiUtil.getComponents(this);
+  }
+
 }

@@ -4,6 +4,7 @@ package opwvhk.intellij.avro_idl.psi;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiListLikeElement;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceOwner;
 
 public class AvroIdlVisitor extends PsiElementVisitor {
@@ -17,7 +18,7 @@ public class AvroIdlVisitor extends PsiElementVisitor {
   }
 
   public void visitEnumBody(@NotNull AvroIdlEnumBody o) {
-    visitPsiElement(o);
+    visitPsiListLikeElement(o);
   }
 
   public void visitEnumConstant(@NotNull AvroIdlEnumConstant o) {
@@ -33,7 +34,7 @@ public class AvroIdlVisitor extends PsiElementVisitor {
   }
 
   public void visitFieldDeclaration(@NotNull AvroIdlFieldDeclaration o) {
-    visitPsiElement(o);
+    visitPsiListLikeElement(o);
   }
 
   public void visitFixedDeclaration(@NotNull AvroIdlFixedDeclaration o) {
@@ -57,11 +58,11 @@ public class AvroIdlVisitor extends PsiElementVisitor {
   }
 
   public void visitJsonArray(@NotNull AvroIdlJsonArray o) {
-    visitPsiElement(o);
+    visitPsiListLikeElement(o);
   }
 
   public void visitJsonObject(@NotNull AvroIdlJsonObject o) {
-    visitPsiElement(o);
+    visitPsiListLikeElement(o);
   }
 
   public void visitJsonPair(@NotNull AvroIdlJsonPair o) {
@@ -96,6 +97,7 @@ public class AvroIdlVisitor extends PsiElementVisitor {
   public void visitMessageDeclaration(@NotNull AvroIdlMessageDeclaration o) {
     visitWithSchemaProperties(o);
     // visitNameIdentifierOwner(o);
+    // visitPsiListLikeElement(o);
   }
 
   public void visitNamedSchemaDeclaration(@NotNull AvroIdlNamedSchemaDeclaration o) {
@@ -155,6 +157,7 @@ public class AvroIdlVisitor extends PsiElementVisitor {
 
   public void visitUnionType(@NotNull AvroIdlUnionType o) {
     visitType(o);
+    // visitPsiListLikeElement(o);
   }
 
   public void visitVariableDeclarator(@NotNull AvroIdlVariableDeclarator o) {
@@ -164,6 +167,10 @@ public class AvroIdlVisitor extends PsiElementVisitor {
 
   public void visitWithSchemaProperties(@NotNull AvroIdlWithSchemaProperties o) {
     visitPsiElement(o);
+  }
+
+  public void visitPsiListLikeElement(@NotNull PsiListLikeElement o) {
+    visitElement(o);
   }
 
   public void visitNameIdentifierOwner(@NotNull AvroIdlNameIdentifierOwner o) {

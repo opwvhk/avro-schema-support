@@ -33,4 +33,9 @@ public class AvroIdlEnumBodyImpl extends ASTWrapperPsiElement implements AvroIdl
     return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlEnumConstant.class);
   }
 
+  @Override
+  public @NotNull List<AvroIdlEnumConstant> getComponents() {
+    return AvroIdlPsiUtil.getComponents(this);
+  }
+
 }

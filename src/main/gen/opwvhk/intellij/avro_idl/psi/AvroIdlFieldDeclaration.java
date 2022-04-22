@@ -4,8 +4,9 @@ package opwvhk.intellij.avro_idl.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiListLikeElement;
 
-public interface AvroIdlFieldDeclaration extends PsiElement {
+public interface AvroIdlFieldDeclaration extends PsiListLikeElement {
 
   @NotNull
   List<AvroIdlWithSchemaProperties> getWithSchemaPropertiesList();
@@ -13,5 +14,7 @@ public interface AvroIdlFieldDeclaration extends PsiElement {
   @NotNull AvroIdlType getType();
 
   @NotNull List<AvroIdlVariableDeclarator> getVariableDeclaratorList();
+
+  @NotNull List<AvroIdlVariableDeclarator> getComponents();
 
 }

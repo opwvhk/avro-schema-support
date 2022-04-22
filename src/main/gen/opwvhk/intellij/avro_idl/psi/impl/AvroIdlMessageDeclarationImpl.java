@@ -72,4 +72,9 @@ public class AvroIdlMessageDeclarationImpl extends AvroIdlWithSchemaPropertiesIm
     return AvroIdlPsiUtil.setName(this, name);
   }
 
+  @Override
+  public @NotNull List<AvroIdlFormalParameter> getComponents() {
+    return AvroIdlPsiUtil.getComponents(this);
+  }
+
 }

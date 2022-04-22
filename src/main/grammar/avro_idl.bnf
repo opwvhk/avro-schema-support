@@ -197,7 +197,11 @@ EnumDeclaration ::= EnumDeclaration1 | EnumDeclaration2 { extends=NamedSchemaDec
 private EnumDeclaration1 ::= SchemaProperty+ EnumInnerDeclaration
 private EnumDeclaration2 ::= EnumInnerDeclaration
 private EnumInnerDeclaration ::= ENUM Identifier LEFT_BRACE EnumBody RIGHT_BRACE [ EnumDefaultValueAssignment ] { pin=1 }
-EnumBody ::= [EnumConstant (COMMA EnumConstant)*] { recoverWhile="recoverEnumBody" }
+EnumBody ::= [EnumConstant (COMMA EnumConstant)*] {
+	recoverWhile="recoverEnumBody"
+	implements="com.intellij.psi.PsiListLikeElement"
+	methods=[getComponents]
+}
 private EnumDefaultValueAssignment ::= EQUALS EnumDefault SEMICOLON { pin=1 }
 EnumConstant ::= Identifier {
 	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
@@ -221,7 +225,8 @@ RecordBody ::= FieldDeclaration* {
 private recoverRecordBody ::= !(RIGHT_BRACE)
 FieldDeclaration ::= Type VariableDeclarator ( COMMA VariableDeclarator )* SEMICOLON { pin=1
 	//recoverWhile="recoverFieldDeclaration"
-	methods=[getType getVariableDeclaratorList]
+	methods=[getType getVariableDeclaratorList getComponents]
+	implements="com.intellij.psi.PsiListLikeElement"
 }
 //private recoverFieldDeclaration ::= !(RIGHT_BRACE)
 
@@ -238,8 +243,8 @@ private recoverVariableDeclarator ::= !(SEMICOLON|RIGHT_BRACE|RIGHT_PAREN|COMMA)
 
 MessageDeclaration ::= MessageDeclaration1 | MessageDeclaration2 {
 	extends=WithSchemaProperties
-	implements="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
-	methods=[getNameIdentifier getTextOffset getName setName]
+	implements=["opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner" "com.intellij.psi.PsiListLikeElement"]
+	methods=[getNameIdentifier getTextOffset getName setName getComponents]
 }
 private MessageDeclaration1 ::= SchemaProperty+ ResultType MessageSignature SEMICOLON { pin=2 }
 private MessageDeclaration2 ::= ResultType MessageSignature SEMICOLON { pin=1 }
@@ -271,7 +276,10 @@ private AngleType ::= LEFT_ANGLE Type RIGHT_ANGLE { pin=1 }
 MapType ::= (MapType1 | MapType2) { extends=Type }
 private MapType1 ::= SchemaProperty+ MapType2 { pin=2 }
 private MapType2 ::= MAP AngleType { pin=1 }
-UnionType ::= UNION LEFT_BRACE UnionContents RIGHT_BRACE { pin=1 extends=Type } // Unions have no schema properties
+UnionType ::= UNION LEFT_BRACE UnionContents RIGHT_BRACE { pin=1 extends=Type
+	implements="com.intellij.psi.PsiListLikeElement"
+	methods=[getComponents]
+} // Unions have no schema properties
 private UnionContents ::= [ Type (COMMA Type)* ] { recoverWhile="recoverUnionContents" }
 private recoverUnionContents ::= !(RIGHT_BRACE)
 // 'upper' is needed because NullableType has extra content; this way, it's included in the PrimitiveType
@@ -294,9 +302,15 @@ JsonStringLiteral ::= STRING_LITERAL { extends=JsonValue
 	implements="com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceOwner"
 	methods=[getReference getLastFileReference]
 }
-JsonObject ::= LEFT_BRACE [ JsonPair (COMMA JsonPair)* ] RIGHT_BRACE { pin=1 }
+JsonObject ::= LEFT_BRACE [ JsonPair (COMMA JsonPair)* ] RIGHT_BRACE { pin=1
+	implements="com.intellij.psi.PsiListLikeElement"
+	methods=[getComponents]
+}
 JsonPair ::= STRING_LITERAL COLON JsonValue { pin=1 recoverWhile="recoverJsonPair" }
-JsonArray ::= LEFT_BRACKET JsonElements RIGHT_BRACKET { pin=1 }
+JsonArray ::= LEFT_BRACKET JsonElements RIGHT_BRACKET { pin=1
+	implements="com.intellij.psi.PsiListLikeElement"
+	methods=[getComponents]
+}
 private JsonElements ::= [ JsonValue (COMMA JsonValue)* ] { recoverWhile="recoverJsonElements" }
 private recoverJsonValue ::= !(RIGHT_PAREN|COMMA|SEMICOLON|IMPORT|FIXED|ENUM|RECORD|ERROR|AT|AT_NAMESPACE|RIGHT_BRACE|RIGHT_BRACKET)
 private recoverJsonPair ::= !(RIGHT_BRACE|COMMA)

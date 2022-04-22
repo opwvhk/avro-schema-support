@@ -33,4 +33,9 @@ public class AvroIdlUnionTypeImpl extends AvroIdlTypeImpl implements AvroIdlUnio
     return PsiTreeUtil.getChildrenOfTypeAsList(this, AvroIdlType.class);
   }
 
+  @Override
+  public @NotNull List<AvroIdlType> getComponents() {
+    return AvroIdlPsiUtil.getComponents(this);
+  }
+
 }
