@@ -73,10 +73,18 @@ public class AvroIdlAnnotator implements Annotator {
 		assert reference != null; // Because we've matched on an identifier, and our parent is a ReferenceType or MessageAttributeThrows
 		final PsiElement referencedElement = reference.resolve();
 
+		final String identifier = getIdentifier(element);
 		if (referencedElement == null) {
-			holder.newAnnotation(ERROR, "Unknown schema: " + getIdentifier(element)).create();
+			AnnotationBuilder annotationBuilder = holder.newAnnotation(ERROR, "Unknown schema: " + identifier);
+			annotationBuilder = annotationBuilder.withFix(new AddEmptyRecordSchemaFix(element, identifier, mustBeAnError));
+			if (!mustBeAnError) {
+				annotationBuilder = annotationBuilder
+					.withFix(new AddEmptyEnumSchemaFix(element, identifier))
+					.withFix(new AddFixedSchemaFix(element, identifier));
+			}
+			annotationBuilder.create();
 		} else if (mustBeAnError && !reference.resolvesToError()) {
-			holder.newAnnotation(ERROR, "Not an error: " + getIdentifier(element)).create();
+			holder.newAnnotation(ERROR, "Not an error: " + identifier).create();
 		}
 	}
 
@@ -97,7 +105,7 @@ public class AvroIdlAnnotator implements Annotator {
 				return;
 			}
 		}
-		holder.newAnnotation(ERROR, "Enum default must be one of the enum constants").create();
+		holder.newAnnotation(ERROR, "Enum default must be one of the enum constants").withFix(new AddEnumSymbolFix(element)).create();
 	}
 
 	private void annotateIdentifierName(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
