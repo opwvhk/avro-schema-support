@@ -33,8 +33,7 @@ public class AvroIdlToProtocolAction extends ConversionActionBase {
 
 		console.print("Parsing IDL file\n", NORMAL_OUTPUT);
 		final Protocol protocol;
-		try {
-			final Idl idl = new Idl(file.toNioPath().toFile());
+		try (final Idl idl = new Idl(file.toNioPath().toFile())) {
 			protocol = idl.CompilationUnit();
 		} catch (RuntimeException | ParseException | IOException e) {
 			console.print("Failed to parse " + file.getName() + "; please resolve errors first.\n", ERROR_OUTPUT);

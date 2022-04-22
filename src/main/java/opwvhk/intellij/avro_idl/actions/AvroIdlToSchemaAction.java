@@ -38,9 +38,9 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 		console.print(" to one or more " + AvroSchemaFileType.INSTANCE.getDisplayName() + " files\n", SYSTEM_OUTPUT);
 
 		List<Schema> rootSchemas;
-		try {
+		try (final Idl idl = new Idl(file.toNioPath().toFile())) {
 			console.print(String.format("Parsing IDL file %s\n", file.getName()), NORMAL_OUTPUT);
-			final Protocol protocol = new Idl(file.toNioPath().toFile()).CompilationUnit();
+			final Protocol protocol = idl.CompilationUnit();
 			if (protocol.getTypes().isEmpty()) {
 				console.print("No root schemas found: aborting.\n", NORMAL_OUTPUT);
 				return;
