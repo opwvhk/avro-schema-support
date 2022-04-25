@@ -60,6 +60,7 @@
 		<backspaceHandlerDelegate implementation="opwvhk.intellij.avro_idl.editor.AvroIdlAngleBracketBackspaceHandler"/>
 		<declarationRangeHandler key="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
 								 implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlDeclarationRangeHandler"/>
+		<lang.documentationProvider language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlDocumentationProvider"/>
 		<!-- Structure view -->
 		<lang.psiStructureViewFactory language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlStructureViewFactory"/>
 		<!-- Formatting & code style -->

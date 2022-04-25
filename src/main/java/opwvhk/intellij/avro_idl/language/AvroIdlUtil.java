@@ -107,7 +107,7 @@ public class AvroIdlUtil {
 				}
 				IElementType importType = importTypeKeyword.getFirstChild().getNode().getElementType();
 				if (importType == AvroIdlTypes.IDL) {
-					PsiManager psiManager = PsiManager.getInstance(importDeclaration.getProject());
+					PsiManager psiManager = importDeclaration.getManager();
 					return ifType(psiManager.findFile(importedFile), AvroIdlFile.class)
 						.flatMap(importedIdlFile -> Stream.of(importedIdlFile.getChildren()))
 						.flatMap(child -> ifType(child, AvroIdlProtocolDeclaration.class)
@@ -161,7 +161,7 @@ public class AvroIdlUtil {
 		}
 
 		final IElementType importType = importTypeElement.getFirstChild().getNode().getElementType();
-		final PsiManager psiManager = PsiManager.getInstance(importDeclaration.getProject());
+		final PsiManager psiManager = importDeclaration.getManager();
 		if (importType == AvroIdlTypes.IDL) {
 			return ifType(psiManager.findFile(importedFile), AvroIdlFile.class).flatMap(idlFile ->
 				findAllSchemaNamesAvailableInIdl(idlFile, errorsOnly, currentNamespace, avroSchemaParser));

@@ -5,5 +5,6 @@ protocol Imported {
 	record Employee {
 		string name;
 		ContractType contract_type;
+		decimal(9,2) salary;
 	}
 }

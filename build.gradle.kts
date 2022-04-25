@@ -76,8 +76,9 @@ tasks {
 			<p>Version 213.1.0:</p>
 			<ul data-version="213.1.0">
 			<li>Added quick fixes for missing schema / enum symbol references</li>
-			<li>Improved brace handling</li>
+			<li>Added declaration documentation for "quick info" popups</li>
 			<li>Added move left/right handing for list-like syntaxes</li>
+			<li>Improved brace handling</li>
 			<li>Improved references to schemata in JSON (<code>.avsc</code>/<code>.avpr</code>)</li>
 			</ul>
 			<p>Version 213.0.1:</p>
