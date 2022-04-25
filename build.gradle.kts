@@ -1,3 +1,5 @@
+@file:Suppress("SpellCheckingInspection")
+
 import org.jetbrains.intellij.tasks.ListProductsReleasesTask.Channel.*
 import org.jetbrains.intellij.tasks.RunPluginVerifierTask.FailureLevel
 import java.util.*
@@ -36,11 +38,13 @@ dependencies {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
 	//version.set("2021.2.4")
-	//plugins.set(listOf("com.intellij.java", "PsiViewer:212-SNAPSHOT")) // Add the java plugin here to satisfy test dependencies.
 	version.set("2021.3.3")
-	plugins.set(listOf("com.intellij.java", "PsiViewer:213-SNAPSHOT")) // Add the java plugin here to satisfy test dependencies.
 	//version.set("2022.1")
-	//plugins.set(listOf("com.intellij.java", "PsiViewer:221-SNAPSHOT")) // Add the java plugin here to satisfy test dependencies.
+
+	val psiViewerVersion = version.get().replace(".", "").substring(2, 5) + "-SNAPSHOT"
+	// Note: without the java plugin tests will fail (so don't remove it even if the plugin does not need it)
+	plugins.set(listOf("com.intellij.java", "PsiViewer:$psiViewerVersion"))
+	//plugins.add("org.jetbrains.idea.maven")
 }
 
 tasks {
