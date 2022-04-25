@@ -30,7 +30,7 @@ public class AvroIdlDeclarationRangeHandler implements DeclarationRangeHandler<A
 
 		int endOffset;
 		if (container instanceof AvroIdlMessageDeclaration || container instanceof AvroIdlImportDeclaration) {
-			ASTNode lastDeclarationChild = container.getNode().getFirstChildNode();
+			ASTNode lastDeclarationChild = container.getNode().getLastChildNode();
 			while (lastDeclarationChild != null && NON_DECLARATION_TYPES.contains(lastDeclarationChild.getElementType())) {
 				lastDeclarationChild = lastDeclarationChild.getTreePrev();
 			}
