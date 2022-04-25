@@ -59,20 +59,20 @@ tasks {
 		// curl 'https://data.services.jetbrains.com/products/releases?code=IIU&code=IIC&code=PCP&code=PCC&latest=true&type=eap' 2>/dev/null|jq -r '.[][0].build'|cut -d . -f 1|sort -r|head -n 1
 		untilBuild.set(lastBuild)
 		//untilBuild.set("221.*")
-		changeNotes.set(
-			/*
-			<p>Version 213.2.0:</p>
-			<ul data-version="213.1.0">
-			<li>Added IDL syntax for the schema syntax (new in Avro 1.12.0)</li>
-			<li>Added inspection suggesting the schema syntax where appropriate</li>
-			</ul>
-			<p>Version 213.1.0:</p>
-			<ul data-version="213.1.0">
-			<li>Added support for Kotlin style nullable types (new in Avro 1.11.1)</li>
-			<li>Added inspection for documentation comments to detect and apply fixes for improvements since Avro 1.11.1</li>
-			</ul>
-			*/
-			"""
+		/*
+		<p>Version 213.2.0:</p>
+		<ul data-version="213.1.0">
+		<li>Added IDL syntax for the schema syntax (new in Avro 1.12.0)</li>
+		<li>Added inspection suggesting the schema syntax where appropriate</li>
+		</ul>
+		<p>Version 213.1.0:</p>
+		<ul data-version="213.1.0">
+		<li>Added support for Kotlin style nullable types (new in Avro 1.11.1)</li>
+		<li>Added inspection for documentation comments to detect and apply fixes for improvements since Avro 1.11.1</li>
+		</ul>
+		*/
+		//language=HTML
+		val changeLog = """
 			<p>Version 213.1.0:</p>
 			<ul data-version="213.1.0">
 			<li>Added quick fixes for missing schema / enum symbol references</li>
@@ -156,7 +156,7 @@ tasks {
 			<li>Some refactoring support (renaming & deleting named types)</li>
 	        </ul>
 			"""
-		)
+		changeNotes.set(changeLog)
 	}
 
 	runPluginVerifier {
