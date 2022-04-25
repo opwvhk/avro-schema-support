@@ -216,7 +216,7 @@ public class AvroIdlUtil {
 		final PsiFile psiProtocolFile = psiManager.findFile(importedFile);
 		if (psiProtocolFile instanceof JsonFile) {
 			final PsiElement[] elements = PsiTreeUtil.collectElements(psiProtocolFile,
-				element -> isSchemaNameJsonStringLiteral(element, schema));
+				element -> isSchemaJsonObject(element, schema));
 			if (elements.length > 0) {
 				return lookupElement(elements[0], schema, namespace);
 			}
@@ -224,30 +224,29 @@ public class AvroIdlUtil {
 		return lookupElement(importedFileReferenceElement, schema, namespace);
 	}
 
-	private static boolean isSchemaNameJsonStringLiteral(@NotNull PsiElement element, @NotNull Schema schema) {
-		if (element instanceof JsonStringLiteral &&
-			element.getParent() instanceof JsonProperty &&
-			element.getParent().getParent() instanceof JsonObject) {
-			// All named schema names in an Avro schema are property values in an object
-			final JsonProperty jsonProperty = (JsonProperty)element.getParent();
-			final JsonObject jsonSchema = (JsonObject)jsonProperty.getParent();
-			if (!"name".equals(jsonProperty.getName())) {
-				return false;
-			}
-			final String textValue = ElementManipulators.getValueText(element);
-			if (textValue.contains(".")) {
-				return textValue.equals(schema.getFullName());
-			} else if (textValue.equals(schema.getName())) {
-				JsonElement parent = jsonSchema;
-				while (parent != null && !(parent instanceof JsonFile)) {
-					final JsonProperty namespaceProperty = jsonSchema.findProperty("namespace");
+	private static boolean isSchemaJsonObject(@NotNull PsiElement element, @NotNull Schema schema) {
+		if (!(element instanceof JsonObject)) return false;
+
+		JsonProperty nameProperty = ((JsonObject)element).findProperty("name");
+		if (nameProperty == null) return false;
+		JsonValue nameValue = nameProperty.getValue();
+		if (!(nameValue instanceof JsonStringLiteral)) return false;
+		String name = ElementManipulators.getValueText(nameValue);
+
+		if (name.contains(".")) {
+			return name.equals(schema.getFullName());
+		} else if (name.equals(schema.getName())) {
+			JsonElement parent = (JsonElement)element;
+			while (parent != null && !(parent instanceof JsonFile)) {
+				if (parent instanceof JsonObject) {
+					final JsonProperty namespaceProperty = ((JsonObject)parent).findProperty("namespace");
 					if (namespaceProperty != null) {
 						final JsonValue namespaceValue = namespaceProperty.getValue();
 						return namespaceValue instanceof JsonStringLiteral &&
 							ElementManipulators.getValueText(namespaceValue).equals(schema.getNamespace());
 					}
-					parent = (JsonElement)parent.getParent();
 				}
+				parent = (JsonElement)parent.getParent();
 			}
 		}
 		return false;
