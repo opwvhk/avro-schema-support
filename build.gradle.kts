@@ -44,7 +44,8 @@ intellij {
 	val psiViewerVersion = version.get().replace(".", "").substring(2, 5) + "-SNAPSHOT"
 	// Note: without the java plugin tests will fail (so don't remove it even if the plugin does not need it)
 	plugins.set(listOf("com.intellij.java", "PsiViewer:$psiViewerVersion"))
-	//plugins.add("org.jetbrains.idea.maven")
+	plugins.add("org.jetbrains.idea.maven")
+	plugins.add("Lombook Plugin") // Yes, this is the actual plugin id (with upper case, space, and spelling mistake...)
 }
 
 tasks {
