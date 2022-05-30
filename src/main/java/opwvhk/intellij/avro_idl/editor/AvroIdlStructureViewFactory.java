@@ -16,9 +16,8 @@ public class AvroIdlStructureViewFactory implements PsiStructureViewFactory {
 		return new TreeBasedStructureViewBuilder() {
 			@Override
             public @NotNull StructureViewModel createStructureViewModel(@Nullable Editor editor) {
-				return new AvroIdlStructureViewModel(psiFile);
+				return new AvroIdlStructureViewModel(psiFile, editor);
 			}
 		};
 	}
-
 }

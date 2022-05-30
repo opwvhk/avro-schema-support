@@ -171,7 +171,7 @@ tasks {
 		val intellijVersions = listOf("2020.3.4", "2021.1.3", "2021.2.4", "2021.3.3", "2022.1").flatMap(forIdes("IC", "IU"))
 		val pycharmVersions = listOf("2020.3.5", "2021.1.3", "2021.2.4", "2021.3.3", "2022.1").flatMap(forIdes("PCC", "PY"))
 		ideVersions.set(intellijVersions + pycharmVersions)
-		failureLevel.set(EnumSet.complementOf(EnumSet.of(FailureLevel.DEPRECATED_API_USAGES)))
+		failureLevel.set(EnumSet.complementOf(EnumSet.of(FailureLevel.DEPRECATED_API_USAGES, FailureLevel.EXPERIMENTAL_API_USAGES)))
 	}
 
 	listProductsReleases {

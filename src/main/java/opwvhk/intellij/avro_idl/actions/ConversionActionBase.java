@@ -130,7 +130,7 @@ abstract class ConversionActionBase extends DumbAwareAction {
 	}
 
 	public void update(@NotNull AnActionEvent e) {
-		// Note: because conversions call external code, disable the refactoring when the project is not trusted.
+		// Note: because conversions call external code, only enable the refactoring for trusted projects.
 		Project project = e.getProject();
 		boolean actionAvailable = false;
 

@@ -61,8 +61,10 @@
 		<declarationRangeHandler key="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
 								 implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlDeclarationRangeHandler"/>
 		<lang.documentationProvider language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlDocumentationProvider"/>
-		<!-- Structure view -->
+		<!-- Structure view (also in project view and navigation bar) -->
 		<lang.psiStructureViewFactory language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlStructureViewFactory"/>
+		<treeStructureProvider implementation="opwvhk.intellij.avro_idl.editor.AvroIdlTreeStructureProvider"/>
+		<navbar implementation="opwvhk.intellij.avro_idl.editor.AvroIdlStructureAwareNavbar"/>
 		<!-- Formatting & code style -->
 		<lang.foldingBuilder language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlFoldingBuilder"/>
 		<lang.formatter language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlFormattingModelBuilder"/>

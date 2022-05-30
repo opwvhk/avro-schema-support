@@ -1,12 +1,11 @@
 package opwvhk.intellij.avro_idl.editor;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.structureView.impl.common.PsiTreeElementBase;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.ui.LayeredIcon;
+import opwvhk.intellij.avro_idl.AvroIdlIcons;
 import opwvhk.intellij.avro_idl.language.AvroIdlUtil;
 import opwvhk.intellij.avro_idl.psi.*;
 import org.jetbrains.annotations.NotNull;
@@ -19,8 +18,6 @@ import java.util.List;
 import java.util.StringJoiner;
 
 public class AvroIdlStructureViewElement extends PsiTreeElementBase<PsiElement> {
-
-	private static final Icon ENUM_CONSTANT = new LayeredIcon(AllIcons.Nodes.Field, AllIcons.Nodes.FinalMark, AllIcons.Nodes.StaticMark);
 
 	public AvroIdlStructureViewElement(PsiElement psiElement) {
 		super(psiElement);
@@ -143,21 +140,6 @@ public class AvroIdlStructureViewElement extends PsiTreeElementBase<PsiElement> 
 	@Override
 	public Icon getIcon(boolean open) {
 		final PsiElement element = getValue();
-		if (element instanceof AvroIdlProtocolDeclaration) {
-			return AllIcons.Nodes.Package;
-		} else if (element instanceof AvroIdlImportDeclaration) {
-			return AllIcons.Nodes.Include;
-		} else if (element instanceof AvroIdlEnumDeclaration) {
-			return AllIcons.Nodes.Enum;
-		} else if (element instanceof AvroIdlNamedSchemaDeclaration) { // Record, error & fixed (enum is matched above)
-			return AllIcons.Nodes.Class;
-		} else if (element instanceof AvroIdlVariableDeclarator) {
-			return AllIcons.Nodes.Field;
-		} else if (element instanceof AvroIdlEnumConstant) {
-			return ENUM_CONSTANT;
-		} else if (element instanceof AvroIdlMessageDeclaration) {
-			return AllIcons.Nodes.Method;
-		}
-		return null;
+		return AvroIdlIcons.getAvroIdlIcon(element);
 	}
 }

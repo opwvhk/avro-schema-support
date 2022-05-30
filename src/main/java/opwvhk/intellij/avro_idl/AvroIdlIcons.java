@@ -36,7 +36,7 @@ public class AvroIdlIcons {
 		}
 		if (element instanceof AvroIdlVariableDeclarator) {
 			boolean isField = element.getParent() instanceof AvroIdlFieldDeclaration;
-			return isField ? Nodes.AVRO_FIELD : Nodes.AVRO_PARAMETER;
+			return isField ? Nodes.AVRO_FIELD : null;
 		}
 		if (element instanceof AvroIdlEnumConstant) {
 			// Previously used: new LayeredIcon(AllIcons.Nodes.Field, AllIcons.Nodes.FinalMark, AllIcons.Nodes.StaticMark);
@@ -69,8 +69,6 @@ public class AvroIdlIcons {
 		public static final Icon AVRO_INTERFACE = IconManager.getInstance().getIcon("/icons/nodes/interface.svg", AvroIdlIcons.class);
 		// Protocol messages
 		public static final Icon AVRO_METHOD = IconManager.getInstance().getIcon("/icons/nodes/method.svg", AvroIdlIcons.class);
-		// Method parameters
-		public static final Icon AVRO_PARAMETER = IconManager.getInstance().getIcon("/icons/nodes/parameter.svg", AvroIdlIcons.class);
 	}
 
 	public static @NotNull RowIcon addAvroMark(@NotNull Icon baseIcon) {
