@@ -5,6 +5,7 @@ import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.ide.IdeBundle;
+import com.intellij.ide.impl.TrustedProjects;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileChooser.*;
@@ -129,9 +130,17 @@ abstract class ConversionActionBase extends DumbAwareAction {
 	}
 
 	public void update(@NotNull AnActionEvent e) {
+		// Note: because conversions call external code, disable the refactoring when the project is not trusted.
 		Project project = e.getProject();
-		List<VirtualFile> files = getFiles(e);
-		e.getPresentation().setEnabledAndVisible(project != null && !files.isEmpty());
+		boolean actionAvailable = false;
+
+		//noinspection UnstableApiUsage
+		if (project != null && TrustedProjects.isTrusted(project)) {
+			List<VirtualFile> files = getFiles(e);
+			actionAvailable = !files.isEmpty();
+		}
+
+		e.getPresentation().setEnabledAndVisible(actionAvailable);
 	}
 
 	private @NotNull List<VirtualFile> getFiles(@NotNull AnActionEvent e) {
