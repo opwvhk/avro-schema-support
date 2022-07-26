@@ -40,7 +40,7 @@ public class IdlUtilsTest {
 		}).isInstanceOf(IllegalStateException.class).hasMessage("Programmer error");
 	}
 
-	// TODO: re-enable test after upgrading Avro and rewriting to use IdlReader
+	// TODO: rewriting to use IdlReader when Avro 1.11.1 is released
 	//@Test
 	public void validateHappyFlowForProtocol() throws ParseException, IOException {
 		final String resourceAsString = getResourceAsString("idl_utils_test_protocol.avdl");
@@ -64,7 +64,7 @@ public class IdlUtilsTest {
 		return schemaBuffer.toString();
 	}
 
-	// TODO: re-enable test after upgrading Avro, rewriting to use IdlReader and the new schema syntax
+	// TODO: re-enable test and rewrite to use IdlReader when Avro 1.12.0 is released
 	//@Test
 	public void validateHappyFlowForSingleSchema() throws ParseException, IOException {
 		final String resourceAsString = getResourceAsString("idl_utils_test_schema.avdl");

@@ -62,7 +62,7 @@ public class AvroSchemaToIdlAction extends ConversionActionBase {
 					try (Writer writer = new OutputStreamWriter(virtualFile.getOutputStream(this))) {
 						final String protocolName = virtualFile.getNameWithoutExtension();
 						final String namespace = schemas.get(0).getNamespace(); // Assume the first schema has the correct namespace.
-						// TODO: switch to schemas when Avro supports the schema syntax.
+						// TODO: switch to schemas when Avro supports the schema syntax (Avro 1.12.0).
 						//IdlUtils.writeIdlSchemas(writer, namespace, schemas);
 						JsonProperties emptyProperties = Schema.create(Schema.Type.NULL);
 						IdlUtils.writeIdlProtocol(writer, emptyProperties, namespace, protocolName, schemas, emptyList());

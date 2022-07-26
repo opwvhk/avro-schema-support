@@ -86,7 +86,7 @@
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Use of optional type" enabledByDefault="false" level="ERROR"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlAvoidNullableShorthandInspection"/>
 		-->
-		<!-- TODO: Enable when Avro supports the schema syntax -->
+		<!-- TODO: Enable when Avro supports the schema syntax (Avro 1.12.0) -->
 		<!--
 		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Schema syntax available" enabledByDefault="true" level="WEAK WARNING"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlUseSchemaSyntaxInspection"/>
