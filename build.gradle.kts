@@ -12,13 +12,17 @@ plugins {
 
 val lastBuild = provider {
 	file("jetbrains.lastBuild.txt").readLines()
-		.map { it.trim() }
+	    .asSequence()
+	    .map { it.trim() }
 		.filterNot { it.isEmpty() || it.startsWith("#") }
-		.first() + ".*"
+		.map { Integer.valueOf(it) }
+		.map { it + 1 }
+		.map { "$it.*" }
+		.first()
 }
 
 group = "net.sf.opk"
-version = "213.1.0-SNAPSHOT"
+version = "213.1.0"
 
 repositories {
 	mavenCentral()
@@ -166,10 +170,11 @@ tasks {
 		fun forIdes(vararg ides: String): (String) -> List<String> { return { version -> ides.map { "$it-$version" } } }
 		// IntelliJ Community (IC), IntelliJ Ultimate (IU), PyCharm Community (PCC) &, PyCharm professional (PY) editions for the patch
 		// releases for all minor releases ranging from sinceBuild to untilBuild (see the patchPluginXml task)
-		val intellijVersions = listOf("2020.3.4", "2021.1.3", "2021.2.4", "2021.3.3", "2022.1").flatMap(forIdes("IC", "IU"))
-		val pycharmVersions = listOf("2020.3.5", "2021.1.3", "2021.2.4", "2021.3.3", "2022.1").flatMap(forIdes("PCC", "PY"))
+		val intellijVersions = listOf("2020.3.4", "2021.1.3", "2021.2.4", "2021.3.3", "2022.1", "2022.2").flatMap(forIdes("IC", "IU"))
+		val pycharmVersions = listOf("2020.3.5", "2021.1.3", "2021.2.4", "2021.3.3", "2022.1", "2022.2").flatMap(forIdes("PCC", "PY"))
 		ideVersions.set(intellijVersions + pycharmVersions)
-		failureLevel.set(EnumSet.complementOf(EnumSet.of(FailureLevel.DEPRECATED_API_USAGES, FailureLevel.EXPERIMENTAL_API_USAGES)))
+		failureLevel.set(EnumSet.complementOf(EnumSet.of(
+			FailureLevel.SCHEDULED_FOR_REMOVAL_API_USAGES, FailureLevel.DEPRECATED_API_USAGES, FailureLevel.EXPERIMENTAL_API_USAGES)))
 	}
 
 	listProductsReleases {
