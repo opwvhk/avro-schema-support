@@ -26,7 +26,7 @@ class AvroIdlCompletionContributor extends CompletionContributor {
 
 		// Empty file: namespace annotation for protocol, or the protocol, namespace, schema, record, enum & fixed keywords
 
-		// TODO: Uncomment schema syntax completions when Avro supports the schema syntax
+		// TODO: Uncomment schema syntax completions when Avro supports the schema syntax (Avro 1.12.0)
 		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParent(
 			psiElement(PsiErrorElement.class).atStartOf(psiElement(AvroIdlFile.class))
 		), "6@namespace(\"\u0000\")", "protocol ");

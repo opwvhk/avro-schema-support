@@ -40,8 +40,8 @@ public class IdlUtilsTest {
 		}).isInstanceOf(IllegalStateException.class).hasMessage("Programmer error");
 	}
 
-	// TODO: rewriting to use IdlReader when Avro 1.11.1 is released
-	//@Test
+	// TODO: rewriting to use IdlReader when Avro 1.12.0 is released
+	@Test
 	public void validateHappyFlowForProtocol() throws ParseException, IOException {
 		final String resourceAsString = getResourceAsString("idl_utils_test_protocol.avdl");
 		Protocol protocol = new Idl(new StringReader(resourceAsString)).CompilationUnit();

@@ -1,6 +1,5 @@
 @file:Suppress("SpellCheckingInspection")
 
-import org.jetbrains.intellij.tasks.ListProductsReleasesTask.Channel.*
 import org.jetbrains.intellij.tasks.RunPluginVerifierTask.FailureLevel
 import java.util.*
 
@@ -12,8 +11,8 @@ plugins {
 
 val lastBuild = provider {
 	file("jetbrains.lastBuild.txt").readLines()
-	    .asSequence()
-	    .map { it.trim() }
+		.asSequence()
+		.map { it.trim() }
 		.filterNot { it.isEmpty() || it.startsWith("#") }
 		.map { Integer.valueOf(it) }
 		.map { it + 1 }
@@ -22,7 +21,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "213.1.0"
+version = "213.2.0"
 
 repositories {
 	mavenCentral()
@@ -34,7 +33,7 @@ java {
 }
 
 dependencies {
-	implementation("org.apache.avro", "avro-compiler", "1.11.0").exclude("org.slf4j")
+	implementation("org.apache.avro", "avro-compiler", "1.11.1").exclude("org.slf4j")
 	testImplementation("junit", "junit", "4.13")
 	testImplementation("org.assertj", "assertj-core", "3.20.2")
 }
@@ -67,19 +66,20 @@ tasks {
 		untilBuild.set(lastBuild)
 		//untilBuild.set("221.*")
 		/*
-		<p>Version 213.2.0:</p>
-		<ul data-version="213.1.0">
+		<p>Version 213.3.0:</p>
+		<ul data-version="213.3.0">
 		<li>Added IDL syntax for the schema syntax (new in Avro 1.12.0)</li>
 		<li>Added inspection suggesting the schema syntax where appropriate</li>
-		</ul>
-		<p>Version 213.1.0:</p>
-		<ul data-version="213.1.0">
-		<li>Added support for Kotlin style nullable types (new in Avro 1.11.1)</li>
-		<li>Added inspection for documentation comments to detect and apply fixes for improvements since Avro 1.11.1</li>
 		</ul>
 		*/
 		//language=HTML
 		val changeLog = """
+			<p>Version 213.2.0:</p>
+			<ul data-version="213.2.0">
+			<li>Using Avro 1.11.1 for conversions</li>
+			<li>Added support for Kotlin style nullable types (new in Avro 1.11.1)</li>
+			<li>Added inspection for documentation comments to detect and apply fixes for improvements since Avro 1.11.1</li>
+			</ul>
 			<p>Version 213.1.0:</p>
 			<ul data-version="213.1.0">
 			<li>Added quick fixes for missing schema / enum symbol references</li>
@@ -167,20 +167,21 @@ tasks {
 	}
 
 	runPluginVerifier {
-		fun forIdes(vararg ides: String): (String) -> List<String> { return { version -> ides.map { "$it-$version" } } }
-		// IntelliJ Community (IC), IntelliJ Ultimate (IU), PyCharm Community (PCC) &, PyCharm professional (PY) editions for the patch
-		// releases for all minor releases ranging from sinceBuild to untilBuild (see the patchPluginXml task)
-		val intellijVersions = listOf("2020.3.4", "2021.1.3", "2021.2.4", "2021.3.3", "2022.1", "2022.2").flatMap(forIdes("IC", "IU"))
-		val pycharmVersions = listOf("2020.3.5", "2021.1.3", "2021.2.4", "2021.3.3", "2022.1", "2022.2").flatMap(forIdes("PCC", "PY"))
-		ideVersions.set(intellijVersions + pycharmVersions)
+		// Do not set ideVersions: the default is to use the result of the listProductsReleases task
 		failureLevel.set(EnumSet.complementOf(EnumSet.of(
-			FailureLevel.SCHEDULED_FOR_REMOVAL_API_USAGES, FailureLevel.DEPRECATED_API_USAGES, FailureLevel.EXPERIMENTAL_API_USAGES)))
+			FailureLevel.SCHEDULED_FOR_REMOVAL_API_USAGES, FailureLevel.DEPRECATED_API_USAGES, FailureLevel.EXPERIMENTAL_API_USAGES
+		)))
 	}
 
 	listProductsReleases {
-		sinceBuild.set("203")
-		releaseChannels.set(listOf(RELEASE, EAP, PATCH, CANARY, RC))
-		types.set(listOf("IC", "IU", "PC", "PY"))
+		sinceVersion.set("2020.3") // Oldest supported version
+		untilVersion.set("*") // No upper bound
+		// Do not set releaseChannels: the default is all
+		types.set(listOf("IC", "IU", "PC", "PY")) // Default: only IC
+
+		// To save time (but a less complete check) is to keep only the last patch release of each minor release:
+		// curl 'https://data.services.jetbrains.com/products/releases?code=IIU&code=IIC&code=PCP&code=PCC&type=eap&type=release' 2>/dev/null |
+	    //   jq -r 'to_entries|map({key,"value":.value|map({majorVersion,version}|select(.majorVersion|test("202.\\..")))|unique|group_by(.majorVersion)|map(last(.[]))|map(.version)}|{key,"version":.value[]}|(.key+"-"+.version))|.[]'
 	}
 }
 
