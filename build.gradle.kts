@@ -21,7 +21,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "213.2.0"
+version = "213.2.1"
 
 repositories {
 	mavenCentral()
@@ -74,6 +74,11 @@ tasks {
 		*/
 		//language=HTML
 		val changeLog = """
+			<p>Version 213.2.1:</p>
+			<ul data-version="213.2.1">
+			<li>Fixed bug #27 (a ClassCastException)</li>
+			<li>Cleaned up the code (to prevent more bugs like #27)</li>
+			</ul>
 			<p>Version 213.2.0:</p>
 			<ul data-version="213.2.0">
 			<li>Using Avro 1.11.1 for conversions</li>

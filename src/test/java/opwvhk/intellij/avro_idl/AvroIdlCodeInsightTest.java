@@ -112,7 +112,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		myFixture.checkResultByFile("DuplicateAnnotationsFixed.avdl");
 	}
 
-	/*
 	@SuppressWarnings("unchecked")
 	public void testUseNullableShorthandInspection() {
 		myFixture.enableInspections(AvroIdlUseNullableShorthandInspection.class);
@@ -162,7 +161,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		}
 		myFixture.checkResultByFile("AllowShorthandNullable.avdl");
 	}
-	*/
 
 	@SuppressWarnings("unchecked")
 	public void testMisplacedAnnotationsInspection() {
@@ -178,71 +176,71 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		);
 	}
 
-	//@SuppressWarnings("unchecked")
-	//public void testMisplacedDocumentationInspection() {
-	//	myFixture.enableInspections(AvroIdlMisplacedDocumentationInspection.class);
-	//	myFixture.configureByFiles("MisplacedDocumentation.avdl");
-	//	final List<Highlight> highlight = Highlight.fromHighlightInfoList(myFixture.doHighlighting());
-	//
-	//	// Note: because we're cutting out the text offsets, all error texts should be unique enough to be identified.
-	//	// Luckily, the method returns highlights in the order they are in the file.
-	//
-	//	final String description = "Misplaced documentation comment: documentation comments should be placed directly before declarations";
-	//	assertOrderedEquals(highlight,
-	//		Highlight.warning("/** Dangling documentation 1 */", description),
-	//		Highlight.warning("/** Misplaced documentation 1 */", description),
-	//		Highlight.warning("/** Dangling documentation 2 */", description),
-	//		Highlight.warning("/** Misplaced documentation 2 */", description),
-	//		Highlight.warning("/** Misplaced documentation 3 */", description),
-	//		Highlight.warning("/** Misplaced documentation 4 */", description),
-	//		Highlight.warning("/** Dangling documentation 3 */", description),
-	//		Highlight.warning("/** Misplaced documentation 5 */", description),
-	//		Highlight.warning("/** Misplaced documentation 6 */", description),
-	//		Highlight.warning("/** Misplaced documentation 7 */", description),
-	//		Highlight.warning("/** Misplaced documentation 8 */", description),
-	//		Highlight.warning("/** Misplaced documentation 9 */", description),
-	//		Highlight.warning("/** Misplaced documentation 10 */", description),
-	//		Highlight.warning("/** Misplaced documentation 11 */", description),
-	//		Highlight.warning("/** Dangling documentation 4 */", description),
-	//		Highlight.warning("/** Misplaced documentation 12 */", description),
-	//		Highlight.warning("/** Misplaced documentation 13 */", description),
-	//		Highlight.warning("/** Misplaced documentation 14 */", description),
-	//		Highlight.warning("/** Dangling documentation 5 */", description),
-	//		Highlight.warning("/** Misplaced documentation 15 */", description),
-	//		Highlight.warning("/** Misplaced documentation 16 */", description),
-	//		Highlight.warning("/** Dangling documentation 6 */", description),
-	//		Highlight.warning("/** Misplaced documentation 17 */", description),
-	//		Highlight.warning("/** Misplaced documentation 18 */", description),
-	//		Highlight.warning("/** Dangling documentation 7 */", description),
-	//		Highlight.warning("/** Dangling documentation 8 */", description)
-	//	);
-	//}
-	//
-	//@SuppressWarnings("unchecked")
-	//public void testMisplacedDocumentationInspectionQuickFixRemove() {
-	//	myFixture.enableInspections(AvroIdlMisplacedDocumentationInspection.class);
-	//	final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("MisplacedDocumentation.avdl");
-	//	assertEquals(52, quickFixes.size());
-	//	for (int i = 0; i < quickFixes.size(); i += 2) {
-	//		IntentionAction quickFix = quickFixes.get(i);
-	//		assertEquals("Delete misplaced documentation comment", quickFix.getText());
-	//		myFixture.launchAction(quickFix);
-	//	}
-	//	myFixture.checkResultByFile("MisplacedDocumentationRemoved.avdl");
-	//}
-	//
-	//@SuppressWarnings("unchecked")
-	//public void testMisplacedDocumentationInspectionQuickFixChange() {
-	//	myFixture.enableInspections(AvroIdlMisplacedDocumentationInspection.class);
-	//	final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("MisplacedDocumentation.avdl");
-	//	assertEquals(52, quickFixes.size());
-	//	for (int i = 1; i < quickFixes.size(); i += 2) {
-	//		IntentionAction quickFix = quickFixes.get(i);
-	//		assertEquals("Replace with multiline comment", quickFix.getText());
-	//		myFixture.launchAction(quickFix);
-	//	}
-	//	myFixture.checkResultByFile("MisplacedDocumentationFixed.avdl");
-	//}
+	@SuppressWarnings("unchecked")
+	public void testMisplacedDocumentationInspection() {
+		myFixture.enableInspections(AvroIdlMisplacedDocumentationInspection.class);
+		myFixture.configureByFiles("MisplacedDocumentation.avdl");
+		final List<Highlight> highlight = Highlight.fromHighlightInfoList(myFixture.doHighlighting());
+
+		// Note: because we're cutting out the text offsets, all error texts should be unique enough to be identified.
+		// Luckily, the method returns highlights in the order they are in the file.
+
+		final String description = "Misplaced documentation comment: documentation comments should be placed directly before declarations";
+		assertOrderedEquals(highlight,
+			Highlight.warning("/** Dangling documentation 1 */", description),
+			Highlight.warning("/** Misplaced documentation 1 */", description),
+			Highlight.warning("/** Dangling documentation 2 */", description),
+			Highlight.warning("/** Misplaced documentation 2 */", description),
+			Highlight.warning("/** Misplaced documentation 3 */", description),
+			Highlight.warning("/** Misplaced documentation 4 */", description),
+			Highlight.warning("/** Dangling documentation 3 */", description),
+			Highlight.warning("/** Misplaced documentation 5 */", description),
+			Highlight.warning("/** Misplaced documentation 6 */", description),
+			Highlight.warning("/** Misplaced documentation 7 */", description),
+			Highlight.warning("/** Misplaced documentation 8 */", description),
+			Highlight.warning("/** Misplaced documentation 9 */", description),
+			Highlight.warning("/** Misplaced documentation 10 */", description),
+			Highlight.warning("/** Misplaced documentation 11 */", description),
+			Highlight.warning("/** Dangling documentation 4 */", description),
+			Highlight.warning("/** Misplaced documentation 12 */", description),
+			Highlight.warning("/** Misplaced documentation 13 */", description),
+			Highlight.warning("/** Misplaced documentation 14 */", description),
+			Highlight.warning("/** Dangling documentation 5 */", description),
+			Highlight.warning("/** Misplaced documentation 15 */", description),
+			Highlight.warning("/** Misplaced documentation 16 */", description),
+			Highlight.warning("/** Dangling documentation 6 */", description),
+			Highlight.warning("/** Misplaced documentation 17 */", description),
+			Highlight.warning("/** Misplaced documentation 18 */", description),
+			Highlight.warning("/** Dangling documentation 7 */", description),
+			Highlight.warning("/** Dangling documentation 8 */", description)
+		);
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testMisplacedDocumentationInspectionQuickFixRemove() {
+		myFixture.enableInspections(AvroIdlMisplacedDocumentationInspection.class);
+		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("MisplacedDocumentation.avdl");
+		assertEquals(52, quickFixes.size());
+		for (int i = 0; i < quickFixes.size(); i += 2) {
+			IntentionAction quickFix = quickFixes.get(i);
+			assertEquals("Delete misplaced documentation comment", quickFix.getText());
+			myFixture.launchAction(quickFix);
+		}
+		myFixture.checkResultByFile("MisplacedDocumentationRemoved.avdl");
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testMisplacedDocumentationInspectionQuickFixChange() {
+		myFixture.enableInspections(AvroIdlMisplacedDocumentationInspection.class);
+		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("MisplacedDocumentation.avdl");
+		assertEquals(52, quickFixes.size());
+		for (int i = 1; i < quickFixes.size(); i += 2) {
+			IntentionAction quickFix = quickFixes.get(i);
+			assertEquals("Replace with multiline comment", quickFix.getText());
+			myFixture.launchAction(quickFix);
+		}
+		myFixture.checkResultByFile("MisplacedDocumentationFixed.avdl");
+	}
 
 	@SuppressWarnings("unchecked")
 	public void testNamingInspection() {
@@ -264,6 +262,7 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		);
 	}
 
+	// TODO: Uncomment these tests when using Avro 1.12.0
 	/*
 	@SuppressWarnings("unchecked")
 	public void testSchemaSyntaxInspectionWithoutNamespaceOrSchema() {

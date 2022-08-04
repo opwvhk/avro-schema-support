@@ -1,12 +1,10 @@
 package opwvhk.intellij.avro_idl.inspections;
 
-import com.intellij.codeInsight.daemon.impl.quickfix.RenameElementFix;
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiElement;
 import opwvhk.intellij.avro_idl.language.AvroIdlAnnotator;
 import opwvhk.intellij.avro_idl.naming.RenameFix;
-import opwvhk.intellij.avro_idl.psi.AvroIdlAnnotatedNameIdentifierOwner;
 import opwvhk.intellij.avro_idl.psi.AvroIdlNamespaceProperty;
 import org.jetbrains.annotations.NotNull;
 

@@ -24,11 +24,14 @@ public abstract class AddDeclarationFix extends SimpleAvroIdlQuickFixOnPsiElemen
 	protected final String template;
 
 	/**
-	 * Create an "Add declaration" fix.
+	 * <p>Create an "Add declaration" fix.</p>
 	 *
-	 * 	Constraints on the template:
-	 * 	1. Only the first non-whitespace element (and its children) will be used.
-	 * 	2. There must be a comment in the element: the first comment will be removed, and the cursor will be placed there.
+	 * <p>Constraints on the template:</p>
+	 * <ol><li>
+	 *     Only the first non-whitespace element (and its children) will be used.
+	 * </li><li>
+	 *     There must be a comment in the element: the first comment will be removed, and the cursor will be placed there.
+	 * </li></ol>
 	 *
 	 * @param element a schema/message declaration or one of its children; the new declaration will be added after the declaration
 	 * @param name the name of the fix

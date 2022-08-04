@@ -8,6 +8,7 @@ Detects the optional type syntax (new in Avro 1.11.1), offering to replace it wi
     string? name = "Anonymous";
     string? description = null;
 }
+</code></pre>
 <p>
 	The quick fix replaces this shorthand syntax with unions.
 </p>
@@ -18,7 +19,6 @@ Detects the optional type syntax (new in Avro 1.11.1), offering to replace it wi
     union {string, null} name = "Anonymous";
     union {null, string} description = null;
 }
-</code></pre>
 </code></pre>
 
 </body>

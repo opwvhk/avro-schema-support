@@ -137,7 +137,7 @@ class AvroIdlCompletionContributor extends CompletionContributor {
 				priority = 0;
 			}
 			final String textToPutInEditor = completion.replace("\u0000", "");
-			final String textInTheCompletionPopup = completion.replaceAll("[\\W&&[^@]]", "");
+			final String textInTheCompletionPopup = completion.replaceAll("\\W&&[^@]", "");
 			LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(textToPutInEditor).withPresentableText(textInTheCompletionPopup);
 			int relativeCaretOffset = completion.indexOf("\u0000"); // Is there a caret marker?
 			if (relativeCaretOffset != -1) {

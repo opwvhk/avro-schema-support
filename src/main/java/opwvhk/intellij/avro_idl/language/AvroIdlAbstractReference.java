@@ -29,7 +29,7 @@ public abstract class AvroIdlAbstractReference extends PsiReferenceBase<PsiEleme
 
 	/**
 	 * @return Range in {@link #getElement() element} that denotes the reference,
-	 * e.g. range of `bar` in `foo.bar` qualified reference expression
+	 * e.g., range of `bar` in `foo.bar` qualified reference expression
 	 */
     @Override
     public @NotNull TextRange getRangeInElement() {

@@ -3,6 +3,7 @@ package opwvhk.intellij.avro_idl.naming;
 import com.intellij.codeInspection.naming.NamingConvention;
 import com.intellij.codeInspection.naming.NamingConventionBean;
 import opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner;
+import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.NonNls;
 
 import static java.util.Objects.requireNonNull;
@@ -14,6 +15,7 @@ public abstract class AvroIdlNamingConvention extends NamingConvention<AvroIdlNa
 	private final Class<? extends AvroIdlNameIdentifierOwner> namedTypeClass;
 	private final int minLength;
 	private final int maxLength;
+	@RegExp
 	private final String regex;
 
 	public AvroIdlNamingConvention(Class<? extends AvroIdlNameIdentifierOwner> namedTypeClass, int minLength, int maxLength, String regex) {

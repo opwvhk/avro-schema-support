@@ -53,7 +53,7 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 	@Override
 	public @Nullable String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
 		if (element instanceof AvroIdlNameIdentifierOwner) {
-			final String name = ((AvroIdlNamedSchemaDeclaration)element).getName();
+			final String name = ((AvroIdlNameIdentifierOwner)element).getName();
 			final String file = SymbolPresentationUtil.getFilePathPresentation(element.getContainingFile());
 			return "\"" + name + "\" in " + file;
 		}
@@ -292,11 +292,6 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 		@Override
 		public int getTextLength() {
 			return comment.getTextLength();
-		}
-
-		@Override
-		public int getTextOffset() {
-			return super.getTextOffset();
 		}
 
 		@Override

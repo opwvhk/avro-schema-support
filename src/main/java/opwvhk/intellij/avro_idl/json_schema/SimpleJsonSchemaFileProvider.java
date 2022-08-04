@@ -1,6 +1,5 @@
 package opwvhk.intellij.avro_idl.json_schema;
 
-import com.intellij.json.JsonFileType;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.openapi.vfs.VirtualFile;

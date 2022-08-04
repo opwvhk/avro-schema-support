@@ -1,6 +1,5 @@
 package opwvhk.intellij.avro_idl;
 
-import com.intellij.json.json5.Json5Language;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

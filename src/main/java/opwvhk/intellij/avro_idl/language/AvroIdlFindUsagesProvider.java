@@ -69,7 +69,7 @@ public class AvroIdlFindUsagesProvider implements FindUsagesProvider {
 	public @NotNull String getNodeText(@NotNull PsiElement element, boolean useFullName) {
 		String name;
 		if (element instanceof AvroIdlNamespacedNameIdentifierOwner) {
-			name = ((AvroIdlNamedSchemaDeclaration)element).getFullName();
+			name = ((AvroIdlNamespacedNameIdentifierOwner)element).getFullName();
 		} else if (element instanceof PsiNamedElement) {
 			name = ((PsiNamedElement)element).getName();
 		} else {
