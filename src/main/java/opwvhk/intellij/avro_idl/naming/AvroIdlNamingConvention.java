@@ -18,7 +18,7 @@ public abstract class AvroIdlNamingConvention extends NamingConvention<AvroIdlNa
 	@RegExp
 	private final String regex;
 
-	public AvroIdlNamingConvention(Class<? extends AvroIdlNameIdentifierOwner> namedTypeClass, int minLength, int maxLength, String regex) {
+	public AvroIdlNamingConvention(Class<? extends AvroIdlNameIdentifierOwner> namedTypeClass, int minLength, int maxLength, @RegExp String regex) {
 		this.namedTypeClass = requireNonNull(namedTypeClass);
 		this.minLength = minLength;
 		this.maxLength = maxLength;

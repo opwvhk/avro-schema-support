@@ -11,18 +11,19 @@
 	-->
 	<description><![CDATA[
 	<p>
-		Provides full support for IDL (<code>.avdl</code>) files.
+		Avro IDL Schema Support extends Intellij IDEs to more easily work with Avro schemata and protocols in IDL or JSON format.
 	</p>
-	<p>
-		Also provides JSON schemas for easier editing of <code>.avsc</code> and <code>.avpr</code> files.
-	</p>
-	<p>IDL features include:<ul>
+	<p>IDL (<code>.avdl</code>) features include:<ul>
 		<li>Syntax & error highlighting</li>
 		<li>Code completion</li>
 		<li>Formatting (configurable)</li>
 		<li>Inspections and quick fixes</li>
 		<li>Navigation, renaming, quote/brace pairs, etc.</li>
 		<li>Converting Avro schemas/protocols from/to IDL</li>
+	</ul></p>
+	<p>JSON (<code>.avsc</code>/<code>.avpr</code>) features include:<ul>
+		<li>Syntax & some error highlighting</li>
+		<li>Code completion</li>
 	</ul></p>
 	]]></description>
 
@@ -59,7 +60,7 @@
 		<typedHandler implementation="opwvhk.intellij.avro_idl.editor.AvroIdlAngleBracketTypedHandler"/>
 		<backspaceHandlerDelegate implementation="opwvhk.intellij.avro_idl.editor.AvroIdlAngleBracketBackspaceHandler"/>
 		<declarationRangeHandler key="opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner"
-								 implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlDeclarationRangeHandler"/>
+		                         implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlDeclarationRangeHandler"/>
 		<lang.documentationProvider language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlDocumentationProvider"/>
 		<!-- Structure view (also in project view and navigation bar) -->
 		<lang.psiStructureViewFactory language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlStructureViewFactory"/>
@@ -71,27 +72,27 @@
 		<codeStyleSettingsProvider implementation="opwvhk.intellij.avro_idl.editor.AvroIdlCodeStyleSettingsProvider"/>
 		<langCodeStyleSettingsProvider implementation="opwvhk.intellij.avro_idl.editor.AvroIdlLanguageCodeStyleSettingsProvider"/>
 		<!-- Inspections (can be turned off) -->
-		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Duplicate annotations" enabledByDefault="true" level="WARNING"
-		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlDuplicateAnnotationsInspection"/>
-		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Misplaced annotations" enabledByDefault="true" level="WEAK WARNING"
-		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlMisplacedAnnotationsInspection"/>
-		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Invalid identifier in @namespace annotation" enabledByDefault="true" level="WARNING"
-		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlInvalidNamespaceAnnotationInspection"/>
-		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Misplaced documentation" enabledByDefault="true" level="WARNING"
-		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlMisplacedDocumentationInspection"/>
-		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Union can be simplified" enabledByDefault="true" level="WEAK WARNING"
-		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlUseNullableShorthandInspection"/>
-		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Use of optional type" enabledByDefault="false" level="ERROR"
-		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlAvoidNullableShorthandInspection"/>
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Duplicate annotations" level="WARNING"
+		                 enabledByDefault="true" implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlDuplicateAnnotationsInspection"/>
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Misplaced annotations" level="WEAK WARNING"
+		                 enabledByDefault="true" implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlMisplacedAnnotationsInspection"/>
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Invalid identifier in @namespace annotation" level="WARNING"
+		                 enabledByDefault="true" implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlInvalidNamespaceAnnotationInspection"/>
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Misplaced documentation" level="WARNING"
+		                 enabledByDefault="true" implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlMisplacedDocumentationInspection"/>
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Union can be simplified" level="WEAK WARNING"
+		                 enabledByDefault="true" implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlUseNullableShorthandInspection"/>
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Use of optional type" level="ERROR"
+		                 enabledByDefault="false" implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlAvoidNullableShorthandInspection"/>
 		<!-- TODO: Enable when Avro supports the schema syntax (Avro 1.12.0) -->
 		<!--
-		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Schema syntax available" enabledByDefault="true" level="WEAK WARNING"
-		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlUseSchemaSyntaxInspection"/>
-		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Use of schema syntax" enabledByDefault="false" level="ERROR"
-		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlAvoidSchemaSyntaxInspection"/>
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Schema syntax available" level="WEAK WARNING"
+		                 enabledByDefault="true" implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlUseSchemaSyntaxInspection"/>
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Use of schema syntax" level="ERROR"
+		                 enabledByDefault="false" implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlAvoidSchemaSyntaxInspection"/>
 		-->
-		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Naming conventions" enabledByDefault="false" level="TYPO"
-		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlNamingConventionInspection"/>
+		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Naming conventions" level="TYPO"
+		                 enabledByDefault="false" implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlNamingConventionInspection"/>
 
 		<!-- Avro Schema & Protocol files (JSON derivative) -->
 		<fileType name="Avro Schema" fieldName="INSTANCE" language="Avro Schema" extensions="avsc"
