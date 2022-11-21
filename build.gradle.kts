@@ -34,8 +34,8 @@ java {
 
 dependencies {
 	implementation("org.apache.avro", "avro-compiler", "1.11.1").exclude("org.slf4j")
-	testImplementation("junit", "junit", "4.13")
-	testImplementation("org.assertj", "assertj-core", "3.20.2")
+	testImplementation("junit", "junit", "4.13.2")
+	testImplementation("org.assertj", "assertj-core", "3.23.1")
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
