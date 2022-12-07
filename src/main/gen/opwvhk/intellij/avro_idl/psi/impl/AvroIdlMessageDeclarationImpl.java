@@ -53,7 +53,8 @@ public class AvroIdlMessageDeclarationImpl extends AvroIdlWithSchemaPropertiesIm
   }
 
   @Override
-  public @Nullable PsiElement getNameIdentifier() {
+  @Nullable
+  public PsiElement getNameIdentifier() {
     return AvroIdlPsiUtil.getNameIdentifier(this);
   }
 
@@ -63,7 +64,9 @@ public class AvroIdlMessageDeclarationImpl extends AvroIdlWithSchemaPropertiesIm
   }
 
   @Override
-  public @Nullable @NonNls String getName() {
+  @Nullable
+  @NonNls
+  public String getName() {
     return AvroIdlPsiUtil.getName(this);
   }
 
@@ -73,7 +76,8 @@ public class AvroIdlMessageDeclarationImpl extends AvroIdlWithSchemaPropertiesIm
   }
 
   @Override
-  public @NotNull List<AvroIdlFormalParameter> getComponents() {
+  @NotNull
+  public List<AvroIdlFormalParameter> getComponents() {
     return AvroIdlPsiUtil.getComponents(this);
   }
 

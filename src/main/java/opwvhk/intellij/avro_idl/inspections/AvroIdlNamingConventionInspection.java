@@ -27,12 +27,14 @@ public class AvroIdlNamingConventionInspection extends AbstractNamingConventionI
 	}
 
 	@Override
-	protected @Nullable LocalQuickFix createRenameFix() {
+    @Nullable
+    protected LocalQuickFix createRenameFix() {
 		return new RenameFix();
 	}
 
 	@Override
-	public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
+    @NotNull
+    public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
 		return new PsiElementVisitor() {
 			@Override
 			public void visitElement(@NotNull PsiElement element) {

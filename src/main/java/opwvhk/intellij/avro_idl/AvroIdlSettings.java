@@ -19,12 +19,14 @@ public final class AvroIdlSettings implements PersistentStateComponent<AvroIdlSe
 		this.pluginVersion = pluginVersion;
 	}
 
-	public static @NotNull AvroIdlSettings getInstance() {
+	@NotNull
+    public static AvroIdlSettings getInstance() {
 		return ApplicationManager.getApplication().getService(AvroIdlSettings.class);
 	}
 
 	@Override
-	public @NotNull AvroIdlSettings getState() {
+    @NotNull
+    public AvroIdlSettings getState() {
 		return this;
 	}
 

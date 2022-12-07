@@ -29,7 +29,8 @@ public class AvroIdlNamespacePropertyImpl extends AvroIdlSchemaPropertyImpl impl
   }
 
   @Override
-  public @Nullable PsiElement getNameIdentifier() {
+  @Nullable
+  public PsiElement getNameIdentifier() {
     return AvroIdlPsiUtil.getNameIdentifier(this);
   }
 
@@ -39,7 +40,9 @@ public class AvroIdlNamespacePropertyImpl extends AvroIdlSchemaPropertyImpl impl
   }
 
   @Override
-  public @Nullable @NonNls String getName() {
+  @Nullable
+  @NonNls
+  public String getName() {
     return AvroIdlPsiUtil.getName(this);
   }
 

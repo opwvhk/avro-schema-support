@@ -8,57 +8,68 @@ import org.jetbrains.annotations.Nullable;
 
 public class AvroIdlCommenter implements CodeDocumentationAwareCommenter {
 	@Override
-	public @Nullable IElementType getLineCommentTokenType() {
+    @Nullable
+    public IElementType getLineCommentTokenType() {
 		return AvroIdlTypes.LINE_COMMENT;
 	}
 
     @Override
-    public @Nullable String getLineCommentPrefix() {
+    @Nullable
+    public String getLineCommentPrefix() {
         return "//";
     }
 
 	@Override
-	public @Nullable IElementType getBlockCommentTokenType() {
+    @Nullable
+    public IElementType getBlockCommentTokenType() {
 		return AvroIdlTypes.BLOCK_COMMENT;
 	}
 
     @Override
-    public @Nullable String getBlockCommentPrefix() {
+    @Nullable
+    public String getBlockCommentPrefix() {
         return "/*";
     }
 
     @Override
-    public @Nullable String getBlockCommentSuffix() {
+    @Nullable
+    public String getBlockCommentSuffix() {
         return "*/";
     }
 
     @Override
-    public @Nullable String getCommentedBlockCommentPrefix() {
+    @Nullable
+    public String getCommentedBlockCommentPrefix() {
         return null;
     }
 
     @Override
-    public @Nullable String getCommentedBlockCommentSuffix() {
+    @Nullable
+    public String getCommentedBlockCommentSuffix() {
         return null;
     }
 
 	@Override
-	public @Nullable IElementType getDocumentationCommentTokenType() {
+    @Nullable
+    public IElementType getDocumentationCommentTokenType() {
 		return AvroIdlTypes.DOC_COMMENT;
 	}
 
 	@Override
-	public @Nullable String getDocumentationCommentPrefix() {
+    @Nullable
+    public String getDocumentationCommentPrefix() {
 		return "/**";
 	}
 
 	@Override
-	public @Nullable String getDocumentationCommentLinePrefix() {
+    @Nullable
+    public String getDocumentationCommentLinePrefix() {
 		return " * ";
 	}
 
 	@Override
-	public @Nullable String getDocumentationCommentSuffix() {
+    @Nullable
+    public String getDocumentationCommentSuffix() {
 		return " */";
 	}
 

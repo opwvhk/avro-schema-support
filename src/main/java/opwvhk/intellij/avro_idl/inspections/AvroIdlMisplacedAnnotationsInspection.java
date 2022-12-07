@@ -68,7 +68,8 @@ public class AvroIdlMisplacedAnnotationsInspection extends BaseAvroIdlInspection
 			this.annotationName = annotationName;
 		}
 
-		public @NotNull String getAnnotationName() {
+		@NotNull
+        public String getAnnotationName() {
 			return annotationName;
 		}
 

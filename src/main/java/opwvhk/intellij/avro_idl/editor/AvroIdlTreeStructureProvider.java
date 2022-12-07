@@ -20,8 +20,9 @@ import static java.util.Objects.requireNonNull;
 
 public class AvroIdlTreeStructureProvider implements TreeStructureProvider {
 	@Override
-	public @NotNull Collection<AbstractTreeNode<?>> modify(@NotNull AbstractTreeNode<?> parent, @NotNull Collection<AbstractTreeNode<?>> children,
-	                                                       ViewSettings settings) {
+    @NotNull
+    public Collection<AbstractTreeNode<?>> modify(@NotNull AbstractTreeNode<?> parent, @NotNull Collection<AbstractTreeNode<?>> children,
+                                                  ViewSettings settings) {
 		boolean showMembers = settings.isShowMembers();
 		if (!showMembers) {
 			return children;
@@ -39,7 +40,8 @@ public class AvroIdlTreeStructureProvider implements TreeStructureProvider {
 	}
 
 	@Override
-	public @Nullable Object getData(@NotNull Collection<AbstractTreeNode<?>> selected, @NotNull String dataId) {
+    @Nullable
+    public Object getData(@NotNull Collection<AbstractTreeNode<?>> selected, @NotNull String dataId) {
 		return TreeStructureProvider.super.getData(selected, dataId);
 	}
 
@@ -57,7 +59,8 @@ public class AvroIdlTreeStructureProvider implements TreeStructureProvider {
 		}
 
 		@Override
-		protected @Nullable Collection<AbstractTreeNode<?>> getChildrenImpl() {
+        @Nullable
+        protected Collection<AbstractTreeNode<?>> getChildrenImpl() {
 			@NotNull List<StructureViewTreeElement> children = structureViewElement.getChildrenWithoutCustomRegions();
 			if (children.size() == 0) {
 				return null;

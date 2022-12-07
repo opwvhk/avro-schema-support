@@ -19,7 +19,8 @@ public class AvroIdlDeclarationRangeHandler implements DeclarationRangeHandler<A
 	private static final TokenSet NON_DECLARATION_TYPES = TokenSet.create(WHITE_SPACE, SCHEMA_PROPERTY, LINE_COMMENT, BLOCK_COMMENT, SEMICOLON);
 
 	@Override
-	public @Nullable TextRange getDeclarationRange(@NotNull AvroIdlNameIdentifierOwner container) {
+    @Nullable
+    public TextRange getDeclarationRange(@NotNull AvroIdlNameIdentifierOwner container) {
 		ASTNode firstDeclarationChild = container.getNode().getFirstChildNode();
 		while (firstDeclarationChild != null && NON_DECLARATION_TYPES.contains(firstDeclarationChild.getElementType())) {
 			firstDeclarationChild = firstDeclarationChild.getTreeNext();

@@ -17,22 +17,26 @@ public class AvroSchemaFileType extends LanguageFileType {
 	}
 
 	@Override
-	public @NotNull String getName() {
+    @NotNull
+    public String getName() {
 		return "Avro Schema";
 	}
 
 	@Override
-	public @NotNull String getDescription() {
+    @NotNull
+    public String getDescription() {
 		return "Apache Avro™ Schema";
 	}
 
 	@Override
-	public @NotNull String getDefaultExtension() {
+    @NotNull
+    public String getDefaultExtension() {
 		return "avsc";
 	}
 
 	@Override
-	public @Nullable Icon getIcon() {
+    @Nullable
+    public Icon getIcon() {
 		return AvroIdlIcons.FILE;
 	}
 }

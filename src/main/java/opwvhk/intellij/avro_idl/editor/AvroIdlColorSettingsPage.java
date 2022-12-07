@@ -16,17 +16,20 @@ import java.util.Map;
 
 public class AvroIdlColorSettingsPage implements ColorSettingsPage {
     @Override
-    public @Nullable Icon getIcon() {
+    @Nullable
+    public Icon getIcon() {
         return AvroIdlIcons.FILE;
     }
 
     @Override
-    public @NotNull SyntaxHighlighter getHighlighter() {
+    @NotNull
+    public SyntaxHighlighter getHighlighter() {
         return new AvroIdlSyntaxHighlighter();
     }
 
     @Override
-    public @NotNull String getDemoText() {
+    @NotNull
+    public String getDemoText() {
         return
         "/**\n" +
         " * An example protocol in Avro IDL\n" +
@@ -71,24 +74,28 @@ public class AvroIdlColorSettingsPage implements ColorSettingsPage {
     }
 
     @Override
-    public @Nullable Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
+    @Nullable
+    public Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
         Map<String, TextAttributesKey> map = new HashMap<>();
         map.put("annotation", AvroIdlSyntaxColors.ANNOTATION);
         return map;
     }
 
     @Override
-    public @NotNull AttributesDescriptor[] getAttributeDescriptors() {
+    @NotNull
+    public AttributesDescriptor[] getAttributeDescriptors() {
         return AvroIdlSyntaxColors.DESCRIPTORS;
     }
 
     @Override
-    public @NotNull ColorDescriptor[] getColorDescriptors() {
+    @NotNull
+    public ColorDescriptor[] getColorDescriptors() {
         return ColorDescriptor.EMPTY_ARRAY;
     }
 
     @Override
-    public @NotNull String getDisplayName() {
+    @NotNull
+    public String getDisplayName() {
         return AvroIdlLanguage.INSTANCE.getDisplayName();
     }
 }

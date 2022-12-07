@@ -40,30 +40,36 @@ import static com.intellij.psi.TokenType.WHITE_SPACE;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
 public class AvroIdlPsiUtil {
-	public static @NotNull List<AvroIdlNamedSchemaDeclaration> getNamedSchemaDeclarationList(@NotNull AvroIdlProtocolBody protocolBody) {
+	@NotNull
+    public static List<AvroIdlNamedSchemaDeclaration> getNamedSchemaDeclarationList(@NotNull AvroIdlProtocolBody protocolBody) {
 		return filterList(protocolBody.getWithSchemaPropertiesList(), AvroIdlNamedSchemaDeclaration.class);
 	}
 
-	public static @NotNull List<AvroIdlMessageDeclaration> getMessageDeclarationList(@NotNull AvroIdlProtocolBody protocolBody) {
+	@NotNull
+    public static List<AvroIdlMessageDeclaration> getMessageDeclarationList(@NotNull AvroIdlProtocolBody protocolBody) {
 		return filterList(protocolBody.getWithSchemaPropertiesList(), AvroIdlMessageDeclaration.class);
 	}
 
-	public static @NotNull List<AvroIdlVariableDeclarator> getVariableDeclaratorList(@NotNull AvroIdlFieldDeclaration fieldDeclaration) {
+	@NotNull
+    public static List<AvroIdlVariableDeclarator> getVariableDeclaratorList(@NotNull AvroIdlFieldDeclaration fieldDeclaration) {
 		return filterList(fieldDeclaration.getWithSchemaPropertiesList(), AvroIdlVariableDeclarator.class);
 	}
 
-	public static @NotNull AvroIdlType getType(@NotNull AvroIdlFieldDeclaration fieldDeclaration) {
+	@NotNull
+    public static AvroIdlType getType(@NotNull AvroIdlFieldDeclaration fieldDeclaration) {
 		// The AvroIdlFieldDeclaration production pins on the type, so this is guaranteed to exist.
 		final Optional<AvroIdlType> avroIdlType = filterFirst(fieldDeclaration.getWithSchemaPropertiesList(), AvroIdlType.class);
 		assert avroIdlType.isPresent();
 		return avroIdlType.get();
 	}
 
-	public static @Nullable AvroIdlVariableDeclarator getVariableDeclarator(@NotNull AvroIdlFormalParameter formalParameter) {
+	@Nullable
+    public static AvroIdlVariableDeclarator getVariableDeclarator(@NotNull AvroIdlFormalParameter formalParameter) {
 		return filterFirst(formalParameter.getWithSchemaPropertiesList(), AvroIdlVariableDeclarator.class).orElse(null);
 	}
 
-	public static @NotNull AvroIdlType getType(@NotNull AvroIdlFormalParameter formalParameter) {
+	@NotNull
+    public static AvroIdlType getType(@NotNull AvroIdlFormalParameter formalParameter) {
 		// The AvroIdlFormalParameter production pins on the type, so this is guaranteed to exist.
 		final Optional<AvroIdlType> avroIdlType = filterFirst(formalParameter.getWithSchemaPropertiesList(), AvroIdlType.class);
 		assert avroIdlType.isPresent();
@@ -78,7 +84,8 @@ public class AvroIdlPsiUtil {
 		return list.stream().filter(clazz::isInstance).map(clazz::cast).findFirst();
 	}
 
-	public static @Nullable PsiElement getNameIdentifier(@NotNull AvroIdlNamedType owner) {
+	@Nullable
+    public static PsiElement getNameIdentifier(@NotNull AvroIdlNamedType owner) {
 		if (owner instanceof AvroIdlNamespaceProperty) {
 			final AvroIdlJsonValue jsonValue = ((AvroIdlNamespaceProperty)owner).getJsonValue();
 			return jsonValue instanceof AvroIdlJsonStringLiteral ? jsonValue : null;
@@ -98,7 +105,9 @@ public class AvroIdlPsiUtil {
 		}
 	}
 
-	public static @Nullable @NonNls String getName(@NotNull AvroIdlNamedType owner) {
+	@Nullable
+    @NonNls
+    public static String getName(@NotNull AvroIdlNamedType owner) {
 		PsiElement nameIdentifier = getNameIdentifier(owner);
 		if (nameIdentifier instanceof AvroIdlJsonStringLiteral) {
 			return AvroIdlUtil.getJsonString((AvroIdlJsonStringLiteral)nameIdentifier);
@@ -123,7 +132,9 @@ public class AvroIdlPsiUtil {
 		return owner;
 	}
 
-	public static @Nullable @NonNls String getFullName(@NotNull AvroIdlNameIdentifierOwner owner) {
+	@Nullable
+    @NonNls
+    public static String getFullName(@NotNull AvroIdlNameIdentifierOwner owner) {
 		String name = getName(owner);
 		if (name == null || name.contains(".")) {
 			return name;
@@ -131,12 +142,14 @@ public class AvroIdlPsiUtil {
 		return getNamespacePrefix(owner) + name;
 	}
 
-	public static @NotNull String getNamespacePrefix(@Nullable PsiElement owner) {
+	@NotNull
+    public static String getNamespacePrefix(@Nullable PsiElement owner) {
 		String namespace = getNamespace(owner);
 		return namespace.isEmpty() ? "" : namespace + ".";
 	}
 
-	public static @NotNull String getNamespace(@Nullable PsiElement owner) {
+	@NotNull
+    public static String getNamespace(@Nullable PsiElement owner) {
 		if (owner == null) {
 			return "";
 		} else if (owner instanceof AvroIdlFile) {
@@ -177,19 +190,23 @@ public class AvroIdlPsiUtil {
 		return owner instanceof AvroIdlPrimitiveType && TreeUtil.findChildBackward(owner.getNode(), NULL) != null;
 	}
 
-	public static @Nullable AvroIdlNamedSchemaReference getReference(@NotNull AvroIdlReferenceType owner) {
+	@Nullable
+    public static AvroIdlNamedSchemaReference getReference(@NotNull AvroIdlReferenceType owner) {
 		return AvroIdlNamedSchemaReference.forType(owner);
 	}
 
-	public static @NotNull AvroIdlNamedSchemaReference getReference(@NotNull AvroIdlMessageAttributeThrows owner) {
+	@NotNull
+    public static AvroIdlNamedSchemaReference getReference(@NotNull AvroIdlMessageAttributeThrows owner) {
 		return AvroIdlNamedSchemaReference.forMessageAttribute(owner);
 	}
 
-	public static @NotNull AvroIdlEnumConstantReference getReference(@NotNull AvroIdlEnumDefault owner) {
+	@NotNull
+    public static AvroIdlEnumConstantReference getReference(@NotNull AvroIdlEnumDefault owner) {
 		return AvroIdlEnumConstantReference.forDefault(owner);
 	}
 
-	public static @Nullable PsiFileReference getReference(@NotNull AvroIdlJsonStringLiteral owner) {
+	@Nullable
+    public static PsiFileReference getReference(@NotNull AvroIdlJsonStringLiteral owner) {
 		if (owner.getParent() instanceof AvroIdlImportDeclaration) {
 			final Optional<AvroIdlImportType> importType = Optional.ofNullable(((AvroIdlImportDeclaration)owner.getParent()).getImportType());
 			final IElementType importElementType = importType.map(PsiElement::getFirstChild).map(PsiElement::getNode).map(ASTNode::getElementType).orElse(null);
@@ -218,69 +235,84 @@ public class AvroIdlPsiUtil {
 		}
 	}
 
-	public static @Nullable PsiFileReference getLastFileReference(@NotNull AvroIdlJsonStringLiteral owner) {
+	@Nullable
+    public static PsiFileReference getLastFileReference(@NotNull AvroIdlJsonStringLiteral owner) {
 		return getReference(owner);
 	}
 
-	public static @NotNull List<AvroIdlEnumConstant> getComponents(@NotNull AvroIdlEnumBody enumBody) {
+	@NotNull
+    public static List<AvroIdlEnumConstant> getComponents(@NotNull AvroIdlEnumBody enumBody) {
 		return enumBody.getEnumConstantList();
 	}
 
-	public static @NotNull List<AvroIdlVariableDeclarator> getComponents(@NotNull AvroIdlFieldDeclaration fieldDeclaration) {
+	@NotNull
+    public static List<AvroIdlVariableDeclarator> getComponents(@NotNull AvroIdlFieldDeclaration fieldDeclaration) {
 		return fieldDeclaration.getVariableDeclaratorList();
 	}
 
-	public static @NotNull List<AvroIdlFormalParameter> getComponents(@NotNull AvroIdlMessageDeclaration messageDeclaration) {
+	@NotNull
+    public static List<AvroIdlFormalParameter> getComponents(@NotNull AvroIdlMessageDeclaration messageDeclaration) {
 		return messageDeclaration.getFormalParameterList();
 	}
 
-	public static @NotNull List<AvroIdlType> getComponents(@NotNull AvroIdlUnionType unionType) {
+	@NotNull
+    public static List<AvroIdlType> getComponents(@NotNull AvroIdlUnionType unionType) {
 		return unionType.getTypeList();
 	}
 
-	public static @NotNull List<AvroIdlJsonPair> getComponents(@NotNull AvroIdlJsonObject jsonObject) {
+	@NotNull
+    public static List<AvroIdlJsonPair> getComponents(@NotNull AvroIdlJsonObject jsonObject) {
 		return jsonObject.getJsonPairList();
 	}
 
-	public static @NotNull List<AvroIdlJsonValue> getComponents(@NotNull AvroIdlJsonArray jsonArray) {
+	@NotNull
+    public static List<AvroIdlJsonValue> getComponents(@NotNull AvroIdlJsonArray jsonArray) {
 		return jsonArray.getJsonValueList();
 	}
 
-	public static @NotNull ItemPresentation getPresentation(final AvroIdlNamedType element) {
+	@NotNull
+    public static ItemPresentation getPresentation(final AvroIdlNamedType element) {
 		//noinspection ConstantConditions
 		return new ItemPresentation() {
 			@Override
-			public @Nullable String getPresentableText() {
+            @Nullable
+            public String getPresentableText() {
 				return element.getName();
 			}
 
 			@Override
-			public @Nullable String getLocationString() {
+            @Nullable
+            public String getLocationString() {
 				return element.getContainingFile().getName();
 			}
 
 			@Override
-			public @Nullable Icon getIcon(boolean unused) {
+            @Nullable
+            public Icon getIcon(boolean unused) {
 				return AvroIdlIcons.LOGO;
 			}
 		};
 	}
 
-	public static @NotNull ItemPresentation getPresentation(final AvroIdlEnumConstant element) {
+	@NotNull
+    public static ItemPresentation getPresentation(final AvroIdlEnumConstant element) {
 		//noinspection ConstantConditions
 		return new ItemPresentation() {
 			@Override
-			public @Nullable String getPresentableText() {
+            @Nullable
+            public String getPresentableText() {
 				return ((AvroIdlEnumDeclaration)element.getParent().getParent()).getName() + "." + element.getName();
 			}
 
 			@Override
-			public @Nullable String getLocationString() {
+            @Nullable
+            public String getLocationString() {
 				return element.getContainingFile().getName();
 			}
 
 			@Override
-			public @Nullable Icon getIcon(boolean unused) {
+            @Nullable
+            public Icon getIcon(boolean unused) {
 				return AvroIdlIcons.LOGO;
 			}
 		};
@@ -305,20 +337,23 @@ public class AvroIdlPsiUtil {
 	/**
 	 * Return the next code leaf, or the next documentation comment leaf, whichever comes first.
 	 */
-	public static @Nullable PsiElement nextNonCommentLeaf(@Nullable PsiElement element) {
+    @Nullable
+    public static PsiElement nextNonCommentLeaf(@Nullable PsiElement element) {
 		return skipMatching(element, PsiTreeUtil::nextLeaf, AvroIdlPsiUtil::isWhitespaceOrNonDocComment, true);
 	}
 
 	/**
 	 * Return the previous code leaf, or the previous documentation comment leaf, whichever comes first.
 	 */
-	public static @Nullable PsiElement prevNonCommentLeaf(@Nullable PsiElement element) {
+    @Nullable
+    public static PsiElement prevNonCommentLeaf(@Nullable PsiElement element) {
 		return skipMatching(element, PsiTreeUtil::prevLeaf, AvroIdlPsiUtil::isWhitespaceOrNonDocComment, true);
 	}
 
-	public static @Nullable PsiElement skipMatching(@Nullable PsiElement element,
-	                                                 @NotNull Function<? super PsiElement, ? extends PsiElement> next,
-	                                                 @NotNull Predicate<? super PsiElement> condition, boolean strict) {
+	@Nullable
+    public static PsiElement skipMatching(@Nullable PsiElement element,
+                                          @NotNull Function<? super PsiElement, ? extends PsiElement> next,
+                                          @NotNull Predicate<? super PsiElement> condition, boolean strict) {
 		if (element == null) {
 			return null;
 		}

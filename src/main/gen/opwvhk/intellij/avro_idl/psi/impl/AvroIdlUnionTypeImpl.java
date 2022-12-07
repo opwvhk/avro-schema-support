@@ -34,7 +34,8 @@ public class AvroIdlUnionTypeImpl extends AvroIdlTypeImpl implements AvroIdlUnio
   }
 
   @Override
-  public @NotNull List<AvroIdlType> getComponents() {
+  @NotNull
+  public List<AvroIdlType> getComponents() {
     return AvroIdlPsiUtil.getComponents(this);
   }
 

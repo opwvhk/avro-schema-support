@@ -53,22 +53,26 @@ public class RenameFix implements RefactoringQuickFix {
 	}
 
 	@Override
-	public @NotNull String getFamilyName() {
+    @NotNull
+    public String getFamilyName() {
 		return "Rename";
 	}
 
 	@Override
-	public @NotNull String getName() {
+    @NotNull
+    public String getName() {
 		return targetName == null ? "Rename" : "Rename to '" + targetName + "'";
 	}
 
 	@Override
-	public @NotNull RefactoringActionHandler getHandler() {
+    @NotNull
+    public RefactoringActionHandler getHandler() {
 		return RefactoringActionHandlerFactory.getInstance().createRenameHandler();
 	}
 
 	@Override
-	public @NotNull RefactoringActionHandler getHandler(DataContext context) {
+    @NotNull
+    public RefactoringActionHandler getHandler(DataContext context) {
 		RenameHandler renameHandler = RenameHandlerRegistry.getInstance().getRenameHandler(context);
 		return renameHandler != null ? renameHandler : getHandler();
 	}

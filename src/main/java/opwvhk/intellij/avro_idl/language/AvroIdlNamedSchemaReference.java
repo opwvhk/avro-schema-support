@@ -17,7 +17,8 @@ public class AvroIdlNamedSchemaReference extends AvroIdlAbstractReference {
 	private final String fullName;
 	private final boolean matchErrorTypesOnly;
 
-	public static @Nullable AvroIdlNamedSchemaReference forType(@NotNull AvroIdlReferenceType owner) {
+	@Nullable
+    public static AvroIdlNamedSchemaReference forType(@NotNull AvroIdlReferenceType owner) {
 		return Optional.of(owner)
 			.map(AvroIdlReferenceType::getIdentifier)
 			.map(PsiElement::getFirstChild)
@@ -25,7 +26,8 @@ public class AvroIdlNamedSchemaReference extends AvroIdlAbstractReference {
 			.orElse(null);
 	}
 
-	public static @NotNull AvroIdlNamedSchemaReference forMessageAttribute(@NotNull AvroIdlMessageAttributeThrows owner) {
+	@NotNull
+    public static AvroIdlNamedSchemaReference forMessageAttribute(@NotNull AvroIdlMessageAttributeThrows owner) {
 		return new AvroIdlNamedSchemaReference(owner, requireNonNull(owner.getIdentifier().getIdentifierToken()), true);
 	}
 
@@ -49,7 +51,8 @@ public class AvroIdlNamedSchemaReference extends AvroIdlAbstractReference {
 	}
 
 	@Override
-	public @Nullable PsiElement resolve() {
+    @Nullable
+    public PsiElement resolve() {
 		return resolve0().map(LookupElement::getPsiElement).orElse(null);
 	}
 
@@ -58,7 +61,8 @@ public class AvroIdlNamedSchemaReference extends AvroIdlAbstractReference {
 	}
 
 	@Override
-	public @NotNull Object[] getVariants() {
+    @NotNull
+    public Object[] getVariants() {
 		final AvroIdlFile idlFile = (AvroIdlFile)myElement.getContainingFile();
 		AvroIdlFile idlFile2 = (AvroIdlFile)idlFile.getOriginalFile();
 		final String namespace = AvroIdlPsiUtil.getNamespace(myElement);

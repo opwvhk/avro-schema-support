@@ -35,7 +35,8 @@ public class AvroIdlReferenceTypeImpl extends AvroIdlNullableTypeImpl implements
   }
 
   @Override
-  public @Nullable AvroIdlNamedSchemaReference getReference() {
+  @Nullable
+  public AvroIdlNamedSchemaReference getReference() {
     return AvroIdlPsiUtil.getReference(this);
   }
 

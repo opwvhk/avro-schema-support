@@ -12,10 +12,12 @@ import org.jetbrains.annotations.Nullable;
 public class AvroIdlStructureViewFactory implements PsiStructureViewFactory {
 
 	@Override
-    public @Nullable StructureViewBuilder getStructureViewBuilder(final @NotNull PsiFile psiFile) {
+    @Nullable
+    public StructureViewBuilder getStructureViewBuilder(@NotNull final PsiFile psiFile) {
 		return new TreeBasedStructureViewBuilder() {
 			@Override
-            public @NotNull StructureViewModel createStructureViewModel(@Nullable Editor editor) {
+            @NotNull
+            public StructureViewModel createStructureViewModel(@Nullable Editor editor) {
 				return new AvroIdlStructureViewModel(psiFile, editor);
 			}
 		};

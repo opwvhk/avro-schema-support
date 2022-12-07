@@ -14,12 +14,14 @@ import javax.swing.*;
 
 public class AvroIdlStructureAwareNavbar extends StructureAwareNavBarModelExtension {
 	@Override
-	protected @NotNull Language getLanguage() {
+    @NotNull
+    protected Language getLanguage() {
 		return AvroIdlLanguage.INSTANCE;
 	}
 
 	@Override
-	public @Nullable String getPresentableText(Object object) {
+    @Nullable
+    public String getPresentableText(Object object) {
 		//if (object instanceof PsiElement && AvroIdlIcons.getAvroIdlIcon((PsiElement)object) != null) {
 		//	assert object instanceof AvroIdlNameIdentifierOwner;
 		//	return ((AvroIdlNameIdentifierOwner)object).getName();
@@ -52,7 +54,8 @@ public class AvroIdlStructureAwareNavbar extends StructureAwareNavBarModelExtens
 	*/
 
 	@Override
-	public @Nullable Icon getIcon(Object object) {
+    @Nullable
+    public Icon getIcon(Object object) {
 		if (object instanceof PsiElement) {
 			return AvroIdlIcons.getAvroIdlIcon((PsiElement)object);
 		}

@@ -10,7 +10,8 @@ import opwvhk.intellij.avro_idl.AvroIdlLanguage;
 import org.jetbrains.annotations.NotNull;
 
 public class AvroIdlCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
-    public @NotNull CodeStyleConfigurable createConfigurable(@NotNull CodeStyleSettings settings, @NotNull CodeStyleSettings modelSettings) {
+    @NotNull
+    public CodeStyleConfigurable createConfigurable(@NotNull CodeStyleSettings settings, @NotNull CodeStyleSettings modelSettings) {
         return new CodeStyleAbstractConfigurable(settings, modelSettings, this.getConfigurableDisplayName()) {
             @Override
             protected CodeStyleAbstractPanel createPanel(CodeStyleSettings settings) {

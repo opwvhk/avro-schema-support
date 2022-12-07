@@ -35,7 +35,8 @@ public class AvroIdlMessageAttributeThrowsImpl extends ASTWrapperPsiElement impl
   }
 
   @Override
-  public @NotNull AvroIdlNamedSchemaReference getReference() {
+  @NotNull
+  public AvroIdlNamedSchemaReference getReference() {
     return AvroIdlPsiUtil.getReference(this);
   }
 

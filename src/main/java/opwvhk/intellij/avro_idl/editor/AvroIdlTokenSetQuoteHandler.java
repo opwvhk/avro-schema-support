@@ -26,7 +26,8 @@ public class AvroIdlTokenSetQuoteHandler extends SimpleTokenSetQuoteHandler impl
 	}
 
 	@Override
-	public @Nullable CharSequence getClosingQuote(@NotNull HighlighterIterator iterator, int offset) {
+    @Nullable
+    public CharSequence getClosingQuote(@NotNull HighlighterIterator iterator, int offset) {
 		final IElementType tokenType = iterator.getTokenType();
 		if (tokenType == TokenType.WHITE_SPACE || myLiteralTokenSet.contains(tokenType)) {
 			final int index = iterator.getStart() - (tokenType == TokenType.WHITE_SPACE ? 1 : 0);

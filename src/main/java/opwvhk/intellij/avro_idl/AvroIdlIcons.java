@@ -21,7 +21,8 @@ public class AvroIdlIcons {
 	public static final Icon LOGO = IconManager.getInstance().getIcon("/META-INF/avroLogo16.svg", AvroIdlIcons.class);
 	public static final Icon FILE = IconManager.getInstance().getIcon("/META-INF/fileIconAvro.svg", AvroIdlIcons.class);
 
-	public static @Nullable Icon getAvroIdlIcon(PsiElement element) {
+	@Nullable
+    public static Icon getAvroIdlIcon(PsiElement element) {
 		if (element instanceof AvroIdlFile) {
 			return FILE;
 		}
@@ -71,7 +72,8 @@ public class AvroIdlIcons {
 		public static final Icon AVRO_METHOD = IconManager.getInstance().getIcon("/icons/nodes/method.svg", AvroIdlIcons.class);
 	}
 
-	public static @NotNull RowIcon addAvroMark(@NotNull Icon baseIcon) {
+	@NotNull
+    public static RowIcon addAvroMark(@NotNull Icon baseIcon) {
 		Icon avroMark = IconLoader.getIcon("/icons/avroMark.svg", AvroIdlIcons.class);
 		ScalableIcon avroMarkMask = (ScalableIcon)IconLoader.getIcon("/icons/avroMarkMask.svg", AvroIdlIcons.class);
 		MaskedIcon maskedIcon = new MaskedIcon(baseIcon, avroMarkMask);
@@ -88,7 +90,8 @@ public class AvroIdlIcons {
 		}
 
 		@Override
-		public @NotNull Icon getDarkIcon(boolean isDark) {
+        @NotNull
+        public Icon getDarkIcon(boolean isDark) {
 			return new MaskedIcon(IconLoader.getDarkIcon(baseIcon, isDark), mask);
 		}
 

@@ -24,7 +24,8 @@ public class AvroIdlStructureViewElement extends PsiTreeElementBase<PsiElement> 
 	}
 
 	@Override
-	public @NotNull Collection<StructureViewTreeElement> getChildrenBase() {
+    @NotNull
+    public Collection<StructureViewTreeElement> getChildrenBase() {
 		final PsiElement element = getElement();
 		List<StructureViewTreeElement> children = new ArrayList<>();
 
@@ -67,7 +68,8 @@ public class AvroIdlStructureViewElement extends PsiTreeElementBase<PsiElement> 
 	}
 
 	@Override
-	public @Nullable String getPresentableText() {
+    @Nullable
+    public String getPresentableText() {
 		if (getValue() instanceof AvroIdlNamedSchemaDeclaration) {
 			return text(((AvroIdlNamedSchemaDeclaration) getValue()).getFullName());
 		} else if (getValue() instanceof AvroIdlMessageDeclaration) {
@@ -104,11 +106,13 @@ public class AvroIdlStructureViewElement extends PsiTreeElementBase<PsiElement> 
 		return getValue().getNode().getElementType().toString();
 	}
 
-	private @NotNull String text(@Nullable String text) {
+	@NotNull
+    private String text(@Nullable String text) {
 		return text == null || text.isBlank() ? "???" : text;
 	}
 
-	private @NotNull String text(@NotNull String format, @Nullable Object... parameters) {
+	@NotNull
+    private String text(@NotNull String format, @Nullable Object... parameters) {
 		for (Object parameter : parameters) {
 			if (parameter == null) {
 				return "???";
@@ -117,7 +121,8 @@ public class AvroIdlStructureViewElement extends PsiTreeElementBase<PsiElement> 
 		return String.format(format, parameters);
 	}
 
-	private @NotNull String text(@Nullable AvroIdlType type) {
+	@NotNull
+    private String text(@Nullable AvroIdlType type) {
 		if (type instanceof AvroIdlArrayType) {
 			return text("array<%s>", text(((AvroIdlArrayType) type).getType()));
 		} else if (type instanceof AvroIdlMapType) {

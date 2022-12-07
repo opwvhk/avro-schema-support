@@ -57,7 +57,7 @@ public class AvroIdlBlock extends AbstractBlock {
 
 		final Wrap childWrap = createChildWrap();
 		List<Block> blocks = new ArrayList<>();
-		final @NotNull ASTNode[] children = myNode.getChildren(null);
+		@NotNull final ASTNode[] children = myNode.getChildren(null);
 		for (int i = 0; i < children.length; i++) {
 			ASTNode child = children[i];
 			final IElementType childElementType = child.getElementType();
@@ -83,7 +83,8 @@ public class AvroIdlBlock extends AbstractBlock {
 		return blocks;
 	}
 
-	private @NotNull Wrap createChildWrap() {
+	@NotNull
+    private Wrap createChildWrap() {
 		final IElementType elementType = myNode.getElementType();
 		if (ELEMENTS_THAT_WRAP_BEFORE_CHILDREN.contains(elementType)) {
 			return Wrap.createChildWrap(myWrap, WrapType.NORMAL, false);
@@ -96,16 +97,19 @@ public class AvroIdlBlock extends AbstractBlock {
 	}
 
 
-	protected @Nullable Indent getPreviousChildIndent(int childNodeIndex) {
+	@Nullable
+    protected Indent getPreviousChildIndent(int childNodeIndex) {
 		return getChildIndent();
 	}
 
-	protected @Nullable Indent getChildIndent(int childNodeIndex) {
+	@Nullable
+    protected Indent getChildIndent(int childNodeIndex) {
 		return getChildIndent();
 	}
 
 	@Override
-    protected @Nullable Indent getChildIndent() {
+    @Nullable
+    protected Indent getChildIndent() {
 		final IElementType myElementType = myNode.getElementType();
 
 		if (DECLARATION_BODIES_WITH_UNINDENTED_CHILDREN.contains(myElementType) || myNode instanceof FileElement) {
@@ -116,7 +120,8 @@ public class AvroIdlBlock extends AbstractBlock {
 	}
 
 	@Override
-	public @NotNull ChildAttributes getChildAttributes(int newChildBlockIndex) {
+    @NotNull
+    public ChildAttributes getChildAttributes(int newChildBlockIndex) {
 		if (newSubBlockAttributes.isEmpty()) {
 			// If we get here, we have not built sub blocks.
 			return super.getChildAttributes(newChildBlockIndex);
@@ -130,7 +135,8 @@ public class AvroIdlBlock extends AbstractBlock {
 	}
 
 	@Override
-    public @Nullable Spacing getSpacing(@Nullable Block child1, @NotNull Block child2) {
+    @Nullable
+    public Spacing getSpacing(@Nullable Block child1, @NotNull Block child2) {
 		return mySpacingBuilder.getSpacing(this, child1, child2);
 	}
 

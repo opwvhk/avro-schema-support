@@ -10,7 +10,8 @@ public class AvroProtocolLanguage extends JsonLanguage {
 	/**
 	 * A shared instance of AvroIdlLanguage.
 	 */
-    public static final @NotNull AvroProtocolLanguage INSTANCE = new AvroProtocolLanguage();
+	@NotNull
+	public static final AvroProtocolLanguage INSTANCE = new AvroProtocolLanguage();
 
 	protected AvroProtocolLanguage() {
 		super("Avro Protocol", "text/vnd.apache.avro-protocol");

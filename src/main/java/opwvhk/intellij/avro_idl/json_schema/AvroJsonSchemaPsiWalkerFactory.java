@@ -32,7 +32,8 @@ public class AvroJsonSchemaPsiWalkerFactory implements JsonLikePsiWalkerFactory 
 	}
 
 	@Override
-    public @NotNull JsonLikePsiWalker create(@NotNull JsonSchemaObject schemaObject) {
+    @NotNull
+    public JsonLikePsiWalker create(@NotNull JsonSchemaObject schemaObject) {
 		return WALKER_INSTANCE;
 	}
 }

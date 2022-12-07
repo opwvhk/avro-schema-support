@@ -32,12 +32,14 @@ public abstract class SimpleAvroIdlQuickFixOnPsiElement<E extends PsiElement> ex
 	protected abstract void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor, @NotNull E element);
 
 	@Override
-	public @IntentionFamilyName @NotNull String getFamilyName() {
+    @NotNull
+    public @IntentionFamilyName String getFamilyName() {
 		return "Avro IDL";
 	}
 
 	@Override
-	public @IntentionName @NotNull String getText() {
+    @NotNull
+    public @IntentionName String getText() {
 		return text;
 	}
 

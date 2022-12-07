@@ -18,7 +18,7 @@ public class AvroIdlCreateFileFromAction extends CreateFileFromTemplateAction im
 	@Override
 	protected void buildDialog(@NotNull Project project,
 	                           @NotNull PsiDirectory directory,
-	                           CreateFileFromTemplateDialog.@NotNull Builder builder) {
+	                           @NotNull CreateFileFromTemplateDialog.Builder builder) {
 		/*
 		 * Note: the template names are prefixes. IntelliJ takes the first matching prefix. This means with the AsciiDoc plugin installed,
 		 * the template name "Empty" matches the empty AsciiDoc template, not one of this template!

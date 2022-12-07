@@ -32,7 +32,8 @@ public abstract class AvroIdlAbstractReference extends PsiReferenceBase<PsiEleme
 	 * e.g., range of `bar` in `foo.bar` qualified reference expression
 	 */
     @Override
-    public @NotNull TextRange getRangeInElement() {
+    @NotNull
+    public TextRange getRangeInElement() {
 		final TextRange rangeInElement = super.getRangeInElement();
 		final String name = myElement.getText();
 		final int offset = name.lastIndexOf(".") + 1;

@@ -13,7 +13,8 @@ public class AvroIdlFile extends PsiFileBase {
     }
 
     @Override
-    public @NotNull FileType getFileType() {
+    @NotNull
+    public FileType getFileType() {
         return AvroIdlFileType.INSTANCE;
     }
 

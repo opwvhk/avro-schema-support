@@ -26,7 +26,8 @@ public abstract class AvroIdlNamingConvention extends NamingConvention<AvroIdlNa
 	}
 
 	@Override
-	public @NonNls String getShortName() {
+    @NonNls
+    public String getShortName() {
 		return getClass().getSimpleName();
 	}
 

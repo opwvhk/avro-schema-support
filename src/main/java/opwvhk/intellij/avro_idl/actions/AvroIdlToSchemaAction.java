@@ -111,7 +111,8 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 		private final List<Schema> rootSchemaCandidates;
 		private final Set<Schema> usedNamedSchemas;
 		private final Deque<Schema> stack;
-		private final @NotNull ConsoleView console;
+		@NotNull
+        private final ConsoleView console;
 
 		public RootSchemaDiscoveringVisitor(@NotNull ConsoleView console) {
 			this.console = console;

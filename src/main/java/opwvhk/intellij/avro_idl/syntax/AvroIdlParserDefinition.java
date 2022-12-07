@@ -19,7 +19,8 @@ public class AvroIdlParserDefinition implements ParserDefinition {
     public static final IFileElementType FILE = new IFileElementType(AvroIdlLanguage.INSTANCE);
 
     @Override
-    public @NotNull Lexer createLexer(Project project) {
+    @NotNull
+    public Lexer createLexer(Project project) {
         return new AvroIdlLexer();
     }
 
@@ -34,22 +35,26 @@ public class AvroIdlParserDefinition implements ParserDefinition {
     }
 
     @Override
-    public @NotNull TokenSet getWhitespaceTokens() {
+    @NotNull
+    public TokenSet getWhitespaceTokens() {
         return AvroIdlTokenSets.WHITE_SPACE;
     }
 
     @Override
-    public @NotNull TokenSet getCommentTokens() {
+    @NotNull
+    public TokenSet getCommentTokens() {
         return AvroIdlTokenSets.COMMENTS;
     }
 
     @Override
-    public @NotNull TokenSet getStringLiteralElements() {
+    @NotNull
+    public TokenSet getStringLiteralElements() {
         return AvroIdlTokenSets.STRING_LITERALS;
     }
 
     @Override
-    public @NotNull PsiElement createElement(ASTNode node) {
+    @NotNull
+    public PsiElement createElement(ASTNode node) {
         return AvroIdlTypes.Factory.createElement(node);
     }
 

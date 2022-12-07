@@ -34,12 +34,14 @@ public class AvroIdlFormalParameterImpl extends ASTWrapperPsiElement implements 
   }
 
   @Override
-  public @NotNull AvroIdlType getType() {
+  @NotNull
+  public AvroIdlType getType() {
     return AvroIdlPsiUtil.getType(this);
   }
 
   @Override
-  public @Nullable AvroIdlVariableDeclarator getVariableDeclarator() {
+  @Nullable
+  public AvroIdlVariableDeclarator getVariableDeclarator() {
     return AvroIdlPsiUtil.getVariableDeclarator(this);
   }
 

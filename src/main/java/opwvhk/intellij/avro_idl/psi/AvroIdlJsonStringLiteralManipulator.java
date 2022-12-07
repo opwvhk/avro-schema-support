@@ -23,7 +23,8 @@ public class AvroIdlJsonStringLiteralManipulator extends AbstractElementManipula
 	}
 
 	@Override
-	public @NotNull TextRange getRangeInElement(@NotNull AvroIdlJsonStringLiteral element) {
+    @NotNull
+    public TextRange getRangeInElement(@NotNull AvroIdlJsonStringLiteral element) {
 		final String content = element.getText();
 		return new TextRange(1, content.length() - 1);
 	}

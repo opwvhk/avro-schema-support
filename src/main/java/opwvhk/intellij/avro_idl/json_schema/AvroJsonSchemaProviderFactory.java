@@ -13,7 +13,8 @@ import java.util.List;
 
 public class AvroJsonSchemaProviderFactory implements JsonSchemaProviderFactory {
 	@Override
-	public @NotNull List<JsonSchemaFileProvider> getProviders(@NotNull Project project) {
+    @NotNull
+    public List<JsonSchemaFileProvider> getProviders(@NotNull Project project) {
 		if (project.isDisposed()) {
 			return Collections.emptyList();
 		}

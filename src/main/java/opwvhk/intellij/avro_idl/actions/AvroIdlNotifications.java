@@ -30,8 +30,9 @@ public final class AvroIdlNotifications {
 		application.invokeLater(() -> application.runReadAction(() -> notification.notify(project)));
 	}
 
-	private static @NotNull Notification createNotification(@NotNull NotificationGroup notificationGroup, boolean fullContent, @NotNull String title,
-	                                                        @NotNull String content, @NotNull NotificationType type) {
+	@NotNull
+    private static Notification createNotification(@NotNull NotificationGroup notificationGroup, boolean fullContent, @NotNull String title,
+                                                   @NotNull String content, @NotNull NotificationType type) {
 		final Notification notification;
 		if (fullContent) {
 			notification = new FullContentNotification(notificationGroup, title, content, type);

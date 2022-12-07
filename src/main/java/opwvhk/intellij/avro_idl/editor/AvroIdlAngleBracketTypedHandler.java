@@ -14,10 +14,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class AvroIdlAngleBracketTypedHandler extends TypedHandlerDelegate {
 
-	static final @NotNull TokenSet INVALID_INSIDE_ANGLE = TokenSet.create(AvroIdlTypes.SEMICOLON);
+	@NotNull
+    static final TokenSet INVALID_INSIDE_ANGLE = TokenSet.create(AvroIdlTypes.SEMICOLON);
 
 	@Override
-	public @NotNull Result beforeCharTyped(char c, @NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file, @NotNull FileType fileType) {
+    @NotNull
+    public Result beforeCharTyped(char c, @NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file, @NotNull FileType fileType) {
 		if (!CodeInsightSettings.getInstance().AUTOINSERT_PAIR_BRACKET || !(file instanceof AvroIdlFile)) {
 			return Result.CONTINUE;
 		}
@@ -31,7 +33,8 @@ public class AvroIdlAngleBracketTypedHandler extends TypedHandlerDelegate {
 	}
 
 	@Override
-	public @NotNull Result charTyped(char c, @NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+    @NotNull
+    public Result charTyped(char c, @NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
 		if (!CodeInsightSettings.getInstance().AUTOINSERT_PAIR_BRACKET || !(file instanceof AvroIdlFile)) {
 			return Result.CONTINUE;
 		}

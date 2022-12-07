@@ -71,7 +71,8 @@ public abstract class AddDeclarationFix extends SimpleAvroIdlQuickFixOnPsiElemen
 		}
 	}
 
-	private @Nullable PsiElement findFirstComment(@NotNull PsiElement element) {
+	@Nullable
+    private PsiElement findFirstComment(@NotNull PsiElement element) {
 		final PsiElement firstLeaf = PsiTreeUtil.getDeepestFirst(element);
 		for (PsiElement e = firstLeaf; e != null; e = PsiTreeUtil.nextLeaf(e)) {
 			if (e instanceof PsiComment) {

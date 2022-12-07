@@ -37,7 +37,8 @@ public class AvroIdlDuplicateAnnotationsInspection extends BaseAvroIdlInspection
 		});
 	}
 
-	private static @Nullable String getAnnotationName(AvroIdlSchemaProperty annotation) {
+	@Nullable
+    private static String getAnnotationName(AvroIdlSchemaProperty annotation) {
 		return annotation instanceof AvroIdlNamespaceProperty ? "namespace" : annotation.getName();
 	}
 

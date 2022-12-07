@@ -31,12 +31,14 @@ class SimpleJsonSchemaFileProvider implements JsonSchemaFileProvider {
 	}
 
 	@Override
-	public @NotNull String getName() {
+    @NotNull
+    public String getName() {
 		return fileTypeName;
 	}
 
 	@Override
-	public @Nullable VirtualFile getSchemaFile() {
+    @Nullable
+    public VirtualFile getSchemaFile() {
 		return jsonSchemaFile.getValue();
 	}
 
@@ -46,7 +48,8 @@ class SimpleJsonSchemaFileProvider implements JsonSchemaFileProvider {
 	}
 
 	@Override
-	public @NotNull SchemaType getSchemaType() {
+    @NotNull
+    public SchemaType getSchemaType() {
 		return SchemaType.embeddedSchema;
 	}
 }

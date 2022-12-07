@@ -42,12 +42,14 @@ public class AvroIdlSyntaxHighlighter extends SyntaxHighlighterBase {
 		AvroIdlTypes.TRUE, AvroIdlTypes.FALSE);
 
 	@Override
-    public @NotNull Lexer getHighlightingLexer() {
+    @NotNull
+    public Lexer getHighlightingLexer() {
 		return new AvroIdlLexer();
 	}
 
 	@Override
-    public @NotNull TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
+    @NotNull
+    public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
 		if (DOC_COMMENT_TOKENS.contains(tokenType)) {
 			return DOC_COMMENT_KEYS;
 		}

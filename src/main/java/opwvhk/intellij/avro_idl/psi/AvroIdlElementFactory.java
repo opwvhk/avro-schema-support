@@ -21,7 +21,8 @@ public class AvroIdlElementFactory {
 		myProject = project;
 	}
 
-	public @NotNull PsiElement createIdentifier(@NotNull String name) {
+	@NotNull
+    public PsiElement createIdentifier(@NotNull String name) {
 		// Yes, in theory this can cause syntax errors. We're assuming the name has been vetted by AvroIdlNamesValidator.
 		final AvroIdlFile file = createDummyFile(String.format("protocol %s {}", name));
 		final AvroIdlProtocolDeclaration protocol = (AvroIdlProtocolDeclaration)file.getFirstChild();
@@ -30,7 +31,8 @@ public class AvroIdlElementFactory {
 		return nameIdentifier;
 	}
 
-	public @NotNull AvroIdlJsonStringLiteral createJsonStringLiteral(@NotNull String text) {
+	@NotNull
+    public AvroIdlJsonStringLiteral createJsonStringLiteral(@NotNull String text) {
 		final AvroIdlFile file = createDummyFile(String.format("protocol Foo { import idl \"%s\"; }", StringUtil.escapeStringCharacters(text)));
 		final AvroIdlProtocolBody protocolBody = extractAvroIdlProtocolBody(file);
 		final AvroIdlImportDeclaration avroIdlImportDeclaration = protocolBody.getImportDeclarationList().get(0);
@@ -39,12 +41,14 @@ public class AvroIdlElementFactory {
 		return jsonStringLiteral;
 	}
 
-	private @NotNull AvroIdlProtocolBody extractAvroIdlProtocolBody(AvroIdlFile file) {
+	@NotNull
+    private AvroIdlProtocolBody extractAvroIdlProtocolBody(AvroIdlFile file) {
 		final AvroIdlProtocolDeclaration protocol = (AvroIdlProtocolDeclaration)file.getFirstChild();
 		return requireNonNull(protocol.getProtocolBody());
 	}
 
-	public @NotNull PsiComment createMultilineComment(@NotNull String docCommentTokenText) {
+	@NotNull
+    public PsiComment createMultilineComment(@NotNull String docCommentTokenText) {
 		final String commentContent = docCommentTokenText.substring(3, docCommentTokenText.length() - 2);
 		final AvroIdlFile file = createDummyFile(String.format("/*%s*/ protocol Foo { }", commentContent));
 		return (PsiComment)file.getFirstChild();
@@ -57,7 +61,8 @@ public class AvroIdlElementFactory {
 	 * @param protocolDeclaration a protocol declaration
 	 * @return an in-memory 'file' using the IDL schema syntax with a namespace declaration and optionally a main schema declaration
 	 */
-	public @NotNull AvroIdlFile createSchemaSyntaxHeader(@NotNull AvroIdlProtocolDeclaration protocolDeclaration) {
+    @NotNull
+    public AvroIdlFile createSchemaSyntaxHeader(@NotNull AvroIdlProtocolDeclaration protocolDeclaration) {
 
 		String fullName = requireNonNull(protocolDeclaration.getFullName());
 		int dotPos = fullName.lastIndexOf('.');
@@ -87,7 +92,8 @@ public class AvroIdlElementFactory {
 		return createDummyFile(buffer);
 	}
 
-	public @NotNull AvroIdlProtocolDeclaration createDummyProtocol(@Nullable String namespace) {
+	@NotNull
+    public AvroIdlProtocolDeclaration createDummyProtocol(@Nullable String namespace) {
 		String protocolDefinition = "protocol Dummy { }";
 		if (namespace != null) {
 			protocolDefinition = String.format("@namespace(\"%s\")%n%s", namespace, protocolDefinition);
@@ -95,7 +101,8 @@ public class AvroIdlElementFactory {
 		return (AvroIdlProtocolDeclaration)createDummyFile(protocolDefinition).getFirstChild();
 	}
 
-	public @NotNull AvroIdlNullableType makeOptional(@NotNull AvroIdlNullableType type) {
+	@NotNull
+    public AvroIdlNullableType makeOptional(@NotNull AvroIdlNullableType type) {
 		if (type.isOptional()) {
 			return type;
 		}
@@ -106,7 +113,8 @@ public class AvroIdlElementFactory {
 		return (AvroIdlNullableType)fieldDeclaration.getType();
 	}
 
-	public @NotNull AvroIdlUnionType unionWithNull(@NotNull AvroIdlType type, boolean nullLast) {
+	@NotNull
+    public AvroIdlUnionType unionWithNull(@NotNull AvroIdlType type, boolean nullLast) {
 		final AvroIdlFile file = createDummyFile("protocol Foo { record Bar { union { null, null } field; } }");
 		final AvroIdlProtocolBody protocolBody = extractAvroIdlProtocolBody(file);
 		final AvroIdlRecordDeclaration recordDeclaration = (AvroIdlRecordDeclaration)protocolBody.getNamedSchemaDeclarationList().get(0);
@@ -123,7 +131,8 @@ public class AvroIdlElementFactory {
 	 * @param content content of the file to be created
 	 * @return created file
 	 */
-	public @NotNull AvroIdlFile createDummyFile(@NotNull CharSequence content) {
+    @NotNull
+    public AvroIdlFile createDummyFile(@NotNull CharSequence content) {
 		return (AvroIdlFile)PsiFileFactory.getInstance(myProject).
 			createFileFromText("dummy." + AvroIdlFileType.INSTANCE.getDefaultExtension(), AvroIdlFileType.INSTANCE, content);
 	}

@@ -31,14 +31,19 @@ import static java.util.Objects.requireNonNull;
  * and the installation account are inaccessible).</p>
  */
 public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbAware {
-	public static final PluginId OLD_PLUGIN_ID = PluginId.getId("claims.bold.intellij.avro");
+	private static final PluginId MY_PLUGIN_ID = PluginId.getId("net.sf.opk.avro-schema-support");
+	private static final PluginId OLD_PLUGIN_ID = PluginId.getId("claims.bold.intellij.avro");
 	private static final String SNAPSHOT_SUFFIX = "-SNAPSHOT";
+
+	@NotNull
+	public static IdeaPluginDescriptor getMyPluginDescriptor() {
+		return requireNonNull(PluginManagerCore.getPlugin(MY_PLUGIN_ID), "Own description is null: broken plugin!");
+	}
 
 	@Override
 	public void runActivity(@NotNull Project project) {
 		AvroIdlSettings settings = AvroIdlSettings.getInstance();
-		final PluginId myPluginId = PluginId.getId("net.sf.opk.avro-schema-support");
-		IdeaPluginDescriptor plugin = requireNonNull(PluginManagerCore.getPlugin(myPluginId), "Own description is null: broken plugin!");
+		IdeaPluginDescriptor plugin = getMyPluginDescriptor();
 
 		checkForReplacedPlugin(project, plugin.getName());
 
@@ -49,7 +54,8 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 		settings.setPluginVersion(newVersion);
 	}
 
-	private @NotNull String versionOf(IdeaPluginDescriptor plugin) {
+	@NotNull
+	private String versionOf(IdeaPluginDescriptor plugin) {
 		String pluginVersion = plugin.getVersion();
 		if (pluginVersion.endsWith(SNAPSHOT_SUFFIX)) {
 			return pluginVersion.substring(0, pluginVersion.length() - SNAPSHOT_SUFFIX.length());
@@ -126,7 +132,8 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 	 * @param project the current project
 	 * @return the notification listener
 	 */
-	private @NotNull NotificationListener.UrlOpeningListener createUrlOpeningListener(@NotNull Project project) {
+	@NotNull
+	private NotificationListener.UrlOpeningListener createUrlOpeningListener(@NotNull Project project) {
 		return new NotificationListener.UrlOpeningListener(false) {
 			@Override
 			protected void hyperlinkActivated(@NotNull Notification notification, @NotNull HyperlinkEvent event) {

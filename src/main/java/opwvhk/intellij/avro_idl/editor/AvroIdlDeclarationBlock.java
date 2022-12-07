@@ -32,7 +32,7 @@ public class AvroIdlDeclarationBlock extends AvroIdlBlock {
 		bodyEndIndex = -1;
 		final IElementType myElementType = myNode.getElementType();
 		if (DECLARATIONS.contains(myElementType)) {
-			final @NotNull ASTNode[] children = myNode.getChildren(null);
+			@NotNull final ASTNode[] children = myNode.getChildren(null);
 			for (int i = 0; i < children.length; i++) {
 				final IElementType childElementType = children[i].getElementType();
 				if (headerStartIndex == -1 && !DECLARATION_PREAMBLE.contains(childElementType)) {

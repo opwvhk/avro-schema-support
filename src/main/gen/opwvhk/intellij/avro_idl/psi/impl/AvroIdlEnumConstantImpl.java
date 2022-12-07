@@ -1,17 +1,19 @@
 // This is a generated file. Not intended for manual editing.
 package opwvhk.intellij.avro_idl.psi.impl;
 
-import java.util.List;
-import org.jetbrains.annotations.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.util.PsiTreeUtil;
-import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import opwvhk.intellij.avro_idl.psi.*;
-import com.intellij.navigation.ItemPresentation;
 import com.intellij.util.IncorrectOperationException;
+import opwvhk.intellij.avro_idl.psi.AvroIdlEnumConstant;
+import opwvhk.intellij.avro_idl.psi.AvroIdlIdentifier;
+import opwvhk.intellij.avro_idl.psi.AvroIdlPsiUtil;
+import opwvhk.intellij.avro_idl.psi.AvroIdlVisitor;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class AvroIdlEnumConstantImpl extends ASTWrapperPsiElement implements AvroIdlEnumConstant {
 
@@ -36,7 +38,8 @@ public class AvroIdlEnumConstantImpl extends ASTWrapperPsiElement implements Avr
   }
 
   @Override
-  public @Nullable PsiElement getNameIdentifier() {
+  @Nullable
+  public PsiElement getNameIdentifier() {
     return AvroIdlPsiUtil.getNameIdentifier(this);
   }
 
@@ -46,7 +49,9 @@ public class AvroIdlEnumConstantImpl extends ASTWrapperPsiElement implements Avr
   }
 
   @Override
-  public @Nullable @NonNls String getName() {
+  @Nullable
+  @NonNls
+  public String getName() {
     return AvroIdlPsiUtil.getName(this);
   }
 
@@ -56,7 +61,8 @@ public class AvroIdlEnumConstantImpl extends ASTWrapperPsiElement implements Avr
   }
 
   @Override
-  public @NotNull ItemPresentation getPresentation() {
+  @NotNull
+  public ItemPresentation getPresentation() {
     return AvroIdlPsiUtil.getPresentation(this);
   }
 

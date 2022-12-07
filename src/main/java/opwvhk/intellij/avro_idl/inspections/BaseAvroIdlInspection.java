@@ -18,7 +18,8 @@ public abstract class BaseAvroIdlInspection<T extends PsiElement> extends LocalI
 	protected abstract void visitElement(@NotNull T element, @NotNull ProblemsHolder holder, @NotNull LocalInspectionToolSession session);
 
 	@Override
-	public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
+    @NotNull
+    public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
 		return new PsiElementVisitor() {
 			@Override
 			public void visitElement(@NotNull PsiElement element) {

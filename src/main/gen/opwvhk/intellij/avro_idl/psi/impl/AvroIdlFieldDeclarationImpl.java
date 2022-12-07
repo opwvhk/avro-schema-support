@@ -34,17 +34,20 @@ public class AvroIdlFieldDeclarationImpl extends ASTWrapperPsiElement implements
   }
 
   @Override
-  public @NotNull AvroIdlType getType() {
+  @NotNull
+  public AvroIdlType getType() {
     return AvroIdlPsiUtil.getType(this);
   }
 
   @Override
-  public @NotNull List<AvroIdlVariableDeclarator> getVariableDeclaratorList() {
+  @NotNull
+  public List<AvroIdlVariableDeclarator> getVariableDeclaratorList() {
     return AvroIdlPsiUtil.getVariableDeclaratorList(this);
   }
 
   @Override
-  public @NotNull List<AvroIdlVariableDeclarator> getComponents() {
+  @NotNull
+  public List<AvroIdlVariableDeclarator> getComponents() {
     return AvroIdlPsiUtil.getComponents(this);
   }
 

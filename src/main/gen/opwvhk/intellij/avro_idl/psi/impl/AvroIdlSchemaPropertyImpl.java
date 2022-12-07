@@ -41,7 +41,9 @@ public class AvroIdlSchemaPropertyImpl extends ASTWrapperPsiElement implements A
   }
 
   @Override
-  public @Nullable @NonNls String getName() {
+  @Nullable
+  @NonNls
+  public String getName() {
     return AvroIdlPsiUtil.getName(this);
   }
 

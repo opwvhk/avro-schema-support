@@ -33,7 +33,8 @@ public class AvroIdlUseNullableShorthandInspection extends BaseAvroIdlInspection
 			super(element, "Replace union with shorthand notation");
 		}
 
-		private static @Nullable AvroIdlType getNonNullType(@NotNull AvroIdlUnionType element) {
+		@Nullable
+        private static AvroIdlType getNonNullType(@NotNull AvroIdlUnionType element) {
 			final List<AvroIdlType> unionTypes = element.getTypeList();
 			if (unionTypes.size() != 2) {
 				return null;

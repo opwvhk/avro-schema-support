@@ -51,7 +51,8 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 	private static final Pattern STAR_INDENT = Pattern.compile("(?U)(?<stars>\\*{1,2}).*(?:\\R\\h*\\k<stars>.*)*");
 
 	@Override
-	public @Nullable String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
+    @Nullable
+    public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
 		if (element instanceof AvroIdlNameIdentifierOwner) {
 			final String name = ((AvroIdlNameIdentifierOwner)element).getName();
 			final String file = SymbolPresentationUtil.getFilePathPresentation(element.getContainingFile());
@@ -61,7 +62,8 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 	}
 
 	@Override
-	public @Nullable String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
+    @Nullable
+    public String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
 		TextRange declarationRange = DeclarationRangeUtil.getPossibleDeclarationAtRange(element);
 		if (declarationRange == null) {
 			return null;
@@ -125,7 +127,8 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 		return null;
 	}
 
-	private @NotNull String renderProperties(@NotNull AvroIdlWithSchemaProperties element, @NotNull String separator) {
+	@NotNull
+    private String renderProperties(@NotNull AvroIdlWithSchemaProperties element, @NotNull String separator) {
 		List<AvroIdlSchemaProperty> schemaProperties = element.getSchemaPropertyList();
 		if (schemaProperties.isEmpty()) {
 			return "";
@@ -184,7 +187,9 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 	}
 
 	@Override
-	public @Nls @Nullable String generateRenderedDoc(@NotNull PsiDocCommentBase comment) {
+    @Nls
+    @Nullable
+    public String generateRenderedDoc(@NotNull PsiDocCommentBase comment) {
 		String rawComment = comment.getText();
 		String commentContent = rawComment.substring(3, rawComment.length() - 2);
 		String documentation = stripIndents(commentContent.strip());
@@ -228,7 +233,8 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 	}
 
 	@Override
-	public @Nullable PsiElement getDocumentationElementForLookupItem(PsiManager psiManager, Object object, PsiElement element) {
+    @Nullable
+    public PsiElement getDocumentationElementForLookupItem(PsiManager psiManager, Object object, PsiElement element) {
 		if (object instanceof PsiElement) {
 			return (PsiElement)object;
 		}
@@ -236,7 +242,8 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 	}
 
 	@Override
-	public @Nullable PsiDocCommentBase findDocComment(@NotNull PsiFile file, @NotNull TextRange range) {
+    @Nullable
+    public PsiDocCommentBase findDocComment(@NotNull PsiFile file, @NotNull TextRange range) {
 		PsiElement element = file.findElementAt(range.getStartOffset());
 		final AvroIdlNameIdentifierOwner nameIdentifierOwner = PsiTreeUtil.getParentOfType(element, AvroIdlNameIdentifierOwner.class, false);
 		if (nameIdentifierOwner == null) {
@@ -245,7 +252,8 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 		return findDocComment(nameIdentifierOwner);
 	}
 
-	private @Nullable PsiDocCommentBase findDocComment(AvroIdlNameIdentifierOwner element) {
+	@Nullable
+    private PsiDocCommentBase findDocComment(AvroIdlNameIdentifierOwner element) {
 		PsiComment docComment = null;
 		if (element instanceof AvroIdlVariableDeclarator) {
 			docComment = findDeclarationDocComment(element);
@@ -261,7 +269,8 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 		return docComment == null ? null : new FakePsiDocComment(element, docComment);
 	}
 
-	private @Nullable PsiComment findDeclarationDocComment(@Nullable PsiElement element) {
+	@Nullable
+    private PsiComment findDeclarationDocComment(@Nullable PsiElement element) {
 		final PsiElement prevLeaf = AvroIdlPsiUtil.prevNonCommentLeaf(element);
 		if (prevLeaf instanceof PsiComment) {
 			return (PsiComment)prevLeaf;
@@ -284,7 +293,8 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 		}
 
 		@Override
-		public @Nullable TextRange getTextRange() {
+        @Nullable
+        public TextRange getTextRange() {
 			final int startOffset = getTextOffset();
 			return new TextRange(startOffset, startOffset + getTextLength());
 		}
@@ -295,7 +305,9 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 		}
 
 		@Override
-		public @Nullable @NonNls String getText() {
+        @Nullable
+        @NonNls
+        public String getText() {
 			return comment.getText();
 		}
 
@@ -305,17 +317,20 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 		}
 
 		@Override
-		public @Nullable PsiElement getOwner() {
+        @Nullable
+        public PsiElement getOwner() {
 			return owner;
 		}
 
 		@Override
-		public @NotNull Language getLanguage() {
+        @NotNull
+        public Language getLanguage() {
 			return owner.getLanguage();
 		}
 
 		@Override
-		public @NotNull IElementType getTokenType() {
+        @NotNull
+        public IElementType getTokenType() {
 			return DOC_COMMENT;
 		}
 

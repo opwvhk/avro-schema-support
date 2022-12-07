@@ -18,7 +18,8 @@ public class AvroIdlFindUsagesProvider implements FindUsagesProvider {
 		AvroIdlTypes.INCOMPLETE_DOC_COMMENT, AvroIdlTypes.INCOMPLETE_BLOCK_COMMENT);
 
 	@Override
-	public @Nullable WordsScanner getWordsScanner() {
+    @Nullable
+    public WordsScanner getWordsScanner() {
 		final DefaultWordsScanner wordsScanner = new DefaultWordsScanner(new AvroIdlLexer(), IDENTIFIER_TOKENS, COMMENT_TOKENS, TokenSet.EMPTY);
 		wordsScanner.setMayHaveFileRefsInLiterals(true);
 		return wordsScanner;
@@ -30,12 +31,14 @@ public class AvroIdlFindUsagesProvider implements FindUsagesProvider {
 	}
 
 	@Override
-	public @Nullable String getHelpId(@NotNull PsiElement psiElement) {
+    @Nullable
+    public String getHelpId(@NotNull PsiElement psiElement) {
 		return null;
 	}
 
 	@Override
-	public @NotNull String getType(@NotNull PsiElement element) {
+    @NotNull
+    public String getType(@NotNull PsiElement element) {
 		if (element instanceof AvroIdlRecordDeclaration) {
 			if (((AvroIdlRecordDeclaration)element).isErrorType()) {
 				return "error schema";
@@ -61,12 +64,14 @@ public class AvroIdlFindUsagesProvider implements FindUsagesProvider {
 	}
 
 	@Override
-	public @NotNull String getDescriptiveName(@NotNull PsiElement element) {
+    @NotNull
+    public String getDescriptiveName(@NotNull PsiElement element) {
 		return getNodeText(element, false);
 	}
 
 	@Override
-	public @NotNull String getNodeText(@NotNull PsiElement element, boolean useFullName) {
+    @NotNull
+    public String getNodeText(@NotNull PsiElement element, boolean useFullName) {
 		String name;
 		if (element instanceof AvroIdlNamespacedNameIdentifierOwner) {
 			name = ((AvroIdlNamespacedNameIdentifierOwner)element).getFullName();

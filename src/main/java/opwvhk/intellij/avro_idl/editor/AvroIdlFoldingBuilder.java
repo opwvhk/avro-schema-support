@@ -17,7 +17,8 @@ import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
 public class AvroIdlFoldingBuilder implements FoldingBuilder, DumbAware {
 	@Override
-	public @NotNull FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document) {
+    @NotNull
+    public FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document) {
 		List<FoldingDescriptor> descriptors = new ArrayList<>();
 		buildFoldRegions(node, document, descriptors);
 		return descriptors.toArray(FoldingDescriptor[]::new);
@@ -39,7 +40,8 @@ public class AvroIdlFoldingBuilder implements FoldingBuilder, DumbAware {
 	}
 
 	@Override
-	public @Nullable String getPlaceholderText(@NotNull ASTNode node) {
+    @Nullable
+    public String getPlaceholderText(@NotNull ASTNode node) {
 		final IElementType elementType = node.getElementType();
 		if (elementType == BLOCK_COMMENT) {
 			return "/*...*/";
@@ -63,7 +65,8 @@ public class AvroIdlFoldingBuilder implements FoldingBuilder, DumbAware {
 		return document.getLineNumber(range.getStartOffset()) == document.getLineNumber(range.getEndOffset());
 	}
 
-	private @Nullable TextRange getFoldRange(@NotNull ASTNode node) {
+	@Nullable
+    private TextRange getFoldRange(@NotNull ASTNode node) {
 		final IElementType elementType = node.getElementType();
 		if (elementType == BLOCK_COMMENT || elementType == DOC_COMMENT) {
 			return node.getTextRange();
@@ -78,7 +81,8 @@ public class AvroIdlFoldingBuilder implements FoldingBuilder, DumbAware {
 		return null;
 	}
 
-	private @Nullable TextRange getFoldRange(@NotNull ASTNode node, @NotNull IElementType startElementType, @NotNull IElementType endElementType) {
+	@Nullable
+    private TextRange getFoldRange(@NotNull ASTNode node, @NotNull IElementType startElementType, @NotNull IElementType endElementType) {
 		final ASTNode foldStart = node.findChildByType(startElementType);
 		final ASTNode foldEnd = node.findChildByType(endElementType, foldStart);
 		if (foldStart != null && foldEnd != null) {
