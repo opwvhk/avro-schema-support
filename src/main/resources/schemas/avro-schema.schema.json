@@ -8,7 +8,7 @@
 		"schema": {
 			"description": "An Avro schema; either a schema name, anonymous (primitive type, annotated primitive type, array, map, union) or named (fixed, enum, record/error)",
 			"oneOf": [
-				{ "type": "string", "not": { "$ref": "#/definitions/primitiveType" } },
+				{ "$ref": "#/definitions/namedTypeReference" },
 				{ "$ref": "#/definitions/primitiveType" },
 				{ "$ref": "#/definitions/annotatedPrimitiveType" },
 				{ "$ref": "#/definitions/array" },
@@ -18,6 +18,10 @@
 				{ "$ref": "#/definitions/enum" },
 				{ "$ref": "#/definitions/record" }
 			]
+		},
+		"namedTypeReference": {
+			"description": "A reference to a named type",
+			"$ref": "#/definitions/nameOrNamespace"
 		},
 		"primitiveType": {
 			"description": "A primitive type",
@@ -141,21 +145,23 @@
 			}
 		},
 		"aliases": {
-			"description": "Aliases of a schema, field, ... Can be used to rename (but not relocate) something",
+			"description": "Aliases of a schema, field, ... (potentially invalid). Can be used to fix/change/evolve names, but not to relocate elements.",
 			"type": "array",
 			"minItems": 1,
 			"uniqueItems": true,
-			"items": {"$ref": "#/definitions/nameOrNamespace" }
+			"items": { "type": "string" }
 		},
 		"name": {
-			"description": "a name is an identifier",
+			"description": "a name is an identifier, but not equal to a primitive type",
 			"type": "string",
-			"pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+			"pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+			"not": { "$ref": "#/definitions/primitiveType" }
 		},
 		"nameOrNamespace": {
-			"description": "a nameOrNamespace is a dot separated sequence of one or more identifiers",
+			"description": "a nameOrNamespace is a dot separated sequence of one or more identifiers, but not equal to a primitive type",
 			"type": "string",
-			"pattern": "^[A-Za-z_][A-Za-z0-9_]*(\\.[A-Za-z_][A-Za-z0-9_]*)*$"
+			"pattern": "^[A-Za-z_][A-Za-z0-9_]*(\\.[A-Za-z_][A-Za-z0-9_]*)*$",
+			"not": { "$ref": "#/definitions/primitiveType" }
 		},
 		"stdLogicalTypes": {
 			"enum": [
