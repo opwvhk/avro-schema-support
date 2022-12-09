@@ -6,7 +6,7 @@ import java.util.*
 plugins {
 	`java-library`
 	id("java")
-	id("org.jetbrains.intellij") version "1.10.0"
+	id("org.jetbrains.intellij") version "1.10.1"
 }
 
 val lastBuild = provider {
@@ -21,7 +21,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "213.2.1"
+version = "213.3.0-SNAPSHOT"
 
 repositories {
 	mavenCentral()
@@ -34,19 +34,24 @@ java {
 
 dependencies {
 	implementation("org.apache.avro", "avro-compiler", "1.11.1").exclude("org.slf4j")
+	implementation("org.json", "json", "20220924")
+	implementation("org.kohsuke", "github-api", "1.313")
 	testImplementation("junit", "junit", "4.13.2")
 	testImplementation("org.assertj", "assertj-core", "3.23.1")
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
+	//version.set("2020.3.4")
 	//version.set("2021.2.4")
 	version.set("2021.3.3")
 	//version.set("2022.1")
+	//version.set("2022.2.3")
+	//version.set("2022.3")
 
 	val psiViewerVersion = version.get().replace(".", "").substring(2, 5) + "-SNAPSHOT"
 	// Note: without the java plugin tests will fail (so don't remove it even if the plugin does not need it)
-	plugins.set(listOf("com.intellij.java", "PsiViewer:$psiViewerVersion"))
+	plugins.set(listOf("com.intellij.java", "PsiViewer:$psiViewerVersion", "markdown"))
 }
 
 tasks {
@@ -66,14 +71,16 @@ tasks {
 		untilBuild.set(lastBuild)
 		//untilBuild.set("221.*")
 		/*
-		<p>Version 213.3.0:</p>
-		<ul data-version="213.3.0">
 		<li>Added IDL syntax for the schema syntax (new in Avro 1.12.0)</li>
 		<li>Added inspection suggesting the schema syntax where appropriate</li>
 		</ul>
 		*/
 		//language=HTML
 		val changeLog = """
+			<p>Version 213.3.0:</p>
+			<ul data-version="213.3">
+			<li>Added error report submitter (submit crash reports directly to GitHub)</li>
+			</ul>
 			<p>Version 213.2.1:</p>
 			<ul data-version="213.2.1">
 			<li>Fixed bug #27 (a ClassCastException)</li>
@@ -89,7 +96,7 @@ tasks {
 			<ul data-version="213.1.0">
 			<li>Added quick fixes for missing schema / enum symbol references</li>
 			<li>Added declaration documentation for "quick info" popups</li>
-			<li>Added move left/right handing for list-like syntaxes</li>
+			<li>Added move left/right handing for list-like syntax</li>
 			<li>Improved brace handling</li>
 			<li>Improved references to schemata in JSON (<code>.avsc</code>/<code>.avpr</code>)</li>
 			</ul>
@@ -104,6 +111,7 @@ tasks {
 			<li>Improved refactoring actions (converting IDL from/to schema/protocol files)</li>
 			<li>Extended formatting & syntax highlighting options</li>
 			<li>Improved quote & brace handling: now supports all "", {}, [] and <> pairs</li>
+			<li>Using IntelliJ version 2021.3 to test</li>
 			</ul>
 			<p>Version 203.1.2:</p>
 			<ul data-version="203.1.2">

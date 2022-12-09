@@ -37,6 +37,7 @@
 	<extensions defaultExtensionNs="com.intellij">
 		<notificationGroup id="Avro IDL updates" displayType="STICKY_BALLOON" icon="opwvhk.intellij.avro_idl.AvroIdlIcons.LOGO"/>
 		<postStartupActivity implementation="opwvhk.intellij.avro_idl.AvroIdlPluginUpdateStartupActivity"/>
+		<errorHandler implementation="opwvhk.intellij.avro_idl.AvroIdlErrorReportSubmitter"/>
 		<!-- File type & Language -->
 		<fileType name="Avro IDL" fieldName="INSTANCE" language="Avro IDL" extensions="avdl" implementationClass="opwvhk.intellij.avro_idl.AvroIdlFileType"/>
 		<lang.parserDefinition language="Avro IDL" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroIdlParserDefinition"/>
