@@ -2,6 +2,7 @@ package opwvhk.intellij.avro_idl.language;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInspection.util.IntentionName;
+import com.intellij.lang.ASTNode;
 import com.intellij.lang.annotation.AnnotationBuilder;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
@@ -277,7 +278,15 @@ public class AvroIdlAnnotator implements Annotator {
 
 	@Nullable
     private IElementType findPrimitiveType(@Nullable PsiElement type) {
-		return (type instanceof AvroIdlPrimitiveType || type instanceof AvroIdlResultType) ? type.getLastChild().getNode().getElementType() : null;
+		if (type instanceof AvroIdlPrimitiveType || type instanceof AvroIdlResultType) {
+			Optional<PsiElement> primitiveTypeNode = Optional.ofNullable(type.getLastChild());
+			if (((AvroIdlType) type).isOptional()) {
+				// Optional types end with a '?', and are guaranteed to have a sibling before that
+				primitiveTypeNode = primitiveTypeNode.map(PsiElement::getPrevSibling);
+			}
+			return primitiveTypeNode.map(PsiElement::getNode).map(ASTNode::getElementType).orElse(null);
+		}
+		return null;
 	}
 
 	@Nullable
