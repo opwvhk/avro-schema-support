@@ -80,6 +80,7 @@ tasks {
 			<p>Version 213.3.0:</p>
 			<ul data-version="213.3">
 			<li>Fix #36 (incorrectly recognizing nullable primitive types)</li>
+			<li>Fix #37 (generating IDL can yield invalid names with Avro <= 1.11.0)</li>
 			<li>Added error report submitter (submit crash reports directly to GitHub)</li>
 			</ul>
 			<p>Version 213.2.1:</p>

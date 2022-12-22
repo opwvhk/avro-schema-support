@@ -25,6 +25,9 @@ public final class IdlUtils {
 	private static final Function<Field, JsonNode> DEFAULT_VALUE;
 	private static final Pattern NEWLINE_PATTERN = Pattern.compile("(?U)\\R");
 	private static final String NEWLINE = System.lineSeparator();
+	private static final Set<String> KEYWORDS = Set.of("array", "boolean", "bytes", "date", "decimal", "double", "enum", "error", "false", "fixed", "float",
+		"idl", "import", "int", "local_timestamp_ms", "long", "map", "namespace", "null", "oneway", "protocol", "record", "schema", "string", "throws",
+		"timestamp_ms", "time_ms", "true", "union", "uuid", "void");
 
 	static {
 		SCHEMA_FACTORY = getFieldValue(getField(Schema.class, "FACTORY"), null);
@@ -46,7 +49,7 @@ public final class IdlUtils {
 	@SuppressWarnings("unchecked")
 	static <T> T getFieldValue(java.lang.reflect.Field field, Object owner) {
 		try {
-			return (T)field.get(owner);
+			return (T) field.get(owner);
 		} catch (IllegalAccessException e) {
 			throw new IllegalStateException("Programmer error", e);
 		}
@@ -65,7 +68,7 @@ public final class IdlUtils {
 	@SuppressWarnings("unchecked")
 	static <T> T invokeMethod(Method method, Object owner, Object... parameters) {
 		try {
-			return (T)method.invoke(owner, parameters);
+			return (T) method.invoke(owner, parameters);
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new IllegalStateException("Programmer error", e);
 		}
@@ -150,7 +153,7 @@ public final class IdlUtils {
 				writer.append("@namespace(\"").append(protocolNameSpace).append("\")").append(NEWLINE);
 			}
 			writeJsonProperties(properties, Collections.singleton("namespace"), writer, jsonGen, "");
-			writer.append("protocol ").append(requireNonNull(protocolName)).append(" {").append(NEWLINE);
+			writer.append("protocol ").append(requireNonNull(safeName(protocolName))).append(" {").append(NEWLINE);
 
 			Set<String> alreadyDeclared = new HashSet<>(4);
 			Set<Schema> toDeclare = new LinkedHashSet<>(schemas);
@@ -175,6 +178,13 @@ public final class IdlUtils {
 		}
 	}
 
+	private static String safeName(String name) {
+		if (KEYWORDS.contains(name)) {
+			return String.format("`%s`", name);
+		}
+		return name;
+	}
+
 	private static void writeSchema(Schema schema, boolean insideProtocol, Writer writer, JsonGenerator jsonGen, String defaultNamespace,
 	                                Set<String> alreadyDeclared,
 	                                Set<Schema> toDeclare) throws IOException {
@@ -193,8 +203,10 @@ public final class IdlUtils {
 			resetContext(jsonGen.getOutputContext());
 			writer.append(")").append(NEWLINE);
 		}
+		String schemaName = safeName(schema.getName());
 		if (type == Schema.Type.RECORD) {
-			writer.append(indent).append("").append(schema.isError() ? "error" : "record").append(" ").append(schema.getName()).append(" {").append(NEWLINE);
+			String declarationType = schema.isError() ? "error" : "record";
+			writer.append(indent).append("").append(declarationType).append(" ").append(schemaName).append(" {").append(NEWLINE);
 			alreadyDeclared.add(schema.getFullName());
 			for (Field field : schema.getFields()) {
 				writeField(schema.getNamespace(), field, writer, jsonGen, alreadyDeclared, toDeclare,
@@ -203,7 +215,7 @@ public final class IdlUtils {
 			}
 			writer.append(indent).append("}").append(NEWLINE);
 		} else if (type == Schema.Type.ENUM) {
-			writer.append(indent).append("enum ").append(schema.getName()).append(" {");
+			writer.append(indent).append("enum ").append(schemaName).append(" {");
 			alreadyDeclared.add(schema.getFullName());
 			Iterator<String> i = schema.getEnumSymbols().iterator();
 			if (i.hasNext()) {
@@ -217,7 +229,7 @@ public final class IdlUtils {
 			}
 			writer.append("}").append(NEWLINE);
 		} else /* (type == Schema.Type.FIXED) */ {
-			writer.append(indent).append("fixed ").append(schema.getName()).append('(')
+			writer.append(indent).append("fixed ").append(schemaName).append('(')
 				.append(Integer.toString(schema.getFixedSize())).append(");").append(NEWLINE);
 			alreadyDeclared.add(schema.getFullName());
 		}
@@ -352,7 +364,7 @@ public final class IdlUtils {
 						break;
 					case "decimal":
 						propertiesToSkip = Set.of("logicalType", "precision", "scale");
-						LogicalTypes.Decimal decimal = (LogicalTypes.Decimal)schema.getLogicalType();
+						LogicalTypes.Decimal decimal = (LogicalTypes.Decimal) schema.getLogicalType();
 						typeName = String.format("decimal(%d,%d)", decimal.getPrecision(), decimal.getScale());
 						break;
 					default:
@@ -398,36 +410,35 @@ public final class IdlUtils {
 			generator.writeNull();
 		} else if (datum instanceof Map) { // record, map
 			generator.writeStartObject();
-			for (Map.Entry<?, ?> entry : ((Map<?, ?>)datum).entrySet()) {
+			for (Map.Entry<?, ?> entry : ((Map<?, ?>) datum).entrySet()) {
 				generator.writeFieldName(entry.getKey().toString());
 				toJson(entry.getValue(), generator);
 			}
 			generator.writeEndObject();
 		} else if (datum instanceof Collection) { // array
 			generator.writeStartArray();
-			for (Object element : (Collection<?>)datum) {
+			for (Object element : (Collection<?>) datum) {
 				toJson(element, generator);
 			}
 			generator.writeEndArray();
 		} else if (datum instanceof byte[]) { // bytes, fixed
-			generator.writeString(new String((byte[])datum, StandardCharsets.ISO_8859_1));
+			generator.writeString(new String((byte[]) datum, StandardCharsets.ISO_8859_1));
 		} else if (datum instanceof CharSequence || datum instanceof Enum<?>) { // string, enum
 			generator.writeString(datum.toString());
 		} else if (datum instanceof Double) { // double
-			generator.writeNumber((Double)datum);
+			generator.writeNumber((Double) datum);
 		} else if (datum instanceof Float) { // float
-			generator.writeNumber((Float)datum);
+			generator.writeNumber((Float) datum);
 		} else if (datum instanceof Long) { // long
-			generator.writeNumber((Long)datum);
+			generator.writeNumber((Long) datum);
 		} else if (datum instanceof Integer) { // int
-			generator.writeNumber((Integer)datum);
+			generator.writeNumber((Integer) datum);
 		} else if (datum instanceof Boolean) { // boolean
-			generator.writeBoolean((Boolean)datum);
+			generator.writeBoolean((Boolean) datum);
 		} else {
 			throw new AvroRuntimeException("Unknown datum class: " + datum.getClass());
 		}
 	}
-
 
 	private static void writeMessage(Protocol.Message message, Writer writer, JsonGenerator jsonGen, String protocolNameSpace, Set<String> alreadyDeclared)
 		throws IOException {
