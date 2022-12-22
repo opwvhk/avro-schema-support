@@ -21,7 +21,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "213.3.0-SNAPSHOT"
+version = "213.3.0"
 
 repositories {
 	mavenCentral()
@@ -52,6 +52,19 @@ intellij {
 	val psiViewerVersion = version.get().replace(".", "").substring(2, 5) + "-SNAPSHOT"
 	// Note: without the java plugin tests will fail (so don't remove it even if the plugin does not need it)
 	plugins.set(listOf("com.intellij.java", "PsiViewer:$psiViewerVersion", "markdown"))
+	/*
+	Other (bundled) plugins:
+	org.intellij.intelliLang
+	Git4Idea
+	com.intellij.tasks
+	Lombook Plugin
+	org.intellij.plugins.markdown
+	org.jetbrains.idea.maven
+	org.editorconfig.editorconfigjetbrains
+	org.jetbrains.plugins.github
+	org.jetbrains.idea.maven.model
+	com.intellij.copyright
+	*/
 }
 
 tasks {
