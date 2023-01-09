@@ -67,7 +67,7 @@ public abstract class AddDeclarationFix extends SimpleAvroIdlQuickFixOnPsiElemen
 			// Replace all carets with a single one
 			LogicalPosition cursorPosition = editor.offsetToLogicalPosition(cursorOffset);
 			editor.getCaretModel().setCaretsAndSelections(List.of(new CaretState(cursorPosition, null, null)));
-			editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
+			editor.getScrollingModel().scrollTo(cursorPosition, ScrollType.MAKE_VISIBLE);
 		}
 	}
 

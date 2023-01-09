@@ -21,7 +21,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "213.3.0"
+version = "213.3.1"
 
 repositories {
 	mavenCentral()
@@ -90,8 +90,13 @@ tasks {
 		*/
 		//language=HTML
 		val changeLog = """
+			<p>Version 213.3.1:</p>
+			<ul data-version="213.3.1">
+			<li>Fix #38 (Incorrect error message in JSON files with multiple invalid names)</li>
+			<li>Fix #40 (cannot set caret in inspection actions when used for preview)</li>
+			</ul>
 			<p>Version 213.3.0:</p>
-			<ul data-version="213.3">
+			<ul data-version="213.3.0">
 			<li>Fix #36 (incorrectly recognizing nullable primitive types)</li>
 			<li>Fix #37 (generating IDL can yield invalid names with Avro <= 1.11.0)</li>
 			<li>Added error report submitter (submit crash reports directly to GitHub)</li>
