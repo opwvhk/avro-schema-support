@@ -1,8 +1,8 @@
 {
-	"$id": "https://github.com/opwvhk/avro-schema-support/blob/master/src/main/resources/schemas/avro-protocol.schema.json",
+	"$id": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-protocol.schema.json",
 	"$schema": "http://json-schema.org/draft-07/schema#",
 	"title": "avro-schema",
-	"description": "JSON Schema for an Apache Avro protocol, version 1.10.1",
+	"description": "JSON Schema for an Apache Avro protocol, version 1.11.1",
 	"$ref": "#/definitions/protocol",
 	"definitions": {
 		"protocol": {
@@ -10,17 +10,13 @@
 			"type": "object",
 			"required": [ "protocol" ],
 			"properties": {
-				"protocol": { "$ref":  "https://github.com/opwvhk/avro-schema-support/blob/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/nameOrNamespace"},
-				"namespace": { "$ref":  "https://github.com/opwvhk/avro-schema-support/blob/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/nameOrNamespace"},
+				"protocol": { "$ref":  "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/fullName"},
+				"namespace": { "$ref":  "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/fullName"},
 				"doc": { "type":  "string" },
 				"types": {
 					"type":  "array",
 					"uniqueItems": true,
-					"items": { "oneOf": [
-						{ "$ref": "https://github.com/opwvhk/avro-schema-support/blob/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/record" },
-						{ "$ref": "https://github.com/opwvhk/avro-schema-support/blob/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/enum" },
-						{ "$ref": "https://github.com/opwvhk/avro-schema-support/blob/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/fixed" }
-					] }
+					"items": { "$ref": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/namedType" }
 				},
 				"messages": {
 					"type": "object",
@@ -29,7 +25,7 @@
 						"uniqueItems": true
 					},
 					"patternProperties": {
-						"^.": { "$ref": "#/definitions/message" }
+						"^.*$": { "$ref": "#/definitions/message" }
 					}
 				}
 			}
@@ -43,17 +39,17 @@
 				"request": {
 					"description": "Message request parameters; treated as an anonymous records schema",
 					"type": "array",
-					"items": { "$ref": "https://github.com/opwvhk/avro-schema-support/blob/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/field" },
+					"items": { "$ref": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/field" },
 					"uniqueItems": true
 				},
 				"response": {
 					"description": "Message response type; can be any schema, and void is an alias for the null type",
-					"oneOf": [
+					"anyOf": [
 						{
 							"type": "string",
 							"const": "void"
 						},
-						{ "$ref": "https://github.com/opwvhk/avro-schema-support/blob/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/schema" }
+						{ "$ref": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/schema" }
 					]},
 				"errors": {
 					"description": "Errors that may be the result of the message; must be (references to) 'error' schemas",
@@ -61,10 +57,10 @@
 					"uniqueItems": true,
 					"items": {
 						"allOf": [
-							{ "$ref": "https://github.com/opwvhk/avro-schema-support/blob/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/record" },
+							{ "$ref": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/schema" },
 							{ "properties": {
 								"type": {
-									"enum": ["error"]
+									"const": "error"
 								}
 							}}
 						]

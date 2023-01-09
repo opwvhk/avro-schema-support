@@ -1,66 +1,142 @@
 {
-	"$id": "https://github.com/opwvhk/avro-schema-support/blob/master/src/main/resources/schemas/avro-schema.schema.json",
+	"$id": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json",
 	"$schema": "http://json-schema.org/draft-07/schema#",
 	"title": "avro-schema",
-	"description": "JSON Schema for an Apache Avro schema, version 1.10.1",
+	"description": "JSON Schema for an Apache Avro schema, version 1.11.1",
 	"$ref": "#/definitions/schema",
 	"definitions": {
 		"schema": {
 			"description": "An Avro schema; either a schema name, anonymous (primitive type, annotated primitive type, array, map, union) or named (fixed, enum, record/error)",
-			"oneOf": [
-				{ "$ref": "#/definitions/namedTypeReference" },
-				{ "$ref": "#/definitions/primitiveType" },
-				{ "$ref": "#/definitions/annotatedPrimitiveType" },
-				{ "$ref": "#/definitions/array" },
-				{ "$ref": "#/definitions/map" },
-				{ "$ref": "#/definitions/union" },
-				{ "$ref": "#/definitions/fixed" },
-				{ "$ref": "#/definitions/enum" },
-				{ "$ref": "#/definitions/record" }
+			"anyOf": [
+				{
+					"type": "string",
+					"oneOf": [
+						{ "$ref": "#/definitions/fullName" },
+						{ "$ref": "#/definitions/primitiveType" }
+					]
+				}, {
+					"type": "object",
+					"required": [ "type" ],
+					"properties": {
+						"type": {
+							"description": "The type of the schema; can be a record/error, enum, fixed, array, map or primitive type",
+							"enum": [ "null", "boolean", "int", "long", "float", "double", "string", "bytes", "array", "map", "fixed", "enum", "record", "error" ]
+						},
+						"doc": { "type": "string", "description": "Documentation for the schema." },
+						"logicalType": {
+							"description": "If a standard type doesn't suit, you can specify a logical type. This is a logical representation of an underlying value, like a timestamp is the number of milliseconds since 1970-01-01T00:00:00.000Z",
+							"oneOf": [
+								{ "$ref": "#/definitions/stdLogicalTypes" },
+								{ "type": "string", "not": { "$ref": "#/definitions/stdLogicalTypes" } }
+							]
+						},
+						"precision": { "type": "integer", "minimum": 1, "maximum": 2147483647, "description": "The number of digits in a decimal logical type." },
+						"scale": { "type": "integer", "minimum": 0, "maximum": 2147483647, "description": "The number of decimal places in a decimal logical type." }
+					},
+					"allOf": [
+						{ "$ref": "#/definitions/arrayItems" },
+						{ "$ref": "#/definitions/mapValues" },
+						{ "$ref": "#/definitions/typesWithName" },
+						{ "$ref": "#/definitions/fixedSize" },
+						{ "$ref": "#/definitions/enumSymbols" },
+						{ "$ref": "#/definitions/recordFields" }
+					]
+				}, {
+					"type": "array",
+					"$ref": "#/definitions/union"
+				}
 			]
 		},
-		"namedTypeReference": {
-			"description": "A reference to a named type",
-			"$ref": "#/definitions/nameOrNamespace"
+		"fullName": {
+			"description": "a full name is a dot separated sequence of one or more simple names (letters, digits and underscores, but doesn't start with a digit), but not equal to a primitive type",
+			"type": "string",
+			"pattern": "^[A-Za-z_][A-Za-z0-9_]*([.][A-Za-z_][A-Za-z0-9_]*)*$",
+			"not": { "$ref": "#/definitions/primitiveType" }
+		},
+		"simpleName": {
+			"description": "a simple name is an identifier (letters, digits and underscores, but doesn't start with a digit), but not equal to a primitive type",
+			"type": "string",
+			"pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+			"not": { "$ref": "#/definitions/primitiveType" }
 		},
 		"primitiveType": {
 			"description": "A primitive type",
+			"type": "string",
 			"enum": [ "null", "boolean", "int", "long", "float", "double", "string", "bytes" ]
 		},
-		"annotatedPrimitiveType": {
-			"description": "A primitive type with annotations (e.g. a logical type)",
-			"type": "object",
-			"required": [ "type" ],
-			"properties": {
-				"type": { "$ref": "#/definitions/primitiveType" },
-				"logicalType": {
-					"oneOf": [
-						{ "$ref": "#/definitions/stdLogicalTypes" },
-						{ "type": "string", "not": { "$ref": "#/definitions/stdLogicalTypes" } }
-					]
-				},
-				"decimal": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
-				"scale": { "type": "integer", "minimum": 0, "maximum": 2147483647 }
+		"arrayItems": {
+			"if": { "properties": { "type": { "const": "array" } } },
+			"then": {
+				"description": "An array of (typed) items",
+				"required": [ "items" ],
+				"properties": {
+					"items": { "description": "The type of the items of the array.", "$ref": "#/definitions/schema" }
+				}
 			}
 		},
-		"array": {
-			"description": "An array",
-			"type": "object",
-			"required": [ "type", "items" ],
-			"properties": {
-				"type": { "enum": [ "array" ] },
-				"items": { "$ref": "#/definitions/schema" },
-				"logicalType": { "type": "string" }
+		"mapValues": {
+			"if": { "properties": { "type": { "const": "map" } } },
+			"then": {
+				"description": "A map with string keys and (typed) values",
+				"required": [ "values" ],
+				"properties": {
+					"values": { "description": "The type of the values in the map (keys are always strings).", "$ref": "#/definitions/schema" }
+				}
 			}
 		},
-		"map": {
-			"description": "A map (keys are always strings)",
-			"type": "object",
-			"required": [ "type", "values" ],
-			"properties": {
-				"type": { "enum": [ "map" ] },
-				"values": { "$ref": "#/definitions/schema" },
-				"logicalType": { "type": "string" }
+		"typesWithName": {
+			"if": { "properties": { "type": { "enum": [ "fixed", "enum", "record", "error" ] } } },
+			"then": {
+				"required": [ "name" ],
+				"properties": {
+					"name": { "$ref": "#/definitions/fullName", "description": "The name of the type. Can be a simple name (with separate namespace) or a full name." },
+					"namespace": { "$ref": "#/definitions/fullName", "description": "The namespace of the type; ignored if the name is not a simple name." },
+					"aliases": { "$ref": "#/definitions/aliases" }
+				}
+			}
+		},
+		"fixedSize": {
+			"if": { "properties": { "type": { "const": "fixed" } } },
+			"then": {
+				"description": "A fixed size type",
+				"required": [ "size" ],
+				"properties": {
+					"size": { "type": "integer", "minimum": 0, "description": "The size (in bytes) of this type." }
+				}
+			}
+		},
+		"enumSymbols": {
+			"if": { "properties": { "type": { "const": "enum" } } },
+			"then": {
+				"description": "A type with a fixed set of possible values",
+				"required": [ "symbols" ],
+				"properties": {
+					"symbols": {
+						"description": "The symbols this enum has.",
+						"type": "array",
+						"items": { "$ref": "#/definitions/simpleName" },
+						"minItems": 1,
+						"uniqueItems": true
+					},
+					"default": {
+						"description": "The enum value to use during schema resolution for unknown/unmatched values of the write schema",
+						"$ref": "#/definitions/simpleName"
+					}
+				}
+			}
+		},
+		"recordFields": {
+			"if": { "properties": { "type": { "enum": [ "record", "error" ] } } },
+			"then": {
+				"description": "A record or error",
+				"required": [ "fields" ],
+				"properties": {
+					"fields": {
+						"description": "The fields of the record/error.",
+						"type": "array",
+						"items": { "$ref": "#/definitions/field" }
+					}
+				}
 			}
 		},
 		"union": {
@@ -74,65 +150,19 @@
 				]
 			}
 		},
-		"fixed": {
-			"description": "A fixed length schema",
-			"type": "object",
-			"required": [ "type", "name", "size" ],
-			"properties": {
-				"type": { "enum": [ "fixed" ] },
-				"name": { "$ref": "#/definitions/nameOrNamespace" },
-				"namespace": { "$ref": "#/definitions/nameOrNamespace" },
-				"size": { "type": "integer", "minimum": 0 },
-				"aliases": { "$ref": "#/definitions/aliases" },
-				"logicalType": { "type": "string" },
-				"decimal": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
-				"scale": { "type": "integer", "minimum": 0, "maximum": 2147483647 }
-			}
-		},
-		"enum": {
-			"description": "An enum",
-			"type": "object",
-			"required": [ "type", "name", "symbols" ],
-			"properties": {
-				"type": { "enum": [ "enum" ] },
-				"name": { "$ref": "#/definitions/nameOrNamespace" },
-				"namespace": { "$ref": "#/definitions/nameOrNamespace" },
-				"aliases": { "$ref": "#/definitions/aliases" },
-				"doc": { "type": "string" },
-				"symbols": {
-					"type": "array",
-					"items": { "$ref": "#/definitions/name" },
-					"minItems": 1,
-					"uniqueItems": true
-				},
-				"default": {
-					"description": "when reading an unknown symbol, use this symbol instead",
-					"type": "string"
-				}
-			}
-		},
-		"record": {
-			"description": "A record or error",
-			"type": "object",
-			"required": [ "type", "name", "fields" ],
-			"properties": {
-				"type": { "enum": [ "record", "error" ] },
-				"name": { "$ref": "#/definitions/nameOrNamespace" },
-				"namespace": { "$ref": "#/definitions/nameOrNamespace" },
-				"doc": { "type": "string" },
-				"aliases": { "$ref": "#/definitions/aliases" },
-				"fields": {
-					"type": "array",
-					"items": { "$ref": "#/definitions/field" }
-				}
-			}
+		"namedType": {
+			"allOf": [
+				{ "properties": { "type": { "enum": ["fixed", "enum", "record", "error"] } } },
+				{ "$ref": "#/definitions/schema" }
+			]
 		},
 		"field": {
 			"description": "A field in a record",
 			"type": "object",
 			"required": [ "name", "type" ],
 			"properties": {
-				"name": { "$ref": "#/definitions/nameOrNamespace" },
+				"name": { "$ref": "#/definitions/simpleName" },
+				"aliases": { "$ref": "#/definitions/aliases" },
 				"doc": { "type": "string" },
 				"type": { "$ref": "#/definitions/schema" },
 				"default": {
@@ -140,8 +170,7 @@
 				},
 				"order": {
 					"enum": [ "ascending", "descending", "ignore" ]
-				},
-				"aliases": { "$ref": "#/definitions/aliases" }
+				}
 			}
 		},
 		"aliases": {
@@ -151,19 +180,8 @@
 			"uniqueItems": true,
 			"items": { "type": "string" }
 		},
-		"name": {
-			"description": "a name is an identifier, but not equal to a primitive type",
-			"type": "string",
-			"pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
-			"not": { "$ref": "#/definitions/primitiveType" }
-		},
-		"nameOrNamespace": {
-			"description": "a nameOrNamespace is a dot separated sequence of one or more identifiers, but not equal to a primitive type",
-			"type": "string",
-			"pattern": "^[A-Za-z_][A-Za-z0-9_]*(\\.[A-Za-z_][A-Za-z0-9_]*)*$",
-			"not": { "$ref": "#/definitions/primitiveType" }
-		},
 		"stdLogicalTypes": {
+			"type": "string",
 			"enum": [
 				"decimal", "uuid", "date", "time-millis", "time-micros",
 				"timestamp-millis", "timestamp-micros", "local-timestamp-millis", "local-timestamp-micros"
