@@ -21,7 +21,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "213.3.1"
+version = "213.3.2-SNAPSHOT"
 
 repositories {
 	mavenCentral()
@@ -90,6 +90,9 @@ tasks {
 		*/
 		//language=HTML
 		val changeLog = """
+			<p>Version 213.3.2:</p>
+			<ul data-version="213.3.2">
+			</ul>
 			<p>Version 213.3.1:</p>
 			<ul data-version="213.3.1">
 			<li>Fix #38 (Incorrect error message in JSON files with multiple invalid names)</li>
