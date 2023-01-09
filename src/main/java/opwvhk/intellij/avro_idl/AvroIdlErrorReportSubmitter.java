@@ -95,7 +95,7 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 		builder.append("\n");
 		builder.append("## What happened\n");
 		builder.append("\n");
-		builder.append(additionalInfo != null ? additionalInfo.trim() : "(The user did now submit additional information)").append("\n");
+		builder.append(additionalInfo != null ? additionalInfo.trim() : "(The user did not submit additional information)").append("\n");
 
 		builder.append("\n");
 		builder.append("\n");
