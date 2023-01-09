@@ -1,7 +1,7 @@
 {
 	"$id": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-protocol.schema.json",
 	"$schema": "http://json-schema.org/draft-07/schema#",
-	"title": "avro-schema",
+	"title": "avro-protocol",
 	"description": "JSON Schema for an Apache Avro protocol, version 1.11.1",
 	"$ref": "#/definitions/protocol",
 	"definitions": {
