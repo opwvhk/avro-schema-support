@@ -20,7 +20,23 @@
 					"properties": {
 						"type": {
 							"description": "The type of the schema; can be a record/error, enum, fixed, array, map or primitive type",
-							"enum": [ "null", "boolean", "int", "long", "float", "double", "string", "bytes", "array", "map", "fixed", "enum", "record", "error" ]
+							"enum": [ "null", "boolean", "int", "long", "float", "double", "string", "bytes", "array", "map", "fixed", "enum", "record", "error" ],
+							"x-intellij-enum-metadata": {
+								"null": { "description": "no value; used in unions to make values optional" },
+								"boolean": { "description": "a binary value" },
+								"int": { "description": "32-bit signed integer" },
+								"long": { "description": "64-bit signed integer" },
+								"float": { "description": "single precision (32-bit) IEEE 754 floating-point number" },
+								"double": { "description": "double precision (64-bit) IEEE 754 floating-point number" },
+								"string": { "description": "unicode character sequence" },
+								"bytes": { "description": "sequence of 8-bit unsigned bytes" },
+								"array": { "description": "an array of items" },
+								"map": { "description": "a map of values by string keys" },
+								"fixed": { "description": "a fixed-length named type" },
+								"enum": { "description": "a named type with explicit values (symbols)" },
+								"record": { "description": "a named type with fields" },
+								"error": { "description": "a named type with fields, thrown my protocol messages" }
+							}
 						},
 						"doc": { "type": "string", "description": "Documentation for the schema." },
 						"logicalType": {
@@ -62,7 +78,17 @@
 		"primitiveType": {
 			"description": "A primitive type",
 			"type": "string",
-			"enum": [ "null", "boolean", "int", "long", "float", "double", "string", "bytes" ]
+			"enum": [ "null", "boolean", "int", "long", "float", "double", "string", "bytes" ],
+			"x-intellij-enum-metadata": {
+				"null": { "description": "no value; used in unions to make values optional" },
+				"boolean": { "description": "a binary value" },
+				"int": { "description": "32-bit signed integer" },
+				"long": { "description": "64-bit signed integer" },
+				"float": { "description": "single precision (32-bit) IEEE 754 floating-point number" },
+				"double": { "description": "double precision (64-bit) IEEE 754 floating-point number" },
+				"string": { "description": "unicode character sequence" },
+				"bytes": { "description": "sequence of 8-bit unsigned bytes" }
+			}
 		},
 		"arrayItems": {
 			"if": { "properties": { "type": { "const": "array" } } },
@@ -184,8 +210,35 @@
 			"type": "string",
 			"enum": [
 				"decimal", "uuid", "date", "time-millis", "time-micros",
-				"timestamp-millis", "timestamp-micros", "local-timestamp-millis", "local-timestamp-micros"
-			]
+				"timestamp-millis", "timestamp-micros", "local-timestamp-millis", "local-timestamp-micros",
+				"duration"
+			],
+			"x-intellij-enum-metadata": {
+				"decimal": { "description": "arbitrary-precision signed decimal number of the form unscaled × 10^(-scale); annotates fixed or bytes types" },
+				"uuid": { "description": "a universally unique identifier (UUID); annotates a string, formatted as per RFC-4122" },
+				"date": { "description": "a date without time zone; annotates an int type, with the number of days from 1 January 1970 (ISO calendar)" },
+				"time-millis": {
+					"description": "a time of day, with no time zone or date; annotates an int type, with the number of milliseconds since midnight, 00:00:00.000"
+				},
+				"time-micros": {
+					"description": "a time of day, with no time zone or date; annotates a long type, with the number of microseconds since midnight, 00:00:00.000000"
+				},
+				"timestamp-millis": {
+					"description": "an instant on the global timeline; annotates a long type, with the number of milliseconds since 1970-01-01T00:00:00.000Z"
+				},
+				"timestamp-micros": {
+					"description": "an instant on the global timeline; annotates a long type, with the number of microseconds since 1970-01-01T00:00:00.000000Z"
+				},
+				"local-timestamp-millis": {
+					"description": "a timestamp in a local timezone (undefined); annotates a long type, with the number of milliseconds since 1970-01-01T00:00:00.000"
+				},
+				"local-timestamp-micros": {
+					"description": "a timestamp in a local timezone (undefined); annotates a long type, with the number of microseconds since 1970-01-01T00:00:00.000000"
+				},
+				"duration": {
+					"description": "an amount of time defined by a number of months, days and milliseconds; annotates a fixed type with size 12, that stores 3 unsigned, little-endian unsigned integers"
+				}
+			}
 		}
 	}
 }
