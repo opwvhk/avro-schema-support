@@ -92,6 +92,8 @@ tasks {
 		val changeLog = """
 			<p>Version 213.3.2:</p>
 			<ul data-version="213.3.2">
+			<li>Implement #42: Adjusted renaming to add an alias for the old name if settings specify this</li>
+			<li>Add new settings for #42, making the behaviour congigurable</li>
 			</ul>
 			<p>Version 213.3.1:</p>
 			<ul data-version="213.3.1">

@@ -42,6 +42,13 @@ public class AvroIdlElementFactory {
 	}
 
 	@NotNull
+	public AvroIdlSchemaProperty createProperty(@NotNull String name, @NotNull String value) {
+		final AvroIdlFile file = createDummyFile(String.format("@%s(%s) protocol dummy {}", name, value));
+		final AvroIdlProtocolDeclaration protocol = (AvroIdlProtocolDeclaration)file.getFirstChild();
+		return protocol.getSchemaPropertyList().get(0);
+	}
+
+	@NotNull
     private AvroIdlProtocolBody extractAvroIdlProtocolBody(AvroIdlFile file) {
 		final AvroIdlProtocolDeclaration protocol = (AvroIdlProtocolDeclaration)file.getFirstChild();
 		return requireNonNull(protocol.getProtocolBody());

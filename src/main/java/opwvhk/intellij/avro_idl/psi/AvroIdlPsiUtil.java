@@ -1,5 +1,6 @@
 package opwvhk.intellij.avro_idl.psi;
 
+import com.intellij.application.options.CodeStyle;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.fileTypes.FileType;
@@ -20,6 +21,7 @@ import opwvhk.intellij.avro_idl.AvroIdlFileType;
 import opwvhk.intellij.avro_idl.AvroIdlIcons;
 import opwvhk.intellij.avro_idl.AvroProtocolFileType;
 import opwvhk.intellij.avro_idl.AvroSchemaFileType;
+import opwvhk.intellij.avro_idl.editor.AvroIdlCodeStyleSettings;
 import opwvhk.intellij.avro_idl.language.AvroIdlEnumConstantReference;
 import opwvhk.intellij.avro_idl.language.AvroIdlNamedSchemaReference;
 import opwvhk.intellij.avro_idl.language.AvroIdlUtil;
@@ -109,8 +111,13 @@ public class AvroIdlPsiUtil {
     @NonNls
     public static String getName(@NotNull AvroIdlNamedType owner) {
 		PsiElement nameIdentifier = getNameIdentifier(owner);
+		return nameFromIdentifier(nameIdentifier);
+	}
+
+	@Nullable
+	private static String nameFromIdentifier(PsiElement nameIdentifier) {
 		if (nameIdentifier instanceof AvroIdlJsonStringLiteral) {
-			return AvroIdlUtil.getJsonString((AvroIdlJsonStringLiteral)nameIdentifier);
+			return AvroIdlUtil.getJsonString((AvroIdlJsonStringLiteral) nameIdentifier);
 		} else if (nameIdentifier != null) {
 			return nameIdentifier.getText();
 		} else {
@@ -119,16 +126,50 @@ public class AvroIdlPsiUtil {
 	}
 
 	public static PsiElement setName(@NotNull AvroIdlNamedType owner, @NonNls @NotNull String name) throws IncorrectOperationException {
+		final AvroIdlElementFactory elementFactory = new AvroIdlElementFactory(owner.getProject());
+
 		final PsiElement oldIdentifier = getNameIdentifier(owner);
+		final String oldName = nameFromIdentifier(oldIdentifier);
 		final PsiElement newNameIdentifier;
 		if (oldIdentifier instanceof AvroIdlJsonStringLiteral) {
-			newNameIdentifier = new AvroIdlElementFactory(owner.getProject()).createJsonStringLiteral(name);
+			newNameIdentifier = elementFactory.createJsonStringLiteral(name);
 		} else if (oldIdentifier != null) {
-			newNameIdentifier = new AvroIdlElementFactory(owner.getProject()).createIdentifier(name);
+			newNameIdentifier = elementFactory.createIdentifier(name);
 		} else {
 			throw new IncorrectOperationException();
 		}
 		oldIdentifier.replace(newNameIdentifier);
+
+		if (owner instanceof AvroIdlNamedSchemaDeclaration || owner instanceof AvroIdlVariableDeclarator) {
+			AvroIdlCodeStyleSettings avroIdlCustomSettings = CodeStyle.getCustomSettings(owner.getContainingFile(), AvroIdlCodeStyleSettings.class);
+			boolean shouldAddAlias = owner instanceof AvroIdlNamedSchemaDeclaration ?
+				avroIdlCustomSettings.ADD_ALIAS_ON_SCHEMA_RENAME :
+				avroIdlCustomSettings.ADD_ALIAS_ON_FIELD_RENAME;
+			if (shouldAddAlias) {
+				AvroIdlAnnotatedNameIdentifierOwner annotatedOwner = (AvroIdlAnnotatedNameIdentifierOwner) owner;
+				AvroIdlSchemaProperty existingAliases = annotatedOwner.getSchemaPropertyList().stream()
+					.filter(p -> "aliases".equals(p.getName()))
+					.findFirst().orElse(null);
+				if (existingAliases != null) {
+					// The element already has aliases
+					String text = Optional.ofNullable(existingAliases.getJsonValue())
+						.map(PsiElement::getText)
+						.map(String::stripLeading)
+						.orElse(null);
+					if (text != null && text.startsWith("[")) {
+						// Only add alias if current aliases are valid
+						String newText = String.format("[\"%s\", %s", oldName, text.substring(1));
+						AvroIdlSchemaProperty newAliases = elementFactory.createProperty("aliases", newText);
+						existingAliases.replace(newAliases);
+					}
+				} else {
+					// The element already has no aliases yet
+					AvroIdlSchemaProperty aliasesProperty = elementFactory.createProperty("aliases", String.format("[\"%s\"]", oldName));
+					annotatedOwner.addBefore(aliasesProperty, annotatedOwner.getFirstChild());
+				}
+			}
+		}
+
 		return owner;
 	}
 

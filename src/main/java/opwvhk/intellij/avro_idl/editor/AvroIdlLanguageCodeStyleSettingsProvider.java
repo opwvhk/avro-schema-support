@@ -1,8 +1,11 @@
 package opwvhk.intellij.avro_idl.editor;
 
+import java.util.Set;
+
 import com.intellij.application.options.IndentOptionsEditor;
 import com.intellij.application.options.SmartIndentOptionsEditor;
 import com.intellij.lang.Language;
+import com.intellij.openapi.options.Configurable;
 import com.intellij.psi.codeStyle.*;
 import opwvhk.intellij.avro_idl.AvroIdlLanguage;
 import org.jetbrains.annotations.NotNull;
@@ -68,6 +71,9 @@ public class AvroIdlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleS
 			);
 			consumer.renameStandardOption("BLANK_LINES_AROUND_CLASS", "Around named type");
 			consumer.renameStandardOption("BLANK_LINES_AFTER_PACKAGE", "After namespace declaration");
+		} else if (settingsType == SettingsType.LANGUAGE_SPECIFIC) {
+			consumer.showCustomOption(AvroIdlCodeStyleSettings.class, "ADD_ALIAS_ON_SCHEMA_RENAME", "Add alias on schema rename", "Aliases");
+			consumer.showCustomOption(AvroIdlCodeStyleSettings.class, "ADD_ALIAS_ON_FIELD_RENAME", "Add alias on field rename", "Aliases");
 		}
 	}
 
