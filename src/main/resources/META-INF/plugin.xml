@@ -25,6 +25,10 @@
 		<li>Syntax & some error highlighting</li>
 		<li>Code completion</li>
 	</ul></p>
+	<p>
+		Please note that the JSON features are limited, as they are provided by IntelliJ JSON support combined with JSON schemas packaged
+		in the plugin. Especially error detection is extremely limited, as are inspections.
+	</p>
 	]]></description>
 
 	<!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html on how to target different products -->
