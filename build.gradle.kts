@@ -60,6 +60,7 @@ intellij {
 	Lombook Plugin
 	org.intellij.plugins.markdown
 	org.jetbrains.idea.maven
+	org.jetbrains.kotlin
 	org.editorconfig.editorconfigjetbrains
 	org.jetbrains.plugins.github
 	org.jetbrains.idea.maven.model

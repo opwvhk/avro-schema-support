@@ -1,11 +1,8 @@
 package opwvhk.intellij.avro_idl.editor;
 
-import java.util.Set;
-
 import com.intellij.application.options.IndentOptionsEditor;
 import com.intellij.application.options.SmartIndentOptionsEditor;
 import com.intellij.lang.Language;
-import com.intellij.openapi.options.Configurable;
 import com.intellij.psi.codeStyle.*;
 import opwvhk.intellij.avro_idl.AvroIdlLanguage;
 import org.jetbrains.annotations.NotNull;
