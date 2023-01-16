@@ -32,7 +32,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbAware {
 	private static final PluginId MY_PLUGIN_ID = PluginId.getId("net.sf.opk.avro-schema-support");
-	private static final PluginId OLD_PLUGIN_ID = PluginId.getId("claims.bold.intellij.avro");
+	public static final PluginId OLD_PLUGIN_ID = PluginId.getId("claims.bold.intellij.avro");
 	private static final String SNAPSHOT_SUFFIX = "-SNAPSHOT";
 
 	@NotNull

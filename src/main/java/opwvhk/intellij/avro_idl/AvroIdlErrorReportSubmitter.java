@@ -3,6 +3,7 @@ package opwvhk.intellij.avro_idl;
 import com.intellij.diagnostic.DiagnosticBundle;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.scratch.ScratchRootType;
 import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -44,9 +45,9 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 	@Override
 	public @Nullable String getPrivacyNoticeText() {
 		return "<html>I agree to my hardware configuration, software configuration, product information, and the error details shown above " +
-			"being published in the GitHub repository <a href=\"https://github.com/" + repository + "/issues\">" + repository + "</a> " +
-			"to allow volunteers provide support if they have time.  \n" +
-			"The reported exception data are not expected to contain any personal data.</html>";
+		       "being published in the GitHub repository <a href=\"https://github.com/" + repository + "/issues\">" + repository + "</a> " +
+		       "to allow volunteers provide support if they have time.  \n" +
+		       "The reported exception data are not expected to contain any personal data.</html>";
 	}
 
 	@Override
@@ -103,8 +104,8 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 		builder.append("\n");
 
 		// Plugin version
-		IdeaPluginDescriptor thisPlugin = AvroIdlPluginUpdateStartupActivity.getMyPluginDescriptor();
-		builder.append("* Plugin: ").append(thisPlugin.getName()).append(" `").append(thisPlugin.getVersion()).append("`\n");
+		appendPluginByDescriptor(builder, "Plugin", AvroIdlPluginUpdateStartupActivity.getMyPluginDescriptor());
+		appendPluginByDescriptor(builder, "Extra", PluginManagerCore.getPlugin(AvroIdlPluginUpdateStartupActivity.OLD_PLUGIN_ID));
 		// IntelliJ version
 		ApplicationInfo info = ApplicationInfo.getInstance();
 		builder.append("* IDE: ").append(info.getVersionName()).append(" `").append(info.getFullVersion()).append("`\n");
@@ -139,6 +140,18 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 		}
 		String markdownText = builder.toString();
 		return markdownText;
+	}
+
+	private static void appendPluginByDescriptor(StringBuilder builder, String label, IdeaPluginDescriptor descriptor) {
+		if (descriptor != null) {
+			builder.append("* ").append(label).append(": ")
+				.append(" ").append(descriptor.getName())
+				.append(" `").append(descriptor.getVersion())
+				.append("` by ").append(descriptor.getVendor())
+				.append(" (id: ").append(descriptor.getPluginId().getIdString())
+				.append(PluginManagerCore.isDisabled(descriptor.getPluginId()) ? "; disabled" : "")
+				.append(")\n");
+		}
 	}
 
 	private static String getExceptionMessage(CharSequence text) {
