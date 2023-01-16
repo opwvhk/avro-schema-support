@@ -5,29 +5,17 @@ import java.awt.*;
 
 import com.intellij.application.options.codeStyle.WrappingAndBracesPanel;
 import com.intellij.lang.Language;
-import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider.SettingsType;
 import com.intellij.ui.components.JBScrollPane;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class OptionTableWithoutPreviewPanel extends WrappingAndBracesPanel {
+public abstract class OptionTableWithoutPreviewPanel extends WrappingAndBracesPanel {
 	private JPanel myPanel;
-	private final @Nullable Language defaultLanguage;
-	private final @NotNull String tabTitle;
-	private final @NotNull SettingsType settingsType;
 
-	protected OptionTableWithoutPreviewPanel(@NotNull SettingsType settingsType, @Nullable Language defaultLanguage, @Nullable CodeStyleSettings settings) {
-		this(settingsType, defaultLanguage, null, settings);
-	}
-
-	protected OptionTableWithoutPreviewPanel(@NotNull SettingsType settingsType, @Nullable Language defaultLanguage, @Nullable String tabTitle,
-	                                         @Nullable CodeStyleSettings settings) {
+	protected OptionTableWithoutPreviewPanel(@Nullable CodeStyleSettings settings) {
 		super(settings);
-		this.defaultLanguage = defaultLanguage;
-		this.tabTitle = tabTitle == null ? ApplicationBundle.message("settings.code.style.tab.title.other") : tabTitle;
-		this.settingsType = settingsType;
 	}
 
 	protected void init() {
@@ -59,18 +47,21 @@ public class OptionTableWithoutPreviewPanel extends WrappingAndBracesPanel {
 		return myPanel;
 	}
 
+	/**
+	 * @return the settings type; called from the superclass constructor, so cannot be a field
+	 */
 	@Override
-	public @NotNull SettingsType getSettingsType() {
-		return settingsType;
-	}
+	public abstract @NotNull SettingsType getSettingsType();
 
+	/**
+	 * @return the tab title; called from the superclass constructor, so cannot be a field
+	 */
 	@Override
-	protected @NotNull String getTabTitle() {
-		return tabTitle;
-	}
+	protected abstract @NotNull String getTabTitle();
 
+	/**
+	 * @return the language this tab is for; called from the superclass constructor, so cannot be a field
+	 */
 	@Override
-	public @Nullable Language getDefaultLanguage() {
-		return defaultLanguage;
-	}
+	public abstract @Nullable Language getDefaultLanguage();
 }

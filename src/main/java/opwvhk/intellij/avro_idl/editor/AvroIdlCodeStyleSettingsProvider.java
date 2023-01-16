@@ -3,11 +3,8 @@ package opwvhk.intellij.avro_idl.editor;
 import com.intellij.application.options.CodeStyleAbstractConfigurable;
 import com.intellij.application.options.CodeStyleAbstractPanel;
 import com.intellij.application.options.TabbedLanguageCodeStylePanel;
-import com.intellij.application.options.codeStyle.OptionTableWithPreviewPanel;
-import com.intellij.application.options.codeStyle.WrappingAndBracesPanel;
 import com.intellij.lang.Language;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.util.NlsContexts;
 import com.intellij.psi.codeStyle.CodeStyleConfigurable;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsProvider;
@@ -46,7 +43,22 @@ public class AvroIdlCodeStyleSettingsProvider extends CodeStyleSettingsProvider 
 		@Override
 		protected void initTabs(CodeStyleSettings settings) {
 			super.initTabs(settings);
-			addTab(new OptionTableWithoutPreviewPanel(SettingsType.LANGUAGE_SPECIFIC, getDefaultLanguage(), settings));
+			addTab(new OptionTableWithoutPreviewPanel(settings) {
+				@Override
+				public @NotNull SettingsType getSettingsType() {
+					return SettingsType.LANGUAGE_SPECIFIC;
+				}
+
+				@Override
+				protected @NotNull String getTabTitle() {
+					return ApplicationBundle.message("settings.code.style.tab.title.other");
+				}
+
+				@Override
+				public @Nullable Language getDefaultLanguage() {
+					return AvroIdlCodeStyleMainPanel.this.getDefaultLanguage();
+				}
+			});
 		}
 	}
 }
