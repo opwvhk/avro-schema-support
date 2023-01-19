@@ -108,16 +108,28 @@
 		<lang.parserDefinition language="Avro Protocol" implementationClass="opwvhk.intellij.avro_idl.syntax.AvroProtocolParserDefinition"/>
 	</extensions>
 	<extensions defaultExtensionNs="opwvhk.avro.idl">
-		<naming.convention id="AvroIdlNamespaceNamingConvention" order="first"
+		<!--
+		Please note: the naming convention order is explicitly reversed in the IntelliJ displaying code.
+		This explains the use of "last"/"before" instead of the more logical "first"/"after".
+		-->
+		<naming.convention id="AvroIdlNamespaceNamingConvention" order="last"
 		                   implementation="opwvhk.intellij.avro_idl.naming.AvroIdlNamespaceNamingConvention"/>
-		<naming.convention id="AvroIdlRecordNamingConvention" implementation="opwvhk.intellij.avro_idl.naming.AvroIdlRecordNamingConvention"/>
-		<naming.convention id="AvroIdlErrorNamingConvention" implementation="opwvhk.intellij.avro_idl.naming.AvroIdlErrorNamingConvention"/>
-		<naming.convention id="AvroIdlFieldNamingConvention" implementation="opwvhk.intellij.avro_idl.naming.AvroIdlFieldNamingConvention"/>
-		<naming.convention id="AvroIdlEnumNamingConvention" implementation="opwvhk.intellij.avro_idl.naming.AvroIdlEnumNamingConvention"/>
-		<naming.convention id="AvroIdlEnumConstantNamingConvention" implementation="opwvhk.intellij.avro_idl.naming.AvroIdlEnumConstantNamingConvention"/>
-		<naming.convention id="AvroIdlFixedNamingConvention" implementation="opwvhk.intellij.avro_idl.naming.AvroIdlFixedNamingConvention"/>
-		<naming.convention id="AvroIdlProtocolNamingConvention" implementation="opwvhk.intellij.avro_idl.naming.AvroIdlProtocolNamingConvention"/>
-		<naming.convention id="AvroIdlMessageNamingConvention" implementation="opwvhk.intellij.avro_idl.naming.AvroIdlMessageNamingConvention"/>
+		<naming.convention id="AvroIdlRecordNamingConvention" order="before AvroIdlNamespaceNamingConvention"
+		                   implementation="opwvhk.intellij.avro_idl.naming.AvroIdlRecordNamingConvention"/>
+		<naming.convention id="AvroIdlErrorNamingConvention" order="before AvroIdlRecordNamingConvention"
+		                   implementation="opwvhk.intellij.avro_idl.naming.AvroIdlErrorNamingConvention"/>
+		<naming.convention id="AvroIdlFieldNamingConvention" order="before AvroIdlErrorNamingConvention"
+		                   implementation="opwvhk.intellij.avro_idl.naming.AvroIdlFieldNamingConvention"/>
+		<naming.convention id="AvroIdlEnumNamingConvention" order="before AvroIdlFieldNamingConvention"
+		                   implementation="opwvhk.intellij.avro_idl.naming.AvroIdlEnumNamingConvention"/>
+		<naming.convention id="AvroIdlEnumConstantNamingConvention" order="before AvroIdlEnumNamingConvention"
+		                   implementation="opwvhk.intellij.avro_idl.naming.AvroIdlEnumConstantNamingConvention"/>
+		<naming.convention id="AvroIdlFixedNamingConvention" order="before AvroIdlEnumConstantNamingConvention"
+		                   implementation="opwvhk.intellij.avro_idl.naming.AvroIdlFixedNamingConvention"/>
+		<naming.convention id="AvroIdlProtocolNamingConvention" order="before AvroIdlFixedNamingConvention"
+		                   implementation="opwvhk.intellij.avro_idl.naming.AvroIdlProtocolNamingConvention"/>
+		<naming.convention id="AvroIdlMessageNamingConvention" order="before AvroIdlProtocolNamingConvention"
+		                   implementation="opwvhk.intellij.avro_idl.naming.AvroIdlMessageNamingConvention"/>
 	</extensions>
 	<extensions defaultExtensionNs="JavaScript">
 		<JsonSchema.ProviderFactory implementation="opwvhk.intellij.avro_idl.json_schema.AvroJsonSchemaProviderFactory"/>
