@@ -9,6 +9,6 @@ public class AvroIdlFieldNamingConvention extends AvroIdlNamingConvention {
 
 	@Override
 	public String getElementDescription() {
-		return "Fixed";
+		return "Field";
 	}
 }
