@@ -21,7 +21,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "213.3.2-SNAPSHOT"
+version = "213.4.0-SNAPSHOT"
 
 repositories {
 	mavenCentral()
@@ -43,11 +43,25 @@ dependencies {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
 	//version.set("2020.3.4")
+	//version.set("2021.1.3")
 	//version.set("2021.2.4")
+	//version.set("2021.3")
+	//version.set("2021.3.1")
+	//version.set("2021.3.2")
 	version.set("2021.3.3")
 	//version.set("2022.1")
+	//version.set("2022.1.1")
+	//version.set("2022.1.2")
+	//version.set("2022.1.3")
+	//version.set("2022.1.4")
+	//version.set("2022.2")
+	//version.set("2022.2.1")
+	//version.set("2022.2.2")
 	//version.set("2022.2.3")
+	//version.set("2022.2.4")
 	//version.set("2022.3")
+	//version.set("2022.3.1")
+	//version.set("2022.3.2")
 
 	val psiViewerVersion = version.get().replace(".", "").substring(2, 5) + "-SNAPSHOT"
 	// Note: without the java plugin tests will fail (so don't remove it even if the plugin does not need it)
@@ -91,10 +105,11 @@ tasks {
 		*/
 		//language=HTML
 		val changeLog = """
-			<p>Version 213.3.2:</p>
+			<p>Version 213.4.0:</p>
 			<ul data-version="213.3.2">
-			<li>Implement #42: Adjusted renaming to add an alias for the old name if settings specify this</li>
-			<li>Add new settings for #42, making the behaviour congigurable</li>
+			<li>Added code to help diagnose issues #39, #43 & #44 (NoClassDefFoundError for existing class)</li>
+			<li>Implement #42: Renaming a schema or field now adds an alias for the old name</li>
+			<li>Add new settings for #42, making the behaviour congigurable (by default, only fields receive an alias)</li>
 			</ul>
 			<p>Version 213.3.1:</p>
 			<ul data-version="213.3.1">
