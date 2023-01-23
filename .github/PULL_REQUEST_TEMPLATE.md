@@ -1,13 +1,22 @@
-Make sure you have checked _all_ steps below.
+<!--
+Thank you very much for contributing. To help review your contribution in the best possible way, please fill out the template below.
+-->
+## What is the purpose of the change
 
-- [ ] My PR addresses the following [issues](https://github.com/opwvhk/avro-schema-support/issues) issues:
-- [ ] My PR adds the following unit tests __OR__ does not need testing for this extremely good reason:
-- [ ] My commits follow the guidelines from "[How to write a good git commit message](https://chris.beams.io/posts/git-commit/)":
-	1. Subject is separated from body by a blank line
-	1. Subject is limited to 50 characters
-	1. Subject does not end with a period
-	1. Subject uses the imperative mood ("add", not "adding")
-	1. Body wraps at 72 characters
-	1. Body explains "what" and "why", not "how"
-- [ ] In case of new functionality, my PR adds documentation that describes how to use it
-	- All the public functions and the classes in the PR contain Javadoc that explain what it does
+(For example: This pull request improves annotation performance by buffering data, fixing issue #xx.)
+
+
+## Verifying this change
+
+(Please describe anything that's useful to review the change)
+
+<!--
+PS: meaningful commit messages are much appreciated. Preferably, they follow the guidelines from [How to write a good git commit message](https://cbea.ms/git-commit/#seven-rules):
+  1. Separate subject from body with a blank line
+  2. Limit the subject line to 50 characters
+  3. Capitalize the subject line
+  4. Do not end the subject line with a period
+  5. Use the imperative mood in the subject line
+  6. Wrap the body at 72 characters
+  7. Use the body to explain "what" and "why", not "how"
+-->
