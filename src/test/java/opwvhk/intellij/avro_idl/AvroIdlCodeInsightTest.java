@@ -255,9 +255,9 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 			Highlight.typo("status", "Enum name 'status' doesn't match regex '[A-Z][a-zA-Z0-9]*'"),
 			Highlight.typo("on", "Enum constant name 'on' is too short (2 < 3)"),
 			Highlight.typo("off", "Enum constant name 'off' doesn't match regex '[A-Z][A-Z0-9_]*[A-Z0-9]'"),
-			Highlight.typo("Name", "Fixed name 'Name' doesn't match regex '[a-z][a-zA-Z0-9]*'"),
-			Highlight.typo("failure", "Record name 'failure' doesn't match regex '[A-Z][a-zA-Z0-9]*'"),
-			Highlight.typo("Cause", "Fixed name 'Cause' doesn't match regex '[a-z][a-zA-Z0-9]*'"),
+			Highlight.typo("Name", "Field name 'Name' doesn't match regex '[a-z][a-zA-Z0-9]*'"),
+			Highlight.typo("failure", "Error name 'failure' doesn't match regex '[A-Z][a-zA-Z0-9]*'"),
+			Highlight.typo("Cause", "Field name 'Cause' doesn't match regex '[a-z][a-zA-Z0-9]*'"),
 			Highlight.typo("Ping", "Message name 'Ping' doesn't match regex '[a-z][a-zA-Z0-9]*'")
 		);
 	}
