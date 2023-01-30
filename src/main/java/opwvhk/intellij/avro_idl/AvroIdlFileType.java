@@ -1,10 +1,12 @@
 package opwvhk.intellij.avro_idl;
 
+import javax.swing.*;
+
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 
 /**
  * Represents the file type for Apache Avro™ IDL files.
@@ -13,9 +15,18 @@ public class AvroIdlFileType extends LanguageFileType {
     /**
      * A shared instance of AvroIdlFileType.
      */
-    public static final AvroIdlFileType INSTANCE = new AvroIdlFileType();
+    public static final AvroIdlFileType INSTANCE;
 
-    protected AvroIdlFileType() {
+	static {
+		try {
+			INSTANCE = new AvroIdlFileType();
+		} catch (Throwable t) {
+			Logger.getInstance(AvroIdlFileType.class).error("Failed to initialise AvroIdlFileType", t);
+			throw t;
+		}
+	}
+
+	protected AvroIdlFileType() {
         super(AvroIdlLanguage.INSTANCE);
     }
 

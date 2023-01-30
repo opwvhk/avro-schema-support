@@ -10,7 +10,7 @@ import opwvhk.intellij.avro_idl.AvroProtocolLanguage;
 import org.jetbrains.annotations.NotNull;
 
 public class AvroProtocolParserDefinition extends Json5ParserDefinition {
-	private static final Logger LOG = Logger.getInstance(AvroIdlParserDefinition.class);
+	private static final Logger LOG = Logger.getInstance(AvroProtocolParserDefinition.class);
 	public static final IFileElementType FILE;
 
 	static {

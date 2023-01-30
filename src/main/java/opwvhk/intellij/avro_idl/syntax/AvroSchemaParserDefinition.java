@@ -10,7 +10,7 @@ import opwvhk.intellij.avro_idl.AvroSchemaLanguage;
 import org.jetbrains.annotations.NotNull;
 
 public class AvroSchemaParserDefinition extends JsonParserDefinition {
-	private static final Logger LOG = Logger.getInstance(AvroIdlParserDefinition.class);
+	private static final Logger LOG = Logger.getInstance(AvroSchemaParserDefinition.class);
 	public static final IFileElementType FILE;
 
 	static {

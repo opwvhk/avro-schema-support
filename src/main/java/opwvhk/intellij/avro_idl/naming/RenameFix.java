@@ -99,9 +99,8 @@ public class RenameFix implements RefactoringQuickFix {
 		try {
 			doFix(project, descriptor);
 		} catch (IncorrectOperationException e) {
-			final Class<? extends RenameFix> aClass = getClass();
-			final String className = aClass.getName();
-			final Logger logger = Logger.getInstance(className);
+			final Class<?> myClass = getClass();
+			final Logger logger = Logger.getInstance(myClass);
 			logger.error(e);
 		}
 	}
