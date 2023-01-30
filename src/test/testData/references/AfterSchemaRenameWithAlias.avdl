@@ -1,0 +1,18 @@
+/**
+ * Rename test input.
+ */
+@namespace("org.apache.avro.test")
+protocol Simple {
+	@aliases(["Status"])
+	enum OnOrOff {ON, OFF}
+
+	record TestRecord {
+		string name = "foo";
+		<caret>OnOrOff status;
+	}
+
+	/**
+	 * Determine the next Status of the record.
+	 */
+	org.apache.avro.test.OnOrOff nextStatus(TestRecord `record` = {"name": "bar", "status": "ON"});
+}

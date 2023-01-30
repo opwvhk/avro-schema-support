@@ -1,11 +1,13 @@
 package opwvhk.intellij.avro_idl;
 
+import com.intellij.application.options.CodeStyle;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import com.intellij.usageView.UsageInfo;
+import opwvhk.intellij.avro_idl.editor.AvroIdlCodeStyleSettings;
 import opwvhk.intellij.avro_idl.psi.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,10 +19,36 @@ import static com.intellij.psi.TokenType.WHITE_SPACE;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
 public class AvroIdlReferencesTest extends LightJavaCodeInsightFixtureTestCase {
-	public void testRename() {
-		myFixture.configureByFiles("BeforeRename.avdl");
+	public void testSchemaRenameWithoutAlias() {
+		myFixture.configureByFiles("BeforeSchemaRename.avdl");
+		AvroIdlCodeStyleSettings codeStyleSettings = CodeStyle.getCustomSettings(myFixture.getFile(), AvroIdlCodeStyleSettings.class);
+		codeStyleSettings.ADD_ALIAS_ON_SCHEMA_RENAME = false;
 		myFixture.renameElementAtCaret("OnOrOff");
-		myFixture.checkResultByFile("AfterRename.avdl", false);
+		myFixture.checkResultByFile("AfterSchemaRenameNoAlias.avdl", false);
+	}
+
+	public void testSchemaRenameWithAlias() {
+		myFixture.configureByFiles("BeforeSchemaRename.avdl");
+		AvroIdlCodeStyleSettings codeStyleSettings = CodeStyle.getCustomSettings(myFixture.getFile(), AvroIdlCodeStyleSettings.class);
+		codeStyleSettings.ADD_ALIAS_ON_SCHEMA_RENAME = true;
+		myFixture.renameElementAtCaret("OnOrOff");
+		myFixture.checkResultByFile("AfterSchemaRenameWithAlias.avdl", false);
+	}
+
+	public void testFieldRenameWithoutAlias() {
+		myFixture.configureByFiles("BeforeFieldRename.avdl");
+		AvroIdlCodeStyleSettings codeStyleSettings = CodeStyle.getCustomSettings(myFixture.getFile(), AvroIdlCodeStyleSettings.class);
+		codeStyleSettings.ADD_ALIAS_ON_FIELD_RENAME = false;
+		myFixture.renameElementAtCaret("onOrOff");
+		myFixture.checkResultByFile("AfterFieldRenameNoAlias.avdl", false);
+	}
+
+	public void testFieldRenameWithAlias() {
+		myFixture.configureByFiles("BeforeFieldRename.avdl");
+		myFixture.renameElementAtCaret("onOrOff");
+		AvroIdlCodeStyleSettings codeStyleSettings = CodeStyle.getCustomSettings(myFixture.getFile(), AvroIdlCodeStyleSettings.class);
+		codeStyleSettings.ADD_ALIAS_ON_FIELD_RENAME = true;
+		myFixture.checkResultByFile("AfterFieldRenameWithAlias.avdl", false);
 	}
 
 	@Override
@@ -29,7 +57,7 @@ public class AvroIdlReferencesTest extends LightJavaCodeInsightFixtureTestCase {
 	}
 
 	public void testReference() {
-		myFixture.configureByFiles("BeforeRename.avdl");
+		myFixture.configureByFiles("BeforeSchemaRename.avdl");
 		PsiElement element = myFixture.getFile().findElementAt(myFixture.getCaretOffset());
 
 		// The element will be an identifier. Ensure it references something.
@@ -45,7 +73,7 @@ public class AvroIdlReferencesTest extends LightJavaCodeInsightFixtureTestCase {
 	}
 
 	public void testFindUsages() {
-		Collection<UsageInfo> usageInfos = myFixture.testFindUsages("BeforeRename.avdl");
+		Collection<UsageInfo> usageInfos = myFixture.testFindUsages("BeforeSchemaRename.avdl");
 		assertUsage(usageInfos,
 			usage("org.apache.avro.test.Status", "Status", FIELD_DECLARATION, RECORD_BODY),
 			usage("org.apache.avro.test.Status", "org.apache.avro.test.Status", MESSAGE_DECLARATION, PROTOCOL_BODY)
