@@ -8,6 +8,7 @@ import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -32,7 +33,8 @@ import static java.util.regex.Pattern.UNICODE_CHARACTER_CLASS;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.NULL;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.VOID;
 
-public class AvroIdlAnnotator implements Annotator {
+/* TODO: Also implement DumbAware when targeting 2023.1+ */
+public class AvroIdlAnnotator implements Annotator, DumbAware {
 	private static final String SIMPLE_NAME_IN_STRING = "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
 	private static final String IDENTIFIER_IN_STRING = SIMPLE_NAME_IN_STRING + "(\\." + SIMPLE_NAME_IN_STRING + ")*";
 	private static final String SIMPLE_NAME = "(`" + SIMPLE_NAME_IN_STRING + "`|" + SIMPLE_NAME_IN_STRING + ")";
