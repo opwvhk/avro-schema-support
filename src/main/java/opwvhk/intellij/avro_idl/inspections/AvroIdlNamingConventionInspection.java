@@ -22,11 +22,6 @@ public class AvroIdlNamingConventionInspection extends AbstractNamingConventionI
 	}
 
 	@Override
-	public void setEnabled(boolean value, String conventionShortName) {
-		super.setEnabled(value, conventionShortName);
-	}
-
-	@Override
     @Nullable
     protected LocalQuickFix createRenameFix() {
 		return new RenameFix();
