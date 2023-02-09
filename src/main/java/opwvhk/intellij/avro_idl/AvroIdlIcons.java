@@ -1,18 +1,21 @@
 package opwvhk.intellij.avro_idl;
 
+import javax.swing.*;
+
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.IconLoader;
-import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.IconManager;
-import com.intellij.ui.RowIcon;
-import com.intellij.ui.icons.DarkIconProvider;
-import opwvhk.intellij.avro_idl.psi.*;
-import org.jetbrains.annotations.NotNull;
+import opwvhk.intellij.avro_idl.psi.AvroIdlEnumConstant;
+import opwvhk.intellij.avro_idl.psi.AvroIdlEnumDeclaration;
+import opwvhk.intellij.avro_idl.psi.AvroIdlFieldDeclaration;
+import opwvhk.intellij.avro_idl.psi.AvroIdlFile;
+import opwvhk.intellij.avro_idl.psi.AvroIdlImportDeclaration;
+import opwvhk.intellij.avro_idl.psi.AvroIdlMessageDeclaration;
+import opwvhk.intellij.avro_idl.psi.AvroIdlNamedSchemaDeclaration;
+import opwvhk.intellij.avro_idl.psi.AvroIdlProtocolDeclaration;
+import opwvhk.intellij.avro_idl.psi.AvroIdlRecordDeclaration;
+import opwvhk.intellij.avro_idl.psi.AvroIdlVariableDeclarator;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
-import java.awt.*;
 
 /**
  * The set of all icons used by the plugin for representing Apache Avro™ IDL.
@@ -22,14 +25,14 @@ public class AvroIdlIcons {
 	public static final Icon FILE = IconManager.getInstance().getIcon("/META-INF/fileIconAvro.svg", AvroIdlIcons.class);
 
 	@Nullable
-    public static Icon getAvroIdlIcon(PsiElement element) {
+	public static Icon getAvroIdlIcon(PsiElement element) {
 		if (element instanceof AvroIdlFile) {
 			return FILE;
 		}
 		if (element instanceof AvroIdlEnumDeclaration) {
 			return Nodes.AVRO_ENUM;
 		}
-		if (element instanceof AvroIdlRecordDeclaration && ((AvroIdlRecordDeclaration)element).isErrorType()) {
+		if (element instanceof AvroIdlRecordDeclaration && ((AvroIdlRecordDeclaration) element).isErrorType()) {
 			return Nodes.AVRO_EXCEPTION;
 		}
 		if (element instanceof AvroIdlNamedSchemaDeclaration) { // Record & fixed (error & enum are matched above)
@@ -70,54 +73,5 @@ public class AvroIdlIcons {
 		public static final Icon AVRO_INTERFACE = IconManager.getInstance().getIcon("/icons/nodes/interface.svg", AvroIdlIcons.class);
 		// Protocol messages
 		public static final Icon AVRO_METHOD = IconManager.getInstance().getIcon("/icons/nodes/method.svg", AvroIdlIcons.class);
-	}
-
-	@NotNull
-    public static RowIcon addAvroMark(@NotNull Icon baseIcon) {
-		Icon avroMark = IconLoader.getIcon("/icons/avroMark.svg", AvroIdlIcons.class);
-		ScalableIcon avroMarkMask = (ScalableIcon)IconLoader.getIcon("/icons/avroMarkMask.svg", AvroIdlIcons.class);
-		MaskedIcon maskedIcon = new MaskedIcon(baseIcon, avroMarkMask);
-		return new RowIcon(maskedIcon, avroMark);
-	}
-
-	private static class MaskedIcon implements Icon, DarkIconProvider {
-		private final Icon baseIcon;
-		private final ScalableIcon mask;
-
-		public MaskedIcon(@NotNull Icon baseIcon, @NotNull ScalableIcon mask) {
-			this.baseIcon = baseIcon;
-			this.mask = mask;
-		}
-
-		@Override
-        @NotNull
-        public Icon getDarkIcon(boolean isDark) {
-			return new MaskedIcon(IconLoader.getDarkIcon(baseIcon, isDark), mask);
-		}
-
-		@Override
-		public void paintIcon(Component c, Graphics g, int x, int y) {
-			Graphics2D g2 = (Graphics2D)g;
-			mask.scale(1);
-			float scale = Math.min(baseIcon.getIconHeight()/(float)mask.getIconHeight(), baseIcon.getIconWidth()/(float)mask.getIconWidth());
-			mask.scale(scale);
-			mask.paintIcon(c, g2, x, y);
-
-			Composite saveComposite = g2.getComposite();
-			// "Source In" effectively adds the alpha channel that's already there to the image we're painting: transparency can only increase.
-			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_IN));
-			baseIcon.paintIcon(c, g2, x, y);
-			g2.setComposite(saveComposite);
-		}
-
-		@Override
-		public int getIconWidth() {
-			return baseIcon.getIconWidth();
-		}
-
-		@Override
-		public int getIconHeight() {
-			return baseIcon.getIconHeight();
-		}
 	}
 }
