@@ -8,7 +8,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import com.intellij.usageView.UsageInfo;
 import opwvhk.intellij.avro_idl.editor.AvroIdlCodeStyleSettings;
-import opwvhk.intellij.avro_idl.psi.*;
+import opwvhk.intellij.avro_idl.psi.AvroIdlEnumDeclaration;
+import opwvhk.intellij.avro_idl.psi.AvroIdlNamedSchemaDeclaration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -21,7 +22,8 @@ import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 public class AvroIdlReferencesTest extends LightJavaCodeInsightFixtureTestCase {
 	public void testSchemaRenameWithoutAlias() {
 		myFixture.configureByFiles("BeforeSchemaRename.avdl");
-		AvroIdlCodeStyleSettings codeStyleSettings = CodeStyle.getCustomSettings(myFixture.getFile(), AvroIdlCodeStyleSettings.class);
+		AvroIdlCodeStyleSettings codeStyleSettings = CodeStyle.getCustomSettings(myFixture.getFile(),
+				AvroIdlCodeStyleSettings.class);
 		codeStyleSettings.ADD_ALIAS_ON_SCHEMA_RENAME = false;
 		myFixture.renameElementAtCaret("OnOrOff");
 		myFixture.checkResultByFile("AfterSchemaRenameNoAlias.avdl", false);
@@ -29,7 +31,8 @@ public class AvroIdlReferencesTest extends LightJavaCodeInsightFixtureTestCase {
 
 	public void testSchemaRenameWithAlias() {
 		myFixture.configureByFiles("BeforeSchemaRename.avdl");
-		AvroIdlCodeStyleSettings codeStyleSettings = CodeStyle.getCustomSettings(myFixture.getFile(), AvroIdlCodeStyleSettings.class);
+		AvroIdlCodeStyleSettings codeStyleSettings = CodeStyle.getCustomSettings(myFixture.getFile(),
+				AvroIdlCodeStyleSettings.class);
 		codeStyleSettings.ADD_ALIAS_ON_SCHEMA_RENAME = true;
 		myFixture.renameElementAtCaret("OnOrOff");
 		myFixture.checkResultByFile("AfterSchemaRenameWithAlias.avdl", false);
@@ -37,7 +40,8 @@ public class AvroIdlReferencesTest extends LightJavaCodeInsightFixtureTestCase {
 
 	public void testFieldRenameWithoutAlias() {
 		myFixture.configureByFiles("BeforeFieldRename.avdl");
-		AvroIdlCodeStyleSettings codeStyleSettings = CodeStyle.getCustomSettings(myFixture.getFile(), AvroIdlCodeStyleSettings.class);
+		AvroIdlCodeStyleSettings codeStyleSettings = CodeStyle.getCustomSettings(myFixture.getFile(),
+				AvroIdlCodeStyleSettings.class);
 		codeStyleSettings.ADD_ALIAS_ON_FIELD_RENAME = false;
 		myFixture.renameElementAtCaret("onOrOff");
 		myFixture.checkResultByFile("AfterFieldRenameNoAlias.avdl", false);
@@ -46,7 +50,8 @@ public class AvroIdlReferencesTest extends LightJavaCodeInsightFixtureTestCase {
 	public void testFieldRenameWithAlias() {
 		myFixture.configureByFiles("BeforeFieldRename.avdl");
 		myFixture.renameElementAtCaret("onOrOff");
-		AvroIdlCodeStyleSettings codeStyleSettings = CodeStyle.getCustomSettings(myFixture.getFile(), AvroIdlCodeStyleSettings.class);
+		AvroIdlCodeStyleSettings codeStyleSettings = CodeStyle.getCustomSettings(myFixture.getFile(),
+				AvroIdlCodeStyleSettings.class);
 		codeStyleSettings.ADD_ALIAS_ON_FIELD_RENAME = true;
 		myFixture.checkResultByFile("AfterFieldRenameWithAlias.avdl", false);
 	}
@@ -75,22 +80,23 @@ public class AvroIdlReferencesTest extends LightJavaCodeInsightFixtureTestCase {
 	public void testFindUsages() {
 		Collection<UsageInfo> usageInfos = myFixture.testFindUsages("BeforeSchemaRename.avdl");
 		assertUsage(usageInfos,
-			usage("org.apache.avro.test.Status", "Status", FIELD_DECLARATION, RECORD_BODY),
-			usage("org.apache.avro.test.Status", "org.apache.avro.test.Status", MESSAGE_DECLARATION, PROTOCOL_BODY)
+				usage("org.apache.avro.test.Status", "Status", FIELD_DECLARATION, RECORD_BODY),
+				usage("org.apache.avro.test.Status", "org.apache.avro.test.Status", MESSAGE_DECLARATION, PROTOCOL_BODY)
 		);
 	}
 
 	private void assertUsage(Collection<UsageInfo> usageInfos, Usage... expectedUsages) {
 		final Usage[] actualUsages = usageInfos.stream()
-			.sorted(Comparator.comparing(UsageInfo::getNavigationOffset))
-			.map(Usage::fromUsageInfo)
-			.toArray(Usage[]::new);
+				.sorted(Comparator.comparing(UsageInfo::getNavigationOffset))
+				.map(Usage::fromUsageInfo)
+				.toArray(Usage[]::new);
 		assertOrderedEquals(actualUsages, expectedUsages);
 	}
 
 	@SuppressWarnings("SameParameterValue")
-	private static Usage usage(@NotNull String resolvedFullName, @NotNull String referenceText, @NotNull IElementType parentElement,
-							   @NotNull IElementType grandParentElement) {
+	private static Usage usage(@NotNull String resolvedFullName, @NotNull String referenceText,
+	                           @NotNull IElementType parentElement,
+	                           @NotNull IElementType grandParentElement) {
 		return new Usage(resolvedFullName, referenceText, parentElement, grandParentElement);
 	}
 
@@ -107,15 +113,16 @@ public class AvroIdlReferencesTest extends LightJavaCodeInsightFixtureTestCase {
 				final ASTNode node = reference.getElement().getNode();
 				if (resolved instanceof AvroIdlNamedSchemaDeclaration) {
 					return new Usage(((AvroIdlNamedSchemaDeclaration) resolved).getFullName(),
-						reference.getElement().getText(),
-						node.getTreeParent().getElementType(),
-						node.getTreeParent().getTreeParent().getElementType());
+							reference.getElement().getText(),
+							node.getTreeParent().getElementType(),
+							node.getTreeParent().getTreeParent().getElementType());
 				}
 			}
 			return new Usage("", "", WHITE_SPACE, WHITE_SPACE);
 		}
 
-		Usage(String resolvedFullName, String referenceText, IElementType parentElement, IElementType grandParentElement) {
+		Usage(String resolvedFullName, String referenceText, IElementType parentElement,
+		      IElementType grandParentElement) {
 			this.resolvedFullName = resolvedFullName;
 			this.referenceText = referenceText;
 			this.parentElement = parentElement;
@@ -132,9 +139,9 @@ public class AvroIdlReferencesTest extends LightJavaCodeInsightFixtureTestCase {
 			}
 			Usage usage = (Usage) o;
 			return Objects.equals(resolvedFullName, usage.resolvedFullName) &&
-				Objects.equals(referenceText, usage.referenceText) &&
-				Objects.equals(parentElement, usage.parentElement) &&
-				Objects.equals(grandParentElement, usage.grandParentElement);
+					Objects.equals(referenceText, usage.referenceText) &&
+					Objects.equals(parentElement, usage.parentElement) &&
+					Objects.equals(grandParentElement, usage.grandParentElement);
 		}
 
 		@Override
@@ -145,11 +152,11 @@ public class AvroIdlReferencesTest extends LightJavaCodeInsightFixtureTestCase {
 		@Override
 		public String toString() {
 			return "Usage{" +
-				"fullName='" + resolvedFullName + '\'' +
-				", displayName='" + referenceText + '\'' +
-				", parentElement=" + parentElement +
-				", grandParentElement=" + grandParentElement +
-				'}';
+					"fullName='" + resolvedFullName + '\'' +
+					", displayName='" + referenceText + '\'' +
+					", parentElement=" + parentElement +
+					", grandParentElement=" + grandParentElement +
+					'}';
 		}
 	}
 }

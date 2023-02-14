@@ -16,7 +16,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class SimpleAvroIdlQuickFixOnPsiElement<E extends PsiElement> extends LocalQuickFixAndIntentionActionOnPsiElement {
+public abstract class SimpleAvroIdlQuickFixOnPsiElement<E extends PsiElement>
+		extends LocalQuickFixAndIntentionActionOnPsiElement {
 
 	private final String text;
 
@@ -29,37 +30,40 @@ public abstract class SimpleAvroIdlQuickFixOnPsiElement<E extends PsiElement> ex
 		return true;
 	}
 
-	protected abstract void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor, @NotNull E element);
+	protected abstract void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor,
+	                               @NotNull E element);
 
 	@Override
-    @NotNull
-    public @IntentionFamilyName String getFamilyName() {
+	@NotNull
+	public @IntentionFamilyName String getFamilyName() {
 		return "Avro IDL";
 	}
 
 	@Override
-    @NotNull
-    public @IntentionName String getText() {
+	@NotNull
+	public @IntentionName String getText() {
 		return text;
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean isAvailable(@NotNull Project project, @NotNull PsiFile file, @NotNull PsiElement startElement, @NotNull PsiElement endElement) {
-		return isAvailable(project, file, (E)startElement);
+	public boolean isAvailable(@NotNull Project project, @NotNull PsiFile file, @NotNull PsiElement startElement,
+	                           @NotNull PsiElement endElement) {
+		return isAvailable(project, file, (E) startElement);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void invoke(@NotNull Project project, @NotNull PsiFile file, @NotNull PsiElement startElement, @NotNull PsiElement endElement) {
-		invoke(project, file, (Editor)null, (E)startElement);
+	public void invoke(@NotNull Project project, @NotNull PsiFile file, @NotNull PsiElement startElement,
+	                   @NotNull PsiElement endElement) {
+		invoke(project, file, (Editor) null, (E) startElement);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor,
 	                   @NotNull PsiElement startElement, @NotNull PsiElement endElement) {
-		invoke(project, file, editor, (E)startElement);
+		invoke(project, file, editor, (E) startElement);
 	}
 
 	protected void selectElement(Editor editor, PsiElement element) {
@@ -68,7 +72,8 @@ public abstract class SimpleAvroIdlQuickFixOnPsiElement<E extends PsiElement> ex
 			// Remove all carets but the "main"
 			LogicalPosition typeStartPosition = editor.offsetToLogicalPosition(range.getStartOffset());
 			LogicalPosition typeEndPosition = editor.offsetToLogicalPosition(range.getEndOffset());
-			editor.getCaretModel().setCaretsAndSelections(List.of(new CaretState(typeStartPosition, typeStartPosition, typeEndPosition)));
+			editor.getCaretModel().setCaretsAndSelections(
+					List.of(new CaretState(typeStartPosition, typeStartPosition, typeEndPosition)));
 			editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
 		}
 	}

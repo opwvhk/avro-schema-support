@@ -30,9 +30,11 @@ import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
 @SuppressWarnings("UnstableApiUsage")
 public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider {
-	public static final TokenSet DECIMAL_TYPE_DECLARATION_ELEMENTS = TokenSet.create(DECIMAL, INT_LITERAL, COMMA, LEFT_PAREN, RIGHT_PAREN);
-	public static final TokenSet NON_DECIMAL_NULLABLE_TYPE_ELEMENTS = TokenSet.create(BOOLEAN, BYTES, INT, STRING, FLOAT, DOUBLE, LONG, NULL,
-		DATE, TIME_MS, TIMESTAMP_MS, LOCAL_TIMESTAMP_MS, UUID, IDENTIFIER);
+	public static final TokenSet DECIMAL_TYPE_DECLARATION_ELEMENTS = TokenSet.create(DECIMAL, INT_LITERAL, COMMA,
+			LEFT_PAREN, RIGHT_PAREN);
+	public static final TokenSet NON_DECIMAL_NULLABLE_TYPE_ELEMENTS = TokenSet.create(BOOLEAN, BYTES, INT, STRING,
+			FLOAT, DOUBLE, LONG, NULL,
+			DATE, TIME_MS, TIMESTAMP_MS, LOCAL_TIMESTAMP_MS, UUID, IDENTIFIER);
 	/**
 	 * Pattern to match the common whitespace indents in a multi-line String.
 	 * Doesn't match a single-line String, fully matches any multi-line String.
@@ -51,10 +53,10 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 	private static final Pattern STAR_INDENT = Pattern.compile("(?U)(?<stars>\\*{1,2}).*(?:\\R\\h*\\k<stars>.*)*");
 
 	@Override
-    @Nullable
-    public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
+	@Nullable
+	public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
 		if (element instanceof AvroIdlNameIdentifierOwner) {
-			final String name = ((AvroIdlNameIdentifierOwner)element).getName();
+			final String name = ((AvroIdlNameIdentifierOwner) element).getName();
 			final String file = SymbolPresentationUtil.getFilePathPresentation(element.getContainingFile());
 			return "\"" + name + "\" in " + file;
 		}
@@ -62,8 +64,8 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 	}
 
 	@Override
-    @Nullable
-    public String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
+	@Nullable
+	public String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
 		TextRange declarationRange = DeclarationRangeUtil.getPossibleDeclarationAtRange(element);
 		if (declarationRange == null) {
 			return null;
@@ -82,53 +84,55 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 
 	private String renderDeclaration(PsiElement element) {
 		if (element instanceof AvroIdlNameIdentifierOwner) {
-			String name = ((AvroIdlNameIdentifierOwner)element).getName();
+			String name = ((AvroIdlNameIdentifierOwner) element).getName();
 			if (name == null) {
 				return null;
 			}
 			if (element instanceof AvroIdlRecordDeclaration) {
-				boolean errorType = ((AvroIdlRecordDeclaration)element).isErrorType();
-				String properties = renderProperties((AvroIdlWithSchemaProperties)element, "\n");
+				boolean errorType = ((AvroIdlRecordDeclaration) element).isErrorType();
+				String properties = renderProperties((AvroIdlWithSchemaProperties) element, "\n");
 				return properties + (errorType ? "error " : "record ") + name;
 			} else if (element instanceof AvroIdlEnumDeclaration) {
-				String properties = renderProperties((AvroIdlWithSchemaProperties)element, "\n");
+				String properties = renderProperties((AvroIdlWithSchemaProperties) element, "\n");
 				return properties + "enum " + name;
 			} else if (element instanceof AvroIdlFixedDeclaration) {
-				PsiElement intLiteral = ((AvroIdlFixedDeclaration)element).getIntLiteral();
-				String properties = renderProperties((AvroIdlWithSchemaProperties)element, "\n");
+				PsiElement intLiteral = ((AvroIdlFixedDeclaration) element).getIntLiteral();
+				String properties = renderProperties((AvroIdlWithSchemaProperties) element, "\n");
 				return intLiteral != null ? properties + "fixed " + name + "(" + intLiteral.getText() + ")" : null;
 			} else if (element instanceof AvroIdlVariableDeclarator) {
 				PsiElement parent = element.getParent();
 				AvroIdlType type = parent instanceof AvroIdlFieldDeclaration ?
-				                   ((AvroIdlFieldDeclaration)parent).getType() :
-				                   ((AvroIdlFormalParameter)parent).getType();
-				String properties = renderProperties((AvroIdlWithSchemaProperties)element, " ");
+						((AvroIdlFieldDeclaration) parent).getType() :
+						((AvroIdlFormalParameter) parent).getType();
+				String properties = renderProperties((AvroIdlWithSchemaProperties) element, " ");
 				return formatType(type) + " " + properties + name;
 			} else if (element instanceof AvroIdlEnumConstant) {
 				return name;
 			} else if (element instanceof AvroIdlProtocolDeclaration) {
-				String properties = renderProperties((AvroIdlWithSchemaProperties)element, "\n");
+				String properties = renderProperties((AvroIdlWithSchemaProperties) element, "\n");
 				return properties + "protocol " + name;
 			} else if (element instanceof AvroIdlMessageDeclaration) {
-				String properties = renderProperties((AvroIdlWithSchemaProperties)element, "\n");
-				List<AvroIdlFormalParameter> formalParameters = ((AvroIdlMessageDeclaration)element).getFormalParameterList();
-				Stream<AvroIdlType> formalParameterTypes = formalParameters.stream().map(AvroIdlFormalParameter::getType);
-				String messageSignature = name + "(" + formalParameterTypes.map(this::formatType).collect(Collectors.joining(", ")) + ")";
+				String properties = renderProperties((AvroIdlWithSchemaProperties) element, "\n");
+				List<AvroIdlFormalParameter> formalParameters = ((AvroIdlMessageDeclaration) element).getFormalParameterList();
+				Stream<AvroIdlType> formalParameterTypes = formalParameters.stream()
+						.map(AvroIdlFormalParameter::getType);
+				String messageSignature =
+						name + "(" + formalParameterTypes.map(this::formatType).collect(Collectors.joining(", ")) + ")";
 				return properties + messageSignature;
 			}
 		} else if (element instanceof AvroIdlFieldDeclaration) {
-			List<AvroIdlVariableDeclarator> variableDeclarators = ((AvroIdlFieldDeclaration)element).getVariableDeclaratorList();
+			List<AvroIdlVariableDeclarator> variableDeclarators = ((AvroIdlFieldDeclaration) element).getVariableDeclaratorList();
 			return variableDeclarators.stream()
-				.map(this::renderDeclaration)
-				.collect(Collectors.joining("\n"));
+					.map(this::renderDeclaration)
+					.collect(Collectors.joining("\n"));
 		} else if (element instanceof AvroIdlFormalParameter) {
-			return renderDeclaration(((AvroIdlFormalParameter)element).getVariableDeclarator());
+			return renderDeclaration(((AvroIdlFormalParameter) element).getVariableDeclarator());
 		}
 		return null;
 	}
 
 	@NotNull
-    private String renderProperties(@NotNull AvroIdlWithSchemaProperties element, @NotNull String separator) {
+	private String renderProperties(@NotNull AvroIdlWithSchemaProperties element, @NotNull String separator) {
 		List<AvroIdlSchemaProperty> schemaProperties = element.getSchemaPropertyList();
 		if (schemaProperties.isEmpty()) {
 			return "";
@@ -138,24 +142,28 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 
 	private String formatType(@Nullable AvroIdlType type) {
 		if (type instanceof AvroIdlArrayType) {
-			final AvroIdlType elementType = ((AvroIdlArrayType)type).getType();
+			final AvroIdlType elementType = ((AvroIdlArrayType) type).getType();
 			return elementType == null ? null : "array<" + formatType(elementType) + ">";
 		} else if (type instanceof AvroIdlMapType) {
-			final AvroIdlType valueType = ((AvroIdlMapType)type).getType();
+			final AvroIdlType valueType = ((AvroIdlMapType) type).getType();
 			return valueType == null ? null : "map<" + formatType(valueType) + ">";
 		} else if (type instanceof AvroIdlUnionType) {
-			final List<AvroIdlType> typeList = ((AvroIdlUnionType)type).getTypeList();
-			return typeList.isEmpty() ? null : typeList.stream().map(this::formatType).collect(Collectors.joining(", ", "union { ", " }"));
+			final List<AvroIdlType> typeList = ((AvroIdlUnionType) type).getTypeList();
+			return typeList.isEmpty() ?
+					null :
+					typeList.stream().map(this::formatType).collect(Collectors.joining(", ", "union { ", " }"));
 		} else if (type instanceof AvroIdlDecimalType) {
 			final List<PsiElement> declarationElements = childrenByElementType(DECIMAL_TYPE_DECLARATION_ELEMENTS, type);
 			if (declarationElements.isEmpty()) {
 				return null;
 			} else {
-				final String declaration = declarationElements.stream().map(PsiElement::getText).collect(Collectors.joining());
+				final String declaration = declarationElements.stream().map(PsiElement::getText)
+						.collect(Collectors.joining());
 				return type.isOptional() ? declaration + "?" : declaration;
 			}
 		} else if (type instanceof AvroIdlNullableType) {
-			final List<PsiElement> declarationElements = childrenByElementType(NON_DECIMAL_NULLABLE_TYPE_ELEMENTS, type);
+			final List<PsiElement> declarationElements = childrenByElementType(NON_DECIMAL_NULLABLE_TYPE_ELEMENTS,
+					type);
 			if (declarationElements.isEmpty()) {
 				return null;
 			} else {
@@ -168,7 +176,8 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 		}
 	}
 
-	private List<PsiElement> childrenByElementType(@SuppressWarnings("SameParameterValue") TokenSet filter, PsiElement element) {
+	private List<PsiElement> childrenByElementType(@SuppressWarnings("SameParameterValue") TokenSet filter,
+	                                               PsiElement element) {
 		List<PsiElement> result = new ArrayList<>();
 		for (PsiElement child = element.getFirstChild(); child != null; child = child.getNextSibling()) {
 			if (filter == null || filter.contains(child.getNode().getElementType())) {
@@ -180,16 +189,16 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 
 	private String formatDeclaration(@NotNull String declaration, @Nullable String renderedDocumentation) {
 		return DEFINITION_START + declaration.replace("\n", "<br/>") + DEFINITION_END +
-			CONTENT_START +
-			//(renderedDocumentation == null ? CodeInsightBundle.message("no.documentation.found") : documentation) +
-			(renderedDocumentation == null ? "&nbsp;" : renderedDocumentation) +
-			CONTENT_END;
+				CONTENT_START +
+				//(renderedDocumentation == null ? CodeInsightBundle.message("no.documentation.found") : documentation) +
+				(renderedDocumentation == null ? "&nbsp;" : renderedDocumentation) +
+				CONTENT_END;
 	}
 
 	@Override
-    @Nls
-    @Nullable
-    public String generateRenderedDoc(@NotNull PsiDocCommentBase comment) {
+	@Nls
+	@Nullable
+	public String generateRenderedDoc(@NotNull PsiDocCommentBase comment) {
 		String rawComment = comment.getText();
 		String commentContent = rawComment.substring(3, rawComment.length() - 2);
 		String documentation = stripIndents(commentContent.strip());
@@ -218,7 +227,8 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 		}
 
 		List<AvroIdlNameIdentifierOwner> possiblyDocumentedElements = new ArrayList<>();
-		AvroIdlProtocolDeclaration protocolDeclaration = PsiTreeUtil.findChildOfType(file, AvroIdlProtocolDeclaration.class);
+		AvroIdlProtocolDeclaration protocolDeclaration = PsiTreeUtil.findChildOfType(file,
+				AvroIdlProtocolDeclaration.class);
 		if (protocolDeclaration != null) {
 			possiblyDocumentedElements.add(protocolDeclaration);
 			AvroIdlProtocolBody protocolBody = protocolDeclaration.getProtocolBody();
@@ -226,26 +236,28 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 				possiblyDocumentedElements.addAll(protocolBody.getNamedSchemaDeclarationList());
 			}
 		} else {
-			possiblyDocumentedElements.addAll(PsiTreeUtil.getChildrenOfTypeAsList(file, AvroIdlNamedSchemaDeclaration.class));
+			possiblyDocumentedElements.addAll(
+					PsiTreeUtil.getChildrenOfTypeAsList(file, AvroIdlNamedSchemaDeclaration.class));
 		}
 
 		possiblyDocumentedElements.stream().map(this::findDocComment).filter(Objects::nonNull).forEach(sink);
 	}
 
 	@Override
-    @Nullable
-    public PsiElement getDocumentationElementForLookupItem(PsiManager psiManager, Object object, PsiElement element) {
+	@Nullable
+	public PsiElement getDocumentationElementForLookupItem(PsiManager psiManager, Object object, PsiElement element) {
 		if (object instanceof PsiElement) {
-			return (PsiElement)object;
+			return (PsiElement) object;
 		}
 		return null;
 	}
 
 	@Override
-    @Nullable
-    public PsiDocCommentBase findDocComment(@NotNull PsiFile file, @NotNull TextRange range) {
+	@Nullable
+	public PsiDocCommentBase findDocComment(@NotNull PsiFile file, @NotNull TextRange range) {
 		PsiElement element = file.findElementAt(range.getStartOffset());
-		final AvroIdlNameIdentifierOwner nameIdentifierOwner = PsiTreeUtil.getParentOfType(element, AvroIdlNameIdentifierOwner.class, false);
+		final AvroIdlNameIdentifierOwner nameIdentifierOwner = PsiTreeUtil.getParentOfType(element,
+				AvroIdlNameIdentifierOwner.class, false);
 		if (nameIdentifierOwner == null) {
 			return null;
 		}
@@ -253,7 +265,7 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 	}
 
 	@Nullable
-    private PsiDocCommentBase findDocComment(AvroIdlNameIdentifierOwner element) {
+	private PsiDocCommentBase findDocComment(AvroIdlNameIdentifierOwner element) {
 		PsiComment docComment = null;
 		if (element instanceof AvroIdlVariableDeclarator) {
 			docComment = findDeclarationDocComment(element);
@@ -261,8 +273,8 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 				docComment = findDeclarationDocComment(element.getParent());
 			}
 		} else if ((element instanceof AvroIdlNamedSchemaDeclaration || element instanceof AvroIdlEnumConstant ||
-			element instanceof AvroIdlFieldDeclaration) || element instanceof AvroIdlProtocolDeclaration ||
-			element instanceof AvroIdlMessageDeclaration || element instanceof AvroIdlFormalParameter) {
+				element instanceof AvroIdlFieldDeclaration) || element instanceof AvroIdlProtocolDeclaration ||
+				element instanceof AvroIdlMessageDeclaration || element instanceof AvroIdlFormalParameter) {
 			docComment = findDeclarationDocComment(element);
 		}
 
@@ -270,10 +282,10 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 	}
 
 	@Nullable
-    private PsiComment findDeclarationDocComment(@Nullable PsiElement element) {
+	private PsiComment findDeclarationDocComment(@Nullable PsiElement element) {
 		final PsiElement prevLeaf = AvroIdlPsiUtil.prevNonCommentLeaf(element);
 		if (prevLeaf instanceof PsiComment) {
-			return (PsiComment)prevLeaf;
+			return (PsiComment) prevLeaf;
 		}
 		return null;
 	}
@@ -293,8 +305,8 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 		}
 
 		@Override
-        @Nullable
-        public TextRange getTextRange() {
+		@Nullable
+		public TextRange getTextRange() {
 			final int startOffset = getTextOffset();
 			return new TextRange(startOffset, startOffset + getTextLength());
 		}
@@ -305,9 +317,9 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 		}
 
 		@Override
-        @Nullable
-        @NonNls
-        public String getText() {
+		@Nullable
+		@NonNls
+		public String getText() {
 			return comment.getText();
 		}
 
@@ -317,20 +329,20 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 		}
 
 		@Override
-        @Nullable
-        public PsiElement getOwner() {
+		@Nullable
+		public PsiElement getOwner() {
 			return owner;
 		}
 
 		@Override
-        @NotNull
-        public Language getLanguage() {
+		@NotNull
+		public Language getLanguage() {
 			return owner.getLanguage();
 		}
 
 		@Override
-        @NotNull
-        public IElementType getTokenType() {
+		@NotNull
+		public IElementType getTokenType() {
 			return DOC_COMMENT;
 		}
 

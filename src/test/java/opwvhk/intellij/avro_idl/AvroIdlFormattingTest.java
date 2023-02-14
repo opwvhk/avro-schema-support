@@ -32,13 +32,14 @@ public class AvroIdlFormattingTest extends LightJavaCodeInsightFixtureTestCase {
 	}
 
 	public void testEmptyLineCounts() {
-		testFormatting("EmptyLinesInput.avdl", "EmptyLinesResultLineCounts_5_2_1_4_6.avdl", (codeStyle, indentStyle) -> {
-			codeStyle.BLANK_LINES_BEFORE_IMPORTS = 5;
-			codeStyle.BLANK_LINES_AFTER_IMPORTS = 2;
-			codeStyle.BLANK_LINES_AROUND_CLASS = 1;
-			codeStyle.BLANK_LINES_AROUND_FIELD = 4;
-			codeStyle.BLANK_LINES_AROUND_METHOD = 6;
-		});
+		testFormatting("EmptyLinesInput.avdl", "EmptyLinesResultLineCounts_5_2_1_4_6.avdl",
+				(codeStyle, indentStyle) -> {
+					codeStyle.BLANK_LINES_BEFORE_IMPORTS = 5;
+					codeStyle.BLANK_LINES_AFTER_IMPORTS = 2;
+					codeStyle.BLANK_LINES_AROUND_CLASS = 1;
+					codeStyle.BLANK_LINES_AROUND_FIELD = 4;
+					codeStyle.BLANK_LINES_AROUND_METHOD = 6;
+				});
 	}
 
 	public void testEmptyLinesToIndents() {
@@ -78,7 +79,7 @@ public class AvroIdlFormattingTest extends LightJavaCodeInsightFixtureTestCase {
 	}
 
 	private void testFormatting(String inputFile, String outputFile,
-								BiConsumer<CommonCodeStyleSettings, CommonCodeStyleSettings.IndentOptions> settingsAdjuster) {
+	                            BiConsumer<CommonCodeStyleSettings, CommonCodeStyleSettings.IndentOptions> settingsAdjuster) {
 		myFixture.configureByFile(inputFile);
 		final CommonCodeStyleSettings avroIdlCodeStyleSettings = CodeStyle.getLanguageSettings(myFixture.getFile());
 		final CommonCodeStyleSettings.IndentOptions avroIdlIndentOptions = avroIdlCodeStyleSettings.initIndentOptions();
@@ -99,8 +100,9 @@ public class AvroIdlFormattingTest extends LightJavaCodeInsightFixtureTestCase {
 		avroIdlCodeStyleSettings.BLANK_LINES_AROUND_FIELD = 0;
 		avroIdlCodeStyleSettings.BLANK_LINES_AROUND_METHOD = 1;
 		settingsAdjuster.accept(avroIdlCodeStyleSettings, avroIdlIndentOptions);
-		WriteCommandAction.writeCommandAction(getProject()).run(() -> CodeStyleManager.getInstance(getProject()).reformatText(
-			myFixture.getFile(), ContainerUtil.newArrayList(myFixture.getFile().getTextRange())));
+		WriteCommandAction.writeCommandAction(getProject())
+				.run(() -> CodeStyleManager.getInstance(getProject()).reformatText(
+						myFixture.getFile(), ContainerUtil.newArrayList(myFixture.getFile().getTextRange())));
 		myFixture.checkResultByFile(outputFile);
 	}
 }

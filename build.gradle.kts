@@ -226,9 +226,15 @@ tasks {
 
 	runPluginVerifier {
 		// Do not set ideVersions: the default is to use the result of the listProductsReleases task
-		failureLevel.set(EnumSet.complementOf(EnumSet.of(
-			FailureLevel.SCHEDULED_FOR_REMOVAL_API_USAGES, FailureLevel.DEPRECATED_API_USAGES, FailureLevel.EXPERIMENTAL_API_USAGES
-		)))
+		failureLevel.set(
+			EnumSet.complementOf(
+				EnumSet.of(
+					FailureLevel.SCHEDULED_FOR_REMOVAL_API_USAGES,
+					FailureLevel.DEPRECATED_API_USAGES,
+					FailureLevel.EXPERIMENTAL_API_USAGES
+				)
+			)
+		)
 	}
 
 	listProductsReleases {
@@ -239,7 +245,7 @@ tasks {
 
 		// To save time (but a less complete check) is to keep only the last patch release of each minor release:
 		// curl 'https://data.services.jetbrains.com/products/releases?code=IIU&code=IIC&code=PCP&code=PCC&type=eap&type=release' 2>/dev/null |
-	    //   jq -r 'to_entries|map({key,"value":.value|map({majorVersion,version}|select(.majorVersion|test("202.\\..")))|unique|group_by(.majorVersion)|map(last(.[]))|map(.version)}|{key,"version":.value[]}|(.key+"-"+.version))|.[]'
+		//   jq -r 'to_entries|map({key,"value":.value|map({majorVersion,version}|select(.majorVersion|test("202.\\..")))|unique|group_by(.majorVersion)|map(last(.[]))|map(.version)}|{key,"version":.value[]}|(.key+"-"+.version))|.[]'
 	}
 }
 

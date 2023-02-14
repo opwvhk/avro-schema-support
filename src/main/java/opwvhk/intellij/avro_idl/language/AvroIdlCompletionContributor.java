@@ -28,7 +28,7 @@ class AvroIdlCompletionContributor extends CompletionContributor {
 
 		// TODO: Uncomment schema syntax completions when Avro supports the schema syntax (Avro 1.12.0)
 		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParent(
-			psiElement(PsiErrorElement.class).atStartOf(psiElement(AvroIdlFile.class))
+				psiElement(PsiErrorElement.class).atStartOf(psiElement(AvroIdlFile.class))
 		), "6@namespace(\"\u0000\")", "protocol ");
 		/*
 		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParent(
@@ -36,7 +36,7 @@ class AvroIdlCompletionContributor extends CompletionContributor {
 		), "6@namespace(\"\u0000\")", "protocol ", "9namespace ", "8schema ", "1import ", "3record ", "4enum ", "4fixed ");
 		*/
 		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).afterSiblingSkipping(
-			psiElement().whitespaceCommentOrError(), psiElement(AvroIdlProtocolDeclaration.class)
+				psiElement().whitespaceCommentOrError(), psiElement(AvroIdlProtocolDeclaration.class)
 		), "6@namespace(\"\u0000\")", "protocol ");
 
 		// After a namespace declaration: schema, record, enum & fixed keywords
@@ -55,8 +55,9 @@ class AvroIdlCompletionContributor extends CompletionContributor {
 		// Also note that due to the syntax tree, message arguments are at a different level than the return type (otherwise this would also match there).
 		// Completions include declarations, and the extra return type 'void'.
 		addBasicCompletion(
-			psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParents(AvroIdlIdentifier.class, AvroIdlReferenceType.class, AvroIdlMessageDeclaration.class),
-			"import ", "9record ", "error ", "7enum ", "7fixed ", "3void ");
+				psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParents(AvroIdlIdentifier.class,
+						AvroIdlReferenceType.class, AvroIdlMessageDeclaration.class),
+				"import ", "9record ", "error ", "7enum ", "7fixed ", "3void ");
 		/*
 		addBasicCompletion(
 			psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParent(
@@ -65,49 +66,58 @@ class AvroIdlCompletionContributor extends CompletionContributor {
 			), "import ", "9record ", "7enum ", "7fixed ");
 		*/
 		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParent(
-			psiElement(PsiErrorElement.class).afterSiblingSkipping(psiElement().whitespaceCommentOrError(), psiElement(AvroIdlImportDeclaration.class))
+				psiElement(PsiErrorElement.class).afterSiblingSkipping(psiElement().whitespaceCommentOrError(),
+						psiElement(AvroIdlImportDeclaration.class))
 		), "import ", "9record ", "7enum ", "7fixed ");
 		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParent(
-			psiElement(PsiErrorElement.class).afterSiblingSkipping(psiElement().whitespaceCommentOrError(), psiElement(AvroIdlNamedSchemaDeclaration.class))
+				psiElement(PsiErrorElement.class).afterSiblingSkipping(psiElement().whitespaceCommentOrError(),
+						psiElement(AvroIdlNamedSchemaDeclaration.class))
 		), "import ", "9record ", "7enum ", "7fixed ");
 
 		// Complete primitive types, logical types and anonymous types
 
 		// Identifiers at a type location are Reference type until proven to be something else
-		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParents(AvroIdlIdentifier.class, AvroIdlReferenceType.class),
-			"4boolean ", "4bytes ", "4int ", "4string ", "4float ", "4double ", "4long ",
-			"4null ",
-			"4date ", "4time_ms ", "4local_timestamp_ms ", "4timestamp_ms ", "4decimal(",
-			"4union {", "4array<", "4map<"
+		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParents(AvroIdlIdentifier.class,
+						AvroIdlReferenceType.class),
+				"4boolean ", "4bytes ", "4int ", "4string ", "4float ", "4double ", "4long ",
+				"4null ",
+				"4date ", "4time_ms ", "4local_timestamp_ms ", "4timestamp_ms ", "4decimal(",
+				"4union {", "4array<", "4map<"
 		);
 
 		// Complete message attributes & import types
 
 		addBasicCompletion(psiElement().withParents(PsiErrorElement.class, AvroIdlMessageDeclaration.class),
-			"throws ", "oneway");
-		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParents(PsiErrorElement.class, AvroIdlImportDeclaration.class),
-			"9idl ", "protocol ", "schema ");
+				"throws ", "oneway");
+		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParents(PsiErrorElement.class,
+						AvroIdlImportDeclaration.class),
+				"9idl ", "protocol ", "schema ");
 
 		// Complete special annotations: @namespace (protocols & named types), @order (record fields), @aliases (in both), @logicalType (types)
 
 		addBasicCompletion(
-			psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParents(AvroIdlIdentifier.class, AvroIdlSchemaProperty.class, AvroIdlProtocolDeclaration.class),
-			'@', "namespace(\"\u0000\")");
+				psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParents(AvroIdlIdentifier.class,
+						AvroIdlSchemaProperty.class, AvroIdlProtocolDeclaration.class),
+				'@', "namespace(\"\u0000\")");
 		addBasicCompletion(
-			psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParents(AvroIdlIdentifier.class, AvroIdlSchemaProperty.class, AvroIdlNamedSchemaDeclaration.class),
-			'@', "namespace(\"\u0000\")", "aliases([\"\u0000\"])", "logicalType(\"\u0000\")");
+				psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParents(AvroIdlIdentifier.class,
+						AvroIdlSchemaProperty.class, AvroIdlNamedSchemaDeclaration.class),
+				'@', "namespace(\"\u0000\")", "aliases([\"\u0000\"])", "logicalType(\"\u0000\")");
 		addBasicCompletion(
-			psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParents(AvroIdlIdentifier.class, AvroIdlSchemaProperty.class, AvroIdlVariableDeclarator.class),
-			'@', "aliases([\"\u0000\"])", "order(\"\u0000\")");
-		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParents(AvroIdlIdentifier.class, AvroIdlSchemaProperty.class, AvroIdlType.class),
-			'@', "logicalType(\"\u0000\")");
+				psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParents(AvroIdlIdentifier.class,
+						AvroIdlSchemaProperty.class, AvroIdlVariableDeclarator.class),
+				'@', "aliases([\"\u0000\"])", "order(\"\u0000\")");
+		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParents(AvroIdlIdentifier.class,
+						AvroIdlSchemaProperty.class, AvroIdlType.class),
+				'@', "logicalType(\"\u0000\")");
 		// Due to missing/present quotes, identify values of @order annotations by (in order): just after the (, and within a string literal
 		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParent(
-				psiElement(PsiErrorElement.class).withParent(psiElement(AvroIdlSchemaProperty.class).withName("order"))),
-			"\"ascending\"", "\"descending\"", "\"ignore\"");
+						psiElement(PsiErrorElement.class).withParent(
+								psiElement(AvroIdlSchemaProperty.class).withName("order"))),
+				"\"ascending\"", "\"descending\"", "\"ignore\"");
 		addBasicCompletion(psiElement(AvroIdlTypes.STRING_LITERAL).withParent(AvroIdlJsonValue.class)
-				.withSuperParent(2, psiElement(AvroIdlSchemaProperty.class).withName("order")),
-			"ascending", "descending", "ignore");
+						.withSuperParent(2, psiElement(AvroIdlSchemaProperty.class).withName("order")),
+				"ascending", "descending", "ignore");
 	}
 
 	/**
@@ -126,7 +136,8 @@ class AvroIdlCompletionContributor extends CompletionContributor {
 	 * @param skipFirstChar if this string matches the first part of the prefix, skip that
 	 * @param completions   the completions
 	 */
-	private void addBasicCompletion(ElementPattern<? extends PsiElement> pattern, Character skipFirstChar, String... completions) {
+	private void addBasicCompletion(ElementPattern<? extends PsiElement> pattern, Character skipFirstChar,
+	                                String... completions) {
 		List<LookupElement> lookupElements = new ArrayList<>();
 		for (String completion : completions) {
 			int priority;
@@ -138,7 +149,8 @@ class AvroIdlCompletionContributor extends CompletionContributor {
 			}
 			final String textToPutInEditor = completion.replace("\u0000", "");
 			final String textInTheCompletionPopup = completion.replaceAll("\\W&&[^@]", "");
-			LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(textToPutInEditor).withPresentableText(textInTheCompletionPopup);
+			LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(textToPutInEditor)
+					.withPresentableText(textInTheCompletionPopup);
 			int relativeCaretOffset = completion.indexOf("\u0000"); // Is there a caret marker?
 			if (relativeCaretOffset != -1) {
 				lookupElementBuilder = lookupElementBuilder.withInsertHandler((context, item) -> {
@@ -153,7 +165,8 @@ class AvroIdlCompletionContributor extends CompletionContributor {
 
 		extend(CompletionType.BASIC, pattern, new CompletionProvider<>() {
 			@Override
-			protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
+			protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context,
+			                              @NotNull CompletionResultSet result) {
 				if (skipFirstChar != null) {
 					final PrefixMatcher prefixMatcher = result.getPrefixMatcher();
 					final String prefix = prefixMatcher.getPrefix();

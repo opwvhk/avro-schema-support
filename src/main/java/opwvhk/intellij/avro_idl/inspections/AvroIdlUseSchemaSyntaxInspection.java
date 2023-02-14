@@ -35,14 +35,16 @@ public class AvroIdlUseSchemaSyntaxInspection extends BaseAvroIdlInspection<Avro
 			ASTNode protocolKeywordNode = element.getNode().findChildByType(AvroIdlTypes.PROTOCOL);
 			if (protocolKeywordNode != null) {
 				PsiElement protocolKeyword = protocolKeywordNode.getPsi();
-				ReplaceProtocolWithSchemaSyntaxQuickFix replaceWithShorthand = new ReplaceProtocolWithSchemaSyntaxQuickFix(element);
+				ReplaceProtocolWithSchemaSyntaxQuickFix replaceWithShorthand = new ReplaceProtocolWithSchemaSyntaxQuickFix(
+						element);
 				holder.registerProblem(protocolKeyword, "Schema syntax available", replaceWithShorthand);
 			}
 		}
 	}
 
 
-	private static class ReplaceProtocolWithSchemaSyntaxQuickFix extends SimpleAvroIdlQuickFixOnPsiElement<AvroIdlProtocolDeclaration> {
+	private static class ReplaceProtocolWithSchemaSyntaxQuickFix
+			extends SimpleAvroIdlQuickFixOnPsiElement<AvroIdlProtocolDeclaration> {
 		public ReplaceProtocolWithSchemaSyntaxQuickFix(@NotNull AvroIdlProtocolDeclaration element) {
 			super(element, "Replace with schema syntax");
 		}
@@ -52,7 +54,8 @@ public class AvroIdlUseSchemaSyntaxInspection extends BaseAvroIdlInspection<Avro
 		}
 
 		@Override
-		protected boolean isAvailable(@NotNull Project project, @NotNull PsiFile file, @NotNull AvroIdlProtocolDeclaration element) {
+		protected boolean isAvailable(@NotNull Project project, @NotNull PsiFile file,
+		                              @NotNull AvroIdlProtocolDeclaration element) {
 			return isAvailableFor(element);
 		}
 
@@ -72,9 +75,11 @@ public class AvroIdlUseSchemaSyntaxInspection extends BaseAvroIdlInspection<Avro
 			if (schemaSyntaxHeader.getFirstChild() != null) {
 				parent.addRangeBefore(schemaSyntaxHeader.getFirstChild(), schemaSyntaxHeader.getLastChild(), element);
 			}
-			AvroIdlMainSchemaDeclaration mainSchemaDeclaration = PsiTreeUtil.getPrevSiblingOfType(element, AvroIdlMainSchemaDeclaration.class);
+			AvroIdlMainSchemaDeclaration mainSchemaDeclaration = PsiTreeUtil.getPrevSiblingOfType(element,
+					AvroIdlMainSchemaDeclaration.class);
 			if (protocolBody.getFirstChild() != null) {
-				Optional.ofNullable(getDocumentationElement(protocolBody.getFirstChild())).ifPresent(e -> parent.addBefore(e, element));
+				Optional.ofNullable(getDocumentationElement(protocolBody.getFirstChild()))
+						.ifPresent(e -> parent.addBefore(e, element));
 				parent.addRangeBefore(protocolBody.getFirstChild(), protocolBody.getLastChild(), element);
 			}
 			docComment.ifPresent(e -> parent.deleteChildRange(e, e));
@@ -87,7 +92,8 @@ public class AvroIdlUseSchemaSyntaxInspection extends BaseAvroIdlInspection<Avro
 				// Remove all carets but the "main"
 				final LogicalPosition typeStartPosition = editor.offsetToLogicalPosition(range.getStartOffset());
 				final LogicalPosition typeEndPosition = editor.offsetToLogicalPosition(range.getEndOffset());
-				editor.getCaretModel().setCaretsAndSelections(List.of(new CaretState(typeStartPosition, typeStartPosition, typeEndPosition)));
+				editor.getCaretModel().setCaretsAndSelections(
+						List.of(new CaretState(typeStartPosition, typeStartPosition, typeEndPosition)));
 				editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
 			}
 		}

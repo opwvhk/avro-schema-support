@@ -3,20 +3,23 @@ package opwvhk.intellij.avro_idl.editor;
 import com.intellij.application.options.IndentOptionsEditor;
 import com.intellij.application.options.SmartIndentOptionsEditor;
 import com.intellij.lang.Language;
-import com.intellij.psi.codeStyle.*;
+import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable;
+import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
 import opwvhk.intellij.avro_idl.AvroIdlLanguage;
 import org.jetbrains.annotations.NotNull;
 
 public class AvroIdlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsProvider {
 
 	@Override
-    @NotNull
-    public Language getLanguage() {
+	@NotNull
+	public Language getLanguage() {
 		return AvroIdlLanguage.INSTANCE;
 	}
 
 	@Override
-	protected void customizeDefaults(@NotNull CommonCodeStyleSettings commonSettings, @NotNull CommonCodeStyleSettings.IndentOptions indentOptions) {
+	protected void customizeDefaults(@NotNull CommonCodeStyleSettings commonSettings,
+	                                 @NotNull CommonCodeStyleSettings.IndentOptions indentOptions) {
 
 		// Opinionated defaults.
 
@@ -48,29 +51,32 @@ public class AvroIdlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleS
 	@Override
 	public void customizeSettings(@NotNull CodeStyleSettingsCustomizable consumer, @NotNull SettingsType settingsType) {
 		if (settingsType == SettingsType.INDENT_SETTINGS) {
-			consumer.showStandardOptions("USE_TAB_CHARACTER", "TAB_SIZE", "INDENT_SIZE", "CONTINUATION_INDENT_SIZE", "KEEP_INDENTS_ON_EMPTY_LINES");
+			consumer.showStandardOptions("USE_TAB_CHARACTER", "TAB_SIZE", "INDENT_SIZE", "CONTINUATION_INDENT_SIZE",
+					"KEEP_INDENTS_ON_EMPTY_LINES");
 		} else if (settingsType == SettingsType.SPACING_SETTINGS) {
 			consumer.showStandardOptions("SPACE_AROUND_ASSIGNMENT_OPERATORS",
-				"SPACE_AFTER_COMMA",
-				"SPACE_AFTER_COMMA_IN_TYPE_ARGUMENTS");
+					"SPACE_AFTER_COMMA",
+					"SPACE_AFTER_COMMA_IN_TYPE_ARGUMENTS");
 			consumer.renameStandardOption("SPACE_AROUND_ASSIGNMENT_OPERATORS", "Assignment operator (=)");
 		} else if (settingsType == SettingsType.WRAPPING_AND_BRACES_SETTINGS) {
 			consumer.showStandardOptions("RIGHT_MARGIN", "WRAP_ON_TYPING", "KEEP_LINE_BREAKS");
 		} else if (settingsType == SettingsType.BLANK_LINES_SETTINGS) {
 			consumer.showStandardOptions(
-				"KEEP_BLANK_LINES_IN_CODE"
-				, "KEEP_BLANK_LINES_IN_DECLARATIONS"
-				, "BLANK_LINES_AFTER_PACKAGE"
-				, "BLANK_LINES_AFTER_IMPORTS"
-				, "BLANK_LINES_AROUND_CLASS"
-				, "BLANK_LINES_AROUND_FIELD"
-				, "BLANK_LINES_AROUND_METHOD"
+					"KEEP_BLANK_LINES_IN_CODE"
+					, "KEEP_BLANK_LINES_IN_DECLARATIONS"
+					, "BLANK_LINES_AFTER_PACKAGE"
+					, "BLANK_LINES_AFTER_IMPORTS"
+					, "BLANK_LINES_AROUND_CLASS"
+					, "BLANK_LINES_AROUND_FIELD"
+					, "BLANK_LINES_AROUND_METHOD"
 			);
 			consumer.renameStandardOption("BLANK_LINES_AROUND_CLASS", "Around named type");
 			consumer.renameStandardOption("BLANK_LINES_AFTER_PACKAGE", "After namespace declaration");
 		} else if (settingsType == SettingsType.LANGUAGE_SPECIFIC) {
-			consumer.showCustomOption(AvroIdlCodeStyleSettings.class, "ADD_ALIAS_ON_SCHEMA_RENAME", "Add alias on schema rename", "Aliases");
-			consumer.showCustomOption(AvroIdlCodeStyleSettings.class, "ADD_ALIAS_ON_FIELD_RENAME", "Add alias on field rename", "Aliases");
+			consumer.showCustomOption(AvroIdlCodeStyleSettings.class, "ADD_ALIAS_ON_SCHEMA_RENAME",
+					"Add alias on schema rename", "Aliases");
+			consumer.showCustomOption(AvroIdlCodeStyleSettings.class, "ADD_ALIAS_ON_FIELD_RENAME",
+					"Add alias on field rename", "Aliases");
 		}
 	}
 
@@ -82,59 +88,59 @@ public class AvroIdlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleS
 	@Override
 	public String getCodeSample(@NotNull SettingsType settingsType) {
 		return "namespace org.example;\n" +
-			"\n" +
-			"\n" +
-			"\n" +
-			"schema array<Employee>;\n" +
-			"\n" +
-			"\n" +
-			"\n" +
-			"import idl \"simple.avdl\";\n" +
-			"\n" +
-			"\n" +
-			"\n" +
-			"import idl \"reserved_words.avdl\";\n" +
-			"\n" +
-			"\n" +
-			"\n" +
-			" enum ContractType {\n" +
-			"    TEMPORARY," +
-			"\n" +
-			"\n" +
-			"\n" +
-			"    FIXED\n" +
-			"\n" +
-			"\n" +
-			"\n" +
-			"} = TEMPORARY;\n" +
-			"\n" +
-			"\n" +
-			"\n" +
-			"@my-annotation([\"any\", \"json\"])\n" +
-			"record Employee {\n" +
-			"\n" +
-			"\n" +
-			"\n" +
-			"    string name;\n" +
-			"\n" +
-			"\n" +
-			"\n" +
-			"    Employee? manager = null;\n" +
-			"\n" +
-			"\n" +
-			"\n" +
-			"    ContractType contract = FIXED;\n" +
-			"\n" +
-			"\n" +
-			"\n" +
-			"    decimal(9, 2) salary;\n" +
-			"\n" +
-			"\n" +
-			"\n" +
-			"    array<string> skills = [];\n" +
-			"\n" +
-			"\n" +
-			"\n" +
-			"}";
+				"\n" +
+				"\n" +
+				"\n" +
+				"schema array<Employee>;\n" +
+				"\n" +
+				"\n" +
+				"\n" +
+				"import idl \"simple.avdl\";\n" +
+				"\n" +
+				"\n" +
+				"\n" +
+				"import idl \"reserved_words.avdl\";\n" +
+				"\n" +
+				"\n" +
+				"\n" +
+				" enum ContractType {\n" +
+				"    TEMPORARY," +
+				"\n" +
+				"\n" +
+				"\n" +
+				"    FIXED\n" +
+				"\n" +
+				"\n" +
+				"\n" +
+				"} = TEMPORARY;\n" +
+				"\n" +
+				"\n" +
+				"\n" +
+				"@my-annotation([\"any\", \"json\"])\n" +
+				"record Employee {\n" +
+				"\n" +
+				"\n" +
+				"\n" +
+				"    string name;\n" +
+				"\n" +
+				"\n" +
+				"\n" +
+				"    Employee? manager = null;\n" +
+				"\n" +
+				"\n" +
+				"\n" +
+				"    ContractType contract = FIXED;\n" +
+				"\n" +
+				"\n" +
+				"\n" +
+				"    decimal(9, 2) salary;\n" +
+				"\n" +
+				"\n" +
+				"\n" +
+				"    array<string> skills = [];\n" +
+				"\n" +
+				"\n" +
+				"\n" +
+				"}";
 	}
 }

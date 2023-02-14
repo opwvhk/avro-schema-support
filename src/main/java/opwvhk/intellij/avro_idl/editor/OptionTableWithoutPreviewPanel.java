@@ -1,8 +1,5 @@
 package opwvhk.intellij.avro_idl.editor;
 
-import javax.swing.*;
-import java.awt.*;
-
 import com.intellij.application.options.codeStyle.WrappingAndBracesPanel;
 import com.intellij.lang.Language;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
@@ -10,6 +7,9 @@ import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider.SettingsType
 import com.intellij.ui.components.JBScrollPane;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
+import java.awt.*;
 
 public abstract class OptionTableWithoutPreviewPanel extends WrappingAndBracesPanel {
 	private JPanel myPanel;

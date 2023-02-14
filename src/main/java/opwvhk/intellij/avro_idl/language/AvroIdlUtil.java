@@ -40,19 +40,20 @@ import static java.util.Objects.requireNonNull;
 public class AvroIdlUtil {
 	private static final Logger LOG = Logger.getInstance(AvroIdlUtil.class);
 	@NotNull
-    public static final Key<Boolean> IS_ERROR_KEY = Key.create("isError");
+	public static final Key<Boolean> IS_ERROR_KEY = Key.create("isError");
 
 	@NotNull
-    public static List<NavigationItem> findNavigableNamedSchemasInProject(Project project) {
+	public static List<NavigationItem> findNavigableNamedSchemasInProject(Project project) {
 		List<NavigationItem> result = new ArrayList<>();
 
 		final PsiManager psiManager = PsiManager.getInstance(project);
 		FileTypeIndex.processFiles(AvroIdlFileType.INSTANCE, virtualFile -> {
 			ifType(psiManager.findFile(virtualFile), AvroIdlFile.class)
-				.flatMap(AvroIdlUtil::readNamedSchemas)
-				.forEach(namedSchemaDeclaration -> {
-					result.add((NavigationItem)namedSchemaDeclaration); // All AvroIdl PSI classes implement NavigationItem
-				});
+					.flatMap(AvroIdlUtil::readNamedSchemas)
+					.forEach(namedSchemaDeclaration -> {
+						result.add(
+								(NavigationItem) namedSchemaDeclaration); // All AvroIdl PSI classes implement NavigationItem
+					});
 			return true;
 		}, GlobalSearchScope.allScope(project));
 		return result;
@@ -61,28 +62,28 @@ public class AvroIdlUtil {
 
 	private static Stream<AvroIdlNamedSchemaDeclaration> readNamedSchemas(@NotNull AvroIdlFile idlFile) {
 		return Stream.of(idlFile)
-			.flatMap(avroIdlFile -> Stream.of(avroIdlFile.getChildren()))
-			.flatMap(child -> Stream.concat(
-				ifType(child, AvroIdlProtocolDeclaration.class)
-					.map(AvroIdlProtocolDeclaration::getProtocolBody)
-					.filter(Objects::nonNull)
-					.map(AvroIdlProtocolBody::getNamedSchemaDeclarationList)
-					.flatMap(List::stream),
-				ifType(child, AvroIdlNamedSchemaDeclaration.class)
-			));
+				.flatMap(avroIdlFile -> Stream.of(avroIdlFile.getChildren()))
+				.flatMap(child -> Stream.concat(
+						ifType(child, AvroIdlProtocolDeclaration.class)
+								.map(AvroIdlProtocolDeclaration::getProtocolBody)
+								.filter(Objects::nonNull)
+								.map(AvroIdlProtocolBody::getNamedSchemaDeclarationList)
+								.flatMap(List::stream),
+						ifType(child, AvroIdlNamedSchemaDeclaration.class)
+				));
 	}
 
 	private static Stream<AvroIdlImportDeclaration> readImports(@NotNull AvroIdlFile idlFile) {
 		return Stream.of(idlFile)
-			.flatMap(avroIdlFile -> Stream.of(avroIdlFile.getChildren()))
-			.flatMap(child -> Stream.concat(
-				ifType(child, AvroIdlProtocolDeclaration.class)
-					.map(AvroIdlProtocolDeclaration::getProtocolBody)
-					.filter(Objects::nonNull)
-					.map(AvroIdlProtocolBody::getImportDeclarationList)
-					.flatMap(List::stream),
-				ifType(child, AvroIdlImportDeclaration.class)
-			));
+				.flatMap(avroIdlFile -> Stream.of(avroIdlFile.getChildren()))
+				.flatMap(child -> Stream.concat(
+						ifType(child, AvroIdlProtocolDeclaration.class)
+								.map(AvroIdlProtocolDeclaration::getProtocolBody)
+								.filter(Objects::nonNull)
+								.map(AvroIdlProtocolBody::getImportDeclarationList)
+								.flatMap(List::stream),
+						ifType(child, AvroIdlImportDeclaration.class)
+				));
 	}
 
 	public static <T> Stream<T> ifType(@Nullable Object object, @NotNull Class<T> type) {
@@ -111,11 +112,11 @@ public class AvroIdlUtil {
 				if (importType == AvroIdlTypes.IDL) {
 					PsiManager psiManager = importDeclaration.getManager();
 					return ifType(psiManager.findFile(importedFile), AvroIdlFile.class)
-						.flatMap(importedIdlFile -> Stream.of(importedIdlFile.getChildren()))
-						.flatMap(child -> ifType(child, AvroIdlProtocolDeclaration.class)
-							.map(AvroIdlProtocolDeclaration::getProtocolBody)
-							.filter(Objects::nonNull))
-						.anyMatch(importedProtocolBody -> hasMessages(module, importedProtocolBody));
+							.flatMap(importedIdlFile -> Stream.of(importedIdlFile.getChildren()))
+							.flatMap(child -> ifType(child, AvroIdlProtocolDeclaration.class)
+									.map(AvroIdlProtocolDeclaration::getProtocolBody)
+									.filter(Objects::nonNull))
+							.anyMatch(importedProtocolBody -> hasMessages(module, importedProtocolBody));
 				} else if (importType == AvroIdlTypes.PROTOCOL) {
 					try (InputStream inputStream = importedFile.getInputStream()) {
 						final Protocol protocol = Protocol.parse(inputStream);
@@ -130,35 +131,39 @@ public class AvroIdlUtil {
 	}
 
 	@NotNull
-    public static Stream<LookupElement> findAllSchemaNamesAvailableInIdl(@NotNull AvroIdlFile idlFile) {
+	public static Stream<LookupElement> findAllSchemaNamesAvailableInIdl(@NotNull AvroIdlFile idlFile) {
 		return findAllSchemaNamesAvailableInIdl(idlFile, false, "");
 	}
 
 	@NotNull
-    public static Stream<LookupElement> findAllSchemaNamesAvailableInIdl(AvroIdlFile idlFile, boolean errorsOnly, @NotNull String currentNamespace) {
+	public static Stream<LookupElement> findAllSchemaNamesAvailableInIdl(AvroIdlFile idlFile, boolean errorsOnly,
+	                                                                     @NotNull String currentNamespace) {
 		return findAllSchemaNamesAvailableInIdl(idlFile, errorsOnly, currentNamespace, new Schema.Parser());
 	}
 
 	@NotNull
-    private static Stream<LookupElement> findAllSchemaNamesAvailableInIdl(AvroIdlFile idlFile, boolean errorsOnly, @NotNull String currentNamespace,
-                                                                          @NotNull Schema.Parser avroSchemaParser) {
+	private static Stream<LookupElement> findAllSchemaNamesAvailableInIdl(AvroIdlFile idlFile, boolean errorsOnly,
+	                                                                      @NotNull String currentNamespace,
+	                                                                      @NotNull Schema.Parser avroSchemaParser) {
 		final Module module = ModuleUtil.findModuleForPsiElement(idlFile);
 		return Stream.concat(
-			readNamedSchemas(idlFile)
-				.filter(namedSchema -> namedSchema.getFullName() != null)
-				.filter(namedSchema -> !errorsOnly || namedSchema.isErrorType())
-				.map(namedSchema -> lookupElement(namedSchema, currentNamespace)),
-			readImports(idlFile)
-				.flatMap(importDeclaration ->
-					findAllSchemaNamesAvailableFromImport(module, importDeclaration, errorsOnly, currentNamespace, avroSchemaParser))
+				readNamedSchemas(idlFile)
+						.filter(namedSchema -> namedSchema.getFullName() != null)
+						.filter(namedSchema -> !errorsOnly || namedSchema.isErrorType())
+						.map(namedSchema -> lookupElement(namedSchema, currentNamespace)),
+				readImports(idlFile)
+						.flatMap(importDeclaration ->
+								findAllSchemaNamesAvailableFromImport(module, importDeclaration, errorsOnly,
+										currentNamespace, avroSchemaParser))
 		);
 	}
 
 	@NotNull
-    private static Stream<LookupElement> findAllSchemaNamesAvailableFromImport(Module module, AvroIdlImportDeclaration importDeclaration,
-                                                                               boolean errorsOnly,
-                                                                               @NotNull String currentNamespace,
-                                                                               @NotNull Schema.Parser avroSchemaParser) {
+	private static Stream<LookupElement> findAllSchemaNamesAvailableFromImport(Module module,
+	                                                                           AvroIdlImportDeclaration importDeclaration,
+	                                                                           boolean errorsOnly,
+	                                                                           @NotNull String currentNamespace,
+	                                                                           @NotNull Schema.Parser avroSchemaParser) {
 		AvroIdlImportType importTypeElement = importDeclaration.getImportType();
 		final AvroIdlJsonStringLiteral importedFileReferenceElement = importDeclaration.getJsonStringLiteral();
 		VirtualFile importedFile = findReferencedFile(module, importedFileReferenceElement);
@@ -170,13 +175,14 @@ public class AvroIdlUtil {
 		final PsiManager psiManager = importDeclaration.getManager();
 		if (importType == AvroIdlTypes.IDL) {
 			return ifType(psiManager.findFile(importedFile), AvroIdlFile.class).flatMap(idlFile ->
-				findAllSchemaNamesAvailableInIdl(idlFile, errorsOnly, currentNamespace, avroSchemaParser));
+					findAllSchemaNamesAvailableInIdl(idlFile, errorsOnly, currentNamespace, avroSchemaParser));
 		} else if (importType == AvroIdlTypes.PROTOCOL) {
 			try (InputStream inputStream = importedFile.getInputStream()) {
 				final Protocol protocol = Protocol.parse(inputStream);
 				return protocol.getTypes().stream()
-					.filter(schema -> !errorsOnly || schema.isError())
-					.map(schema -> createLookupElement(currentNamespace, importedFileReferenceElement, psiManager, importedFile, schema));
+						.filter(schema -> !errorsOnly || schema.isError())
+						.map(schema -> createLookupElement(currentNamespace, importedFileReferenceElement, psiManager,
+								importedFile, schema));
 			} catch (Exception e) {
 				LOG.warn("Failed to read file " + importedFile.getCanonicalPath(), e);
 			}
@@ -184,8 +190,9 @@ public class AvroIdlUtil {
 			try (InputStream inputStream = importedFile.getInputStream()) {
 				avroSchemaParser.parse(inputStream);
 				return avroSchemaParser.getTypes().values().stream()
-					.filter(schema -> !errorsOnly || schema.isError())
-					.map(schema -> createLookupElement(currentNamespace, importedFileReferenceElement, psiManager, importedFile, schema));
+						.filter(schema -> !errorsOnly || schema.isError())
+						.map(schema -> createLookupElement(currentNamespace, importedFileReferenceElement, psiManager,
+								importedFile, schema));
 			} catch (Exception e) {
 				LOG.warn("Failed to read file " + importedFile.getCanonicalPath(), e);
 			}
@@ -194,7 +201,8 @@ public class AvroIdlUtil {
 		return Stream.empty();
 	}
 
-	private static VirtualFile findReferencedFile(Module module, AvroIdlJsonStringLiteral importedFileReferenceElement) {
+	private static VirtualFile findReferencedFile(Module module,
+	                                              AvroIdlJsonStringLiteral importedFileReferenceElement) {
 		if (importedFileReferenceElement == null) {
 			return null;
 		}
@@ -202,28 +210,29 @@ public class AvroIdlUtil {
 		String importedFileReference = getJsonString(importedFileReferenceElement);
 		assert importedFileReference != null;
 		return Optional.of(importedFileReferenceElement)
-			.map(PsiElement::getContainingFile)
-			.map(PsiFile::getVirtualFile)
-			.map(VirtualFile::getParent)
-			.map(vFile -> vFile.findFileByRelativePath(importedFileReference))
-			.or(() -> Stream.ofNullable(module)
-				.map(ModuleRootManager::getInstance)
-				.map(rootMgr -> rootMgr.orderEntries().classes().getRoots())
-				.flatMap(Stream::of)
-				.map(root -> root.findFileByRelativePath(importedFileReference))
-				.filter(Objects::nonNull)
-				.findFirst()
-			).orElse(null);
+				.map(PsiElement::getContainingFile)
+				.map(PsiFile::getVirtualFile)
+				.map(VirtualFile::getParent)
+				.map(vFile -> vFile.findFileByRelativePath(importedFileReference))
+				.or(() -> Stream.ofNullable(module)
+						.map(ModuleRootManager::getInstance)
+						.map(rootMgr -> rootMgr.orderEntries().classes().getRoots())
+						.flatMap(Stream::of)
+						.map(root -> root.findFileByRelativePath(importedFileReference))
+						.filter(Objects::nonNull)
+						.findFirst()
+				).orElse(null);
 	}
 
 	@NotNull
-    private static LookupElement createLookupElement(@NotNull String namespace, AvroIdlJsonStringLiteral importedFileReferenceElement,
-                                                     PsiManager psiManager,
-                                                     VirtualFile importedFile, Schema schema) {
+	private static LookupElement createLookupElement(@NotNull String namespace,
+	                                                 AvroIdlJsonStringLiteral importedFileReferenceElement,
+	                                                 PsiManager psiManager,
+	                                                 VirtualFile importedFile, Schema schema) {
 		final PsiFile psiProtocolFile = psiManager.findFile(importedFile);
 		if (psiProtocolFile instanceof JsonFile) {
 			final PsiElement[] elements = PsiTreeUtil.collectElements(psiProtocolFile,
-				element -> isSchemaJsonObject(element, schema));
+					element -> isSchemaJsonObject(element, schema));
 			if (elements.length > 0) {
 				return lookupElement(elements[0], schema, namespace);
 			}
@@ -232,66 +241,80 @@ public class AvroIdlUtil {
 	}
 
 	private static boolean isSchemaJsonObject(@NotNull PsiElement element, @NotNull Schema schema) {
-		if (!(element instanceof JsonObject)) return false;
+		if (!(element instanceof JsonObject)) {
+			return false;
+		}
 
-		JsonProperty nameProperty = ((JsonObject)element).findProperty("name");
-		if (nameProperty == null) return false;
+		JsonProperty nameProperty = ((JsonObject) element).findProperty("name");
+		if (nameProperty == null) {
+			return false;
+		}
 		JsonValue nameValue = nameProperty.getValue();
-		if (!(nameValue instanceof JsonStringLiteral)) return false;
+		if (!(nameValue instanceof JsonStringLiteral)) {
+			return false;
+		}
 		String name = ElementManipulators.getValueText(nameValue);
 
 		if (name.contains(".")) {
 			return name.equals(schema.getFullName());
 		} else if (name.equals(schema.getName())) {
-			JsonElement parent = (JsonElement)element;
+			JsonElement parent = (JsonElement) element;
 			while (parent != null && !(parent instanceof JsonFile)) {
 				if (parent instanceof JsonObject) {
-					final JsonProperty namespaceProperty = ((JsonObject)parent).findProperty("namespace");
+					final JsonProperty namespaceProperty = ((JsonObject) parent).findProperty("namespace");
 					if (namespaceProperty != null) {
 						final JsonValue namespaceValue = namespaceProperty.getValue();
 						return namespaceValue instanceof JsonStringLiteral &&
-							ElementManipulators.getValueText(namespaceValue).equals(schema.getNamespace());
+								ElementManipulators.getValueText(namespaceValue).equals(schema.getNamespace());
 					}
 				}
-				parent = (JsonElement)parent.getParent();
+				parent = (JsonElement) parent.getParent();
 			}
 		}
 		return false;
 	}
 
 	@NotNull
-    private static LookupElement lookupElement(@NotNull PsiElement psiElement, @NotNull Schema schema, @NotNull String currentNamespace) {
+	private static LookupElement lookupElement(@NotNull PsiElement psiElement, @NotNull Schema schema,
+	                                           @NotNull String currentNamespace) {
 		final String namespace0 = schema.getNamespace();
 		final String namespace = namespace0 == null ? "" : namespace0;
 		final String schemaName = schema.getName();
 		final String schemaFullName = schema.getFullName();
-		final LookupElement lookupElement = lookupElement(psiElement, schemaName, schemaFullName, namespace, currentNamespace);
+		final LookupElement lookupElement = lookupElement(psiElement, schemaName, schemaFullName, namespace,
+				currentNamespace);
 		lookupElement.putUserData(IS_ERROR_KEY, schema.getType() == Schema.Type.RECORD && schema.isError());
 		return lookupElement;
 	}
 
 	@NotNull
-    private static LookupElement lookupElement(@NotNull AvroIdlNamedSchemaDeclaration schemaDeclaration, @NotNull String currentNamespace) {
-		final LookupElement lookupElement = lookupElement(schemaDeclaration, requireNonNull(schemaDeclaration.getName()),
-			requireNonNull(schemaDeclaration.getFullName()), AvroIdlPsiUtil.getNamespace(schemaDeclaration), currentNamespace);
+	private static LookupElement lookupElement(@NotNull AvroIdlNamedSchemaDeclaration schemaDeclaration,
+	                                           @NotNull String currentNamespace) {
+		final LookupElement lookupElement = lookupElement(schemaDeclaration,
+				requireNonNull(schemaDeclaration.getName()),
+				requireNonNull(schemaDeclaration.getFullName()), AvroIdlPsiUtil.getNamespace(schemaDeclaration),
+				currentNamespace);
 		lookupElement.putUserData(IS_ERROR_KEY, schemaDeclaration.isErrorType());
 		return lookupElement;
 	}
 
 	@NotNull
-    private static LookupElement lookupElement(@NotNull PsiElement psiElement, @NotNull String schemaName, @NotNull String schemaFullName,
-                                               @Nullable String namespace, @NotNull String currentNamespace) {
+	private static LookupElement lookupElement(@NotNull PsiElement psiElement, @NotNull String schemaName,
+	                                           @NotNull String schemaFullName,
+	                                           @Nullable String namespace, @NotNull String currentNamespace) {
 		if (namespace == null || namespace.isEmpty()) {
 			return LookupElementBuilder.create(psiElement, schemaName);
 		} else if (namespace.equals(currentNamespace)) {
-			return LookupElementBuilder.create(psiElement, schemaName).withLookupString(schemaFullName).withTypeText(namespace);
+			return LookupElementBuilder.create(psiElement, schemaName).withLookupString(schemaFullName)
+					.withTypeText(namespace);
 		} else {
-			return LookupElementBuilder.create(psiElement, schemaFullName).withLookupString(schemaName).withTypeText(namespace);
+			return LookupElementBuilder.create(psiElement, schemaFullName).withLookupString(schemaName)
+					.withTypeText(namespace);
 		}
 	}
 
 	@Nullable
-    public static String getJsonString(@Nullable AvroIdlJsonValue jsonValue) {
+	public static String getJsonString(@Nullable AvroIdlJsonValue jsonValue) {
 		if (jsonValue instanceof AvroIdlJsonStringLiteral) {
 			final TextRange range = ElementManipulators.getValueTextRange(jsonValue);
 			String escapedLiteral = range.substring(jsonValue.getText());

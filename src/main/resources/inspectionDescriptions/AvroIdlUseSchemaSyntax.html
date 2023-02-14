@@ -3,8 +3,9 @@
 Offers to use the schema syntax (since Avro 1.12.0) to replace data-only protocols.
 <!-- tooltip end -->
 <p>
-	Protocols that have no message declarations (either defined or imported) can be removed in favour of the schema syntax.
-	The schema syntax also has the benefit of defining a <em>main</em> schema, creating a <code>.avsc</code> equivalent.
+	Protocols that have no message declarations (either defined or imported) can be removed in favour of the schema
+	syntax. The schema syntax also has the benefit of defining a <em>main</em> schema, creating a <code>.avsc</code>
+	equivalent.
 </p>
 <p><strong>Example:</strong></p>
 <pre><code>@namespace("my.name.space")
@@ -19,7 +20,8 @@ protocol MessageLess {
 	} = UNKNOWN;
 }</code></pre>
 <p>
-	The quick fix unwraps the protocol body, adds a namespace declaration (when appropriate) and a schema declaration (for the first named schema).
+	The quick fix unwraps the protocol body, adds a namespace declaration (when appropriate) and a schema declaration
+	(for the first named schema).
 </p>
 <p>
 	Result after applying the fix:

@@ -26,7 +26,8 @@ public class AddEnumSymbolFix extends SimpleAvroIdlQuickFixOnPsiElement<PsiEleme
 	}
 
 	@Override
-	protected void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor, @NotNull PsiElement element) {
+	protected void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor,
+	                      @NotNull PsiElement element) {
 		AvroIdlEnumDeclaration enumDeclaration = PsiTreeUtil.getParentOfType(element, AvroIdlEnumDeclaration.class);
 		if (enumDeclaration == null) {
 			return;

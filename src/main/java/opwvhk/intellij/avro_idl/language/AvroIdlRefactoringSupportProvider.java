@@ -17,6 +17,6 @@ public class AvroIdlRefactoringSupportProvider extends RefactoringSupportProvide
 	@Override
 	public boolean isSafeDeleteAvailable(@NotNull PsiElement element) {
 		return element instanceof AvroIdlNamedSchemaDeclaration ||
-			super.isSafeDeleteAvailable(element);
+				super.isSafeDeleteAvailable(element);
 	}
 }

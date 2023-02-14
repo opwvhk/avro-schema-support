@@ -45,7 +45,6 @@ public class RenameFix implements RefactoringQuickFix {
 		this(targetName, true, true);
 	}
 
-
 	public RenameFix(@NonNls String targetName, boolean searchInStrings, boolean searchInNonJavaFiles) {
 		this.targetName = targetName;
 		this.searchInStrings = searchInStrings;
@@ -53,26 +52,26 @@ public class RenameFix implements RefactoringQuickFix {
 	}
 
 	@Override
-    @NotNull
-    public String getFamilyName() {
+	@NotNull
+	public String getFamilyName() {
 		return "Rename";
 	}
 
 	@Override
-    @NotNull
-    public String getName() {
+	@NotNull
+	public String getName() {
 		return targetName == null ? "Rename" : "Rename to '" + targetName + "'";
 	}
 
 	@Override
-    @NotNull
-    public RefactoringActionHandler getHandler() {
+	@NotNull
+	public RefactoringActionHandler getHandler() {
 		return RefactoringActionHandlerFactory.getInstance().createRenameHandler();
 	}
 
 	@Override
-    @NotNull
-    public RefactoringActionHandler getHandler(DataContext context) {
+	@NotNull
+	public RefactoringActionHandler getHandler(DataContext context) {
 		RenameHandler renameHandler = RenameHandlerRegistry.getInstance().getRenameHandler(context);
 		return renameHandler != null ? renameHandler : getHandler();
 	}
@@ -85,7 +84,7 @@ public class RenameFix implements RefactoringQuickFix {
 			final PsiElement elementToRename = nameIdentifier.getParent();
 			final RefactoringFactory factory = RefactoringFactory.getInstance(project);
 			final RenameRefactoring renameRefactoring =
-				factory.createRename(elementToRename, targetName, searchInStrings, searchInNonJavaFiles);
+					factory.createRename(elementToRename, targetName, searchInStrings, searchInNonJavaFiles);
 			renameRefactoring.run();
 		}
 	}

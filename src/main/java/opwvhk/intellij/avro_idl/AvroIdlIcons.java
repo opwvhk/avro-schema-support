@@ -1,21 +1,12 @@
 package opwvhk.intellij.avro_idl;
 
-import javax.swing.*;
-
 import com.intellij.icons.AllIcons;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.IconManager;
-import opwvhk.intellij.avro_idl.psi.AvroIdlEnumConstant;
-import opwvhk.intellij.avro_idl.psi.AvroIdlEnumDeclaration;
-import opwvhk.intellij.avro_idl.psi.AvroIdlFieldDeclaration;
-import opwvhk.intellij.avro_idl.psi.AvroIdlFile;
-import opwvhk.intellij.avro_idl.psi.AvroIdlImportDeclaration;
-import opwvhk.intellij.avro_idl.psi.AvroIdlMessageDeclaration;
-import opwvhk.intellij.avro_idl.psi.AvroIdlNamedSchemaDeclaration;
-import opwvhk.intellij.avro_idl.psi.AvroIdlProtocolDeclaration;
-import opwvhk.intellij.avro_idl.psi.AvroIdlRecordDeclaration;
-import opwvhk.intellij.avro_idl.psi.AvroIdlVariableDeclarator;
+import opwvhk.intellij.avro_idl.psi.*;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 /**
  * The set of all icons used by the plugin for representing Apache Avro™ IDL.
@@ -60,18 +51,25 @@ public class AvroIdlIcons {
 
 	public static final class Nodes {
 		// Records & Fixed
-		public static final Icon AVRO_CLASS = IconManager.getInstance().getIcon("/icons/nodes/class.svg", AvroIdlIcons.class);
+		public static final Icon AVRO_CLASS = IconManager.getInstance()
+				.getIcon("/icons/nodes/class.svg", AvroIdlIcons.class);
 		// Errors
-		public static final Icon AVRO_EXCEPTION = IconManager.getInstance().getIcon("/icons/nodes/exception.svg", AvroIdlIcons.class);
+		public static final Icon AVRO_EXCEPTION = IconManager.getInstance()
+				.getIcon("/icons/nodes/exception.svg", AvroIdlIcons.class);
 		// Class fields
-		public static final Icon AVRO_FIELD = IconManager.getInstance().getIcon("/icons/nodes/field.svg", AvroIdlIcons.class);
+		public static final Icon AVRO_FIELD = IconManager.getInstance()
+				.getIcon("/icons/nodes/field.svg", AvroIdlIcons.class);
 		// Enums
-		public static final Icon AVRO_ENUM = IconManager.getInstance().getIcon("/icons/nodes/enum.svg", AvroIdlIcons.class);
+		public static final Icon AVRO_ENUM = IconManager.getInstance()
+				.getIcon("/icons/nodes/enum.svg", AvroIdlIcons.class);
 		// Enum constants
-		public static final Icon AVRO_CONSTANT = IconManager.getInstance().getIcon("/icons/nodes/constant.svg", AvroIdlIcons.class);
+		public static final Icon AVRO_CONSTANT = IconManager.getInstance()
+				.getIcon("/icons/nodes/constant.svg", AvroIdlIcons.class);
 		// Protocols
-		public static final Icon AVRO_INTERFACE = IconManager.getInstance().getIcon("/icons/nodes/interface.svg", AvroIdlIcons.class);
+		public static final Icon AVRO_INTERFACE = IconManager.getInstance()
+				.getIcon("/icons/nodes/interface.svg", AvroIdlIcons.class);
 		// Protocol messages
-		public static final Icon AVRO_METHOD = IconManager.getInstance().getIcon("/icons/nodes/method.svg", AvroIdlIcons.class);
+		public static final Icon AVRO_METHOD = IconManager.getInstance()
+				.getIcon("/icons/nodes/method.svg", AvroIdlIcons.class);
 	}
 }

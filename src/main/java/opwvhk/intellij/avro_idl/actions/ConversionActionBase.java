@@ -46,9 +46,10 @@ abstract class ConversionActionBase extends DumbAwareAction {
 	protected final String actionTitle;
 	private final String consoleTitle;
 
-	protected ConversionActionBase(@NotNull @NlsActions.ActionText String actionTitle, @NotNull LanguageFileType sourceFileType,
+	protected ConversionActionBase(@NotNull @NlsActions.ActionText String actionTitle,
+	                               @NotNull LanguageFileType sourceFileType,
 	                               @NotNull LanguageFileType destinationFileType) {
-		super((String)null);
+		super((String) null);
 		this.actionTitle = actionTitle;
 		this.consoleTitle = sourceFileType.getDisplayName() + " to " + destinationFileType.getDisplayName();
 		this.sourceFileType = sourceFileType;
@@ -57,10 +58,11 @@ abstract class ConversionActionBase extends DumbAwareAction {
 
 	protected void convertFile(@NotNull Project project, @NotNull ConsoleView console, @NotNull VirtualFile file) {
 		throw new UnsupportedOperationException(
-			"Cannot convert file; please override convertFile(Project, ConsoleView, VirtualFile) or convertFiles(Project, ConsoleView, List<VirtualFile>)");
+				"Cannot convert file; please override convertFile(Project, ConsoleView, VirtualFile) or convertFiles(Project, ConsoleView, List<VirtualFile>)");
 	}
 
-	protected void convertFiles(@NotNull Project project, @NotNull ConsoleView console, @NotNull List<VirtualFile> files) {
+	protected void convertFiles(@NotNull Project project, @NotNull ConsoleView console,
+	                            @NotNull List<VirtualFile> files) {
 		for (VirtualFile file : files) {
 			convertFile(project, console, file);
 		}
@@ -68,11 +70,13 @@ abstract class ConversionActionBase extends DumbAwareAction {
 	}
 
 	@SuppressWarnings("SameParameterValue")
-    @Nullable
-    protected VirtualFile askForTargetDirectory(@NotNull Project project, @Nullable String title, @Nullable String description,
-                                                @Nullable VirtualFile suggestedTargetDirectory) {
+	@Nullable
+	protected VirtualFile askForTargetDirectory(@NotNull Project project, @Nullable String title,
+	                                            @Nullable String description,
+	                                            @Nullable VirtualFile suggestedTargetDirectory) {
 		final String nonNullTitle = title == null ? UIBundle.message("file.chooser.default.title") : title;
-		final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor().withTitle(nonNullTitle);
+		final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor()
+				.withTitle(nonNullTitle);
 		if (description != null) {
 			descriptor.withDescription(description);
 		}
@@ -80,20 +84,25 @@ abstract class ConversionActionBase extends DumbAwareAction {
 	}
 
 	@Nullable
-    protected VirtualFileWrapper askForTargetFile(@NotNull Project project, @Nullable String title, @Nullable String description,
-                                                  @NotNull FileType fileType, @Nullable VirtualFile suggestedTargetDirectory,
-                                                  @NotNull String suggestedBaseName) {
+	protected VirtualFileWrapper askForTargetFile(@NotNull Project project, @Nullable String title,
+	                                              @Nullable String description,
+	                                              @NotNull FileType fileType,
+	                                              @Nullable VirtualFile suggestedTargetDirectory,
+	                                              @NotNull String suggestedBaseName) {
 		final String nonNullTitle = title == null ? IdeBundle.message("dialog.title.save.as") : title;
-		final String nonNullDescription = description == null ? IdeBundle.message("label.choose.target.file") : description;
+		final String nonNullDescription =
+				description == null ? IdeBundle.message("label.choose.target.file") : description;
 		final String fileName = suggestedBaseName + "." + destinationFileType.getDefaultExtension();
 
-		Collection<VirtualFile> files = FilenameIndex.getVirtualFilesByName(project, fileName, ProjectScope.getContentScope(project));
+		Collection<VirtualFile> files = FilenameIndex.getVirtualFilesByName(project, fileName,
+				ProjectScope.getContentScope(project));
 		VirtualFile firstItem = ContainerUtil.getFirstItem(files);
 		VirtualFile baseDir = firstItem != null ? firstItem.getParent() : suggestedTargetDirectory;
 
 		// Using FileTypeManager.getInstance().getAssociations(FileType) to match allowed filenames would be preferable, except
 		// that you can't get a save dialog then (FileSaverDescriptor doesn't support it), and hence no overwrite confirmation.
-		FileSaverDescriptor descriptor = new FileSaverDescriptor(nonNullTitle, nonNullDescription, findExtensionsFor(fileType).toArray(String[]::new));
+		FileSaverDescriptor descriptor = new FileSaverDescriptor(nonNullTitle, nonNullDescription,
+				findExtensionsFor(fileType).toArray(String[]::new));
 		return FileChooserFactory.getInstance().createSaveFileDialog(descriptor, project).save(baseDir, fileName);
 	}
 
@@ -103,9 +112,9 @@ abstract class ConversionActionBase extends DumbAwareAction {
 	 * @param fileType a registered file type
 	 * @return all registered extensions
 	 */
-    @SuppressWarnings("SameParameterValue")
-    @NotNull
-    protected String findExtensionFor(@NotNull FileType fileType) {
+	@SuppressWarnings("SameParameterValue")
+	@NotNull
+	protected String findExtensionFor(@NotNull FileType fileType) {
 		return findExtensionsFor(fileType).get(0);
 	}
 
@@ -115,8 +124,8 @@ abstract class ConversionActionBase extends DumbAwareAction {
 	 * @param fileType a registered file type
 	 * @return all registered extensions, or the default extension if none found
 	 */
-    @NotNull
-    protected List<String> findExtensionsFor(@NotNull FileType fileType) {
+	@NotNull
+	protected List<String> findExtensionsFor(@NotNull FileType fileType) {
 		final List<String> result = new ArrayList<>();
 		final List<FileNameMatcher> associations = FileTypeManager.getInstance().getAssociations(fileType);
 		for (FileNameMatcher association : associations) {
@@ -148,7 +157,7 @@ abstract class ConversionActionBase extends DumbAwareAction {
 	}
 
 	@NotNull
-    private List<VirtualFile> getFiles(@NotNull AnActionEvent e) {
+	private List<VirtualFile> getFiles(@NotNull AnActionEvent e) {
 		final VirtualFile[] virtualFiles = e.getData(LangDataKeys.VIRTUAL_FILE_ARRAY);
 		if (virtualFiles == null) {
 			return emptyList();
@@ -182,10 +191,11 @@ abstract class ConversionActionBase extends DumbAwareAction {
 	}
 
 	@NotNull
-    protected ConsoleView openConsole(@NotNull Project project) {
+	protected ConsoleView openConsole(@NotNull Project project) {
 		final ToolWindow buildToolWindow = BuildContentManager.getInstance(project).getOrCreateToolWindow();
 		Content content = buildToolWindow.getContentManager().findContent(consoleTitle);
-		ConsoleView console = content == null ? null : UIUtil.uiTraverser(content.getComponent()).filter(ConsoleView.class).first();
+		ConsoleView console =
+				content == null ? null : UIUtil.uiTraverser(content.getComponent()).filter(ConsoleView.class).first();
 		if (content != null && console != null) {
 			// The console already exists. Clear it.
 			//console.print("\n\n\n", ConsoleViewContentType.SYSTEM_OUTPUT);
@@ -201,7 +211,8 @@ abstract class ConversionActionBase extends DumbAwareAction {
 				toolbarActions.add(action);
 			}
 
-			ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.TOOLBAR, toolbarActions, false);
+			ActionToolbar toolbar = ActionManager.getInstance()
+					.createActionToolbar(ActionPlaces.TOOLBAR, toolbarActions, false);
 			toolbar.setTargetComponent(console.getComponent());
 			panel.add(toolbar.getComponent(), BorderLayout.WEST);
 
@@ -211,7 +222,8 @@ abstract class ConversionActionBase extends DumbAwareAction {
 		}
 
 		final Content activeContent = content;
-		buildToolWindow.activate(() -> buildToolWindow.getContentManager().setSelectedContent(activeContent), false, false);
+		buildToolWindow.activate(() -> buildToolWindow.getContentManager().setSelectedContent(activeContent), false,
+				false);
 		return console;
 	}
 

@@ -17,6 +17,6 @@ public class AvroIdlRecordNamingConvention extends AvroIdlNamingConvention {
 	@Override
 	public boolean isApplicable(AvroIdlNameIdentifierOwner member) {
 		// The shortcut operator prevents ClassCastExceptions
-		return super.isApplicable(member) && ((AvroIdlRecordDeclaration)member).isErrorType();
+		return super.isApplicable(member) && ((AvroIdlRecordDeclaration) member).isErrorType();
 	}
 }

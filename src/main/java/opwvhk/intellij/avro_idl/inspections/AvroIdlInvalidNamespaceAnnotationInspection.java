@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class AvroIdlInvalidNamespaceAnnotationInspection extends BaseAvroIdlInspection<AvroIdlNamespaceProperty>{
+public class AvroIdlInvalidNamespaceAnnotationInspection extends BaseAvroIdlInspection<AvroIdlNamespaceProperty> {
 	public AvroIdlInvalidNamespaceAnnotationInspection() {
 		super(AvroIdlNamespaceProperty.class);
 	}
@@ -22,8 +22,9 @@ public class AvroIdlInvalidNamespaceAnnotationInspection extends BaseAvroIdlInsp
 		final String name = element.getName();
 		if (name != null && !AvroIdlAnnotator.VALID_IDENTIFIER_IN_STRING.test(name)) {
 			PsiElement nameIdentifier = element.getNameIdentifier();
-			holder.registerProblem(Objects.requireNonNull(nameIdentifier, "Bug: name identifier is null, but the name is not..."),
-				"The namespace is not composed of valid identifiers", new RenameFix());
+			holder.registerProblem(
+					Objects.requireNonNull(nameIdentifier, "Bug: name identifier is null, but the name is not..."),
+					"The namespace is not composed of valid identifiers", new RenameFix());
 		}
 	}
 }

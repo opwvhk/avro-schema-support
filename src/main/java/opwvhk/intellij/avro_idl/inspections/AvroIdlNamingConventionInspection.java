@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class AvroIdlNamingConventionInspection extends AbstractNamingConventionInspection<AvroIdlNameIdentifierOwner> {
 	public static final ExtensionPointName<NamingConvention<AvroIdlNameIdentifierOwner>> EP_NAME =
-		ExtensionPointName.create("opwvhk.avro.idl.naming.convention");
+			ExtensionPointName.create("opwvhk.avro.idl.naming.convention");
 
 	public AvroIdlNamingConventionInspection() {
 		super(EP_NAME.getExtensionList(), "AvroIdlNamingConvention");
@@ -22,19 +22,19 @@ public class AvroIdlNamingConventionInspection extends AbstractNamingConventionI
 	}
 
 	@Override
-    @Nullable
-    protected LocalQuickFix createRenameFix() {
+	@Nullable
+	protected LocalQuickFix createRenameFix() {
 		return new RenameFix();
 	}
 
 	@Override
-    @NotNull
-    public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
+	@NotNull
+	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
 		return new PsiElementVisitor() {
 			@Override
 			public void visitElement(@NotNull PsiElement element) {
 				if (element instanceof AvroIdlNameIdentifierOwner) {
-					AvroIdlNameIdentifierOwner owner = (AvroIdlNameIdentifierOwner)element;
+					AvroIdlNameIdentifierOwner owner = (AvroIdlNameIdentifierOwner) element;
 					String name = owner.getName();
 					if (name != null) {
 						checkName(owner, name, holder);

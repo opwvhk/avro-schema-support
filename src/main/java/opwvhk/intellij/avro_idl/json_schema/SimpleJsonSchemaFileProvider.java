@@ -21,7 +21,7 @@ class SimpleJsonSchemaFileProvider implements JsonSchemaFileProvider {
 		this.fileTypeType = fileType.getClass();
 		this.resourcePath = resourcePath;
 		this.jsonSchemaFile = NullableLazyValue.createValue(() ->
-			JsonSchemaProviderFactory.getResourceFile(SimpleJsonSchemaFileProvider.class, this.resourcePath)
+				JsonSchemaProviderFactory.getResourceFile(SimpleJsonSchemaFileProvider.class, this.resourcePath)
 		);
 	}
 
@@ -31,14 +31,14 @@ class SimpleJsonSchemaFileProvider implements JsonSchemaFileProvider {
 	}
 
 	@Override
-    @NotNull
-    public String getName() {
+	@NotNull
+	public String getName() {
 		return fileTypeName;
 	}
 
 	@Override
-    @Nullable
-    public VirtualFile getSchemaFile() {
+	@Nullable
+	public VirtualFile getSchemaFile() {
 		return jsonSchemaFile.getValue();
 	}
 
@@ -48,8 +48,8 @@ class SimpleJsonSchemaFileProvider implements JsonSchemaFileProvider {
 	}
 
 	@Override
-    @NotNull
-    public SchemaType getSchemaType() {
+	@NotNull
+	public SchemaType getSchemaType() {
 		return SchemaType.embeddedSchema;
 	}
 }

@@ -15,17 +15,19 @@ import org.jetbrains.annotations.NotNull;
 public class AvroIdlAngleBracketTypedHandler extends TypedHandlerDelegate {
 
 	@NotNull
-    static final TokenSet INVALID_INSIDE_ANGLE = TokenSet.create(AvroIdlTypes.SEMICOLON);
+	static final TokenSet INVALID_INSIDE_ANGLE = TokenSet.create(AvroIdlTypes.SEMICOLON);
 
 	@Override
-    @NotNull
-    public Result beforeCharTyped(char c, @NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file, @NotNull FileType fileType) {
+	@NotNull
+	public Result beforeCharTyped(char c, @NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file,
+	                              @NotNull FileType fileType) {
 		if (!CodeInsightSettings.getInstance().AUTOINSERT_PAIR_BRACKET || !(file instanceof AvroIdlFile)) {
 			return Result.CONTINUE;
 		}
 
 		if (c == '>') {
-			TypedHandlerUtil.handleGenericGT(editor, AvroIdlTypes.LEFT_ANGLE, AvroIdlTypes.RIGHT_ANGLE, INVALID_INSIDE_ANGLE);
+			TypedHandlerUtil.handleGenericGT(editor, AvroIdlTypes.LEFT_ANGLE, AvroIdlTypes.RIGHT_ANGLE,
+					INVALID_INSIDE_ANGLE);
 			return Result.STOP;
 		}
 
@@ -33,14 +35,15 @@ public class AvroIdlAngleBracketTypedHandler extends TypedHandlerDelegate {
 	}
 
 	@Override
-    @NotNull
-    public Result charTyped(char c, @NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+	@NotNull
+	public Result charTyped(char c, @NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
 		if (!CodeInsightSettings.getInstance().AUTOINSERT_PAIR_BRACKET || !(file instanceof AvroIdlFile)) {
 			return Result.CONTINUE;
 		}
 
 		if (c == '<') {
-			TypedHandlerUtil.handleAfterGenericLT(editor, AvroIdlTypes.LEFT_ANGLE, AvroIdlTypes.RIGHT_ANGLE, INVALID_INSIDE_ANGLE);
+			TypedHandlerUtil.handleAfterGenericLT(editor, AvroIdlTypes.LEFT_ANGLE, AvroIdlTypes.RIGHT_ANGLE,
+					INVALID_INSIDE_ANGLE);
 			return Result.STOP;
 		}
 

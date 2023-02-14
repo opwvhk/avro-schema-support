@@ -17,9 +17,12 @@ import static java.util.Objects.requireNonNull;
 public final class AvroIdlNotifications {
 
 	public static void showNotification(@NotNull Project project, @NotNull NotificationType type, boolean fullContent,
-	                                    @Nullable String title, @NotNull String message, @Nullable Consumer<Notification> configurer) {
-		final NotificationGroup notificationGroup = requireNonNull(NotificationGroup.findRegisteredGroup("Avro IDL updates"));
-		Notification notification = createNotification(notificationGroup, fullContent, title == null ? "" : title, message, type);
+	                                    @Nullable String title, @NotNull String message,
+	                                    @Nullable Consumer<Notification> configurer) {
+		final NotificationGroup notificationGroup = requireNonNull(
+				NotificationGroup.findRegisteredGroup("Avro IDL updates"));
+		Notification notification = createNotification(notificationGroup, fullContent, title == null ? "" : title,
+				message, type);
 		if (configurer != null) {
 			configurer.accept(notification);
 		}
@@ -31,13 +34,14 @@ public final class AvroIdlNotifications {
 	}
 
 	@NotNull
-    private static Notification createNotification(@NotNull NotificationGroup notificationGroup, boolean fullContent, @NotNull String title,
-                                                   @NotNull String content, @NotNull NotificationType type) {
+	private static Notification createNotification(@NotNull NotificationGroup notificationGroup, boolean fullContent,
+	                                               @NotNull String title,
+	                                               @NotNull String content, @NotNull NotificationType type) {
 		final Notification notification;
 		if (fullContent) {
 			notification = new FullContentNotification(notificationGroup, title, content, type);
 		} else {
-			notification = notificationGroup.createNotification(title, content, type, null);
+			notification = notificationGroup.createNotification(title, content, type);
 		}
 		notification.setIcon(notificationGroup.getIcon());
 		return notification;
@@ -48,7 +52,8 @@ public final class AvroIdlNotifications {
 	}
 
 	private static class FullContentNotification extends Notification implements NotificationFullContent {
-		public FullContentNotification(@NotNull NotificationGroup notificationGroup, @NotNull String title, @NotNull String content,
+		public FullContentNotification(@NotNull NotificationGroup notificationGroup, @NotNull String title,
+		                               @NotNull String content,
 		                               @NotNull NotificationType type) {
 			super(notificationGroup.getDisplayId(), title, content, type);
 		}

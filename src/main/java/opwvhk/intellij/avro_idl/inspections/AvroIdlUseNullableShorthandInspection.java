@@ -34,7 +34,7 @@ public class AvroIdlUseNullableShorthandInspection extends BaseAvroIdlInspection
 		}
 
 		@Nullable
-        private static AvroIdlType getNonNullType(@NotNull AvroIdlUnionType element) {
+		private static AvroIdlType getNonNullType(@NotNull AvroIdlUnionType element) {
 			final List<AvroIdlType> unionTypes = element.getTypeList();
 			if (unionTypes.size() != 2) {
 				return null;
@@ -50,7 +50,8 @@ public class AvroIdlUseNullableShorthandInspection extends BaseAvroIdlInspection
 		}
 
 		@Override
-		protected boolean isAvailable(@NotNull Project project, @NotNull PsiFile file, @NotNull AvroIdlUnionType element) {
+		protected boolean isAvailable(@NotNull Project project, @NotNull PsiFile file,
+		                              @NotNull AvroIdlUnionType element) {
 			return isAvailableFor(element);
 		}
 
@@ -59,7 +60,8 @@ public class AvroIdlUseNullableShorthandInspection extends BaseAvroIdlInspection
 		                      @NotNull AvroIdlUnionType element) {
 			AvroIdlType nonNullType = getNonNullType(element);
 			if (nonNullType instanceof AvroIdlNullableType) {
-				final AvroIdlNullableType optionalType = new AvroIdlElementFactory(project).makeOptional((AvroIdlNullableType)nonNullType);
+				final AvroIdlNullableType optionalType = new AvroIdlElementFactory(project).makeOptional(
+						(AvroIdlNullableType) nonNullType);
 				element.replace(optionalType);
 			}
 		}

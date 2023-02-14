@@ -36,14 +36,16 @@ public class AvroProtocolToIdlAction extends ConversionActionBase {
 		try {
 			protocol = Protocol.parse(file.toNioPath().toFile());
 		} catch (AvroRuntimeException | IOException e) {
-			console.print("Failed to parse AvroProtocol in " + file.getName() + "; please resolve errors first.\n", ERROR_OUTPUT);
+			console.print("Failed to parse AvroProtocol in " + file.getName() + "; please resolve errors first.\n",
+					ERROR_OUTPUT);
 			writeStackTrace(console, e);
 			return;
 		}
 
 		console.print("Asking for file to write Avro IDL to...\n", NORMAL_OUTPUT);
-		final VirtualFileWrapper wrapper = askForTargetFile(project, "Save as Avro IDL", "Choose the filename to save to",
-			AvroIdlFileType.INSTANCE, file.getParent(), file.getNameWithoutExtension());
+		final VirtualFileWrapper wrapper = askForTargetFile(project, "Save as Avro IDL",
+				"Choose the filename to save to",
+				AvroIdlFileType.INSTANCE, file.getParent(), file.getNameWithoutExtension());
 		if (wrapper != null) {
 			final VirtualFile virtualFile = wrapper.getVirtualFile(true);
 			if (virtualFile != null) {
@@ -55,11 +57,14 @@ public class AvroProtocolToIdlAction extends ConversionActionBase {
 						IdlUtils.writeIdlProtocol(writer, protocol);
 
 						console.print("Wrote Avro IDL \"" + protocol.getName() + "\" to ", NORMAL_OUTPUT);
-						console.printHyperlink(virtualFile.getName(), new OpenFileHyperlinkInfo(project, virtualFile, 0));
+						console.printHyperlink(virtualFile.getName(),
+								new OpenFileHyperlinkInfo(project, virtualFile, 0));
 						console.print("\n", NORMAL_OUTPUT);
-						FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, virtualFile), true);
+						FileEditorManager.getInstance(project)
+								.openTextEditor(new OpenFileDescriptor(project, virtualFile), true);
 					} catch (RuntimeException | IOException e) {
-						console.print("Failed to write the Avro IDL to " + virtualFile.getName() + "\n" + e.getLocalizedMessage(), ERROR_OUTPUT);
+						console.print("Failed to write the Avro IDL to " + virtualFile.getName() + "\n" +
+								e.getLocalizedMessage(), ERROR_OUTPUT);
 						writeStackTrace(console, e);
 					}
 				});

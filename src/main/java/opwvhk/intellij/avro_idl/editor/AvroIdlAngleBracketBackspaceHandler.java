@@ -19,15 +19,20 @@ public class AvroIdlAngleBracketBackspaceHandler extends BackspaceHandlerDelegat
 
 	@Override
 	public boolean charDeleted(char deletedChar, @NotNull PsiFile file, @NotNull Editor editor) {
-		if (!CodeInsightSettings.getInstance().AUTOINSERT_PAIR_BRACKET) return false;
-		if (!(file instanceof AvroIdlFile)) return false;
+		if (!CodeInsightSettings.getInstance().AUTOINSERT_PAIR_BRACKET) {
+			return false;
+		}
+		if (!(file instanceof AvroIdlFile)) {
+			return false;
+		}
 
 		if (deletedChar == '<') {
 			var offset = editor.getCaretModel().getOffset();
 			if (offset < 1 || offset >= editor.getDocument().getTextLength()) {
 				return false;
 			}
-			TypedHandlerUtil.handleGenericLTDeletion(editor, offset, AvroIdlTypes.LEFT_ANGLE, AvroIdlTypes.RIGHT_ANGLE, INVALID_INSIDE_ANGLE);
+			TypedHandlerUtil.handleGenericLTDeletion(editor, offset, AvroIdlTypes.LEFT_ANGLE, AvroIdlTypes.RIGHT_ANGLE,
+					INVALID_INSIDE_ANGLE);
 			return true;
 			//var document = editor.getDocument();
 			//var nextChar = document.getCharsSequence().charAt(offset);

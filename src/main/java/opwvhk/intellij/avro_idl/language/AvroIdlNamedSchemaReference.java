@@ -2,7 +2,10 @@ package opwvhk.intellij.avro_idl.language;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.psi.PsiElement;
-import opwvhk.intellij.avro_idl.psi.*;
+import opwvhk.intellij.avro_idl.psi.AvroIdlFile;
+import opwvhk.intellij.avro_idl.psi.AvroIdlMessageAttributeThrows;
+import opwvhk.intellij.avro_idl.psi.AvroIdlPsiUtil;
+import opwvhk.intellij.avro_idl.psi.AvroIdlReferenceType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,20 +21,21 @@ public class AvroIdlNamedSchemaReference extends AvroIdlAbstractReference {
 	private final boolean matchErrorTypesOnly;
 
 	@Nullable
-    public static AvroIdlNamedSchemaReference forType(@NotNull AvroIdlReferenceType owner) {
+	public static AvroIdlNamedSchemaReference forType(@NotNull AvroIdlReferenceType owner) {
 		return Optional.of(owner)
-			.map(AvroIdlReferenceType::getIdentifier)
-			.map(PsiElement::getFirstChild)
-			.map(token -> new AvroIdlNamedSchemaReference(owner, token, false))
-			.orElse(null);
+				.map(AvroIdlReferenceType::getIdentifier)
+				.map(PsiElement::getFirstChild)
+				.map(token -> new AvroIdlNamedSchemaReference(owner, token, false))
+				.orElse(null);
 	}
 
 	@NotNull
-    public static AvroIdlNamedSchemaReference forMessageAttribute(@NotNull AvroIdlMessageAttributeThrows owner) {
+	public static AvroIdlNamedSchemaReference forMessageAttribute(@NotNull AvroIdlMessageAttributeThrows owner) {
 		return new AvroIdlNamedSchemaReference(owner, requireNonNull(owner.getIdentifier().getIdentifierToken()), true);
 	}
 
-	private AvroIdlNamedSchemaReference(@NotNull PsiElement element, @NotNull PsiElement identifier, boolean matchErrorTypesOnly) {
+	private AvroIdlNamedSchemaReference(@NotNull PsiElement element, @NotNull PsiElement identifier,
+	                                    boolean matchErrorTypesOnly) {
 		super(element, identifier);
 		final String name = identifier.getText();
 		if (name.contains(".")) {
@@ -45,14 +49,14 @@ public class AvroIdlNamedSchemaReference extends AvroIdlAbstractReference {
 	protected Optional<LookupElement> resolve0() {
 		final String namespace = AvroIdlPsiUtil.getNamespace(myElement);
 		return ifType(myElement.getContainingFile().getOriginalFile(), AvroIdlFile.class)
-			.flatMap(idlFile -> AvroIdlUtil.findAllSchemaNamesAvailableInIdl(idlFile, false, namespace))
-			.filter(lookupElement -> lookupElement.getAllLookupStrings().contains(fullName))
-			.findFirst();
+				.flatMap(idlFile -> AvroIdlUtil.findAllSchemaNamesAvailableInIdl(idlFile, false, namespace))
+				.filter(lookupElement -> lookupElement.getAllLookupStrings().contains(fullName))
+				.findFirst();
 	}
 
 	@Override
-    @Nullable
-    public PsiElement resolve() {
+	@Nullable
+	public PsiElement resolve() {
 		return resolve0().map(LookupElement::getPsiElement).orElse(null);
 	}
 
@@ -61,10 +65,10 @@ public class AvroIdlNamedSchemaReference extends AvroIdlAbstractReference {
 	}
 
 	@Override
-    @NotNull
-    public Object[] getVariants() {
-		final AvroIdlFile idlFile = (AvroIdlFile)myElement.getContainingFile();
-		AvroIdlFile idlFile2 = (AvroIdlFile)idlFile.getOriginalFile();
+	@NotNull
+	public Object[] getVariants() {
+		final AvroIdlFile idlFile = (AvroIdlFile) myElement.getContainingFile();
+		AvroIdlFile idlFile2 = (AvroIdlFile) idlFile.getOriginalFile();
 		final String namespace = AvroIdlPsiUtil.getNamespace(myElement);
 		return AvroIdlUtil.findAllSchemaNamesAvailableInIdl(idlFile2, matchErrorTypesOnly, namespace).toArray();
 	}

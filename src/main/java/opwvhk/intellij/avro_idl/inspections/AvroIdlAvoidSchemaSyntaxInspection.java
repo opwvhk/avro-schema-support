@@ -24,9 +24,11 @@ import static java.util.Objects.requireNonNull;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
 public class AvroIdlAvoidSchemaSyntaxInspection extends BaseAvroIdlInspection<PsiElement> {
-	private static final TokenSet SCHEMA_SYNTAX_TOPLEVEL_ELEMENTS = TokenSet.create(NAMESPACE_DECLARATION, MAIN_SCHEMA_DECLARATION, IMPORT_DECLARATION,
-		RECORD_DECLARATION, ENUM_DECLARATION, FIXED_DECLARATION);
-	private static final TokenSet SCHEMA_SYNTAX_TOPLEVEL_KEYWORDS = TokenSet.create(NAMESPACE, SCHEMA, IMPORT, RECORD, ERROR, ENUM, FIXED);
+	private static final TokenSet SCHEMA_SYNTAX_TOPLEVEL_ELEMENTS = TokenSet.create(NAMESPACE_DECLARATION,
+			MAIN_SCHEMA_DECLARATION, IMPORT_DECLARATION,
+			RECORD_DECLARATION, ENUM_DECLARATION, FIXED_DECLARATION);
+	private static final TokenSet SCHEMA_SYNTAX_TOPLEVEL_KEYWORDS = TokenSet.create(NAMESPACE, SCHEMA, IMPORT, RECORD,
+			ERROR, ENUM, FIXED);
 
 	public AvroIdlAvoidSchemaSyntaxInspection() {
 		super(PsiElement.class);
@@ -37,7 +39,8 @@ public class AvroIdlAvoidSchemaSyntaxInspection extends BaseAvroIdlInspection<Ps
 	                            @NotNull ProblemsHolder holder,
 	                            @NotNull LocalInspectionToolSession session) {
 		if (ReplaceSchemaSyntaxWithProtocolQuickFix.isAvailableFor(element)) {
-			ReplaceSchemaSyntaxWithProtocolQuickFix replaceWithShorthand = new ReplaceSchemaSyntaxWithProtocolQuickFix(element);
+			ReplaceSchemaSyntaxWithProtocolQuickFix replaceWithShorthand = new ReplaceSchemaSyntaxWithProtocolQuickFix(
+					element);
 			holder.registerProblem(element, "Use of schema syntax", replaceWithShorthand);
 		}
 	}
@@ -53,7 +56,8 @@ public class AvroIdlAvoidSchemaSyntaxInspection extends BaseAvroIdlInspection<Ps
 			if (!SCHEMA_SYNTAX_TOPLEVEL_KEYWORDS.contains(node.getElementType())) {
 				return false;
 			}
-			final ASTNode previousToplevelElement = TreeUtil.findSiblingBackward(node.getTreeParent().getTreePrev(), SCHEMA_SYNTAX_TOPLEVEL_ELEMENTS);
+			final ASTNode previousToplevelElement = TreeUtil.findSiblingBackward(node.getTreeParent().getTreePrev(),
+					SCHEMA_SYNTAX_TOPLEVEL_ELEMENTS);
 			return !(element.getParent().getParent() instanceof AvroIdlProtocolBody) && previousToplevelElement == null;
 		}
 
@@ -63,13 +67,16 @@ public class AvroIdlAvoidSchemaSyntaxInspection extends BaseAvroIdlInspection<Ps
 		}
 
 		@Override
-		protected void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor, @NotNull PsiElement element) {
+		protected void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor,
+		                      @NotNull PsiElement element) {
 			// Find the parent of the declaration this element is a keyword of.
 			PsiElement parent = element.getParent().getParent();
 
 			// Find the header declarations that are available (both are optional)
-			AvroIdlNamespaceDeclaration namespaceDeclaration = PsiTreeUtil.findChildOfType(parent, AvroIdlNamespaceDeclaration.class);
-			AvroIdlMainSchemaDeclaration mainSchemaDeclaration = PsiTreeUtil.findChildOfType(parent, AvroIdlMainSchemaDeclaration.class);
+			AvroIdlNamespaceDeclaration namespaceDeclaration = PsiTreeUtil.findChildOfType(parent,
+					AvroIdlNamespaceDeclaration.class);
+			AvroIdlMainSchemaDeclaration mainSchemaDeclaration = PsiTreeUtil.findChildOfType(parent,
+					AvroIdlMainSchemaDeclaration.class);
 
 			// Create the protocol
 			String namespace = namespaceDeclaration != null ? namespaceDeclaration.getName() : null;
@@ -93,13 +100,14 @@ public class AvroIdlAvoidSchemaSyntaxInspection extends BaseAvroIdlInspection<Ps
 			parent.deleteChildRange(firstChildToMove, lastChildToMove);
 
 			Optional.ofNullable(PsiTreeUtil.findChildOfType(file, AvroIdlProtocolDeclaration.class))
-				.map(AvroIdlProtocolDeclaration::getNameIdentifier)
-				.ifPresent(elem -> Optional.ofNullable(editor).ifPresent(ed -> selectElement(ed, elem)));
+					.map(AvroIdlProtocolDeclaration::getNameIdentifier)
+					.ifPresent(elem -> Optional.ofNullable(editor).ifPresent(ed -> selectElement(ed, elem)));
 
 			// Place the cursor at the protocol name
-			selectElement(editor, Optional.ofNullable(PsiTreeUtil.findChildOfType(file, AvroIdlProtocolDeclaration.class))
-				.map(AvroIdlProtocolDeclaration::getNameIdentifier)
-				.orElse(null));
+			selectElement(editor,
+					Optional.ofNullable(PsiTreeUtil.findChildOfType(file, AvroIdlProtocolDeclaration.class))
+							.map(AvroIdlProtocolDeclaration::getNameIdentifier)
+							.orElse(null));
 
 			// The default indent change breaks formatting of doc (and block?) comments. Triggering a reformat keeps them intact.
 			CodeStyleManager.getInstance(project).reformat(parent);
@@ -120,7 +128,9 @@ public class AvroIdlAvoidSchemaSyntaxInspection extends BaseAvroIdlInspection<Ps
 
 		private PsiElement findFirstCodeElement(PsiElement start, Function<PsiElement, PsiElement> nextFunction) {
 			return AvroIdlPsiUtil.skipMatching(start, nextFunction, element ->
-				element instanceof PsiWhiteSpace || element instanceof PsiComment && ((PsiComment)element).getTokenType() != DOC_COMMENT, false);
+							element instanceof PsiWhiteSpace ||
+									element instanceof PsiComment && ((PsiComment) element).getTokenType() != DOC_COMMENT,
+					false);
 		}
 	}
 }

@@ -15,11 +15,13 @@ public abstract class BaseAvroIdlInspection<T extends PsiElement> extends LocalI
 		this.elementType = elementType;
 	}
 
-	protected abstract void visitElement(@NotNull T element, @NotNull ProblemsHolder holder, @NotNull LocalInspectionToolSession session);
+	protected abstract void visitElement(@NotNull T element, @NotNull ProblemsHolder holder,
+	                                     @NotNull LocalInspectionToolSession session);
 
 	@Override
-    @NotNull
-    public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
+	@NotNull
+	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly,
+	                                      @NotNull LocalInspectionToolSession session) {
 		return new PsiElementVisitor() {
 			@Override
 			public void visitElement(@NotNull PsiElement element) {

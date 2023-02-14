@@ -25,9 +25,11 @@ public final class IdlUtils {
 	private static final Function<Field, JsonNode> DEFAULT_VALUE;
 	private static final Pattern NEWLINE_PATTERN = Pattern.compile("(?U)\\R");
 	private static final String NEWLINE = System.lineSeparator();
-	private static final Set<String> KEYWORDS = Set.of("array", "boolean", "bytes", "date", "decimal", "double", "enum", "error", "false", "fixed", "float",
-		"idl", "import", "int", "local_timestamp_ms", "long", "map", "namespace", "null", "oneway", "protocol", "record", "schema", "string", "throws",
-		"timestamp_ms", "time_ms", "true", "union", "uuid", "void");
+	private static final Set<String> KEYWORDS = Set.of("array", "boolean", "bytes", "date", "decimal", "double", "enum",
+			"error", "false", "fixed", "float",
+			"idl", "import", "int", "local_timestamp_ms", "long", "map", "namespace", "null", "oneway", "protocol",
+			"record", "schema", "string", "throws",
+			"timestamp_ms", "time_ms", "true", "union", "uuid", "void");
 
 	static {
 		SCHEMA_FACTORY = getFieldValue(getField(Schema.class, "FACTORY"), null);
@@ -138,15 +140,18 @@ public final class IdlUtils {
 		} else {
 			protocolNameSpace = null;
 		}
-		writeIdlProtocol(writer, protocol, protocolNameSpace, protocolFullName.substring(lastDotPos + 1), protocol.getTypes(), protocol.getMessages().values());
+		writeIdlProtocol(writer, protocol, protocolNameSpace, protocolFullName.substring(lastDotPos + 1),
+				protocol.getTypes(), protocol.getMessages().values());
 	}
 
 	public static void writeIdlProtocol(Writer writer, Schema schema) throws IOException {
 		final JsonProperties emptyProperties = Schema.create(Schema.Type.NULL);
-		writeIdlProtocol(writer, emptyProperties, schema.getNamespace(), "Protocol", List.of(schema), Collections.emptyList());
+		writeIdlProtocol(writer, emptyProperties, schema.getNamespace(), "Protocol", List.of(schema),
+				Collections.emptyList());
 	}
 
-	public static void writeIdlProtocol(Writer writer, JsonProperties properties, String protocolNameSpace, String protocolName, Collection<Schema> schemas,
+	public static void writeIdlProtocol(Writer writer, JsonProperties properties, String protocolNameSpace,
+	                                    String protocolName, Collection<Schema> schemas,
 	                                    Collection<Protocol.Message> messages) throws IOException {
 		try (JsonGenerator jsonGen = SCHEMA_FACTORY.createGenerator(writer)) {
 			if (protocolNameSpace != null) {
@@ -185,7 +190,8 @@ public final class IdlUtils {
 		return name;
 	}
 
-	private static void writeSchema(Schema schema, boolean insideProtocol, Writer writer, JsonGenerator jsonGen, String defaultNamespace,
+	private static void writeSchema(Schema schema, boolean insideProtocol, Writer writer, JsonGenerator jsonGen,
+	                                String defaultNamespace,
 	                                Set<String> alreadyDeclared,
 	                                Set<Schema> toDeclare) throws IOException {
 		String indent = insideProtocol ? "    " : "";
@@ -206,11 +212,12 @@ public final class IdlUtils {
 		String schemaName = safeName(schema.getName());
 		if (type == Schema.Type.RECORD) {
 			String declarationType = schema.isError() ? "error" : "record";
-			writer.append(indent).append("").append(declarationType).append(" ").append(schemaName).append(" {").append(NEWLINE);
+			writer.append(indent).append("").append(declarationType).append(" ").append(schemaName).append(" {")
+					.append(NEWLINE);
 			alreadyDeclared.add(schema.getFullName());
 			for (Field field : schema.getFields()) {
 				writeField(schema.getNamespace(), field, writer, jsonGen, alreadyDeclared, toDeclare,
-					insideProtocol ? FieldIndent.INSIDE_PROTOCOL : FieldIndent.TOPLEVEL_SCHEMA);
+						insideProtocol ? FieldIndent.INSIDE_PROTOCOL : FieldIndent.TOPLEVEL_SCHEMA);
 				writer.append(";").append(NEWLINE);
 			}
 			writer.append(indent).append("}").append(NEWLINE);
@@ -230,12 +237,13 @@ public final class IdlUtils {
 			writer.append("}").append(NEWLINE);
 		} else /* (type == Schema.Type.FIXED) */ {
 			writer.append(indent).append("fixed ").append(schemaName).append('(')
-				.append(Integer.toString(schema.getFixedSize())).append(");").append(NEWLINE);
+					.append(Integer.toString(schema.getFixedSize())).append(");").append(NEWLINE);
 			alreadyDeclared.add(schema.getFullName());
 		}
 	}
 
-	private static void writeField(String namespace, Field field, Writer writer, JsonGenerator jsonGen, Set<String> alreadyDeclared, Set<Schema> toDeclare,
+	private static void writeField(String namespace, Field field, Writer writer, JsonGenerator jsonGen,
+	                               Set<String> alreadyDeclared, Set<Schema> toDeclare,
 	                               FieldIndent fieldIndent) throws IOException {
 		// Note: indentField must not be NONE if any field of the containing record/method has documentation
 		switch (fieldIndent) {
@@ -304,7 +312,8 @@ public final class IdlUtils {
 		return buffer.toString();
 	}
 
-	private static void writeFieldSchema(Schema schema, Writer writer, JsonGenerator jsonGen, Set<String> alreadyDeclared, Set<Schema> toDeclare,
+	private static void writeFieldSchema(Schema schema, Writer writer, JsonGenerator jsonGen,
+	                                     Set<String> alreadyDeclared, Set<Schema> toDeclare,
 	                                     String recordNameSpace) throws IOException {
 		Schema.Type type = schema.getType();
 		if (type == Schema.Type.RECORD || type == Schema.Type.ENUM || type == Schema.Type.FIXED) {
@@ -383,12 +392,14 @@ public final class IdlUtils {
 		writeJsonProperties(schema, writer, jsonGen, "    ");
 	}
 
-	private static void writeJsonProperties(JsonProperties props, Writer writer, JsonGenerator jsonGen, String indent) throws IOException {
+	private static void writeJsonProperties(JsonProperties props, Writer writer, JsonGenerator jsonGen, String indent)
+			throws IOException {
 		writeJsonProperties(props, Collections.emptySet(), writer, jsonGen, indent);
 	}
 
-	private static void writeJsonProperties(JsonProperties props, Set<String> propertiesToSkip, Writer writer, JsonGenerator jsonGen, String indent)
-		throws IOException {
+	private static void writeJsonProperties(JsonProperties props, Set<String> propertiesToSkip, Writer writer,
+	                                        JsonGenerator jsonGen, String indent)
+			throws IOException {
 		Map<String, Object> objectProps = props.getObjectProps();
 		for (Map.Entry<String, Object> entry : objectProps.entrySet()) {
 			if (propertiesToSkip.contains(entry.getKey())) {
@@ -440,17 +451,20 @@ public final class IdlUtils {
 		}
 	}
 
-	private static void writeMessage(Protocol.Message message, Writer writer, JsonGenerator jsonGen, String protocolNameSpace, Set<String> alreadyDeclared)
-		throws IOException {
+	private static void writeMessage(Protocol.Message message, Writer writer, JsonGenerator jsonGen,
+	                                 String protocolNameSpace, Set<String> alreadyDeclared)
+			throws IOException {
 		writeMessageAttributes(message, writer, jsonGen);
-		final Set<Schema> toDeclare = Collections.unmodifiableSet(new HashSet<>()); // Crash if a type hasn't been declared yet.
+		final Set<Schema> toDeclare = Collections.unmodifiableSet(
+				new HashSet<>()); // Crash if a type hasn't been declared yet.
 		writer.append("    ");
 		writeFieldSchema(message.getResponse(), writer, jsonGen, alreadyDeclared, toDeclare, protocolNameSpace);
 		writer.append(' ');
 		writer.append(message.getName());
 
 		Schema request = message.getRequest(); // MUST be a record type
-		boolean indentParameters = request.getFields().stream().anyMatch(field -> field.doc() != null && !field.doc().isBlank());
+		boolean indentParameters = request.getFields().stream()
+				.anyMatch(field -> field.doc() != null && !field.doc().isBlank());
 		writer.append('(');
 		if (indentParameters) {
 			writer.append("\n");
@@ -466,7 +480,7 @@ public final class IdlUtils {
 				writer.append(", ");
 			}
 			writeField(protocolNameSpace, field, writer, jsonGen, alreadyDeclared, toDeclare,
-				indentParameters ? FieldIndent.INSIDE_PROTOCOL : FieldIndent.NONE);
+					indentParameters ? FieldIndent.INSIDE_PROTOCOL : FieldIndent.NONE);
 		}
 		if (indentParameters) {
 			writer.append("\n    ");
@@ -498,7 +512,8 @@ public final class IdlUtils {
 		}
 	}
 
-	private static void writeMessageAttributes(Protocol.Message message, Writer writer, JsonGenerator jsonGen) throws IOException {
+	private static void writeMessageAttributes(Protocol.Message message, Writer writer, JsonGenerator jsonGen)
+			throws IOException {
 		writeDocumentation(writer, "    ", message.getDoc());
 		writeJsonProperties(message, writer, jsonGen, "    ");
 	}

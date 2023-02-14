@@ -26,8 +26,8 @@ public class AvroIdlDuplicateAnnotationsInspection extends BaseAvroIdlInspection
 	protected void visitElement(@NotNull AvroIdlAnnotatedNameIdentifierOwner element, @NotNull ProblemsHolder holder,
 	                            @NotNull LocalInspectionToolSession session) {
 		Map<String, List<AvroIdlSchemaProperty>> annotationsByName = element.getSchemaPropertyList().stream()
-			.filter(annotation -> getAnnotationName(annotation) != null)
-			.collect(Collectors.groupingBy(AvroIdlDuplicateAnnotationsInspection::getAnnotationName));
+				.filter(annotation -> getAnnotationName(annotation) != null)
+				.collect(Collectors.groupingBy(AvroIdlDuplicateAnnotationsInspection::getAnnotationName));
 		annotationsByName.entrySet().removeIf(entry -> entry.getValue().size() <= 1);
 
 		final String description = "Duplicate annotation (only the last will take effect)";
@@ -38,21 +38,23 @@ public class AvroIdlDuplicateAnnotationsInspection extends BaseAvroIdlInspection
 	}
 
 	@Nullable
-    private static String getAnnotationName(AvroIdlSchemaProperty annotation) {
+	private static String getAnnotationName(AvroIdlSchemaProperty annotation) {
 		return annotation instanceof AvroIdlNamespaceProperty ? "namespace" : annotation.getName();
 	}
 
-	private static class RemoveDuplicateAnnotationsQuickFix extends SimpleAvroIdlQuickFixOnPsiElement<AvroIdlAnnotatedNameIdentifierOwner> {
+	private static class RemoveDuplicateAnnotationsQuickFix
+			extends SimpleAvroIdlQuickFixOnPsiElement<AvroIdlAnnotatedNameIdentifierOwner> {
 		private final String annotationName;
 
-		public RemoveDuplicateAnnotationsQuickFix(@NotNull AvroIdlAnnotatedNameIdentifierOwner annotatedElement, String annotationName) {
+		public RemoveDuplicateAnnotationsQuickFix(@NotNull AvroIdlAnnotatedNameIdentifierOwner annotatedElement,
+		                                          String annotationName) {
 			super(annotatedElement, "Delete all @" + annotationName + " annotations except the last");
 			this.annotationName = annotationName;
 		}
 
 		@Override
 		protected void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor,
-                              @NotNull AvroIdlAnnotatedNameIdentifierOwner element) {
+		                      @NotNull AvroIdlAnnotatedNameIdentifierOwner element) {
 			final List<AvroIdlSchemaProperty> duplicates = new ArrayList<>();
 			for (AvroIdlSchemaProperty schemaProperty : element.getSchemaPropertyList()) {
 				if (annotationName.equals(getAnnotationName(schemaProperty))) {

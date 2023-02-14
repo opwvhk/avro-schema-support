@@ -30,8 +30,10 @@ public class AvroSchemaToIdlAction extends ConversionActionBase {
 		super("Convert to Avro IDL", AvroSchemaFileType.INSTANCE, AvroIdlFileType.INSTANCE);
 	}
 
-	protected void convertFiles(@NotNull Project project, @NotNull ConsoleView console, @NotNull List<VirtualFile> files) {
-		console.print("Converting " + files.size() + " " + AvroSchemaFileType.INSTANCE.getDisplayName() + " file(s) ", SYSTEM_OUTPUT);
+	protected void convertFiles(@NotNull Project project, @NotNull ConsoleView console,
+	                            @NotNull List<VirtualFile> files) {
+		console.print("Converting " + files.size() + " " + AvroSchemaFileType.INSTANCE.getDisplayName() + " file(s) ",
+				SYSTEM_OUTPUT);
 		console.print("to a single " + AvroIdlFileType.INSTANCE.getDisplayName() + " file\n", SYSTEM_OUTPUT);
 
 		final List<Schema> schemas = new ArrayList<>();
@@ -50,8 +52,9 @@ public class AvroSchemaToIdlAction extends ConversionActionBase {
 		}
 
 		console.print("Asking for file to write Avro IDL to...\n", NORMAL_OUTPUT);
-		final VirtualFileWrapper wrapper = askForTargetFile(project, "Save as Avro IDL", "Choose the filename to save to",
-			AvroIdlFileType.INSTANCE, files.get(0).getParent(), files.get(0).getNameWithoutExtension());
+		final VirtualFileWrapper wrapper = askForTargetFile(project, "Save as Avro IDL",
+				"Choose the filename to save to",
+				AvroIdlFileType.INSTANCE, files.get(0).getParent(), files.get(0).getNameWithoutExtension());
 		if (wrapper != null) {
 			final VirtualFile virtualFile = wrapper.getVirtualFile(true);
 			if (virtualFile != null) {
@@ -61,20 +64,25 @@ public class AvroSchemaToIdlAction extends ConversionActionBase {
 				WriteCommandAction.runWriteCommandAction(project, actionTitle, "AvroIDL", () -> {
 					try (Writer writer = new OutputStreamWriter(virtualFile.getOutputStream(this))) {
 						final String protocolName = virtualFile.getNameWithoutExtension();
-						final String namespace = schemas.get(0).getNamespace(); // Assume the first schema has the correct namespace.
+						final String namespace = schemas.get(0)
+								.getNamespace(); // Assume the first schema has the correct namespace.
 						// TODO: switch to schemas when Avro supports the schema syntax (Avro 1.12.0).
 						//IdlUtils.writeIdlSchemas(writer, namespace, schemas);
 						JsonProperties emptyProperties = Schema.create(Schema.Type.NULL);
-						IdlUtils.writeIdlProtocol(writer, emptyProperties, namespace, protocolName, schemas, emptyList());
+						IdlUtils.writeIdlProtocol(writer, emptyProperties, namespace, protocolName, schemas,
+								emptyList());
 
 						console.print("Wrote Avro IDL \"", NORMAL_OUTPUT);
 						console.print(protocolName, NORMAL_OUTPUT);
 						console.print("\" to ", NORMAL_OUTPUT);
-						console.printHyperlink(virtualFile.getName(), new OpenFileHyperlinkInfo(project, virtualFile, 0));
+						console.printHyperlink(virtualFile.getName(),
+								new OpenFileHyperlinkInfo(project, virtualFile, 0));
 						console.print("\n", NORMAL_OUTPUT);
-						FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, virtualFile), true);
+						FileEditorManager.getInstance(project)
+								.openTextEditor(new OpenFileDescriptor(project, virtualFile), true);
 					} catch (RuntimeException | IOException e) {
-						console.print("Failed to write the Avro IDL to " + virtualFile.getName() + "\n" + e.getLocalizedMessage(), ERROR_OUTPUT);
+						console.print("Failed to write the Avro IDL to " + virtualFile.getName() + "\n" +
+								e.getLocalizedMessage(), ERROR_OUTPUT);
 						writeStackTrace(console, e);
 					}
 				});

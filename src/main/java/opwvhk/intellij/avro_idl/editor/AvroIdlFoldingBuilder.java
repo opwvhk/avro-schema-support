@@ -17,14 +17,15 @@ import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
 public class AvroIdlFoldingBuilder implements FoldingBuilder, DumbAware {
 	@Override
-    @NotNull
-    public FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document) {
+	@NotNull
+	public FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document) {
 		List<FoldingDescriptor> descriptors = new ArrayList<>();
 		buildFoldRegions(node, document, descriptors);
 		return descriptors.toArray(FoldingDescriptor[]::new);
 	}
 
-	private void buildFoldRegions(@NotNull ASTNode node, @NotNull Document document, @NotNull List<FoldingDescriptor> descriptors) {
+	private void buildFoldRegions(@NotNull ASTNode node, @NotNull Document document,
+	                              @NotNull List<FoldingDescriptor> descriptors) {
 		if (isSingleLine(node, document)) {
 			return;
 		}
@@ -40,8 +41,8 @@ public class AvroIdlFoldingBuilder implements FoldingBuilder, DumbAware {
 	}
 
 	@Override
-    @Nullable
-    public String getPlaceholderText(@NotNull ASTNode node) {
+	@Nullable
+	public String getPlaceholderText(@NotNull ASTNode node) {
 		final IElementType elementType = node.getElementType();
 		if (elementType == BLOCK_COMMENT) {
 			return "/*...*/";
@@ -66,13 +67,14 @@ public class AvroIdlFoldingBuilder implements FoldingBuilder, DumbAware {
 	}
 
 	@Nullable
-    private TextRange getFoldRange(@NotNull ASTNode node) {
+	private TextRange getFoldRange(@NotNull ASTNode node) {
 		final IElementType elementType = node.getElementType();
 		if (elementType == BLOCK_COMMENT || elementType == DOC_COMMENT) {
 			return node.getTextRange();
 		}
 
-		if (elementType == PROTOCOL_DECLARATION || elementType == RECORD_DECLARATION || elementType == ENUM_DECLARATION || elementType == JSON_OBJECT) {
+		if (elementType == PROTOCOL_DECLARATION || elementType == RECORD_DECLARATION ||
+				elementType == ENUM_DECLARATION || elementType == JSON_OBJECT) {
 			return getFoldRange(node, LEFT_BRACE, RIGHT_BRACE);
 		} else if (elementType == JSON_ARRAY) {
 			return getFoldRange(node, LEFT_BRACKET, RIGHT_BRACKET);
@@ -82,7 +84,8 @@ public class AvroIdlFoldingBuilder implements FoldingBuilder, DumbAware {
 	}
 
 	@Nullable
-    private TextRange getFoldRange(@NotNull ASTNode node, @NotNull IElementType startElementType, @NotNull IElementType endElementType) {
+	private TextRange getFoldRange(@NotNull ASTNode node, @NotNull IElementType startElementType,
+	                               @NotNull IElementType endElementType) {
 		final ASTNode foldStart = node.findChildByType(startElementType);
 		final ASTNode foldEnd = node.findChildByType(endElementType, foldStart);
 		if (foldStart != null && foldEnd != null) {

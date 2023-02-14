@@ -13,14 +13,14 @@ import java.util.List;
 
 public class AvroJsonSchemaProviderFactory implements JsonSchemaProviderFactory {
 	@Override
-    @NotNull
-    public List<JsonSchemaFileProvider> getProviders(@NotNull Project project) {
+	@NotNull
+	public List<JsonSchemaFileProvider> getProviders(@NotNull Project project) {
 		if (project.isDisposed()) {
 			return Collections.emptyList();
 		}
 		return Arrays.asList(
-			new SimpleJsonSchemaFileProvider(AvroSchemaFileType.INSTANCE, "/schemas/avro-schema.schema.json"),
-			new SimpleJsonSchemaFileProvider(AvroProtocolFileType.INSTANCE, "/schemas/avro-protocol.schema.json")
+				new SimpleJsonSchemaFileProvider(AvroSchemaFileType.INSTANCE, "/schemas/avro-schema.schema.json"),
+				new SimpleJsonSchemaFileProvider(AvroProtocolFileType.INSTANCE, "/schemas/avro-protocol.schema.json")
 		);
 	}
 }

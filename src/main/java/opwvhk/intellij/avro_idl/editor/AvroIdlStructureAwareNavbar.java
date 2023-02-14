@@ -1,7 +1,5 @@
 package opwvhk.intellij.avro_idl.editor;
 
-import javax.swing.*;
-
 import com.intellij.ide.navigationToolbar.StructureAwareNavBarModelExtension;
 import com.intellij.lang.Language;
 import com.intellij.psi.PsiElement;
@@ -11,6 +9,8 @@ import opwvhk.intellij.avro_idl.psi.AvroIdlFile;
 import opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 public class AvroIdlStructureAwareNavbar extends StructureAwareNavBarModelExtension {
 	@Override

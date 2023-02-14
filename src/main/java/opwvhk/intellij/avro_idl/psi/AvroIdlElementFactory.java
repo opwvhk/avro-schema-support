@@ -22,18 +22,19 @@ public class AvroIdlElementFactory {
 	}
 
 	@NotNull
-    public PsiElement createIdentifier(@NotNull String name) {
+	public PsiElement createIdentifier(@NotNull String name) {
 		// Yes, in theory this can cause syntax errors. We're assuming the name has been vetted by AvroIdlNamesValidator.
 		final AvroIdlFile file = createDummyFile(String.format("protocol %s {}", name));
-		final AvroIdlProtocolDeclaration protocol = (AvroIdlProtocolDeclaration)file.getFirstChild();
+		final AvroIdlProtocolDeclaration protocol = (AvroIdlProtocolDeclaration) file.getFirstChild();
 		final PsiElement nameIdentifier = protocol.getNameIdentifier();
 		assert nameIdentifier != null;
 		return nameIdentifier;
 	}
 
 	@NotNull
-    public AvroIdlJsonStringLiteral createJsonStringLiteral(@NotNull String text) {
-		final AvroIdlFile file = createDummyFile(String.format("protocol Foo { import idl \"%s\"; }", StringUtil.escapeStringCharacters(text)));
+	public AvroIdlJsonStringLiteral createJsonStringLiteral(@NotNull String text) {
+		final AvroIdlFile file = createDummyFile(
+				String.format("protocol Foo { import idl \"%s\"; }", StringUtil.escapeStringCharacters(text)));
 		final AvroIdlProtocolBody protocolBody = extractAvroIdlProtocolBody(file);
 		final AvroIdlImportDeclaration avroIdlImportDeclaration = protocolBody.getImportDeclarationList().get(0);
 		final AvroIdlJsonStringLiteral jsonStringLiteral = avroIdlImportDeclaration.getJsonStringLiteral();
@@ -44,21 +45,21 @@ public class AvroIdlElementFactory {
 	@NotNull
 	public AvroIdlSchemaProperty createProperty(@NotNull String name, @NotNull String value) {
 		final AvroIdlFile file = createDummyFile(String.format("@%s(%s) protocol dummy {}", name, value));
-		final AvroIdlProtocolDeclaration protocol = (AvroIdlProtocolDeclaration)file.getFirstChild();
+		final AvroIdlProtocolDeclaration protocol = (AvroIdlProtocolDeclaration) file.getFirstChild();
 		return protocol.getSchemaPropertyList().get(0);
 	}
 
 	@NotNull
-    private AvroIdlProtocolBody extractAvroIdlProtocolBody(AvroIdlFile file) {
-		final AvroIdlProtocolDeclaration protocol = (AvroIdlProtocolDeclaration)file.getFirstChild();
+	private AvroIdlProtocolBody extractAvroIdlProtocolBody(AvroIdlFile file) {
+		final AvroIdlProtocolDeclaration protocol = (AvroIdlProtocolDeclaration) file.getFirstChild();
 		return requireNonNull(protocol.getProtocolBody());
 	}
 
 	@NotNull
-    public PsiComment createMultilineComment(@NotNull String docCommentTokenText) {
+	public PsiComment createMultilineComment(@NotNull String docCommentTokenText) {
 		final String commentContent = docCommentTokenText.substring(3, docCommentTokenText.length() - 2);
 		final AvroIdlFile file = createDummyFile(String.format("/*%s*/ protocol Foo { }", commentContent));
-		return (PsiComment)file.getFirstChild();
+		return (PsiComment) file.getFirstChild();
 	}
 
 	/**
@@ -68,22 +69,22 @@ public class AvroIdlElementFactory {
 	 * @param protocolDeclaration a protocol declaration
 	 * @return an in-memory 'file' using the IDL schema syntax with a namespace declaration and optionally a main schema declaration
 	 */
-    @NotNull
-    public AvroIdlFile createSchemaSyntaxHeader(@NotNull AvroIdlProtocolDeclaration protocolDeclaration) {
+	@NotNull
+	public AvroIdlFile createSchemaSyntaxHeader(@NotNull AvroIdlProtocolDeclaration protocolDeclaration) {
 
 		String fullName = requireNonNull(protocolDeclaration.getFullName());
 		int dotPos = fullName.lastIndexOf('.');
 		String namespace = dotPos < 0 ? "" : fullName.substring(0, dotPos);
 
 		String firstSchemaDeclaration = Stream.ofNullable(protocolDeclaration.getProtocolBody())
-			.map(AvroIdlProtocolBody::getNamedSchemaDeclarationList)
-			.flatMap(List::stream)
-			.findFirst()
-			.map(namedSchema -> {
-				String schemaNamespace = AvroIdlPsiUtil.getNamespace(namedSchema);
-				return (namespace.equals(schemaNamespace) ? "" : (schemaNamespace + ".")) + namedSchema.getName();
-			})
-			.orElse(null);
+				.map(AvroIdlProtocolBody::getNamedSchemaDeclarationList)
+				.flatMap(List::stream)
+				.findFirst()
+				.map(namedSchema -> {
+					String schemaNamespace = AvroIdlPsiUtil.getNamespace(namedSchema);
+					return (namespace.equals(schemaNamespace) ? "" : (schemaNamespace + ".")) + namedSchema.getName();
+				})
+				.orElse(null);
 
 		StringBuilder buffer = new StringBuilder();
 		if (!namespace.isEmpty()) {
@@ -100,33 +101,38 @@ public class AvroIdlElementFactory {
 	}
 
 	@NotNull
-    public AvroIdlProtocolDeclaration createDummyProtocol(@Nullable String namespace) {
+	public AvroIdlProtocolDeclaration createDummyProtocol(@Nullable String namespace) {
 		String protocolDefinition = "protocol Dummy { }";
 		if (namespace != null) {
 			protocolDefinition = String.format("@namespace(\"%s\")%n%s", namespace, protocolDefinition);
 		}
-		return (AvroIdlProtocolDeclaration)createDummyFile(protocolDefinition).getFirstChild();
+		return (AvroIdlProtocolDeclaration) createDummyFile(protocolDefinition).getFirstChild();
 	}
 
 	@NotNull
-    public AvroIdlNullableType makeOptional(@NotNull AvroIdlNullableType type) {
+	public AvroIdlNullableType makeOptional(@NotNull AvroIdlNullableType type) {
 		if (type.isOptional()) {
 			return type;
 		}
-		final AvroIdlFile file = createDummyFile(String.format("protocol Foo { record Bar { %s? field; } }", type.getText()));
+		final AvroIdlFile file = createDummyFile(
+				String.format("protocol Foo { record Bar { %s? field; } }", type.getText()));
 		final AvroIdlProtocolBody protocolBody = extractAvroIdlProtocolBody(file);
-		final AvroIdlRecordDeclaration recordDeclaration = (AvroIdlRecordDeclaration)protocolBody.getNamedSchemaDeclarationList().get(0);
-		final AvroIdlFieldDeclaration fieldDeclaration = requireNonNull(recordDeclaration.getRecordBody()).getFieldDeclarationList().get(0);
-		return (AvroIdlNullableType)fieldDeclaration.getType();
+		final AvroIdlRecordDeclaration recordDeclaration = (AvroIdlRecordDeclaration) protocolBody.getNamedSchemaDeclarationList()
+				.get(0);
+		final AvroIdlFieldDeclaration fieldDeclaration = requireNonNull(
+				recordDeclaration.getRecordBody()).getFieldDeclarationList().get(0);
+		return (AvroIdlNullableType) fieldDeclaration.getType();
 	}
 
 	@NotNull
-    public AvroIdlUnionType unionWithNull(@NotNull AvroIdlType type, boolean nullLast) {
+	public AvroIdlUnionType unionWithNull(@NotNull AvroIdlType type, boolean nullLast) {
 		final AvroIdlFile file = createDummyFile("protocol Foo { record Bar { union { null, null } field; } }");
 		final AvroIdlProtocolBody protocolBody = extractAvroIdlProtocolBody(file);
-		final AvroIdlRecordDeclaration recordDeclaration = (AvroIdlRecordDeclaration)protocolBody.getNamedSchemaDeclarationList().get(0);
-		final AvroIdlFieldDeclaration fieldDeclaration = requireNonNull(recordDeclaration.getRecordBody()).getFieldDeclarationList().get(0);
-		final AvroIdlUnionType unionType = (AvroIdlUnionType)fieldDeclaration.getType();
+		final AvroIdlRecordDeclaration recordDeclaration = (AvroIdlRecordDeclaration) protocolBody.getNamedSchemaDeclarationList()
+				.get(0);
+		final AvroIdlFieldDeclaration fieldDeclaration = requireNonNull(
+				recordDeclaration.getRecordBody()).getFieldDeclarationList().get(0);
+		final AvroIdlUnionType unionType = (AvroIdlUnionType) fieldDeclaration.getType();
 
 		unionType.getTypeList().get(nullLast ? 0 : 1).replace(type);
 		return unionType;
@@ -138,9 +144,10 @@ public class AvroIdlElementFactory {
 	 * @param content content of the file to be created
 	 * @return created file
 	 */
-    @NotNull
-    public AvroIdlFile createDummyFile(@NotNull CharSequence content) {
-		return (AvroIdlFile)PsiFileFactory.getInstance(myProject).
-			createFileFromText("dummy." + AvroIdlFileType.INSTANCE.getDefaultExtension(), AvroIdlFileType.INSTANCE, content);
+	@NotNull
+	public AvroIdlFile createDummyFile(@NotNull CharSequence content) {
+		return (AvroIdlFile) PsiFileFactory.getInstance(myProject).
+				createFileFromText("dummy." + AvroIdlFileType.INSTANCE.getDefaultExtension(), AvroIdlFileType.INSTANCE,
+						content);
 	}
 }

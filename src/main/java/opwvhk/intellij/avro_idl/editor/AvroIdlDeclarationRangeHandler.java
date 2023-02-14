@@ -16,13 +16,15 @@ import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
 public class AvroIdlDeclarationRangeHandler implements DeclarationRangeHandler<AvroIdlNameIdentifierOwner> {
 
-	private static final TokenSet NON_DECLARATION_TYPES = TokenSet.create(WHITE_SPACE, SCHEMA_PROPERTY, LINE_COMMENT, BLOCK_COMMENT, SEMICOLON);
+	private static final TokenSet NON_DECLARATION_TYPES = TokenSet.create(WHITE_SPACE, SCHEMA_PROPERTY, LINE_COMMENT,
+			BLOCK_COMMENT, SEMICOLON);
 
 	@Override
-    @Nullable
-    public TextRange getDeclarationRange(@NotNull AvroIdlNameIdentifierOwner container) {
+	@Nullable
+	public TextRange getDeclarationRange(@NotNull AvroIdlNameIdentifierOwner container) {
 		ASTNode firstDeclarationChild = container.getNode().getFirstChildNode();
-		while (firstDeclarationChild != null && NON_DECLARATION_TYPES.contains(firstDeclarationChild.getElementType())) {
+		while (firstDeclarationChild != null &&
+				NON_DECLARATION_TYPES.contains(firstDeclarationChild.getElementType())) {
 			firstDeclarationChild = firstDeclarationChild.getTreeNext();
 		}
 		if (firstDeclarationChild == null) {
@@ -32,7 +34,8 @@ public class AvroIdlDeclarationRangeHandler implements DeclarationRangeHandler<A
 		int endOffset;
 		if (container instanceof AvroIdlMessageDeclaration || container instanceof AvroIdlImportDeclaration) {
 			ASTNode lastDeclarationChild = container.getNode().getLastChildNode();
-			while (lastDeclarationChild != null && NON_DECLARATION_TYPES.contains(lastDeclarationChild.getElementType())) {
+			while (lastDeclarationChild != null &&
+					NON_DECLARATION_TYPES.contains(lastDeclarationChild.getElementType())) {
 				lastDeclarationChild = lastDeclarationChild.getTreePrev();
 			}
 			assert lastDeclarationChild != null; // Worst case: the same as firstDeclarationChild

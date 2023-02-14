@@ -23,26 +23,30 @@ public class AvroIdlBlock extends AbstractBlock {
 	 *
 	 * We'll be testing for the preamble elements, and the body start & end to make the algorithm robust against changes to the types (especially logical types).
 	 */
-	protected static final TokenSet DECLARATIONS = TokenSet.create(PROTOCOL_DECLARATION, FIXED_DECLARATION, ENUM_DECLARATION, RECORD_DECLARATION,
-		MESSAGE_DECLARATION, FIELD_DECLARATION, TYPE, RESULT_TYPE, PRIMITIVE_TYPE, ARRAY_TYPE, MAP_TYPE, UNION_TYPE, REFERENCE_TYPE);
-	private static final TokenSet DECLARATION_BODIES_WITH_UNINDENTED_CHILDREN = TokenSet.create(PROTOCOL_BODY, ENUM_BODY, RECORD_BODY);
+	protected static final TokenSet DECLARATIONS = TokenSet.create(PROTOCOL_DECLARATION, FIXED_DECLARATION,
+			ENUM_DECLARATION, RECORD_DECLARATION, MESSAGE_DECLARATION, FIELD_DECLARATION, TYPE, RESULT_TYPE,
+			PRIMITIVE_TYPE, ARRAY_TYPE, MAP_TYPE, UNION_TYPE, REFERENCE_TYPE);
+	private static final TokenSet DECLARATION_BODIES_WITH_UNINDENTED_CHILDREN = TokenSet.create(PROTOCOL_BODY,
+			ENUM_BODY, RECORD_BODY);
 
 	private static final TokenSet ELEMENTS_THAT_MAY_CONTAIN_CHILDREN = TokenSet.create(ARRAY_TYPE, DECIMAL_TYPE,
-		ENUM_CONSTANT, ENUM_DECLARATION, ENUM_DEFAULT, FIELD_DECLARATION, FIXED_DECLARATION, FORMAL_PARAMETER, IMPORT_DECLARATION, IMPORT_TYPE, JSON_ARRAY,
-		JSON_OBJECT, JSON_PAIR, JSON_VALUE, MAP_TYPE, MESSAGE_ATTRIBUTES, MESSAGE_ATTRIBUTE_THROWS, MESSAGE_DECLARATION, NAMED_SCHEMA_DECLARATION,
-		PRIMITIVE_TYPE, PROTOCOL_BODY, PROTOCOL_DECLARATION, RECORD_BODY, RECORD_DECLARATION, REFERENCE_TYPE, RESULT_TYPE, SCHEMA_PROPERTY, TYPE, UNION_TYPE,
-		VARIABLE_DECLARATOR);
+			ENUM_CONSTANT, ENUM_DECLARATION, ENUM_DEFAULT, FIELD_DECLARATION, FIXED_DECLARATION, FORMAL_PARAMETER,
+			IMPORT_DECLARATION, IMPORT_TYPE, JSON_ARRAY, JSON_OBJECT, JSON_PAIR, JSON_VALUE, MAP_TYPE,
+			MESSAGE_ATTRIBUTES, MESSAGE_ATTRIBUTE_THROWS, MESSAGE_DECLARATION, NAMED_SCHEMA_DECLARATION, PRIMITIVE_TYPE,
+			PROTOCOL_BODY, PROTOCOL_DECLARATION, RECORD_BODY, RECORD_DECLARATION, REFERENCE_TYPE, RESULT_TYPE,
+			SCHEMA_PROPERTY, TYPE, UNION_TYPE, VARIABLE_DECLARATOR);
 
-	private static final TokenSet ELEMENTS_THAT_WRAP_BEFORE_CHILDREN = TokenSet.create(MESSAGE_ATTRIBUTE_THROWS, JSON_PAIR);
-	private static final TokenSet ELEMENTS_THAT_NEVER_WRAP = TokenSet.create(
-		COMMA, SEMICOLON, LEFT_PAREN, RIGHT_PAREN, LEFT_ANGLE, RIGHT_ANGLE, LEFT_BRACKET, RIGHT_BRACKET);
+	private static final TokenSet ELEMENTS_THAT_WRAP_BEFORE_CHILDREN = TokenSet.create(MESSAGE_ATTRIBUTE_THROWS,
+			JSON_PAIR);
+	private static final TokenSet ELEMENTS_THAT_NEVER_WRAP = TokenSet.create(COMMA, SEMICOLON, LEFT_PAREN, RIGHT_PAREN,
+			LEFT_ANGLE, RIGHT_ANGLE, LEFT_BRACKET, RIGHT_BRACKET);
 
 	private final Indent myIndent;
 	private final SpacingBuilder mySpacingBuilder;
 	private final List<ChildAttributes> newSubBlockAttributes;
 
 	protected AvroIdlBlock(@NotNull ASTNode node, @NotNull Wrap wrap, @Nullable Alignment alignment, Indent indent,
-						   @NotNull SpacingBuilder spacingBuilder) {
+	                       @NotNull SpacingBuilder spacingBuilder) {
 		super(node, wrap, alignment);
 		myIndent = indent;
 		mySpacingBuilder = spacingBuilder;
@@ -84,7 +88,7 @@ public class AvroIdlBlock extends AbstractBlock {
 	}
 
 	@NotNull
-    private Wrap createChildWrap() {
+	private Wrap createChildWrap() {
 		final IElementType elementType = myNode.getElementType();
 		if (ELEMENTS_THAT_WRAP_BEFORE_CHILDREN.contains(elementType)) {
 			return Wrap.createChildWrap(myWrap, WrapType.NORMAL, false);
@@ -98,18 +102,18 @@ public class AvroIdlBlock extends AbstractBlock {
 
 
 	@Nullable
-    protected Indent getPreviousChildIndent(int childNodeIndex) {
+	protected Indent getPreviousChildIndent(int childNodeIndex) {
 		return getChildIndent();
 	}
 
 	@Nullable
-    protected Indent getChildIndent(int childNodeIndex) {
+	protected Indent getChildIndent(int childNodeIndex) {
 		return getChildIndent();
 	}
 
 	@Override
-    @Nullable
-    protected Indent getChildIndent() {
+	@Nullable
+	protected Indent getChildIndent() {
 		final IElementType myElementType = myNode.getElementType();
 
 		if (DECLARATION_BODIES_WITH_UNINDENTED_CHILDREN.contains(myElementType) || myNode instanceof FileElement) {
@@ -120,8 +124,8 @@ public class AvroIdlBlock extends AbstractBlock {
 	}
 
 	@Override
-    @NotNull
-    public ChildAttributes getChildAttributes(int newChildBlockIndex) {
+	@NotNull
+	public ChildAttributes getChildAttributes(int newChildBlockIndex) {
 		if (newSubBlockAttributes.isEmpty()) {
 			// If we get here, we have not built sub blocks.
 			return super.getChildAttributes(newChildBlockIndex);
@@ -135,8 +139,8 @@ public class AvroIdlBlock extends AbstractBlock {
 	}
 
 	@Override
-    @Nullable
-    public Spacing getSpacing(@Nullable Block child1, @NotNull Block child2) {
+	@Nullable
+	public Spacing getSpacing(@Nullable Block child1, @NotNull Block child2) {
 		return mySpacingBuilder.getSpacing(this, child1, child2);
 	}
 

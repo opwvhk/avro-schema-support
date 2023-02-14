@@ -14,13 +14,15 @@ import org.jetbrains.annotations.Nullable;
 public class AvroIdlFindUsagesProvider implements FindUsagesProvider {
 
 	private static final TokenSet IDENTIFIER_TOKENS = TokenSet.create(AvroIdlTypes.IDENTIFIER);
-	private static final TokenSet COMMENT_TOKENS = TokenSet.create(AvroIdlTypes.DOC_COMMENT, AvroIdlTypes.BLOCK_COMMENT, AvroIdlTypes.LINE_COMMENT,
-		AvroIdlTypes.INCOMPLETE_DOC_COMMENT, AvroIdlTypes.INCOMPLETE_BLOCK_COMMENT);
+	private static final TokenSet COMMENT_TOKENS = TokenSet.create(AvroIdlTypes.DOC_COMMENT, AvroIdlTypes.BLOCK_COMMENT,
+			AvroIdlTypes.LINE_COMMENT,
+			AvroIdlTypes.INCOMPLETE_DOC_COMMENT, AvroIdlTypes.INCOMPLETE_BLOCK_COMMENT);
 
 	@Override
-    @Nullable
-    public WordsScanner getWordsScanner() {
-		final DefaultWordsScanner wordsScanner = new DefaultWordsScanner(new AvroIdlLexer(), IDENTIFIER_TOKENS, COMMENT_TOKENS, TokenSet.EMPTY);
+	@Nullable
+	public WordsScanner getWordsScanner() {
+		final DefaultWordsScanner wordsScanner = new DefaultWordsScanner(new AvroIdlLexer(), IDENTIFIER_TOKENS,
+				COMMENT_TOKENS, TokenSet.EMPTY);
 		wordsScanner.setMayHaveFileRefsInLiterals(true);
 		return wordsScanner;
 	}
@@ -31,16 +33,16 @@ public class AvroIdlFindUsagesProvider implements FindUsagesProvider {
 	}
 
 	@Override
-    @Nullable
-    public String getHelpId(@NotNull PsiElement psiElement) {
+	@Nullable
+	public String getHelpId(@NotNull PsiElement psiElement) {
 		return null;
 	}
 
 	@Override
-    @NotNull
-    public String getType(@NotNull PsiElement element) {
+	@NotNull
+	public String getType(@NotNull PsiElement element) {
 		if (element instanceof AvroIdlRecordDeclaration) {
-			if (((AvroIdlRecordDeclaration)element).isErrorType()) {
+			if (((AvroIdlRecordDeclaration) element).isErrorType()) {
 				return "error schema";
 			} else {
 				return "record schema";
@@ -52,7 +54,7 @@ public class AvroIdlFindUsagesProvider implements FindUsagesProvider {
 		} else if (element instanceof AvroIdlEnumConstant) {
 			return "enum schema";
 		} else if (element instanceof AvroIdlNamedSchemaReference) {
-			final PsiElement resolvedReference = ((AvroIdlNamedSchemaReference)element).resolve();
+			final PsiElement resolvedReference = ((AvroIdlNamedSchemaReference) element).resolve();
 			if (resolvedReference != null) {
 				return getType(resolvedReference);
 			} else {
@@ -64,19 +66,19 @@ public class AvroIdlFindUsagesProvider implements FindUsagesProvider {
 	}
 
 	@Override
-    @NotNull
-    public String getDescriptiveName(@NotNull PsiElement element) {
+	@NotNull
+	public String getDescriptiveName(@NotNull PsiElement element) {
 		return getNodeText(element, false);
 	}
 
 	@Override
-    @NotNull
-    public String getNodeText(@NotNull PsiElement element, boolean useFullName) {
+	@NotNull
+	public String getNodeText(@NotNull PsiElement element, boolean useFullName) {
 		String name;
 		if (element instanceof AvroIdlNamespacedNameIdentifierOwner) {
-			name = ((AvroIdlNamespacedNameIdentifierOwner)element).getFullName();
+			name = ((AvroIdlNamespacedNameIdentifierOwner) element).getFullName();
 		} else if (element instanceof PsiNamedElement) {
-			name = ((PsiNamedElement)element).getName();
+			name = ((PsiNamedElement) element).getName();
 		} else {
 			name = element.getText();
 		}

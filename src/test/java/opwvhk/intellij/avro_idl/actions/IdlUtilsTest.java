@@ -28,12 +28,12 @@ public class IdlUtilsTest {
 	@Test
 	public void idlUtilsUtilitiesThrowRuntimeExceptionsOnProgrammerError() {
 		assertThatThrownBy(() -> IdlUtils.getField(Object.class, "noSuchField"))
-			.isInstanceOf(IllegalStateException.class).hasMessage("Programmer error");
+				.isInstanceOf(IllegalStateException.class).hasMessage("Programmer error");
 		assertThatThrownBy(() -> IdlUtils.getFieldValue(String.class.getDeclaredField("value"), "anything"))
-			.isInstanceOf(IllegalStateException.class).hasMessage("Programmer error");
+				.isInstanceOf(IllegalStateException.class).hasMessage("Programmer error");
 
 		assertThatThrownBy(() -> IdlUtils.getMethod(Object.class, "noSuchMethod"))
-			.isInstanceOf(IllegalStateException.class).hasMessage("Programmer error");
+				.isInstanceOf(IllegalStateException.class).hasMessage("Programmer error");
 		assertThatThrownBy(() -> {
 			Object foo = IdlUtils.invokeMethod(Object.class.getDeclaredMethod("clone"), new Object());
 			System.err.println(foo);
@@ -81,21 +81,21 @@ public class IdlUtilsTest {
 	@Test
 	public void cannotWriteProtocolWithUnnamedTypes() {
 		assertThatThrownBy(() -> IdlUtils.writeIdlProtocol(new StringWriter(),
-			Schema.create(Schema.Type.STRING))).isInstanceOf(AvroRuntimeException.class);
+				Schema.create(Schema.Type.STRING))).isInstanceOf(AvroRuntimeException.class);
 	}
 
 	@Test
 	public void cannotWriteEmptyEnums() {
 		assertThatThrownBy(() -> IdlUtils.writeIdlProtocol(new StringWriter(),
-			Schema.createEnum("Single", null, "naming", emptyList()))).isInstanceOf(AvroRuntimeException.class);
+				Schema.createEnum("Single", null, "naming", emptyList()))).isInstanceOf(AvroRuntimeException.class);
 	}
 
 	@Test
 	public void cannotWriteEmptyUnionTypes() {
 		assertThatThrownBy(() -> IdlUtils.writeIdlProtocol(new StringWriter(),
-			Schema.createRecord("Single", null, "naming", false, singletonList(
-				new Schema.Field("field", Schema.createUnion())
-			)))).isInstanceOf(AvroRuntimeException.class);
+				Schema.createRecord("Single", null, "naming", false, singletonList(
+						new Schema.Field("field", Schema.createUnion())
+				)))).isInstanceOf(AvroRuntimeException.class);
 	}
 
 	@Test

@@ -32,7 +32,8 @@ public class AvroIdlCodeCompletionsTest extends LightJavaCodeInsightFixtureTestC
 	*/
 
 	public void testCompletionsAfterOnlyAnnotations() {
-		assertThat(getBasicCompletions("OnlyAnnotationFile.avdl")).containsExactlyInAnyOrder("@namespace(\"\")", "protocol ");
+		assertThat(getBasicCompletions("OnlyAnnotationFile.avdl")).containsExactlyInAnyOrder("@namespace(\"\")",
+				"protocol ");
 	}
 
 	public void testCompletionsForAnnotationInProtocol() {
@@ -41,41 +42,43 @@ public class AvroIdlCodeCompletionsTest extends LightJavaCodeInsightFixtureTestC
 
 	public void testCompletionsForProtocolBody() {
 		assertThat(getBasicCompletions("ProtocolBody.avdl")).containsExactlyInAnyOrder(
-			"import ", "enum ", "record ", "error ", "fixed ", "void ",
-			"boolean ", "bytes ", "int ", "string ", "float ", "double ", "long ",
-			"null ",
-			"date ", "time_ms ", "local_timestamp_ms ", "timestamp_ms ", "decimal(",
-			"union {", "array<", "map<",
-			"Rec1", "other.namespace.Enum"
+				"import ", "enum ", "record ", "error ", "fixed ", "void ",
+				"boolean ", "bytes ", "int ", "string ", "float ", "double ", "long ",
+				"null ",
+				"date ", "time_ms ", "local_timestamp_ms ", "timestamp_ms ", "decimal(",
+				"union {", "array<", "map<",
+				"Rec1", "other.namespace.Enum"
 		);
 	}
 
 	public void testCompletionsForEnumDefaults() {
-		assertThat(getBasicCompletions("EnumDefaults.avdl")).containsExactlyInAnyOrder("TRUE", "FALSE", "FILE_NOT_FOUND");
+		assertThat(getBasicCompletions("EnumDefaults.avdl")).containsExactlyInAnyOrder("TRUE", "FALSE",
+				"FILE_NOT_FOUND");
 	}
 
 	public void testCompletionsForRecordBody() {
 		assertThat(getBasicCompletions("RecordBody.avdl")).containsExactlyInAnyOrder(
-			"boolean ", "bytes ", "int ", "string ", "float ", "double ", "long ",
-			"null ",
-			"date ", "time_ms ", "local_timestamp_ms ", "timestamp_ms ", "decimal(",
-			"union {", "array<", "map<",
-			"Rec1", "Rec2", "other.namespace.Enum"
+				"boolean ", "bytes ", "int ", "string ", "float ", "double ", "long ",
+				"null ",
+				"date ", "time_ms ", "local_timestamp_ms ", "timestamp_ms ", "decimal(",
+				"union {", "array<", "map<",
+				"Rec1", "Rec2", "other.namespace.Enum"
 		);
 	}
 
 	public void testCompletionsForMainSchemaDeclaration() {
 		assertThat(getBasicCompletions("MainSchemaDeclaration.avdl")).containsExactlyInAnyOrder(
-			"boolean ", "bytes ", "int ", "string ", "float ", "double ", "long ",
-			"null ",
-			"date ", "time_ms ", "local_timestamp_ms ", "timestamp_ms ", "decimal(",
-			"union {", "array<", "map<",
-			"Rec1", "other.namespace.Enum"
+				"boolean ", "bytes ", "int ", "string ", "float ", "double ", "long ",
+				"null ",
+				"date ", "time_ms ", "local_timestamp_ms ", "timestamp_ms ", "decimal(",
+				"union {", "array<", "map<",
+				"Rec1", "other.namespace.Enum"
 		);
 	}
 
 	public void testCompletionsForImportTypesInProtocol() {
-		assertThat(getBasicCompletions("ImportTypesInProtocol.avdl")).containsExactlyInAnyOrder("idl ", "protocol ", "schema ");
+		assertThat(getBasicCompletions("ImportTypesInProtocol.avdl")).containsExactlyInAnyOrder("idl ", "protocol ",
+				"schema ");
 	}
 
 	public void testCompletionsForImportTypes() {
@@ -83,7 +86,8 @@ public class AvroIdlCodeCompletionsTest extends LightJavaCodeInsightFixtureTestC
 	}
 
 	public void testCompletionsForNamedSchemaAnnotations() {
-		assertThat(getBasicCompletions("NamedSchemaAnnotations.avdl")).containsExactlyInAnyOrder("namespace(\"\")", "aliases([\"\"])", "logicalType(\"\")");
+		assertThat(getBasicCompletions("NamedSchemaAnnotations.avdl")).containsExactlyInAnyOrder("namespace(\"\")",
+				"aliases([\"\"])", "logicalType(\"\")");
 	}
 
 	public void testCompletionsForUnnamedSchemaAnnotations() {
@@ -91,48 +95,54 @@ public class AvroIdlCodeCompletionsTest extends LightJavaCodeInsightFixtureTestC
 	}
 
 	public void testCompletionsForFieldAnnotations() {
-		assertThat(getBasicCompletions("FieldAnnotations.avdl")).containsExactlyInAnyOrder("order(\"\")", "aliases([\"\"])");
+		assertThat(getBasicCompletions("FieldAnnotations.avdl")).containsExactlyInAnyOrder("order(\"\")",
+				"aliases([\"\"])");
 	}
 
 	public void testCompletionsForOrderAnnotationStringsOnIncompleteFields() {
-		assertThat(getBasicCompletions("OrderAnnotationStringsOnIncompleteFields.avdl")).containsExactlyInAnyOrder("\"ascending\"", "\"descending\"",
-			"\"ignore\"");
+		assertThat(getBasicCompletions("OrderAnnotationStringsOnIncompleteFields.avdl")).containsExactlyInAnyOrder(
+				"\"ascending\"", "\"descending\"",
+				"\"ignore\"");
 	}
 
 	public void testCompletionsForOrderAnnotationStrings() {
-		assertThat(getBasicCompletions("OrderAnnotationStrings.avdl")).containsExactlyInAnyOrder("\"ascending\"", "\"descending\"", "\"ignore\"");
+		assertThat(getBasicCompletions("OrderAnnotationStrings.avdl")).containsExactlyInAnyOrder("\"ascending\"",
+				"\"descending\"", "\"ignore\"");
 	}
 
 	public void testCompletionsForOrderAnnotationValuesOnIncompleteFields() {
-		assertThat(getBasicCompletions("OrderAnnotationValuesOnIncompleteFields.avdl")).containsExactlyInAnyOrder("ascending", "descending", "ignore");
+		assertThat(getBasicCompletions("OrderAnnotationValuesOnIncompleteFields.avdl")).containsExactlyInAnyOrder(
+				"ascending", "descending", "ignore");
 	}
 
 	public void testCompletionsForOrderAnnotationValues() {
-		assertThat(getBasicCompletions("OrderAnnotationValues.avdl")).containsExactlyInAnyOrder("ascending", "descending", "ignore");
+		assertThat(getBasicCompletions("OrderAnnotationValues.avdl")).containsExactlyInAnyOrder("ascending",
+				"descending", "ignore");
 	}
 
 	public void testCompletionsForFirstFormalParameter() {
 		assertThat(getBasicCompletions("FirstFormalParameter.avdl")).containsExactlyInAnyOrder(
-			"boolean ", "bytes ", "int ", "string ", "float ", "double ", "long ",
-			"null ",
-			"date ", "time_ms ", "local_timestamp_ms ", "timestamp_ms ", "decimal(",
-			"union {", "array<", "map<",
-			"Rec1", "other.namespace.Enum"
+				"boolean ", "bytes ", "int ", "string ", "float ", "double ", "long ",
+				"null ",
+				"date ", "time_ms ", "local_timestamp_ms ", "timestamp_ms ", "decimal(",
+				"union {", "array<", "map<",
+				"Rec1", "other.namespace.Enum"
 		);
 	}
 
 	public void testCompletionsForOtherFormalParameter() {
 		assertThat(getBasicCompletions("OtherFormalParameter.avdl")).containsExactlyInAnyOrder(
-			"boolean ", "bytes ", "int ", "string ", "float ", "double ", "long ",
-			"null ",
-			"date ", "time_ms ", "local_timestamp_ms ", "timestamp_ms ", "decimal(",
-			"union {", "array<", "map<",
-			"Rec1", "other.namespace.Enum"
+				"boolean ", "bytes ", "int ", "string ", "float ", "double ", "long ",
+				"null ",
+				"date ", "time_ms ", "local_timestamp_ms ", "timestamp_ms ", "decimal(",
+				"union {", "array<", "map<",
+				"Rec1", "other.namespace.Enum"
 		);
 	}
 
 	public void testCompletionsForMessageAttributes() {
-		assertThat(getBasicCompletions("MessageAttributesKeywords.avdl")).containsExactlyInAnyOrder("oneway", "throws ");
+		assertThat(getBasicCompletions("MessageAttributesKeywords.avdl")).containsExactlyInAnyOrder("oneway",
+				"throws ");
 	}
 
 	public void testCompletionsForMessageThrowsClause() {

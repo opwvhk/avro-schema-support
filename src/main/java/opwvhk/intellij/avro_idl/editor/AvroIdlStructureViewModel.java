@@ -11,14 +11,15 @@ import opwvhk.intellij.avro_idl.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class AvroIdlStructureViewModel extends StructureViewModelBase implements StructureViewModel.ElementInfoProvider {
+public class AvroIdlStructureViewModel extends StructureViewModelBase
+		implements StructureViewModel.ElementInfoProvider {
 
 	public AvroIdlStructureViewModel(@NotNull PsiFile psiFile, @Nullable Editor editor) {
 		super(psiFile, editor, new AvroIdlStructureViewElement(psiFile));
 	}
 
 	@NotNull
-    public Sorter[] getSorters() {
+	public Sorter[] getSorters() {
 		return new Sorter[]{Sorter.ALPHA_SORTER};
 	}
 
@@ -36,9 +37,9 @@ public class AvroIdlStructureViewModel extends StructureViewModelBase implements
 	@Override
 	protected Class<?> @NotNull [] getSuitableClasses() {
 		return new Class<?>[]{
-			AvroIdlFile.class,
-			AvroIdlNamedSchemaDeclaration.class, AvroIdlVariableDeclarator.class, AvroIdlEnumConstant.class,
-			AvroIdlProtocolDeclaration.class, AvroIdlMessageDeclaration.class
+				AvroIdlFile.class,
+				AvroIdlNamedSchemaDeclaration.class, AvroIdlVariableDeclarator.class, AvroIdlEnumConstant.class,
+				AvroIdlProtocolDeclaration.class, AvroIdlMessageDeclaration.class
 		};
 	}
 

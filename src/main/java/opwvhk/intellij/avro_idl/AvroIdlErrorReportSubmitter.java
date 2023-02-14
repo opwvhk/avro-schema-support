@@ -45,9 +45,10 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 	@Override
 	public @Nullable String getPrivacyNoticeText() {
 		return "<html>I agree to my hardware configuration, software configuration, product information, and the error details shown above " +
-		       "being published in the GitHub repository <a href=\"https://github.com/" + repository + "/issues\">" + repository + "</a> " +
-		       "to allow volunteers provide support if they have time.  \n" +
-		       "The reported exception data are not expected to contain any personal data.</html>";
+				"being published in the GitHub repository <a href=\"https://github.com/" + repository + "/issues\">" +
+				repository + "</a> " +
+				"to allow volunteers provide support if they have time.  \n" +
+				"The reported exception data are not expected to contain any personal data.</html>";
 	}
 
 	@Override
@@ -56,7 +57,8 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 	}
 
 	@Override
-	public boolean submit(IdeaLoggingEvent @NotNull [] events, @Nullable String additionalInfo, @NotNull Component parentComponent,
+	public boolean submit(IdeaLoggingEvent @NotNull [] events, @Nullable String additionalInfo,
+	                      @NotNull Component parentComponent,
 	                      @NotNull Consumer<? super SubmittedReportInfo> consumer) {
 		SubmittedReportInfo reportInfo;
 		if (events.length == 0 && additionalInfo == null) {
@@ -75,28 +77,35 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 				GHIssue issue = findIssue(gitHub, searchTerm);
 				boolean duplicate = issue != null;
 				if (!duplicate) {
-					issue = createIssue(gitHub, "Crash Report " + getExceptionMessage(errorMessage), markdownText, "crash report");
+					issue = createIssue(gitHub, "Crash Report " + getExceptionMessage(errorMessage), markdownText,
+							"crash report");
 				}
 				String issueUrl = issue.getHtmlUrl().toExternalForm();
 				int issueNumber = issue.getNumber();
-				reportInfo = new SubmittedReportInfo(issueUrl, "issue " + issueNumber, duplicate ? DUPLICATE : NEW_ISSUE);
+				reportInfo = new SubmittedReportInfo(issueUrl, "issue " + issueNumber,
+						duplicate ? DUPLICATE : NEW_ISSUE);
 			} catch (Exception e) {
 				reportInfo = new SubmittedReportInfo(null, null, FAILED);
 				String markdownErrorReport = String.format(MARKDOWN_GITHUB_FAILURE, repository, markdownText);
-				ApplicationManager.getApplication().invokeLater(() -> openInScratchFile(parentComponent, markdownErrorReport), ModalityState.NON_MODAL);
+				ApplicationManager.getApplication()
+						.invokeLater(() -> openInScratchFile(parentComponent, markdownErrorReport),
+								ModalityState.NON_MODAL);
 			}
 		}
 		consumer.consume(reportInfo);
 		return true;
 	}
 
-	private static @NotNull String createCrashReportMarkdown(IdeaLoggingEvent @NotNull [] events, @Nullable String additionalInfo) {
+	private static @NotNull String createCrashReportMarkdown(IdeaLoggingEvent @NotNull [] events,
+	                                                         @Nullable String additionalInfo) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("# Crash Report\n");
 		builder.append("\n");
 		builder.append("## What happened\n");
 		builder.append("\n");
-		builder.append(additionalInfo != null ? additionalInfo.trim() : "(The user did not submit additional information)").append("\n");
+		builder.append(
+						additionalInfo != null ? additionalInfo.trim() : "(The user did not submit additional information)")
+				.append("\n");
 
 		builder.append("\n");
 		builder.append("\n");
@@ -105,20 +114,22 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 
 		// Plugin version
 		appendPluginByDescriptor(builder, "Plugin", AvroIdlPluginUpdateStartupActivity.getMyPluginDescriptor());
-		appendPluginByDescriptor(builder, "Extra", PluginManagerCore.getPlugin(AvroIdlPluginUpdateStartupActivity.OLD_PLUGIN_ID));
+		appendPluginByDescriptor(builder, "Extra",
+				PluginManagerCore.getPlugin(AvroIdlPluginUpdateStartupActivity.OLD_PLUGIN_ID));
 		// IntelliJ version
 		ApplicationInfo info = ApplicationInfo.getInstance();
-		builder.append("* IDE: ").append(info.getVersionName()).append(" `").append(info.getFullVersion()).append("`\n");
+		builder.append("* IDE: ").append(info.getVersionName()).append(" `").append(info.getFullVersion())
+				.append("`\n");
 		// Java VM
 		builder.append("* JVM: ")
-			.append(System.getProperty("java.vm.name")).append(" (")
-			.append(System.getProperty("java.vm.vendor")).append(") `")
-			.append(System.getProperty("java.vm.version")).append("`\n");
+				.append(System.getProperty("java.vm.name")).append(" (")
+				.append(System.getProperty("java.vm.vendor")).append(") `")
+				.append(System.getProperty("java.vm.version")).append("`\n");
 		// Operating system
 		builder.append("* OS: ")
-			.append(System.getProperty("os.name")).append(" (")
-			.append(System.getProperty("os.arch")).append(") `")
-			.append(System.getProperty("os.version")).append("`\n");
+				.append(System.getProperty("os.name")).append(" (")
+				.append(System.getProperty("os.arch")).append(") `")
+				.append(System.getProperty("os.version")).append("`\n");
 
 		for (IdeaLoggingEvent event : events) {
 			builder.append("\n");
@@ -145,12 +156,12 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 	private static void appendPluginByDescriptor(StringBuilder builder, String label, IdeaPluginDescriptor descriptor) {
 		if (descriptor != null) {
 			builder.append("* ").append(label).append(": ")
-				.append(" ").append(descriptor.getName())
-				.append(" `").append(descriptor.getVersion())
-				.append("` by ").append(descriptor.getVendor())
-				.append(" (id: ").append(descriptor.getPluginId().getIdString())
-				.append(PluginManagerCore.isDisabled(descriptor.getPluginId()) ? "; disabled" : "")
-				.append(")\n");
+					.append(" ").append(descriptor.getName())
+					.append(" `").append(descriptor.getVersion())
+					.append("` by ").append(descriptor.getVendor())
+					.append(" (id: ").append(descriptor.getPluginId().getIdString())
+					.append(PluginManagerCore.isDisabled(descriptor.getPluginId()) ? "; disabled" : "")
+					.append(")\n");
 		}
 	}
 
@@ -173,11 +184,11 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 
 	private GHIssue findIssue(GitHub gitHub, String searchString) throws IOException {
 		GHIssueSearchBuilder searchBuilder = gitHub.searchIssues()
-			.sort(GHIssueSearchBuilder.Sort.CREATED).order(GHDirection.ASC)
-			.q("repo:" + repository)
-			.q("is:issue")
-			.q("in:body")
-			.q(searchString);
+				.sort(GHIssueSearchBuilder.Sort.CREATED).order(GHDirection.ASC)
+				.q("repo:" + repository)
+				.q("is:issue")
+				.q("in:body")
+				.q(searchString);
 		PagedSearchIterable<GHIssue> ghIssues = searchBuilder.list().withPageSize(1);
 		int issuesReported = ghIssues.getTotalCount();
 		if (issuesReported == 0) {

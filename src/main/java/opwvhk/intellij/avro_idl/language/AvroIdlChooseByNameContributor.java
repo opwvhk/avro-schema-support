@@ -11,16 +11,16 @@ public class AvroIdlChooseByNameContributor implements ChooseByNameContributor {
 	@Override
 	public String @NotNull [] getNames(Project project, boolean includeNonProjectItems) {
 		return AvroIdlUtil.findNavigableNamedSchemasInProject(project).stream()
-			.map(NavigationItem::getName)
-			.filter(Objects::nonNull)
-			.toArray(String[]::new);
+				.map(NavigationItem::getName)
+				.filter(Objects::nonNull)
+				.toArray(String[]::new);
 	}
 
 	@Override
 	public NavigationItem @NotNull [] getItemsByName(String name, String pattern,
-													Project project,
-													boolean includeNonProjectItems) {
+	                                                 Project project,
+	                                                 boolean includeNonProjectItems) {
 		return AvroIdlUtil.findNavigableNamedSchemasInProject(project)
-			.toArray(NavigationItem[]::new);
+				.toArray(NavigationItem[]::new);
 	}
 }

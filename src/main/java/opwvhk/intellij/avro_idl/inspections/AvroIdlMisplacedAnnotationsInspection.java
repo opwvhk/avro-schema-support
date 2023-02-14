@@ -24,7 +24,7 @@ public class AvroIdlMisplacedAnnotationsInspection extends BaseAvroIdlInspection
 		final PsiElement parent = element.getParent();
 		final String name = element.getName();
 		if (element instanceof AvroIdlNamespaceProperty) {
-			if(!(parent instanceof AvroIdlProtocolDeclaration || parent instanceof AvroIdlNamedSchemaDeclaration)) {
+			if (!(parent instanceof AvroIdlProtocolDeclaration || parent instanceof AvroIdlNamedSchemaDeclaration)) {
 				quickFix = new RemoveAnnotationQuickFix(element, "namespace");
 			}
 		} else if (name != null) {
@@ -33,14 +33,15 @@ public class AvroIdlMisplacedAnnotationsInspection extends BaseAvroIdlInspection
 			switch (name) {
 				case "aliases":
 					isMisplaced = !(parent instanceof AvroIdlProtocolDeclaration ||
-						parent instanceof AvroIdlNamedSchemaDeclaration ||
-						parent instanceof AvroIdlVariableDeclarator);
+							parent instanceof AvroIdlNamedSchemaDeclaration ||
+							parent instanceof AvroIdlVariableDeclarator);
 					break;
 				case "order":
 					isMisplaced = !(parent instanceof AvroIdlVariableDeclarator);
 					break;
 				case "logicalType":
-					isMisplaced = !(parent instanceof AvroIdlType) && !(parent instanceof AvroIdlNamedSchemaDeclaration);
+					isMisplaced =
+							!(parent instanceof AvroIdlType) && !(parent instanceof AvroIdlNamedSchemaDeclaration);
 					break;
 				case "precision":
 				case "scale":
@@ -56,7 +57,8 @@ public class AvroIdlMisplacedAnnotationsInspection extends BaseAvroIdlInspection
 		}
 
 		if (quickFix != null) {
-			holder.registerProblem(element, "The @" + quickFix.getAnnotationName() + " annotation has no effect here", quickFix);
+			holder.registerProblem(element, "The @" + quickFix.getAnnotationName() + " annotation has no effect here",
+					quickFix);
 		}
 	}
 
@@ -69,13 +71,13 @@ public class AvroIdlMisplacedAnnotationsInspection extends BaseAvroIdlInspection
 		}
 
 		@NotNull
-        public String getAnnotationName() {
+		public String getAnnotationName() {
 			return annotationName;
 		}
 
 		@Override
 		protected void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor,
-                              @NotNull AvroIdlSchemaProperty element) {
+		                      @NotNull AvroIdlSchemaProperty element) {
 			element.delete();
 		}
 	}

@@ -15,14 +15,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static com.intellij.openapi.editor.colors.TextAttributesKey.EMPTY_ARRAY;
+import static opwvhk.intellij.avro_idl.editor.AvroIdlSyntaxColors.*;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.BLOCK_COMMENT;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.DOC_COMMENT;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.STRING;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
-import static opwvhk.intellij.avro_idl.editor.AvroIdlSyntaxColors.*;
 
 public class AvroIdlSyntaxHighlighter extends SyntaxHighlighterBase {
-	private static final TokenSet BLOCK_COMMENT_TOKENS = TokenSet.create(BLOCK_COMMENT, BLOCK_COMMENT_START, INCOMPLETE_BLOCK_COMMENT);
+	private static final TokenSet BLOCK_COMMENT_TOKENS = TokenSet.create(BLOCK_COMMENT, BLOCK_COMMENT_START,
+			INCOMPLETE_BLOCK_COMMENT);
 	private static final TokenSet DOC_COMMENT_TOKENS = TokenSet.create(DOC_COMMENT, INCOMPLETE_DOC_COMMENT);
 
 	@SafeVarargs
@@ -31,25 +32,25 @@ public class AvroIdlSyntaxHighlighter extends SyntaxHighlighterBase {
 	}
 
 	private static final Set<IElementType> TYPE_TOKENS = set(
-		BOOLEAN, BYTES, INT, STRING, FLOAT, DOUBLE, LONG,
-		DATE, TIME_MS, TIMESTAMP_MS, LOCAL_TIMESTAMP_MS, DECIMAL, UUID,
-		NULL, VOID, ARRAY, MAP, UNION);
+			BOOLEAN, BYTES, INT, STRING, FLOAT, DOUBLE, LONG,
+			DATE, TIME_MS, TIMESTAMP_MS, LOCAL_TIMESTAMP_MS, DECIMAL, UUID,
+			NULL, VOID, ARRAY, MAP, UNION);
 
 	private static final Set<IElementType> KEYWORD_TOKENS = set(
-		AvroIdlTypes.NAMESPACE, AvroIdlTypes.SCHEMA, AvroIdlTypes.PROTOCOL, AvroIdlTypes.IMPORT, AvroIdlTypes.IDL,
-		AvroIdlTypes.RECORD, AvroIdlTypes.ERROR, AvroIdlTypes.ENUM, AvroIdlTypes.FIXED,
-		AvroIdlTypes.THROWS, AvroIdlTypes.ONEWAY,
-		AvroIdlTypes.TRUE, AvroIdlTypes.FALSE);
+			AvroIdlTypes.NAMESPACE, AvroIdlTypes.SCHEMA, AvroIdlTypes.PROTOCOL, AvroIdlTypes.IMPORT, AvroIdlTypes.IDL,
+			AvroIdlTypes.RECORD, AvroIdlTypes.ERROR, AvroIdlTypes.ENUM, AvroIdlTypes.FIXED,
+			AvroIdlTypes.THROWS, AvroIdlTypes.ONEWAY,
+			AvroIdlTypes.TRUE, AvroIdlTypes.FALSE);
 
 	@Override
-    @NotNull
-    public Lexer getHighlightingLexer() {
+	@NotNull
+	public Lexer getHighlightingLexer() {
 		return new AvroIdlLexer();
 	}
 
 	@Override
-    @NotNull
-    public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
+	@NotNull
+	public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
 		if (DOC_COMMENT_TOKENS.contains(tokenType)) {
 			return DOC_COMMENT_KEYS;
 		}

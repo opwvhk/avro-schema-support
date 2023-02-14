@@ -1,10 +1,10 @@
 package opwvhk.intellij.avro_idl;
 
-import javax.swing.*;
-
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 /**
  * Represents the file type for Apache Avro™ IDL files.

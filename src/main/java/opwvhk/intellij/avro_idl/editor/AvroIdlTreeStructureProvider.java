@@ -20,9 +20,10 @@ import static java.util.Objects.requireNonNull;
 
 public class AvroIdlTreeStructureProvider implements TreeStructureProvider {
 	@Override
-    @NotNull
-    public Collection<AbstractTreeNode<?>> modify(@NotNull AbstractTreeNode<?> parent, @NotNull Collection<AbstractTreeNode<?>> children,
-                                                  ViewSettings settings) {
+	@NotNull
+	public Collection<AbstractTreeNode<?>> modify(@NotNull AbstractTreeNode<?> parent,
+	                                              @NotNull Collection<AbstractTreeNode<?>> children,
+	                                              ViewSettings settings) {
 		boolean showMembers = settings.isShowMembers();
 		if (!showMembers) {
 			return children;
@@ -31,7 +32,7 @@ public class AvroIdlTreeStructureProvider implements TreeStructureProvider {
 		Collection<AbstractTreeNode<?>> result = new ArrayList<>();
 		for (AbstractTreeNode<?> child : children) {
 			if (child.getValue() instanceof AvroIdlFile) {
-				result.add(new AvroIdlNode((PsiElement)child.getValue(), settings));
+				result.add(new AvroIdlNode((PsiElement) child.getValue(), settings));
 			} else {
 				result.add(child);
 			}
@@ -40,8 +41,8 @@ public class AvroIdlTreeStructureProvider implements TreeStructureProvider {
 	}
 
 	@Override
-    @Nullable
-    public Object getData(@NotNull Collection<AbstractTreeNode<?>> selected, @NotNull String dataId) {
+	@Nullable
+	public Object getData(@NotNull Collection<AbstractTreeNode<?>> selected, @NotNull String dataId) {
 		return TreeStructureProvider.super.getData(selected, dataId);
 	}
 
@@ -53,14 +54,15 @@ public class AvroIdlTreeStructureProvider implements TreeStructureProvider {
 			this.structureViewElement = new AvroIdlStructureViewElement(psiElement);
 		}
 
-		private AvroIdlNode(@NotNull Project project, @NotNull AvroIdlStructureViewElement structureViewElement, ViewSettings settings) {
+		private AvroIdlNode(@NotNull Project project, @NotNull AvroIdlStructureViewElement structureViewElement,
+		                    ViewSettings settings) {
 			super(project, requireNonNull(structureViewElement.getValue()), settings);
 			this.structureViewElement = structureViewElement;
 		}
 
 		@Override
-        @Nullable
-        protected Collection<AbstractTreeNode<?>> getChildrenImpl() {
+		@Nullable
+		protected Collection<AbstractTreeNode<?>> getChildrenImpl() {
 			@NotNull List<StructureViewTreeElement> children = structureViewElement.getChildrenWithoutCustomRegions();
 			if (children.size() == 0) {
 				return null;
@@ -68,7 +70,7 @@ public class AvroIdlTreeStructureProvider implements TreeStructureProvider {
 
 			Collection<AbstractTreeNode<?>> result = new ArrayList<>(children.size());
 			for (StructureViewTreeElement child : children) {
-				AvroIdlStructureViewElement treeElement = (AvroIdlStructureViewElement)child;
+				AvroIdlStructureViewElement treeElement = (AvroIdlStructureViewElement) child;
 				result.add(new AvroIdlNode(getProject(), treeElement, getSettings()));
 			}
 			return result;

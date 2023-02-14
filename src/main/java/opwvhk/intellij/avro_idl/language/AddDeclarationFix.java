@@ -33,8 +33,8 @@ public abstract class AddDeclarationFix extends SimpleAvroIdlQuickFixOnPsiElemen
 	 *     There must be a comment in the element: the first comment will be removed, and the cursor will be placed there.
 	 * </li></ol>
 	 *
-	 * @param element a schema/message declaration or one of its children; the new declaration will be added after the declaration
-	 * @param name the name of the fix
+	 * @param element  a schema/message declaration or one of its children; the new declaration will be added after the declaration
+	 * @param name     the name of the fix
 	 * @param template a template for the declaration, subject to the constraints above
 	 */
 	public AddDeclarationFix(@NotNull PsiElement element, @IntentionName @NotNull String name, String template) {
@@ -43,9 +43,11 @@ public abstract class AddDeclarationFix extends SimpleAvroIdlQuickFixOnPsiElemen
 	}
 
 	@Override
-	protected void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor, @NotNull PsiElement element) {
+	protected void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor,
+	                      @NotNull PsiElement element) {
 		element = PsiTreeUtil.findFirstParent(element,
-			e -> e instanceof AvroIdlNamedSchemaDeclaration || e instanceof AvroIdlMainSchemaDeclaration || e instanceof AvroIdlMessageDeclaration);
+				e -> e instanceof AvroIdlNamedSchemaDeclaration || e instanceof AvroIdlMainSchemaDeclaration ||
+						e instanceof AvroIdlMessageDeclaration);
 		if (element == null) {
 			return;
 		}
@@ -72,7 +74,7 @@ public abstract class AddDeclarationFix extends SimpleAvroIdlQuickFixOnPsiElemen
 	}
 
 	@Nullable
-    private PsiElement findFirstComment(@NotNull PsiElement element) {
+	private PsiElement findFirstComment(@NotNull PsiElement element) {
 		final PsiElement firstLeaf = PsiTreeUtil.getDeepestFirst(element);
 		for (PsiElement e = firstLeaf; e != null; e = PsiTreeUtil.nextLeaf(e)) {
 			if (e instanceof PsiComment) {

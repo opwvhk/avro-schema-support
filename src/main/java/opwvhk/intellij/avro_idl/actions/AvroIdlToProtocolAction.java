@@ -42,8 +42,9 @@ public class AvroIdlToProtocolAction extends ConversionActionBase {
 		}
 
 		console.print("Asking for file to write Avro Protocol to...\n", NORMAL_OUTPUT);
-		final VirtualFileWrapper wrapper = askForTargetFile(project, "Save as Avro Protocol", "Choose the filename to save to",
-			AvroProtocolFileType.INSTANCE, file.getParent(), file.getNameWithoutExtension());
+		final VirtualFileWrapper wrapper = askForTargetFile(project, "Save as Avro Protocol",
+				"Choose the filename to save to",
+				AvroProtocolFileType.INSTANCE, file.getParent(), file.getNameWithoutExtension());
 		if (wrapper != null) {
 			final VirtualFile virtualFile = wrapper.getVirtualFile(true);
 			if (virtualFile != null) {
@@ -54,11 +55,14 @@ public class AvroIdlToProtocolAction extends ConversionActionBase {
 					try {
 						VfsUtil.saveText(virtualFile, protocol.toString(true));
 						console.print("Wrote Avro Protocol \"" + protocol.getName() + "\" to ", NORMAL_OUTPUT);
-						console.printHyperlink(virtualFile.getName(), new OpenFileHyperlinkInfo(project, virtualFile, 0));
+						console.printHyperlink(virtualFile.getName(),
+								new OpenFileHyperlinkInfo(project, virtualFile, 0));
 						console.print("\n", NORMAL_OUTPUT);
-						FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, virtualFile), true);
+						FileEditorManager.getInstance(project)
+								.openTextEditor(new OpenFileDescriptor(project, virtualFile), true);
 					} catch (RuntimeException | IOException e) {
-						console.print("Failed to write the AvroProtocol to " + virtualFile.getName() + "\n" + e.getLocalizedMessage(), ERROR_OUTPUT);
+						console.print("Failed to write the AvroProtocol to " + virtualFile.getName() + "\n" +
+								e.getLocalizedMessage(), ERROR_OUTPUT);
 						writeStackTrace(console, e);
 					}
 				});

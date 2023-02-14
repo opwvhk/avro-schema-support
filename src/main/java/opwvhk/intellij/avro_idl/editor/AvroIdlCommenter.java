@@ -8,68 +8,68 @@ import org.jetbrains.annotations.Nullable;
 
 public class AvroIdlCommenter implements CodeDocumentationAwareCommenter {
 	@Override
-    @Nullable
-    public IElementType getLineCommentTokenType() {
+	@Nullable
+	public IElementType getLineCommentTokenType() {
 		return AvroIdlTypes.LINE_COMMENT;
 	}
 
-    @Override
-    @Nullable
-    public String getLineCommentPrefix() {
-        return "//";
-    }
+	@Override
+	@Nullable
+	public String getLineCommentPrefix() {
+		return "//";
+	}
 
 	@Override
-    @Nullable
-    public IElementType getBlockCommentTokenType() {
+	@Nullable
+	public IElementType getBlockCommentTokenType() {
 		return AvroIdlTypes.BLOCK_COMMENT;
 	}
 
-    @Override
-    @Nullable
-    public String getBlockCommentPrefix() {
-        return "/*";
-    }
-
-    @Override
-    @Nullable
-    public String getBlockCommentSuffix() {
-        return "*/";
-    }
-
-    @Override
-    @Nullable
-    public String getCommentedBlockCommentPrefix() {
-        return null;
-    }
-
-    @Override
-    @Nullable
-    public String getCommentedBlockCommentSuffix() {
-        return null;
-    }
+	@Override
+	@Nullable
+	public String getBlockCommentPrefix() {
+		return "/*";
+	}
 
 	@Override
-    @Nullable
-    public IElementType getDocumentationCommentTokenType() {
+	@Nullable
+	public String getBlockCommentSuffix() {
+		return "*/";
+	}
+
+	@Override
+	@Nullable
+	public String getCommentedBlockCommentPrefix() {
+		return null;
+	}
+
+	@Override
+	@Nullable
+	public String getCommentedBlockCommentSuffix() {
+		return null;
+	}
+
+	@Override
+	@Nullable
+	public IElementType getDocumentationCommentTokenType() {
 		return AvroIdlTypes.DOC_COMMENT;
 	}
 
 	@Override
-    @Nullable
-    public String getDocumentationCommentPrefix() {
+	@Nullable
+	public String getDocumentationCommentPrefix() {
 		return "/**";
 	}
 
 	@Override
-    @Nullable
-    public String getDocumentationCommentLinePrefix() {
+	@Nullable
+	public String getDocumentationCommentLinePrefix() {
 		return " * ";
 	}
 
 	@Override
-    @Nullable
-    public String getDocumentationCommentSuffix() {
+	@Nullable
+	public String getDocumentationCommentSuffix() {
 		return " */";
 	}
 

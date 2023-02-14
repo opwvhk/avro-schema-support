@@ -22,7 +22,8 @@ public abstract class AvroIdlAbstractReference extends PsiReferenceBase<PsiEleme
 		final int offset = oldName.lastIndexOf(".") + 1;
 		final String prefix = oldName.substring(0, offset);
 
-		final PsiElement newIdentifier = new AvroIdlElementFactory(myElement.getProject()).createIdentifier(prefix + newElementName);
+		final PsiElement newIdentifier = new AvroIdlElementFactory(myElement.getProject()).createIdentifier(
+				prefix + newElementName);
 		identifier.replace(newIdentifier);
 		return myElement;
 	}
@@ -31,9 +32,9 @@ public abstract class AvroIdlAbstractReference extends PsiReferenceBase<PsiEleme
 	 * @return Range in {@link #getElement() element} that denotes the reference,
 	 * e.g., range of `bar` in `foo.bar` qualified reference expression
 	 */
-    @Override
-    @NotNull
-    public TextRange getRangeInElement() {
+	@Override
+	@NotNull
+	public TextRange getRangeInElement() {
 		final TextRange rangeInElement = super.getRangeInElement();
 		final String name = myElement.getText();
 		final int offset = name.lastIndexOf(".") + 1;

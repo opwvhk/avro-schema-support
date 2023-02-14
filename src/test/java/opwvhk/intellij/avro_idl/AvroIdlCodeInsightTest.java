@@ -28,60 +28,75 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		// Luckily, the method returns highlights in the order they are in the file.
 
 		assertOrderedEquals(highlight,
-			Highlight.error("Many-Mistakes", "Not a valid identifier: Many-Mistakes"),
-			Highlight.error("Status", "Schema '12 monkeys.Status' is already defined"),
-			Highlight.error("Status", "Schema '12 monkeys.Status' is already defined"),
-			Highlight.error("12", "@namespace annotations must contain a string"),
-			Highlight.error("\"even-more-wrong\"", "Not a valid identifier (with namespace): even-more-wrong"),
-			Highlight.error("also-wrong", "Not a valid identifier: also-wrong"),
-			Highlight.error("C", "Enum default must be one of the enum constants"),
-			Highlight.error("my-data", "Not a valid identifier: my-data"),
-			Highlight.error("@namespace(\"unused\")", "Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile."),
-			Highlight.error("one-letter", "Not a valid identifier: one-letter"),
-			Highlight.error("23", "@logicalType annotation must contain a string naming the logical type"),
-			Highlight.error("34", "@order annotation must contain one of: \"ascending\", \"descending\", \"ignore\""),
-			Highlight.error("@logicalType(\"date\")", "The logical type 'date' requires the underlying type int"),
-			Highlight.error("\"wrong\"", "@order annotation must contain one of: \"ascending\", \"descending\", \"ignore\""),
-			Highlight.error("@logicalType(\"time-millis\")", "The logical type 'time-millis' requires the underlying type int"),
-			Highlight.error("45", "@aliases annotations must contain an array of identifiers (strings)"),
-			Highlight.error("@logicalType(\"timestamp-millis\")", "The logical type 'timestamp-millis' requires the underlying type long"),
-			Highlight.error("56", "@aliases elements must be strings"),
-			Highlight.error("\"invites-failure\"", "Not a valid identifier: invites-failure"),
-			Highlight.error("@logicalType(\"local-timestamp-millis\")", "The logical type 'local-timestamp-millis' requires the underlying type long"),
-			Highlight.error("@logicalType(\"decimal\")", "@logicalType(\"decimal\") requires a sibling @precision annotation with a number between 1 and 2^31-1"),
-			Highlight.error("true", "@precision must contain a number between 1 and 2^31-1"),
-			Highlight.error("-1", "@precision must contain a number between 1 and 2^31-1"),
-			Highlight.error("4294967296", "@precision must contain a number between 1 and 2^31-1"),
-			Highlight.error("false", "@scale must contain a non-negative number of at most the value of @precision"),
-			Highlight.error("-2", "@scale must contain a non-negative number of at most the value of @precision"),
-			Highlight.error("@logicalType(\"decimal\")", "The logical type 'decimal' requires the underlying type bytes or fixed"),
-			Highlight.error("8", "@scale must contain a non-negative number of at most the value of @precision"),
-			Highlight.error("@logicalType(\"decimal\")", "The logical type 'decimal' requires the underlying type bytes or fixed"),
-			Highlight.error("@logicalType(\"decimal\")", "The logical type 'decimal' requires the underlying type bytes or fixed"),
-			Highlight.error("@logicalType(\"decimal\")", "Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile."),
-			Highlight.error("@precision(40)", "Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile."),
-			Highlight.error("40", "hashes.MD5, a fixed(16), cannot store 40 digits (max 38)"),
-			Highlight.error("@scale(0)", "Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile."),
-			Highlight.error("67", "@aliases annotations must contain an array of identifiers (strings)"),
-			Highlight.error("78", "@aliases elements must be strings"),
-			Highlight.error("\"her-failure\"", "Not a valid identifier (with namespace): her-failure"),
-			Highlight.error("his-failure", "Not a valid identifier: his-failure"),
-			Highlight.error("Whatever", "Unknown schema: Whatever"),
-			Highlight.error("do-stuff", "Not a valid identifier: do-stuff"),
-			Highlight.error("Something", "Unknown schema: Something"),
-			Highlight.error("SomeError", "Unknown schema: SomeError"),
-			Highlight.error("hashes.MD5", "Not an error: hashes.MD5"),
-			Highlight.error("oneway", "Oneway messages must have a void or null return type")
+				Highlight.error("Many-Mistakes", "Not a valid identifier: Many-Mistakes"),
+				Highlight.error("Status", "Schema '12 monkeys.Status' is already defined"),
+				Highlight.error("Status", "Schema '12 monkeys.Status' is already defined"),
+				Highlight.error("12", "@namespace annotations must contain a string"),
+				Highlight.error("\"even-more-wrong\"", "Not a valid identifier (with namespace): even-more-wrong"),
+				Highlight.error("also-wrong", "Not a valid identifier: also-wrong"),
+				Highlight.error("C", "Enum default must be one of the enum constants"),
+				Highlight.error("my-data", "Not a valid identifier: my-data"),
+				Highlight.error("@namespace(\"unused\")",
+						"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile."),
+				Highlight.error("one-letter", "Not a valid identifier: one-letter"),
+				Highlight.error("23", "@logicalType annotation must contain a string naming the logical type"),
+				Highlight.error("34",
+						"@order annotation must contain one of: \"ascending\", \"descending\", \"ignore\""),
+				Highlight.error("@logicalType(\"date\")", "The logical type 'date' requires the underlying type int"),
+				Highlight.error("\"wrong\"",
+						"@order annotation must contain one of: \"ascending\", \"descending\", \"ignore\""),
+				Highlight.error("@logicalType(\"time-millis\")",
+						"The logical type 'time-millis' requires the underlying type int"),
+				Highlight.error("45", "@aliases annotations must contain an array of identifiers (strings)"),
+				Highlight.error("@logicalType(\"timestamp-millis\")",
+						"The logical type 'timestamp-millis' requires the underlying type long"),
+				Highlight.error("56", "@aliases elements must be strings"),
+				Highlight.error("\"invites-failure\"", "Not a valid identifier: invites-failure"),
+				Highlight.error("@logicalType(\"local-timestamp-millis\")",
+						"The logical type 'local-timestamp-millis' requires the underlying type long"),
+				Highlight.error("@logicalType(\"decimal\")",
+						"@logicalType(\"decimal\") requires a sibling @precision annotation with a number between 1 and 2^31-1"),
+				Highlight.error("true", "@precision must contain a number between 1 and 2^31-1"),
+				Highlight.error("-1", "@precision must contain a number between 1 and 2^31-1"),
+				Highlight.error("4294967296", "@precision must contain a number between 1 and 2^31-1"),
+				Highlight.error("false",
+						"@scale must contain a non-negative number of at most the value of @precision"),
+				Highlight.error("-2", "@scale must contain a non-negative number of at most the value of @precision"),
+				Highlight.error("@logicalType(\"decimal\")",
+						"The logical type 'decimal' requires the underlying type bytes or fixed"),
+				Highlight.error("8", "@scale must contain a non-negative number of at most the value of @precision"),
+				Highlight.error("@logicalType(\"decimal\")",
+						"The logical type 'decimal' requires the underlying type bytes or fixed"),
+				Highlight.error("@logicalType(\"decimal\")",
+						"The logical type 'decimal' requires the underlying type bytes or fixed"),
+				Highlight.error("@logicalType(\"decimal\")",
+						"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile."),
+				Highlight.error("@precision(40)",
+						"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile."),
+				Highlight.error("40", "hashes.MD5, a fixed(16), cannot store 40 digits (max 38)"),
+				Highlight.error("@scale(0)",
+						"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile."),
+				Highlight.error("67", "@aliases annotations must contain an array of identifiers (strings)"),
+				Highlight.error("78", "@aliases elements must be strings"),
+				Highlight.error("\"her-failure\"", "Not a valid identifier (with namespace): her-failure"),
+				Highlight.error("his-failure", "Not a valid identifier: his-failure"),
+				Highlight.error("Whatever", "Unknown schema: Whatever"),
+				Highlight.error("do-stuff", "Not a valid identifier: do-stuff"),
+				Highlight.error("Something", "Unknown schema: Something"),
+				Highlight.error("SomeError", "Unknown schema: SomeError"),
+				Highlight.error("hashes.MD5", "Not an error: hashes.MD5"),
+				Highlight.error("oneway", "Oneway messages must have a void or null return type")
 		);
 	}
 
 	public void testAnnotatorForImports() {
-		myFixture.configureByFiles("ImportsAndReferences.avdl", "Employee.avdl", "ContractType.avsc", "HelloWorld.avpr");
+		myFixture.configureByFiles("ImportsAndReferences.avdl", "Employee.avdl", "ContractType.avsc",
+				"HelloWorld.avpr");
 		final List<Highlight> highlight = Highlight.fromHighlightInfoList(myFixture.doHighlighting());
 		// Note: because we're cutting out the text offsets, all error texts should be unique enough to be identified.
 		// Luckily, the method returns highlights in the order they are in the file.
 		assertContainsOrdered(highlight,
-			Highlight.error("NotAnError", "Not an error: NotAnError")
+				Highlight.error("NotAnError", "Not an error: NotAnError")
 		);
 	}
 
@@ -92,9 +107,9 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		final List<HighlightInfo> highlightInfoList = myFixture.doHighlighting();
 		final List<Highlight> highlight = Highlight.fromHighlightInfoList(highlightInfoList);
 		assertContainsOrdered(highlight,
-			Highlight.warning("@foo(\"bar1\")", "Duplicate annotation (only the last will take effect)"),
-			Highlight.warning("@foo(\"bar2\")", "Duplicate annotation (only the last will take effect)"),
-			Highlight.warning("@foo(\"bar3\")", "Duplicate annotation (only the last will take effect)")
+				Highlight.warning("@foo(\"bar1\")", "Duplicate annotation (only the last will take effect)"),
+				Highlight.warning("@foo(\"bar2\")", "Duplicate annotation (only the last will take effect)"),
+				Highlight.warning("@foo(\"bar3\")", "Duplicate annotation (only the last will take effect)")
 		);
 	}
 
@@ -119,9 +134,9 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		final List<HighlightInfo> highlightInfoList = myFixture.doHighlighting();
 		final List<Highlight> highlight = Highlight.fromHighlightInfoList(highlightInfoList);
 		assertContainsOrdered(highlight,
-			Highlight.weakWarning("union{null, string}", "Union can be simplified"),
-			Highlight.weakWarning("union{null, string}", "Union can be simplified"),
-			Highlight.weakWarning("union{string, null}", "Union can be simplified")
+				Highlight.weakWarning("union{null, string}", "Union can be simplified"),
+				Highlight.weakWarning("union{null, string}", "Union can be simplified"),
+				Highlight.weakWarning("union{string, null}", "Union can be simplified")
 		);
 	}
 
@@ -144,9 +159,9 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		final List<HighlightInfo> highlightInfoList = myFixture.doHighlighting();
 		final List<Highlight> highlight = Highlight.fromHighlightInfoList(highlightInfoList);
 		assertContainsOrdered(highlight,
-			Highlight.error("string?", "Use union instead of optional type"),
-			Highlight.error("string?", "Use union instead of optional type"),
-			Highlight.error("string?", "Use union instead of optional type")
+				Highlight.error("string?", "Use union instead of optional type"),
+				Highlight.error("string?", "Use union instead of optional type"),
+				Highlight.error("string?", "Use union instead of optional type")
 		);
 	}
 
@@ -169,10 +184,10 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		final List<HighlightInfo> highlightInfoList = myFixture.doHighlighting();
 		final List<Highlight> highlight = Highlight.fromHighlightInfoList(highlightInfoList);
 		assertContainsOrdered(highlight,
-			Highlight.weakWarning("@logicalType(\"character\")", "The @logicalType annotation has no effect here"),
-			Highlight.weakWarning("@namespace(\"on.type\")", "The @namespace annotation has no effect here"),
-			Highlight.weakWarning("@aliases([\"for_type\"])", "The @aliases annotation has no effect here"),
-			Highlight.weakWarning("@order(\"ignore\")", "The @order annotation has no effect here")
+				Highlight.weakWarning("@logicalType(\"character\")", "The @logicalType annotation has no effect here"),
+				Highlight.weakWarning("@namespace(\"on.type\")", "The @namespace annotation has no effect here"),
+				Highlight.weakWarning("@aliases([\"for_type\"])", "The @aliases annotation has no effect here"),
+				Highlight.weakWarning("@order(\"ignore\")", "The @order annotation has no effect here")
 		);
 	}
 
@@ -187,32 +202,32 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 
 		final String description = "Misplaced documentation comment: documentation comments should be placed directly before declarations";
 		assertOrderedEquals(highlight,
-			Highlight.warning("/** Dangling documentation 1 */", description),
-			Highlight.warning("/** Misplaced documentation 1 */", description),
-			Highlight.warning("/** Dangling documentation 2 */", description),
-			Highlight.warning("/** Misplaced documentation 2 */", description),
-			Highlight.warning("/** Misplaced documentation 3 */", description),
-			Highlight.warning("/** Misplaced documentation 4 */", description),
-			Highlight.warning("/** Dangling documentation 3 */", description),
-			Highlight.warning("/** Misplaced documentation 5 */", description),
-			Highlight.warning("/** Misplaced documentation 6 */", description),
-			Highlight.warning("/** Misplaced documentation 7 */", description),
-			Highlight.warning("/** Misplaced documentation 8 */", description),
-			Highlight.warning("/** Misplaced documentation 9 */", description),
-			Highlight.warning("/** Misplaced documentation 10 */", description),
-			Highlight.warning("/** Misplaced documentation 11 */", description),
-			Highlight.warning("/** Dangling documentation 4 */", description),
-			Highlight.warning("/** Misplaced documentation 12 */", description),
-			Highlight.warning("/** Misplaced documentation 13 */", description),
-			Highlight.warning("/** Misplaced documentation 14 */", description),
-			Highlight.warning("/** Dangling documentation 5 */", description),
-			Highlight.warning("/** Misplaced documentation 15 */", description),
-			Highlight.warning("/** Misplaced documentation 16 */", description),
-			Highlight.warning("/** Dangling documentation 6 */", description),
-			Highlight.warning("/** Misplaced documentation 17 */", description),
-			Highlight.warning("/** Misplaced documentation 18 */", description),
-			Highlight.warning("/** Dangling documentation 7 */", description),
-			Highlight.warning("/** Dangling documentation 8 */", description)
+				Highlight.warning("/** Dangling documentation 1 */", description),
+				Highlight.warning("/** Misplaced documentation 1 */", description),
+				Highlight.warning("/** Dangling documentation 2 */", description),
+				Highlight.warning("/** Misplaced documentation 2 */", description),
+				Highlight.warning("/** Misplaced documentation 3 */", description),
+				Highlight.warning("/** Misplaced documentation 4 */", description),
+				Highlight.warning("/** Dangling documentation 3 */", description),
+				Highlight.warning("/** Misplaced documentation 5 */", description),
+				Highlight.warning("/** Misplaced documentation 6 */", description),
+				Highlight.warning("/** Misplaced documentation 7 */", description),
+				Highlight.warning("/** Misplaced documentation 8 */", description),
+				Highlight.warning("/** Misplaced documentation 9 */", description),
+				Highlight.warning("/** Misplaced documentation 10 */", description),
+				Highlight.warning("/** Misplaced documentation 11 */", description),
+				Highlight.warning("/** Dangling documentation 4 */", description),
+				Highlight.warning("/** Misplaced documentation 12 */", description),
+				Highlight.warning("/** Misplaced documentation 13 */", description),
+				Highlight.warning("/** Misplaced documentation 14 */", description),
+				Highlight.warning("/** Dangling documentation 5 */", description),
+				Highlight.warning("/** Misplaced documentation 15 */", description),
+				Highlight.warning("/** Misplaced documentation 16 */", description),
+				Highlight.warning("/** Dangling documentation 6 */", description),
+				Highlight.warning("/** Misplaced documentation 17 */", description),
+				Highlight.warning("/** Misplaced documentation 18 */", description),
+				Highlight.warning("/** Dangling documentation 7 */", description),
+				Highlight.warning("/** Dangling documentation 8 */", description)
 		);
 	}
 
@@ -249,16 +264,17 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		final List<HighlightInfo> highlightInfoList = myFixture.doHighlighting();
 		final List<Highlight> highlight = Highlight.fromHighlightInfoList(highlightInfoList);
 		assertContainsOrdered(highlight,
-			Highlight.typo("\"Package\"", "Namespace name '\"Package\"' doesn't match regex '[a-z][a-z0-9_]*[a-z0-9](\\.[a-z][a-z0-9_]*[a-z0-9])*'"),
-			Highlight.typo("mis_named", "Protocol name 'mis_named' doesn't match regex '[A-Z][a-zA-Z0-9]*'"),
-			Highlight.typo("lowerCaseStart", "Fixed name 'lowerCaseStart' doesn't match regex '[A-Z][a-zA-Z0-9]*'"),
-			Highlight.typo("status", "Enum name 'status' doesn't match regex '[A-Z][a-zA-Z0-9]*'"),
-			Highlight.typo("on", "Enum constant name 'on' is too short (2 < 3)"),
-			Highlight.typo("off", "Enum constant name 'off' doesn't match regex '[A-Z][A-Z0-9_]*[A-Z0-9]'"),
-			Highlight.typo("Name", "Field name 'Name' doesn't match regex '[a-z][a-zA-Z0-9]*'"),
-			Highlight.typo("failure", "Error name 'failure' doesn't match regex '[A-Z][a-zA-Z0-9]*'"),
-			Highlight.typo("Cause", "Field name 'Cause' doesn't match regex '[a-z][a-zA-Z0-9]*'"),
-			Highlight.typo("Ping", "Message name 'Ping' doesn't match regex '[a-z][a-zA-Z0-9]*'")
+				Highlight.typo("\"Package\"",
+						"Namespace name '\"Package\"' doesn't match regex '[a-z][a-z0-9_]*[a-z0-9](\\.[a-z][a-z0-9_]*[a-z0-9])*'"),
+				Highlight.typo("mis_named", "Protocol name 'mis_named' doesn't match regex '[A-Z][a-zA-Z0-9]*'"),
+				Highlight.typo("lowerCaseStart", "Fixed name 'lowerCaseStart' doesn't match regex '[A-Z][a-zA-Z0-9]*'"),
+				Highlight.typo("status", "Enum name 'status' doesn't match regex '[A-Z][a-zA-Z0-9]*'"),
+				Highlight.typo("on", "Enum constant name 'on' is too short (2 < 3)"),
+				Highlight.typo("off", "Enum constant name 'off' doesn't match regex '[A-Z][A-Z0-9_]*[A-Z0-9]'"),
+				Highlight.typo("Name", "Field name 'Name' doesn't match regex '[a-z][a-zA-Z0-9]*'"),
+				Highlight.typo("failure", "Error name 'failure' doesn't match regex '[A-Z][a-zA-Z0-9]*'"),
+				Highlight.typo("Cause", "Field name 'Cause' doesn't match regex '[a-z][a-zA-Z0-9]*'"),
+				Highlight.typo("Ping", "Message name 'Ping' doesn't match regex '[a-z][a-zA-Z0-9]*'")
 		);
 	}
 
@@ -403,8 +419,12 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 
 	public void testMissingSchemaAddRecordQuickFix() {
 		List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("MissingSchema.avdl");
-		final Map<String, IntentionAction> quickFixesByName = quickFixes.stream().collect(Collectors.toMap(IntentionAction::getText, a -> a,
-			(a, b) -> { fail("Duplicate quick fixes (i.e. the same name occurs multiple times)"); return null; }));
+		final Map<String, IntentionAction> quickFixesByName = quickFixes.stream()
+				.collect(Collectors.toMap(IntentionAction::getText, a -> a,
+						(a, b) -> {
+							fail("Duplicate quick fixes (i.e. the same name occurs multiple times)");
+							return null;
+						}));
 		assertEquals(3, quickFixesByName.size());
 		assertContainsElements(quickFixesByName.keySet(), "Create record");
 		myFixture.launchAction(quickFixesByName.get("Create record"));
@@ -413,8 +433,12 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 
 	public void testMissingSchemaAddEnumQuickFix() {
 		List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("MissingSchema.avdl");
-		final Map<String, IntentionAction> quickFixesByName = quickFixes.stream().collect(Collectors.toMap(IntentionAction::getText, a -> a,
-			(a, b) -> { fail("Duplicate quick fixes (i.e. the same name occurs multiple times)"); return null; }));
+		final Map<String, IntentionAction> quickFixesByName = quickFixes.stream()
+				.collect(Collectors.toMap(IntentionAction::getText, a -> a,
+						(a, b) -> {
+							fail("Duplicate quick fixes (i.e. the same name occurs multiple times)");
+							return null;
+						}));
 		assertEquals(3, quickFixesByName.size());
 		assertContainsElements(quickFixesByName.keySet(), "Create enum");
 		myFixture.launchAction(quickFixesByName.get("Create enum"));
@@ -423,8 +447,12 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 
 	public void testMissingSchemaAddFixedQuickFix() {
 		List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("MissingSchema.avdl");
-		final Map<String, IntentionAction> quickFixesByName = quickFixes.stream().collect(Collectors.toMap(IntentionAction::getText, a -> a,
-			(a, b) -> { fail("Duplicate quick fixes (i.e. the same name occurs multiple times)"); return null; }));
+		final Map<String, IntentionAction> quickFixesByName = quickFixes.stream()
+				.collect(Collectors.toMap(IntentionAction::getText, a -> a,
+						(a, b) -> {
+							fail("Duplicate quick fixes (i.e. the same name occurs multiple times)");
+							return null;
+						}));
 		assertEquals(3, quickFixesByName.size());
 		assertContainsElements(quickFixesByName.keySet(), "Create fixed");
 		myFixture.launchAction(quickFixesByName.get("Create fixed"));
@@ -466,8 +494,8 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		myFixture.configureByFiles("DocumentationTestData.java", "DocumentationTestData.simple");
 		final PsiElement originalElement = myFixture.getElementAtCaret();
 		PsiElement element = DocumentationManager
-			.getInstance(getProject())
-			.findTargetElement(myFixture.getEditor(), originalElement.getContainingFile(), originalElement);
+				.getInstance(getProject())
+				.findTargetElement(myFixture.getEditor(), originalElement.getContainingFile(), originalElement);
 
 		if (element == null) {
 			element = originalElement;
@@ -504,7 +532,8 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		static List<Highlight> fromHighlightInfoList(List<HighlightInfo> highlightInfoList) {
 			List<Highlight> result = new ArrayList<>(highlightInfoList.size());
 			for (HighlightInfo highlightInfo : highlightInfoList) {
-				result.add(new Highlight(highlightInfo.getSeverity(), highlightInfo.getText(), highlightInfo.getDescription()));
+				result.add(new Highlight(highlightInfo.getSeverity(), highlightInfo.getText(),
+						highlightInfo.getDescription()));
 			}
 			return result;
 		}
@@ -523,10 +552,10 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 			if (o == null || getClass() != o.getClass()) {
 				return false;
 			}
-			Highlight highlight = (Highlight)o;
+			Highlight highlight = (Highlight) o;
 			return severity.equals(highlight.severity) &&
-				text.equals(highlight.text) &&
-				description.equals(highlight.description);
+					text.equals(highlight.text) &&
+					description.equals(highlight.description);
 		}
 
 		@Override

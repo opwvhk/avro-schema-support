@@ -38,17 +38,18 @@ public class AvroIdlMisplacedDocumentationInspection extends BaseAvroIdlInspecti
 		boolean validDocumentation = declaration != null && AvroIdlPsiUtil.prevNonCommentLeaf(declaration) == element;
 
 		if (!validDocumentation) {
-			holder.registerProblem(element, "Misplaced documentation comment: documentation comments should be placed directly before declarations",
-				new RemoveDocumentationQuickFix(element, "Delete misplaced documentation comment"),
-				new MakeCommentQuickFix(element, "Replace with multiline comment")
+			holder.registerProblem(element,
+					"Misplaced documentation comment: documentation comments should be placed directly before declarations",
+					new RemoveDocumentationQuickFix(element, "Delete misplaced documentation comment"),
+					new MakeCommentQuickFix(element, "Replace with multiline comment")
 			);
 		}
 	}
 
 	private boolean isDeclaration(PsiElement element) {
 		return element instanceof AvroIdlProtocolDeclaration || element instanceof AvroIdlNamedSchemaDeclaration ||
-			element instanceof AvroIdlFieldDeclaration || element instanceof AvroIdlVariableDeclarator ||
-			element instanceof AvroIdlMessageDeclaration || element instanceof AvroIdlFormalParameter;
+				element instanceof AvroIdlFieldDeclaration || element instanceof AvroIdlVariableDeclarator ||
+				element instanceof AvroIdlMessageDeclaration || element instanceof AvroIdlFormalParameter;
 	}
 
 	protected static class RemoveDocumentationQuickFix extends SimpleAvroIdlQuickFixOnPsiElement<PsiComment> {
@@ -57,7 +58,8 @@ public class AvroIdlMisplacedDocumentationInspection extends BaseAvroIdlInspecti
 		}
 
 		@Override
-		protected void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor, @NotNull PsiComment element) {
+		protected void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor,
+		                      @NotNull PsiComment element) {
 			element.delete();
 		}
 	}

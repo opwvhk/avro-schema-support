@@ -8,15 +8,25 @@
 		"protocol": {
 			"description": "An Avro protocol definition",
 			"type": "object",
-			"required": [ "protocol" ],
+			"required": [
+				"protocol"
+			],
 			"properties": {
-				"protocol": { "$ref":  "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/fullName"},
-				"namespace": { "$ref":  "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/fullName"},
-				"doc": { "type":  "string" },
+				"protocol": {
+					"$ref": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/fullName"
+				},
+				"namespace": {
+					"$ref": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/fullName"
+				},
+				"doc": {
+					"type": "string"
+				},
 				"types": {
-					"type":  "array",
+					"type": "array",
 					"uniqueItems": true,
-					"items": { "$ref": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/namedType" }
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/namedType"
+					}
 				},
 				"messages": {
 					"type": "object",
@@ -25,7 +35,9 @@
 						"uniqueItems": true
 					},
 					"patternProperties": {
-						"^.*$": { "$ref": "#/definitions/message" }
+						"^.*$": {
+							"$ref": "#/definitions/message"
+						}
 					}
 				}
 			}
@@ -33,13 +45,20 @@
 		"message": {
 			"description": "A protocol message description",
 			"type": "object",
-			"required": [ "request", "response" ],
+			"required": [
+				"request",
+				"response"
+			],
 			"properties": {
-				"doc": { "type": "string" },
+				"doc": {
+					"type": "string"
+				},
 				"request": {
 					"description": "Message request parameters; treated as an anonymous records schema",
 					"type": "array",
-					"items": { "$ref": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/field" },
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/field"
+					},
 					"uniqueItems": true
 				},
 				"response": {
@@ -49,20 +68,27 @@
 							"type": "string",
 							"const": "void"
 						},
-						{ "$ref": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/schema" }
-					]},
+						{
+							"$ref": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/schema"
+						}
+					]
+				},
 				"errors": {
 					"description": "Errors that may be the result of the message; must be (references to) 'error' schemas",
 					"type": "array",
 					"uniqueItems": true,
 					"items": {
 						"allOf": [
-							{ "$ref": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/schema" },
-							{ "properties": {
-								"type": {
-									"const": "error"
+							{
+								"$ref": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/schema"
+							},
+							{
+								"properties": {
+									"type": {
+										"const": "error"
+									}
 								}
-							}}
+							}
 						]
 					}
 				},

@@ -48,24 +48,29 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 
 			// Find all root schemas (schemas not used by other schemas).
 			console.print("Finding root schemas\n", NORMAL_OUTPUT);
-			final String schemaNames = protocol.getTypes().stream().map(Schema::getName).collect(Collectors.joining(", "));
+			final String schemaNames = protocol.getTypes().stream().map(Schema::getName)
+					.collect(Collectors.joining(", "));
 			console.print("Initial schemas from protocol: " + schemaNames + "\n", NORMAL_OUTPUT);
 
 			// Use one instance to ensure we discover common roots
 			final SchemaVisitor<List<Schema>> rootSchemaDiscoveringVisitor = new RootSchemaDiscoveringVisitor(console);
 			protocol.getTypes().forEach(rootCandidate -> Schemas.visit(rootCandidate, rootSchemaDiscoveringVisitor));
 			rootSchemas = rootSchemaDiscoveringVisitor.get();
-			console.print("Root schemas: " + rootSchemas.stream().map(Schema::getName).collect(Collectors.joining(", ")) + "\n", NORMAL_OUTPUT);
+			console.print(
+					"Root schemas: " + rootSchemas.stream().map(Schema::getName).collect(Collectors.joining(", ")) +
+							"\n", NORMAL_OUTPUT);
 		} catch (RuntimeException | ParseException | IOException e) {
-			console.print(String.format("Failed to parse Avro IDL in %s: please resolve errors first.", file.getName()), ERROR_OUTPUT);
+			console.print(String.format("Failed to parse Avro IDL in %s: please resolve errors first.", file.getName()),
+					ERROR_OUTPUT);
 			writeStackTrace(console, e);
 			return;
 		}
 		final VirtualFile destination;
 		if (rootSchemas.size() == 1) {
 			console.print("Asking for file to write Avro Schema to...\n", NORMAL_OUTPUT);
-			final VirtualFileWrapper fileWrapper = askForTargetFile(project, "Save Avro Schema as", null, AvroSchemaFileType.INSTANCE,
-				file.getParent(), rootSchemas.get(0).getName());
+			final VirtualFileWrapper fileWrapper = askForTargetFile(project, "Save Avro Schema as", null,
+					AvroSchemaFileType.INSTANCE,
+					file.getParent(), rootSchemas.get(0).getName());
 			if (fileWrapper != null) {
 				destination = fileWrapper.getVirtualFile(true);
 			} else {
@@ -74,7 +79,8 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 		} else {
 			console.print("Asking for path to (over)write Avro Schema files to...\n", NORMAL_OUTPUT);
 			destination = askForTargetDirectory(project, null,
-				"The root schemas will be stored in this directory, overwriting any existing files.", file.getParent());
+					"The root schemas will be stored in this directory, overwriting any existing files.",
+					file.getParent());
 		}
 		if (destination == null) {
 			return;
@@ -83,7 +89,8 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 			try {
 				if (rootSchemas.size() == 1) {
 					writeSchema(project, console, destination, rootSchemas.get(0));
-					FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, destination), true);
+					FileEditorManager.getInstance(project)
+							.openTextEditor(new OpenFileDescriptor(project, destination), true);
 				} else {
 					final String suffix = "." + findExtensionFor(AvroSchemaFileType.INSTANCE);
 					for (Schema rootSchema : rootSchemas) {
@@ -98,7 +105,8 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 		});
 	}
 
-	private void writeSchema(@NotNull Project project, @NotNull ConsoleView console, VirtualFile destination, Schema schema) throws IOException {
+	private void writeSchema(@NotNull Project project, @NotNull ConsoleView console, VirtualFile destination,
+	                         Schema schema) throws IOException {
 		VfsUtil.saveText(destination, schema.toString(true));
 		console.print("Wrote Avro Schema \"", NORMAL_OUTPUT);
 		console.print(schema.getName(), NORMAL_OUTPUT);
@@ -112,7 +120,7 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 		private final Set<Schema> usedNamedSchemas;
 		private final Deque<Schema> stack;
 		@NotNull
-        private final ConsoleView console;
+		private final ConsoleView console;
 
 		public RootSchemaDiscoveringVisitor(@NotNull ConsoleView console) {
 			this.console = console;
@@ -152,13 +160,16 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 		private SchemaVisitorAction addNamedSchema(Schema schema) {
 			if (stack.isEmpty()) {
 				if (usedNamedSchemas.contains(schema)) {
-					final String message = "Skipping schema " + schema.getName() + ": it was used within a previous root.\n";
+					final String message =
+							"Skipping schema " + schema.getName() + ": it was used within a previous root.\n";
 					console.print(message, NORMAL_OUTPUT);
 					return SchemaVisitorAction.TERMINATE;
 				}
 				rootSchemaCandidates.add(schema);
 			} else if (usedNamedSchemas.add(schema)) {
-				final String message = "Eliminating schema " + schema.getName() + ": it's used within " + stack.getLast().getName() + "\n";
+				final String message =
+						"Eliminating schema " + schema.getName() + ": it's used within " + stack.getLast().getName() +
+								"\n";
 				console.print(message, NORMAL_OUTPUT);
 			}
 			return SchemaVisitorAction.CONTINUE;
