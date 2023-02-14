@@ -13,3 +13,4 @@ LAST_BUILD=$(curl \
 	sort -r | head -n 1)
 echo "# Highest released build number for IntelliJ IDEA Ultimate / Community edition and PyCharm Professional / PyCharm Community edition" >jetbrains.lastBuild.txt
 echo "${LAST_BUILD}" >>jetbrains.lastBuild.txt
+echo "Last released build number for IntelliJ IDEA Ultimate / Community edition and PyCharm Professional / PyCharm Community edition: ${LAST_BUILD}"
