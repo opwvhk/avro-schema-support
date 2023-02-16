@@ -58,6 +58,7 @@ public class AvroIdlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleS
 					"SPACE_AFTER_COMMA",
 					"SPACE_AFTER_COMMA_IN_TYPE_ARGUMENTS");
 			consumer.renameStandardOption("SPACE_AROUND_ASSIGNMENT_OPERATORS", "Assignment operator (=)");
+			consumer.moveStandardOption("SPACE_AFTER_COMMA_IN_TYPE_ARGUMENTS", "Within messages");
 		} else if (settingsType == SettingsType.WRAPPING_AND_BRACES_SETTINGS) {
 			consumer.showStandardOptions("RIGHT_MARGIN", "WRAP_ON_TYPING", "KEEP_LINE_BREAKS");
 		} else if (settingsType == SettingsType.BLANK_LINES_SETTINGS) {
@@ -129,7 +130,7 @@ public class AvroIdlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleS
 				"\n" +
 				"\n" +
 				"\n" +
-				"    ContractType contract = FIXED;\n" +
+				"    ContractType contract = \"FIXED\";\n" +
 				"\n" +
 				"\n" +
 				"\n" +

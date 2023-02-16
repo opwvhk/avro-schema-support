@@ -107,7 +107,7 @@ tasks {
 		val changeLog = """
 			<p>Version 213.4.1:</p>
 			<ul data-version="213.4.1">
-			<li>Added code to help diagnose persistent but intermittend NoClassDefFoundError (initialisation failure of AvroIdlLanguage)</li>
+			<li>Reverted code to help diagnose crashes</li>
 			</ul>
 			<p>Version 213.4.0:</p>
 			<ul data-version="213.4.0">

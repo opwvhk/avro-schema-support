@@ -25,7 +25,7 @@ public class AvroIdlFormattingModelBuilder implements FormattingModelBuilder {
 
 		// IntelliJ applies spacing rules in order: the first match wins
 
-		final TokenSet allTypes = TokenSet.create(PRIMITIVE_TYPE, ARRAY_TYPE, MAP_TYPE, UNION_TYPE, REFERENCE_TYPE);
+		final TokenSet allTypes = TokenSet.create(PRIMITIVE_TYPE, DECIMAL_TYPE, REFERENCE_TYPE, NULLABLE_TYPE, ARRAY_TYPE, MAP_TYPE, UNION_TYPE);
 		SpacingBuilder spacingBuilder = new SpacingBuilder(settings, AvroIdlLanguage.INSTANCE)
 				// Universal
 				.beforeInside(SEMICOLON, TokenSet.create(
@@ -145,6 +145,7 @@ public class AvroIdlFormattingModelBuilder implements FormattingModelBuilder {
 		Alignment alignment = null;//Alignment.createAlignment();
 		final Indent indent = Indent.getNoneIndent();
 		SpacingBuilder spaceBuilder = createSpaceBuilder(codeStyleSettings);
+		//noinspection ConstantValue
 		AvroIdlBlock block = new AvroIdlBlock(psiElement.getNode(), normalWrap, alignment, indent, spaceBuilder);
 		return FormattingModelProvider.createFormattingModelForPsiFile(psiElement.getContainingFile(), block,
 				codeStyleSettings);
@@ -155,5 +156,4 @@ public class AvroIdlFormattingModelBuilder implements FormattingModelBuilder {
 	public TextRange getRangeAffectingIndent(PsiFile psiFile, int i, ASTNode astNode) {
 		return null;
 	}
-
 }
