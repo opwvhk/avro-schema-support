@@ -93,7 +93,7 @@ tasks {
 
 	patchPluginXml {
 		version.set(project.version.toString())
-		sinceBuild.set("203")
+		sinceBuild.set("203.7717") // IntelliJ 2020.3.4, PyCharm 2020.3.5
 		// Find last EAP version (the build version until the first dot):
 		// curl 'https://data.services.jetbrains.com/products/releases?code=IIU&code=IIC&code=PCP&code=PCC&latest=true&type=eap' 2>/dev/null|jq -r '.[][0].build'|cut -d . -f 1|sort -r|head -n 1
 		untilBuild.set(lastBuild)
@@ -240,7 +240,7 @@ tasks {
 	}
 
 	listProductsReleases {
-		sinceVersion.set("2020.3") // Oldest supported version
+		sinceBuild.set(patchPluginXml.get().sinceBuild.get()) // Oldest supported version
 		untilVersion.set("*") // No upper bound
 		// Do not set releaseChannels: the default is all
 		types.set(listOf("IC", "IU", "PC", "PY")) // Default: only IC

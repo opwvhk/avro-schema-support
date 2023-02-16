@@ -41,7 +41,8 @@ public final class AvroIdlNotifications {
 		if (fullContent) {
 			notification = new FullContentNotification(notificationGroup, title, content, type);
 		} else {
-			notification = notificationGroup.createNotification(title, content, type);
+			//noinspection deprecation - replacement not yet available in 2020.3
+			notification = notificationGroup.createNotification(title, content, type, null);
 		}
 		notification.setIcon(notificationGroup.getIcon());
 		return notification;
