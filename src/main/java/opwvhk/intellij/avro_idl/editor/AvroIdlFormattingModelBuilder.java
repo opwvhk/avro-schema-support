@@ -25,7 +25,8 @@ public class AvroIdlFormattingModelBuilder implements FormattingModelBuilder {
 
 		// IntelliJ applies spacing rules in order: the first match wins
 
-		final TokenSet allTypes = TokenSet.create(PRIMITIVE_TYPE, DECIMAL_TYPE, REFERENCE_TYPE, NULLABLE_TYPE, ARRAY_TYPE, MAP_TYPE, UNION_TYPE);
+		final TokenSet allTypes = TokenSet.create(PRIMITIVE_TYPE, DECIMAL_TYPE, REFERENCE_TYPE, NULLABLE_TYPE,
+				ARRAY_TYPE, MAP_TYPE, UNION_TYPE);
 		SpacingBuilder spacingBuilder = new SpacingBuilder(settings, AvroIdlLanguage.INSTANCE)
 				// Universal
 				.beforeInside(SEMICOLON, TokenSet.create(

@@ -52,7 +52,8 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 	}
 
 	@Override
-	public @NotNull @NlsActions.ActionText String getReportActionText() {
+	public @NotNull
+	@NlsActions.ActionText String getReportActionText() {
 		return DiagnosticBundle.message("error.report.impossible.action");
 	}
 
