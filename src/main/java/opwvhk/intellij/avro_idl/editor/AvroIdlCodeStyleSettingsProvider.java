@@ -44,7 +44,7 @@ public class AvroIdlCodeStyleSettingsProvider extends CodeStyleSettingsProvider 
 		@Override
 		protected void initTabs(CodeStyleSettings settings) {
 			super.initTabs(settings);
-			addTab(new OptionTableWithoutPreviewPanel(settings) {
+			addTab(new OptionTreeWithoutPreviewPanel(settings) {
 				@Override
 				public @NotNull SettingsType getSettingsType() {
 					return SettingsType.LANGUAGE_SPECIFIC;

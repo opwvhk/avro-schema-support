@@ -107,6 +107,8 @@ tasks {
 		val changeLog = """
 			<p>Version 213.4.1:</p>
 			<ul data-version="213.4.1">
+			<li>Fix #64 (bug in formatting preferences)</li>
+			<li>Layout change for code style tab "Other"</li>
 			<li>Reverted code to help diagnose crashes</li>
 			</ul>
 			<p>Version 213.4.0:</p>
