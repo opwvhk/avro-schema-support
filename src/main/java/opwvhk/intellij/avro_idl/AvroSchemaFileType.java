@@ -25,6 +25,8 @@ public class AvroSchemaFileType extends LanguageFileType {
 	@Override
 	@NotNull
 	public String getDescription() {
+		// False positive: this "description" is used as a name
+		//noinspection DialogTitleCapitalization
 		return "Apache Avro™ Schema";
 	}
 

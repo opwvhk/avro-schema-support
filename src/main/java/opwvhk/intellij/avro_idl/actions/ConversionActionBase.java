@@ -89,11 +89,15 @@ abstract class ConversionActionBase extends DumbAwareAction {
 	                                              @NotNull FileType fileType,
 	                                              @Nullable VirtualFile suggestedTargetDirectory,
 	                                              @NotNull String suggestedBaseName) {
+		// False positive: reuse of platform text
+		//noinspection DialogTitleCapitalization
 		final String nonNullTitle = title == null ? IdeBundle.message("dialog.title.save.as") : title;
 		final String nonNullDescription =
 				description == null ? IdeBundle.message("label.choose.target.file") : description;
 		final String fileName = suggestedBaseName + "." + destinationFileType.getDefaultExtension();
 
+		// Replacement for getVirtualFilesByName is not available in 2020.3.4
+		//noinspection deprecation
 		Collection<VirtualFile> files = FilenameIndex.getVirtualFilesByName(project, fileName,
 				ProjectScope.getContentScope(project));
 		VirtualFile firstItem = ContainerUtil.getFirstItem(files);

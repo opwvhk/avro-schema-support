@@ -9,7 +9,9 @@ import org.jetbrains.annotations.NonNls;
 import static java.util.Objects.requireNonNull;
 
 public abstract class AvroIdlNamingConvention extends NamingConvention<AvroIdlNameIdentifierOwner> {
-	public static final String IDENTIFIER_START_UPPERCASE = "[A-Z][a-zA-Z0-9]*";
+	@RegExp
+    public static final String IDENTIFIER_START_UPPERCASE = "[A-Z][a-zA-Z0-9]*";
+	@RegExp
 	public static final String IDENTIFIER_START_LOWERCASE = "[a-z][a-zA-Z0-9]*";
 
 	private final Class<? extends AvroIdlNameIdentifierOwner> namedTypeClass;

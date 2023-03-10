@@ -22,6 +22,7 @@ class AvroIdlCompletionContributor extends CompletionContributor {
 		super.fillCompletionVariants(parameters, result);
 	}
 
+	@SuppressWarnings("CommentedOutCode")
 	public AvroIdlCompletionContributor() {
 
 		// Empty file: namespace annotation for protocol, or the protocol, namespace, schema, record, enum & fixed keywords

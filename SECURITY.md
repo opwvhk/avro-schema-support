@@ -19,5 +19,5 @@ don't cause notifications.
 Security vulnerabilities will be fixed either quickly, or as soon as an upstream
 fix in a library is available.
 
-On the off chance that a security vulnerability does not apply, it'll be
+On the off chance a security vulnerability does not apply, it'll be
 declined with an explanation why it doesn't apply.

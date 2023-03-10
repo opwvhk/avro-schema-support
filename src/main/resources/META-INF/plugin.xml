@@ -11,23 +11,33 @@
 	-->
 	<description><![CDATA[
 	<p>
-		Avro IDL Schema Support extends Intellij IDEs to more easily work with Avro schemata and protocols in IDL or JSON format.
+		Extend IntelliJ, PyCharm and other JetBrains IDEs to more easily work with Avro schemata and protocols in both
+		IDL or JSON format.
 	</p>
-	<p>IDL (<code>.avdl</code>) features include:<ul>
+	<p>
+		<br/>
+		IDL (<code>.avdl</code>) features include:
+	</p>
+	<ul>
 		<li>Syntax & error highlighting</li>
 		<li>Code completion</li>
 		<li>Formatting (configurable)</li>
 		<li>Inspections and quick fixes</li>
 		<li>Navigation, renaming, quote/brace pairs, etc.</li>
 		<li>Converting Avro schemas/protocols from/to IDL</li>
-	</ul></p>
-	<p>JSON (<code>.avsc</code>/<code>.avpr</code>) features include:<ul>
+	</ul>
+	<p>
+		<br/>
+		JSON (<code>.avsc</code>/<code>.avpr</code>) features include:
+	</p>
+	<ul>
 		<li>Syntax & some error highlighting</li>
 		<li>Code completion</li>
-	</ul></p>
+	</ul>
 	<p>
-		Please note that the JSON features are limited, as they are provided by IntelliJ JSON support combined with JSON schemas packaged
-		in the plugin. Especially error detection is extremely limited, as are inspections.
+		<br/>
+		Please note that the JSON features are limited, as they are provided by IntelliJ JSON support combined with JSON
+		schemas packaged in the plugin. Especially error detection is extremely limited, as are inspection.
 	</p>
 	]]></description>
 
@@ -35,13 +45,14 @@
 	<depends>com.intellij.modules.platform</depends>
 	<depends>com.intellij.modules.lang</depends>
 
+	<resource-bundle>messages.TextBundle</resource-bundle>
 	<extensionPoints>
 		<extensionPoint qualifiedName="opwvhk.avro.idl.naming.convention" dynamic="true"
 		                interface="opwvhk.intellij.avro_idl.naming.AvroIdlNamingConvention"/>
 	</extensionPoints>
 	<extensions defaultExtensionNs="com.intellij">
-		<notificationGroup id="Avro IDL updates" displayType="STICKY_BALLOON"
-		                   icon="opwvhk.intellij.avro_idl.AvroIdlIcons.LOGO"/>
+		<notificationGroup id="Avro IDL updates" key="notification.group.avro.idl.updates"
+		                   displayType="STICKY_BALLOON" icon="opwvhk.intellij.avro_idl.AvroIdlIcons.LOGO"/>
 		<postStartupActivity implementation="opwvhk.intellij.avro_idl.AvroIdlPluginUpdateStartupActivity"/>
 		<errorHandler implementation="opwvhk.intellij.avro_idl.AvroIdlErrorReportSubmitter"/>
 		<!-- File type & Language -->
@@ -92,34 +103,35 @@
 		<langCodeStyleSettingsProvider
 				implementation="opwvhk.intellij.avro_idl.editor.AvroIdlLanguageCodeStyleSettingsProvider"/>
 		<!-- Inspections (can be turned off) -->
-		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Duplicate annotations" level="WARNING"
-		                 enabledByDefault="true"
+		<localInspection language="Avro IDL" groupKey="inspection.group.avro" key="inspection.duplicate.annotations"
+		                 level="WARNING" enabledByDefault="true"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlDuplicateAnnotationsInspection"/>
-		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Misplaced annotations"
+		<localInspection language="Avro IDL" groupKey="inspection.group.avro" key="inspection.misplaced.annotations"
 		                 level="WEAK WARNING" enabledByDefault="true"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlMisplacedAnnotationsInspection"/>
-		<localInspection language="Avro IDL" groupName="Avro IDL"
-		                 displayName="Invalid identifier in @namespace annotation" level="WARNING"
-		                 enabledByDefault="true"
+		<localInspection language="Avro IDL" groupKey="inspection.group.avro" key="inspection.invalid.namespace.annotation"
+		                 level="WARNING" enabledByDefault="true"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlInvalidNamespaceAnnotationInspection"/>
-		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Misplaced documentation" level="WARNING"
-		                 enabledByDefault="true"
+		<localInspection language="Avro IDL" groupKey="inspection.group.avro" key="inspection.misplaced.documentation"
+		                 level="WARNING" enabledByDefault="true"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlMisplacedDocumentationInspection"/>
-		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Union can be simplified"
+		<localInspection language="Avro IDL" groupKey="inspection.group.avro" key="inspection.use.nullable.shorthand"
 		                 level="WEAK WARNING" enabledByDefault="true"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlUseNullableShorthandInspection"/>
-		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Use of optional type" level="ERROR"
-		                 enabledByDefault="false"
+		<localInspection language="Avro IDL" groupKey="inspection.group.avro" key="inspection.avoid.nullable.shorthand"
+		                 level="ERROR" enabledByDefault="false"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlAvoidNullableShorthandInspection"/>
 		<!-- TODO: Enable when Avro supports the schema syntax (Avro 1.12.0) -->
 		<!--
-		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Schema syntax available" level="WEAK WARNING"
-		                 enabledByDefault="true" implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlUseSchemaSyntaxInspection"/>
-		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Use of schema syntax" level="ERROR"
-		                 enabledByDefault="false" implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlAvoidSchemaSyntaxInspection"/>
+		<localInspection language="Avro IDL" groupKey="inspection.group.avro" key="inspection.use.schema.syntax"
+		                 level="WEAK WARNING" enabledByDefault="true"
+		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlUseSchemaSyntaxInspection"/>
+		<localInspection language="Avro IDL" groupKey="inspection.group.avro" key="inspection.avoid.schema.syntax"
+		                 level="ERROR" enabledByDefault="false"
+		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlAvoidSchemaSyntaxInspection"/>
 		-->
-		<localInspection language="Avro IDL" groupName="Avro IDL" displayName="Naming conventions" level="TYPO"
-		                 enabledByDefault="false"
+		<localInspection language="Avro IDL" groupKey="inspection.group.avro" key="inspection.naming.convention"
+		                 level="TYPO" enabledByDefault="false"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlNamingConventionInspection"/>
 
 		<!-- Avro Schema & Protocol files (JSON derivative) -->
@@ -164,28 +176,20 @@
 		<jsonLikePsiWalkerFactory implementation="opwvhk.intellij.avro_idl.json_schema.AvroJsonSchemaPsiWalkerFactory"/>
 	</extensions>
 	<actions>
-		<action id="AvroIdl.IdlToProtocol" text="Convert Avro IDL to Avro Protocol"
-		        description="Convert Avro IDL file to an Avro protocol file."
-		        class="opwvhk.intellij.avro_idl.actions.AvroIdlToProtocolAction">
+		<action id="AvroIdl.IdlToProtocol" class="opwvhk.intellij.avro_idl.actions.AvroIdlToProtocolAction">
 			<add-to-group group-id="RefactoringMenu" anchor="last"/>
 		</action>
-		<action id="AvroIdl.IdlToSchema" text="Convert Avro IDL to Avro Schema"
-		        description="Convert Avro IDL file to a minimal number of Avro schema files."
-		        class="opwvhk.intellij.avro_idl.actions.AvroIdlToSchemaAction">
+		<action id="AvroIdl.IdlToSchema" class="opwvhk.intellij.avro_idl.actions.AvroIdlToSchemaAction">
 			<add-to-group group-id="RefactoringMenu" anchor="last"/>
 		</action>
-		<action id="AvroIdl.ProtocolToIdl" text="Convert Avro Protocol to Avro IDL"
-		        description="Convert Avro protocol file an Avro IDL file."
-		        class="opwvhk.intellij.avro_idl.actions.AvroProtocolToIdlAction">
+		<action id="AvroIdl.ProtocolToIdl" class="opwvhk.intellij.avro_idl.actions.AvroProtocolToIdlAction">
 			<add-to-group group-id="RefactoringMenu" anchor="last"/>
 		</action>
-		<action id="AvroIdl.SchemaToIdl" text="Convert Avro Schema to Avro IDL"
-		        description="Convert Avro schema file an Avro IDL file."
-		        class="opwvhk.intellij.avro_idl.actions.AvroSchemaToIdlAction">
+		<action id="AvroIdl.SchemaToIdl" class="opwvhk.intellij.avro_idl.actions.AvroSchemaToIdlAction">
 			<add-to-group group-id="RefactoringMenu" anchor="last"/>
 		</action>
 
-		<group id="AvroIdl.NewGroup" text="Avro IDL">
+		<group id="AvroIdl.NewGroup">
 			<action id="AvroIdlNewFile" class="opwvhk.intellij.avro_idl.actions.AvroIdlCreateFileFromAction"/>
 			<add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFromTemplate"/>
 		</group>

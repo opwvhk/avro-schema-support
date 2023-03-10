@@ -25,6 +25,7 @@ public class AvroIdlDuplicateAnnotationsInspection extends BaseAvroIdlInspection
 	@Override
 	protected void visitElement(@NotNull AvroIdlAnnotatedNameIdentifierOwner element, @NotNull ProblemsHolder holder,
 	                            @NotNull LocalInspectionToolSession session) {
+		//noinspection DataFlowIssue : getAnnotationName is @NUllable, but null results are filtered out
 		Map<String, List<AvroIdlSchemaProperty>> annotationsByName = element.getSchemaPropertyList().stream()
 				.filter(annotation -> getAnnotationName(annotation) != null)
 				.collect(Collectors.groupingBy(AvroIdlDuplicateAnnotationsInspection::getAnnotationName));

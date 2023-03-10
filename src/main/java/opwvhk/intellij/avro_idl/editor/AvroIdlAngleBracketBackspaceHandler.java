@@ -34,12 +34,6 @@ public class AvroIdlAngleBracketBackspaceHandler extends BackspaceHandlerDelegat
 			TypedHandlerUtil.handleGenericLTDeletion(editor, offset, AvroIdlTypes.LEFT_ANGLE, AvroIdlTypes.RIGHT_ANGLE,
 					INVALID_INSIDE_ANGLE);
 			return true;
-			//var document = editor.getDocument();
-			//var nextChar = document.getCharsSequence().charAt(offset);
-			//if (nextChar == '>') {
-			//	document.replaceString(offset, offset + 1, "");
-			//	return true;
-			//}
 		}
 		return false;
 	}

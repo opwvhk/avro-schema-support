@@ -325,7 +325,6 @@ public class AvroIdlPsiUtil {
 
 	@NotNull
 	public static ItemPresentation getPresentation(final AvroIdlNamedType element) {
-		//noinspection ConstantConditions
 		return new ItemPresentation() {
 			@Override
 			@Nullable
@@ -334,14 +333,12 @@ public class AvroIdlPsiUtil {
 			}
 
 			@Override
-			@Nullable
-			public String getLocationString() {
+			public @NotNull String getLocationString() {
 				return element.getContainingFile().getName();
 			}
 
 			@Override
-			@Nullable
-			public Icon getIcon(boolean unused) {
+			public @NotNull Icon getIcon(boolean unused) {
 				return AvroIdlIcons.LOGO;
 			}
 		};
@@ -349,23 +346,19 @@ public class AvroIdlPsiUtil {
 
 	@NotNull
 	public static ItemPresentation getPresentation(final AvroIdlEnumConstant element) {
-		//noinspection ConstantConditions
 		return new ItemPresentation() {
 			@Override
-			@Nullable
-			public String getPresentableText() {
+			public @NotNull String getPresentableText() {
 				return ((AvroIdlEnumDeclaration) element.getParent().getParent()).getName() + "." + element.getName();
 			}
 
 			@Override
-			@Nullable
-			public String getLocationString() {
+			public @NotNull String getLocationString() {
 				return element.getContainingFile().getName();
 			}
 
 			@Override
-			@Nullable
-			public Icon getIcon(boolean unused) {
+			public @NotNull Icon getIcon(boolean unused) {
 				return AvroIdlIcons.LOGO;
 			}
 		};

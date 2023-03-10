@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class AvroIdlPairedBraceMatcher implements PairedBraceMatcher {
 	@Override
-	public BracePair[] getPairs() {
+	public BracePair @NotNull [] getPairs() {
 		return new BracePair[]{
 				new BracePair(AvroIdlTypes.LEFT_BRACE, AvroIdlTypes.RIGHT_BRACE, true),
 				new BracePair(AvroIdlTypes.LEFT_BRACKET, AvroIdlTypes.RIGHT_BRACKET, false),

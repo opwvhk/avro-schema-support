@@ -17,8 +17,7 @@ import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
 public class AvroIdlFoldingBuilder implements FoldingBuilder, DumbAware {
 	@Override
-	@NotNull
-	public FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document) {
+	public FoldingDescriptor @NotNull [] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document) {
 		List<FoldingDescriptor> descriptors = new ArrayList<>();
 		buildFoldRegions(node, document, descriptors);
 		return descriptors.toArray(FoldingDescriptor[]::new);

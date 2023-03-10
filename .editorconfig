@@ -14,7 +14,3 @@ trim_trailing_whitespace = true
 indent_style = space
 indent_size = 2
 ij_continuation_indent_size = 4
-
-# Tab indentation (no size specified)
-[{Makefile,makefile,GNUmakefile,*.make}]
-indent_style = tab
