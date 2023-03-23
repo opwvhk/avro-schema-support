@@ -21,7 +21,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "213.4.1"
+version = "213.4.2"
 
 repositories {
 	mavenCentral()
@@ -93,7 +93,7 @@ tasks {
 
 	patchPluginXml {
 		version.set(project.version.toString())
-		sinceBuild.set("203.7717") // IntelliJ 2020.3.4, PyCharm 2020.3.5
+		sinceBuild.set("203.7717203.7717.56") // IntelliJ 2020.3.4, PyCharm 2020.3.5
 		// Find last EAP version (the build version until the first dot):
 		// curl 'https://data.services.jetbrains.com/products/releases?code=IIU&code=IIC&code=PCP&code=PCC&latest=true&type=eap' 2>/dev/null|jq -r '.[][0].build'|cut -d . -f 1|sort -r|head -n 1
 		untilBuild.set(lastBuild)
@@ -105,6 +105,10 @@ tasks {
 		*/
 		//language=HTML
 		val changeLog = """
+			<p>Version 213.4.2:</p>
+			<ul data-version="213.4.2">
+			<li>Updated API token for crash reporting</li>
+			</ul>
 			<p>Version 213.4.1:</p>
 			<ul data-version="213.4.1">
 			<li>Fix #64 (bug in formatting preferences)</li>
