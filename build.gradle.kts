@@ -62,6 +62,7 @@ intellij {
 	//version.set("2022.3")
 	//version.set("2022.3.1")
 	//version.set("2022.3.2")
+	//version.set("2022.3.3")
 
 	val psiViewerVersion = version.get().replace(".", "").substring(2, 5) + "-SNAPSHOT"
 	// Note: without the java plugin tests will fail (so don't remove it even if the plugin does not need it)
