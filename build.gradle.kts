@@ -6,7 +6,7 @@ import java.util.*
 plugins {
 	`java-library`
 	id("java")
-	id("org.jetbrains.intellij") version "1.13.2"
+	id("org.jetbrains.intellij") version "1.13.3"
 }
 
 val lastBuild = provider {
