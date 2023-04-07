@@ -26,9 +26,10 @@ public class AvroIdlAngleBracketTypedHandler extends TypedHandlerDelegate {
 		}
 
 		if (c == '>') {
-			TypedHandlerUtil.handleGenericGT(editor, AvroIdlTypes.LEFT_ANGLE, AvroIdlTypes.RIGHT_ANGLE,
-					INVALID_INSIDE_ANGLE);
-			return Result.STOP;
+			if (TypedHandlerUtil.handleGenericGT(editor, AvroIdlTypes.LEFT_ANGLE, AvroIdlTypes.RIGHT_ANGLE,
+					INVALID_INSIDE_ANGLE)) {
+				return Result.STOP;
+			}
 		}
 
 		return Result.CONTINUE;
