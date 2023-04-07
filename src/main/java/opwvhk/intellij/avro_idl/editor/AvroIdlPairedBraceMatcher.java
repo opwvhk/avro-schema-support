@@ -13,14 +13,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class AvroIdlPairedBraceMatcher implements PairedBraceMatcher {
+
+	private static final BracePair[] PAIRS = new BracePair[]{
+			new BracePair(AvroIdlTypes.LEFT_BRACE, AvroIdlTypes.RIGHT_BRACE, true),
+			new BracePair(AvroIdlTypes.LEFT_BRACKET, AvroIdlTypes.RIGHT_BRACKET, false),
+			new BracePair(AvroIdlTypes.LEFT_PAREN, AvroIdlTypes.LEFT_PAREN, false),
+			new BracePair(AvroIdlTypes.LEFT_ANGLE, AvroIdlTypes.RIGHT_ANGLE, false)
+	};
+
 	@Override
 	public BracePair @NotNull [] getPairs() {
-		return new BracePair[]{
-				new BracePair(AvroIdlTypes.LEFT_BRACE, AvroIdlTypes.RIGHT_BRACE, true),
-				new BracePair(AvroIdlTypes.LEFT_BRACKET, AvroIdlTypes.RIGHT_BRACKET, false),
-				new BracePair(AvroIdlTypes.LEFT_PAREN, AvroIdlTypes.LEFT_PAREN, false),
-				new BracePair(AvroIdlTypes.LEFT_ANGLE, AvroIdlTypes.RIGHT_ANGLE, false)
-		};
+		return PAIRS;
 	}
 
 	@Override
