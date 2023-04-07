@@ -152,7 +152,7 @@ abstract class ConversionActionBase extends DumbAwareAction {
 		boolean actionAvailable = false;
 
 		//noinspection UnstableApiUsage
-		if (project != null && TrustedProjects.isTrusted(project)) {
+		if (project != null && !project.isDisposed() && TrustedProjects.isTrusted(project)) {
 			List<VirtualFile> files = getFiles(e);
 			actionAvailable = !files.isEmpty();
 		}
