@@ -21,7 +21,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "213.4.2"
+version = "213.4.3"
 
 repositories {
 	mavenCentral()
@@ -63,6 +63,7 @@ intellij {
 	//version.set("2022.3.1")
 	//version.set("2022.3.2")
 	//version.set("2022.3.3")
+	//version.set("2023.1")
 
 	val psiViewerVersion = version.get().replace(".", "").substring(2, 5) + "-SNAPSHOT"
 	// Note: without the java plugin tests will fail (so don't remove it even if the plugin does not need it)
