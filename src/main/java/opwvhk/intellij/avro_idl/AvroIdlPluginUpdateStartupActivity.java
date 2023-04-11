@@ -133,7 +133,7 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 	 * <p>
 	 * To link into the settings, build a link with: [a settings id] + '#' + [a search filter]
 	 * <p>
-	 * Useful settings ids are in searchableOptions.xml (created by building the plugin), using the XPath: //configurable[configurable_name="Avro IDL"]@id
+	 * Useful settings ids are in searchableOptions.xml (created by building the plugin), using the XPath: //configurable[configurable_name="AvroIDL"]@id
 	 *
 	 * @param project the current project
 	 * @return the notification listener
@@ -149,7 +149,7 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 					String idToSelect = link.substring(0, hashPos); // link.contains("#"), so hashPos >= 0
 					String searchFilter = link.substring(hashPos + 1);
 					if (!project.isDisposed()) {
-						// Values for idToSelect are in searchableOptions.xml; use this XPath: /option/configurable[configurable_name="Avro IDL"]@id
+						// Values for idToSelect are in searchableOptions.xml; use this XPath: /option/configurable[configurable_name="AvroIDL"]@id
 						// (note: searchableOptions.xml is created when building the plugin)
 						ShowSettingsUtilImpl.showSettingsDialog(project, idToSelect, searchFilter);
 					}

@@ -21,7 +21,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "213.4.3"
+version = "213.5.0"
 
 repositories {
 	mavenCentral()
@@ -107,6 +107,19 @@ tasks {
 		*/
 		//language=HTML
 		val changeLog = """
+			<p>Version 213.5.0:</p>
+			<ul data-version="213.5.0">
+			<li>
+				Renamed internal language ID (issue #78).<br/>
+				<b>This invalidates previously generated <code>.editorconfig</code> settings!</b><br/>
+				To fix, replace "ij_avro idl_" with "ij_avroidl_" in your <code>.editorconfig</code> files.
+			</li>
+			<li>Added disposed check in menu actions (issue #73)</li>
+			</ul>
+			<p>Version 213.4.3:</p>
+			<ul data-version="213.4.3">
+			<li>Fixed issue #77: editor support for angle brackets was broken</li>
+			</ul>
 			<p>Version 213.4.2:</p>
 			<ul data-version="213.4.2">
 			<li>Updated API token for crash reporting</li>

@@ -22,7 +22,7 @@ public class AvroIdlFileType extends LanguageFileType {
 	@Override
 	@NotNull
 	public String getName() {
-		return "Avro IDL";
+		return "AvroIDL";
 	}
 
 	@Override
