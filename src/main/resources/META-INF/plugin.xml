@@ -51,7 +51,7 @@
 		                interface="opwvhk.intellij.avro_idl.naming.AvroIdlNamingConvention"/>
 	</extensionPoints>
 	<extensions defaultExtensionNs="com.intellij">
-		<notificationGroup id="Avro IDL updates" key="notification.group.avro.idl.updates"
+		<notificationGroup id="avro.idl.updates" key="notification.group.avro.idl.updates"
 		                   displayType="STICKY_BALLOON" icon="opwvhk.intellij.avro_idl.AvroIdlIcons.LOGO"/>
 		<postStartupActivity implementation="opwvhk.intellij.avro_idl.AvroIdlPluginUpdateStartupActivity"/>
 		<errorHandler implementation="opwvhk.intellij.avro_idl.AvroIdlErrorReportSubmitter"/>

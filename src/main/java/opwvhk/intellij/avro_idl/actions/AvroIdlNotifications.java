@@ -20,7 +20,7 @@ public final class AvroIdlNotifications {
 	                                    @Nullable String title, @NotNull String message,
 	                                    @Nullable Consumer<Notification> configurer) {
 		final NotificationGroup notificationGroup = requireNonNull(
-				NotificationGroup.findRegisteredGroup("Avro IDL updates"));
+				NotificationGroup.findRegisteredGroup("avro.idl.updates"));
 		Notification notification = createNotification(notificationGroup, fullContent, title == null ? "" : title,
 				message, type);
 		if (configurer != null) {
