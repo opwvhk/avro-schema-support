@@ -21,7 +21,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "213.5.0"
+version = "213.5.1-SNAPSHOT"
 
 repositories {
 	mavenCentral()
@@ -107,6 +107,10 @@ tasks {
 		*/
 		//language=HTML
 		val changeLog = """
+			<p>Version 213.5.1:</p>
+			<ul data-version="213.5.1">
+				<li>...</li>
+			</ul>
 			<p>Version 213.5.0:</p>
 			<ul data-version="213.5.0">
 			<li>
