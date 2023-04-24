@@ -21,7 +21,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "213.5.1-SNAPSHOT"
+version = "213.5.1"
 
 repositories {
 	mavenCentral()
@@ -34,10 +34,11 @@ java {
 
 dependencies {
 	implementation("org.apache.avro", "avro-compiler", "1.11.1").exclude("org.slf4j")
-	implementation("org.json", "json", "20220924")
-	implementation("org.kohsuke", "github-api", "1.313")
+	implementation("org.apache.commons", "commons-text", "1.10.0")
+	implementation("org.json", "json", "20230227")
+	implementation("org.kohsuke", "github-api", "1.314")
 	testImplementation("junit", "junit", "4.13.2")
-	testImplementation("org.assertj", "assertj-core", "3.23.1")
+	testImplementation("org.assertj", "assertj-core", "3.24.2")
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
@@ -109,7 +110,7 @@ tasks {
 		val changeLog = """
 			<p>Version 213.5.1:</p>
 			<ul data-version="213.5.1">
-				<li>...</li>
+				<li>Upgraded dependencies</li>
 			</ul>
 			<p>Version 213.5.0:</p>
 			<ul data-version="213.5.0">
