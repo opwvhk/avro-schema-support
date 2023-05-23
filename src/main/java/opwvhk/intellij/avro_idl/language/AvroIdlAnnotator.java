@@ -1,6 +1,5 @@
 package opwvhk.intellij.avro_idl.language;
 
-import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.annotation.AnnotationBuilder;
@@ -14,10 +13,11 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.util.CachedValueProvider;
+import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.util.PsiUtilCore;
 import opwvhk.intellij.avro_idl.inspections.SimpleAvroIdlQuickFixOnPsiElement;
 import opwvhk.intellij.avro_idl.psi.*;
@@ -26,14 +26,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import static com.intellij.lang.annotation.HighlightSeverity.ERROR;
 import static java.util.regex.Pattern.UNICODE_CHARACTER_CLASS;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.NULL;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.VOID;
 
-/* TODO: Also implement DumbAware when targeting 2023.1+ */
 public class AvroIdlAnnotator implements Annotator, DumbAware {
 	private static final String SIMPLE_NAME_IN_STRING = "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
 	private static final String IDENTIFIER_IN_STRING = SIMPLE_NAME_IN_STRING + "(\\." + SIMPLE_NAME_IN_STRING + ")*";
@@ -68,8 +69,6 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 			}
 		} else if (element instanceof AvroIdlSchemaProperty) {
 			annotateSchemaProperty((AvroIdlSchemaProperty) element, holder);
-		} else if (element instanceof AvroIdlFile) {
-			annotateFile((AvroIdlFile) element, holder);
 		} else if (element.getNode().getElementType() == AvroIdlTypes.ONEWAY) {
 			annotateOneWay(element, holder);
 		}
@@ -123,12 +122,89 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 
 	private void annotateIdentifierName(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
 		final String identifier = element.getText();
-		final Predicate<String> validName = element.getParent().getParent() instanceof AvroIdlVariableDeclarator ?
-				VALID_SIMPLE_NAME :
-				VALID_IDENTIFIER;
+		final boolean isVariableName = element.getParent() instanceof AvroIdlVariableDeclarator;
+		final Predicate<String> validName = isVariableName ? VALID_SIMPLE_NAME : VALID_IDENTIFIER;
+
+		final Map<PsiElement, NameAndLink> duplicateNameElements;
+		final String identifiedElement;
+		if (isVariableName) {
+			final PsiElement valueHolder = element.getParent().getParent().getParent();
+			if (valueHolder instanceof AvroIdlRecordBody) {
+				duplicateNameElements = getDuplicateNames(valueHolder,
+						() -> Stream.of(((AvroIdlRecordBody) valueHolder))
+								.map(AvroIdlRecordBody::getFieldDeclarationList)
+								.flatMap(List::stream)
+								.map(AvroIdlFieldDeclaration::getVariableDeclaratorList)
+								.flatMap(List::stream)
+				);
+				identifiedElement = "Field";
+			} else {
+				duplicateNameElements = getDuplicateNames(valueHolder,
+						() -> Stream.of(((AvroIdlMessageDeclaration) valueHolder))
+								.map(AvroIdlMessageDeclaration::getFormalParameterList)
+								.flatMap(List::stream)
+								.map(AvroIdlFormalParameter::getVariableDeclarator)
+								.flatMap(Stream::ofNullable));
+				identifiedElement = "Message parameter";
+			}
+		} else if (element.getParent() instanceof AvroIdlEnumConstant) {
+			AvroIdlEnumBody enumBody = (AvroIdlEnumBody) element.getParent().getParent();
+			duplicateNameElements = getDuplicateNames(enumBody,
+					() -> enumBody.getEnumConstantList().stream().flatMap(Stream::ofNullable));
+			identifiedElement = "Enum constant";
+		} else if (element.getParent() instanceof AvroIdlNamedSchemaDeclaration) {
+			PsiElement valueHolder = element.getParent().getParent();
+			duplicateNameElements = getDuplicateNames(valueHolder,
+					() -> ((Stream<?>) Stream.of(valueHolder.getChildren()))
+							.filter(AvroIdlNamedSchemaDeclaration.class::isInstance)
+							.map(AvroIdlNamedSchemaDeclaration.class::cast)
+			);
+			identifiedElement = "Schema";
+		} else {
+			duplicateNameElements = Collections.emptyMap();
+			identifiedElement = null;
+		}
+		NameAndLink linkToDuplicate = duplicateNameElements.get(element);
+		if (linkToDuplicate != null) {
+			String message = duplicateElementMessage(identifiedElement, linkToDuplicate.name);
+			String tooltip = "<html>" + duplicateElementMessage(identifiedElement, linkToDuplicate.link) + "</html>";
+			holder.newAnnotation(ERROR, message).range(element).tooltip(tooltip).create();
+		}
 		if (!validName.test(identifier)) {
 			holder.newAnnotation(ERROR, invalidIdentifierMessage("", identifier)).range(element).create();
 		}
+	}
+
+	private static Map<PsiElement, NameAndLink> getDuplicateNames(PsiElement contextElement,
+	                                                              Supplier<Stream<PsiNameIdentifierOwner>> findNames) {
+		return CachedValuesManager.getCachedValue(contextElement, () -> {
+			Map<String, List<PsiElement>> elementsByName = new HashMap<>();
+			findNames.get().forEach(
+					nameOwner -> {
+						String name = nameOwner instanceof AvroIdlNamespacedNameIdentifierOwner ?
+								((AvroIdlNamespacedNameIdentifierOwner) nameOwner).getFullName() : nameOwner.getName();
+						elementsByName
+								.computeIfAbsent(name, ignored -> new ArrayList<>())
+								.add(nameOwner.getNameIdentifier());
+					}
+			);
+			elementsByName.values().removeIf(list -> list.size() < 2);
+
+			Set<PsiElement> dependencies = new HashSet<>();
+			dependencies.add(contextElement);
+			Map<PsiElement, NameAndLink> duplicates = new HashMap<>();
+			elementsByName.forEach((name, duplicatesForName) -> {
+				PsiElement first = duplicatesForName.get(0);
+				PsiElement second = duplicatesForName.get(1);
+				dependencies.add(first);
+				duplicates.put(first, new NameAndLink(name, second));
+				duplicatesForName.subList(1, duplicatesForName.size()).forEach(duplicate -> {
+					dependencies.add(duplicate);
+					duplicates.put(duplicate, new NameAndLink(name, first));
+				});
+			});
+			return CachedValueProvider.Result.create(duplicates, dependencies);
+		});
 	}
 
 	@NotNull
@@ -401,60 +477,9 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 
 	}
 
-	private void annotateFile(AvroIdlFile element, AnnotationHolder holder) {
-		final PsiManager psiManager = PsiManager.getInstance(element.getProject());
-
-		final Map<String, List<LookupElement>> allTypesByName = new LinkedHashMap<>();
-		AvroIdlUtil.findAllSchemaNamesAvailableInIdl(element)
-				.forEach(lookupElement -> lookupElement.getAllLookupStrings()
-						.forEach(name -> allTypesByName.computeIfAbsent(name, ignored -> new ArrayList<>())
-								.add(lookupElement)));
-
-		final Collection<AvroIdlNamedSchemaDeclaration> schemasInThisFile = PsiTreeUtil.findChildrenOfType(element,
-				AvroIdlNamedSchemaDeclaration.class);
-		for (AvroIdlNamedSchemaDeclaration schema : schemasInThisFile) {
-			final String fullName = schema.getFullName();
-			if (fullName == null) {
-				continue;
-			}
-			final List<LookupElement> duplicates = allTypesByName.getOrDefault(fullName, Collections.emptyList());
-			if (duplicates.size() > 1) {
-				//noinspection OptionalGetWithoutIsPresent
-				final LookupElement anyDuplicate = duplicates.stream()
-						.filter(dup -> dup.getPsiElement() == null ||
-								!psiManager.areElementsEquivalent(dup.getPsiElement(), schema))
-						.findAny().get(); // Always returns something, as we're only filtering out one element
-
-				final PsiElement psiElement = anyDuplicate.getPsiElement();
-				final Object object = anyDuplicate.getObject();
-				final Optional<String> linkToDuplicate = Optional.ofNullable(psiElement)
-						.map(PsiUtilCore::getVirtualFile)
-						.map(VirtualFile::getPath)
-						.map(FileUtil::toSystemIndependentName)
-						.map(path -> path + ":" + psiElement.getTextOffset())
-						.or(() -> Optional.of(object)
-								.filter(o -> o instanceof VirtualFile)
-								.map(o -> ((VirtualFile) o).getPath())
-								.map(FileUtil::toSystemIndependentName)
-								.map(path -> path + ":0"))
-						.map(link -> "<a href=\"#navigation/" + link + "\">" + anyDuplicate.getLookupString() + "</a>");
-
-				final PsiElement nameIdentifier = schema.getNameIdentifier();
-				assert nameIdentifier != null; // fullName!=null, thus nameIdentifier!=null
-				AnnotationBuilder annotationBuilder = holder.newAnnotation(ERROR, duplicateSchemaMessage(fullName))
-						.range(nameIdentifier);
-				if (linkToDuplicate.isPresent()) {
-					annotationBuilder = annotationBuilder.tooltip(
-							"<html>" + duplicateSchemaMessage(linkToDuplicate.get()) + "</html>");
-				}
-				annotationBuilder.create();
-			}
-		}
-	}
-
 	@NotNull
-	private String duplicateSchemaMessage(String schemaName) {
-		return String.format("Schema '%s' is already defined", schemaName);
+	private String duplicateElementMessage(String type, String name) {
+		return String.format("%s '%s' is already defined", type, name);
 	}
 
 	private void annotateOneWay(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
@@ -485,6 +510,22 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 		@Override
 		public boolean startInWriteAction() {
 			return false;
+		}
+	}
+
+	private static class NameAndLink {
+		private final String name;
+		private final String link;
+
+		public NameAndLink(String name, PsiElement element) {
+			this.name = name;
+			this.link = Optional.of(element)
+					.map(PsiUtilCore::getVirtualFile)
+					.map(VirtualFile::getPath)
+					.map(FileUtil::toSystemIndependentName)
+					.map(path -> path + ":" + element.getTextOffset())
+					.map(link -> "<a href=\"#navigation/" + link + "\">" + name + "</a>")
+					.orElse(name);
 		}
 	}
 }

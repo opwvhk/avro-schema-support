@@ -46,6 +46,8 @@ protocol Many-Mistakes {
 	@aliases(["even-more-wrong"])
 	enum also-wrong { A, B } = C;
 	record my-data {
+		int duplicate;
+		int duplicate;
 		@namespace("unused")
 		Letters @logicalType("character") one-letter;
 
@@ -96,11 +98,15 @@ protocol Many-Mistakes {
 		@scale(0)
 		hashes.MD5 notLogic14;
 	}
+	enum SillyEnum {
+		DUP, DUP
+	}
+
 	@aliases(67)
 	@aliases([78, "her-failure"])
 	error his-failure {}
 
-	Whatever do-stuff(Something one) throws SomeError, hashes.MD5;
+	Whatever do-stuff(Something one, Something one) throws SomeError, hashes.MD5;
 
 	string onewayMessagesMustUseVoid() oneway;
 }
