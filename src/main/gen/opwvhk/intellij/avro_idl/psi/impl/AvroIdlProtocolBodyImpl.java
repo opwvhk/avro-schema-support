@@ -40,14 +40,12 @@ public class AvroIdlProtocolBodyImpl extends ASTWrapperPsiElement implements Avr
   }
 
   @Override
-  @NotNull
-  public List<AvroIdlNamedSchemaDeclaration> getNamedSchemaDeclarationList() {
+  public @NotNull List<AvroIdlNamedSchemaDeclaration> getNamedSchemaDeclarationList() {
     return AvroIdlPsiUtil.getNamedSchemaDeclarationList(this);
   }
 
   @Override
-  @NotNull
-  public List<AvroIdlMessageDeclaration> getMessageDeclarationList() {
+  public @NotNull List<AvroIdlMessageDeclaration> getMessageDeclarationList() {
     return AvroIdlPsiUtil.getMessageDeclarationList(this);
   }
 

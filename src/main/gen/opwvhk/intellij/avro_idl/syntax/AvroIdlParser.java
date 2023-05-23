@@ -11,6 +11,7 @@ import com.intellij.psi.tree.TokenSet;
 import com.intellij.lang.PsiParser;
 import com.intellij.lang.LightPsiParser;
 
+@SuppressWarnings({"SimplifiableIfStatement", "UnusedAssignment"})
 public class AvroIdlParser implements PsiParser, LightPsiParser {
 
   public ASTNode parse(IElementType t, PsiBuilder b) {
@@ -624,7 +625,7 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // LEFT_BRACKET JsonElements RIGHT_BRACKET
+  // LEFT_BRACKET JsonElements? RIGHT_BRACKET
   public static boolean JsonArray(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "JsonArray")) return false;
     if (!nextTokenIs(b, LEFT_BRACKET)) return false;
@@ -632,10 +633,17 @@ public class AvroIdlParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, JSON_ARRAY, null);
     r = consumeToken(b, LEFT_BRACKET);
     p = r; // pin = 1
-    r = r && report_error_(b, JsonElements(b, l + 1));
+    r = r && report_error_(b, JsonArray_1(b, l + 1));
     r = p && consumeToken(b, RIGHT_BRACKET) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
+  }
+
+  // JsonElements?
+  private static boolean JsonArray_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "JsonArray_1")) return false;
+    JsonElements(b, l + 1);
+    return true;
   }
 
   /* ********************************************************** */

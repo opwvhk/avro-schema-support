@@ -35,8 +35,7 @@ public class AvroIdlEnumDefaultImpl extends ASTWrapperPsiElement implements Avro
   }
 
   @Override
-  @NotNull
-  public AvroIdlEnumConstantReference getReference() {
+  public @NotNull AvroIdlEnumConstantReference getReference() {
     return AvroIdlPsiUtil.getReference(this);
   }
 

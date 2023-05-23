@@ -1,17 +1,15 @@
 // This is a generated file. Not intended for manual editing.
 package opwvhk.intellij.avro_idl.psi.impl;
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import java.util.List;
+import org.jetbrains.annotations.*;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
-import opwvhk.intellij.avro_idl.psi.AvroIdlEnumBody;
-import opwvhk.intellij.avro_idl.psi.AvroIdlEnumConstant;
-import opwvhk.intellij.avro_idl.psi.AvroIdlPsiUtil;
-import opwvhk.intellij.avro_idl.psi.AvroIdlVisitor;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
+import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import opwvhk.intellij.avro_idl.psi.*;
 
 public class AvroIdlEnumBodyImpl extends ASTWrapperPsiElement implements AvroIdlEnumBody {
 
@@ -36,8 +34,7 @@ public class AvroIdlEnumBodyImpl extends ASTWrapperPsiElement implements AvroIdl
   }
 
   @Override
-  @NotNull
-  public List<AvroIdlEnumConstant> getComponents() {
+  public @NotNull List<AvroIdlEnumConstant> getComponents() {
     return AvroIdlPsiUtil.getComponents(this);
   }
 

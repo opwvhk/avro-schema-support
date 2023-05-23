@@ -30,8 +30,7 @@ public abstract class AvroIdlNamedSchemaDeclarationImpl extends AvroIdlWithSchem
   }
 
   @Override
-  @Nullable
-  public PsiElement getNameIdentifier() {
+  public @Nullable PsiElement getNameIdentifier() {
     return AvroIdlPsiUtil.getNameIdentifier(this);
   }
 
@@ -41,9 +40,7 @@ public abstract class AvroIdlNamedSchemaDeclarationImpl extends AvroIdlWithSchem
   }
 
   @Override
-  @Nullable
-  @NonNls
-  public String getName() {
+  public @Nullable @NonNls String getName() {
     return AvroIdlPsiUtil.getName(this);
   }
 
@@ -53,15 +50,12 @@ public abstract class AvroIdlNamedSchemaDeclarationImpl extends AvroIdlWithSchem
   }
 
   @Override
-  @Nullable
-  @NonNls
-  public String getFullName() {
+  public @Nullable @NonNls String getFullName() {
     return AvroIdlPsiUtil.getFullName(this);
   }
 
   @Override
-  @NotNull
-  public ItemPresentation getPresentation() {
+  public @NotNull ItemPresentation getPresentation() {
     return AvroIdlPsiUtil.getPresentation(this);
   }
 

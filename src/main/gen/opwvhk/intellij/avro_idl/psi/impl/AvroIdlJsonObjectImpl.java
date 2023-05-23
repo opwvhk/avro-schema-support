@@ -34,8 +34,7 @@ public class AvroIdlJsonObjectImpl extends ASTWrapperPsiElement implements AvroI
   }
 
   @Override
-  @NotNull
-  public List<AvroIdlJsonPair> getComponents() {
+  public @NotNull List<AvroIdlJsonPair> getComponents() {
     return AvroIdlPsiUtil.getComponents(this);
   }
 

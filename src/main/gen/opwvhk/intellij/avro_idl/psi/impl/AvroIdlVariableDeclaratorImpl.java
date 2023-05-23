@@ -41,8 +41,7 @@ public class AvroIdlVariableDeclaratorImpl extends AvroIdlWithSchemaPropertiesIm
   }
 
   @Override
-  @Nullable
-  public PsiElement getNameIdentifier() {
+  public @Nullable PsiElement getNameIdentifier() {
     return AvroIdlPsiUtil.getNameIdentifier(this);
   }
 
@@ -52,9 +51,7 @@ public class AvroIdlVariableDeclaratorImpl extends AvroIdlWithSchemaPropertiesIm
   }
 
   @Override
-  @Nullable
-  @NonNls
-  public String getName() {
+  public @Nullable @NonNls String getName() {
     return AvroIdlPsiUtil.getName(this);
   }
 
