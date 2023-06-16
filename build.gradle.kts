@@ -43,6 +43,8 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
+	//type.set("PC")
+
 	//version.set("2020.3.4")
 	//version.set("2021.1.3")
 	//version.set("2021.2.4")
@@ -66,9 +68,14 @@ intellij {
 	//version.set("2022.3.3")
 	//version.set("2023.1")
 
-	val psiViewerVersion = version.get().replace(".", "").substring(2, 5) + "-SNAPSHOT"
 	// Note: without the java plugin tests will fail (so don't remove it even if the plugin does not need it)
-	plugins.set(listOf("com.intellij.java", "PsiViewer:$psiViewerVersion", "markdown"))
+	plugins.set(listOf("com.intellij.java"))
+
+	// Use this instead of Java when testing with PyCharm (see 'type' above)
+	//plugins.set(listOf("PythonCore"))
+	// Use this for more elaborate testing (especially when debugging the grammar)
+	val psiViewerVersion = version.get().replace(".", "").substring(2, 5) + "-SNAPSHOT"
+	//plugins.set(listOf("com.intellij.java", "PsiViewer:$psiViewerVersion", "markdown"))
 	/*
 	Other (bundled) plugins:
 	org.intellij.intelliLang
@@ -113,6 +120,7 @@ tasks {
 			<ul data-version="213.5.2">
 				<li>Improved grammar (fixes #82, #83)</li>
 				<li>Added duplicate name detection (fixes #84; does not evaluate aliases)</li>
+				<li>Fixed #91: improper range in JSON string literal</li>
 				<li>Added reference detection to JSON strings other than in import statements (#92)</li>
 			</ul>
 			<p>Version 213.5.1:</p>

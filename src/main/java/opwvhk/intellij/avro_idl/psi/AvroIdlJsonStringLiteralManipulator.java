@@ -27,7 +27,13 @@ public class AvroIdlJsonStringLiteralManipulator extends AbstractElementManipula
 	@Override
 	@NotNull
 	public TextRange getRangeInElement(@NotNull AvroIdlJsonStringLiteral element) {
+		// The lexer defines a string literal as having an optional end quote, so unclosed string literals create more
+		// meaningful parse errors. This means we need to check if there is an end quote.
 		final String content = element.getText();
-		return new TextRange(1, content.length() - 1);
+		int endOffset = content.length();
+		if (content.length() > 1 && content.endsWith("\"")) {
+			endOffset--;
+		}
+		return new TextRange(1, endOffset);
 	}
 }
