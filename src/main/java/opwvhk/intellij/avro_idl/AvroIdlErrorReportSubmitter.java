@@ -14,6 +14,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.ErrorReportSubmitter;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.diagnostic.SubmittedReportInfo;
+import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
@@ -117,6 +118,7 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 		appendPluginByDescriptor(builder, "Plugin", AvroIdlPluginUpdateStartupActivity.getMyPluginDescriptor());
 		appendPluginByDescriptor(builder, "Extra",
 				PluginManagerCore.getPlugin(AvroIdlPluginUpdateStartupActivity.OLD_PLUGIN_ID));
+		appendPluginByDescriptor(builder, "Extra", PluginManagerCore.getPlugin(PluginId.getId("sparql4idea")));
 		// IntelliJ version
 		ApplicationInfo info = ApplicationInfo.getInstance();
 		builder.append("* IDE: ").append(info.getVersionName()).append(" `").append(info.getFullVersion())
