@@ -21,7 +21,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "213.5.2"
+version = "213.5.3-SNAPSHOT"
 
 repositories {
 	mavenCentral()
