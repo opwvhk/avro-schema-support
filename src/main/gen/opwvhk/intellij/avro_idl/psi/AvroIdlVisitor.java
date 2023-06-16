@@ -5,6 +5,7 @@ import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiListLikeElement;
+import com.intellij.psi.PsiLiteralValue;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceOwner;
 
 public class AvroIdlVisitor extends PsiElementVisitor {
@@ -71,6 +72,7 @@ public class AvroIdlVisitor extends PsiElementVisitor {
 
   public void visitJsonStringLiteral(@NotNull AvroIdlJsonStringLiteral o) {
     visitJsonValue(o);
+    // visitPsiLiteralValue(o);
     // visitFileReferenceOwner(o);
   }
 

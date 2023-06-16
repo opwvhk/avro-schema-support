@@ -113,6 +113,7 @@ tasks {
 			<ul data-version="213.5.2">
 				<li>Improved grammar (fixes #82, #83)</li>
 				<li>Added duplicate name detection (fixes #84; does not evaluate aliases)</li>
+				<li>Added reference detection to JSON strings other than in import statements (#92)</li>
 			</ul>
 			<p>Version 213.5.1:</p>
 			<ul data-version="213.5.1">

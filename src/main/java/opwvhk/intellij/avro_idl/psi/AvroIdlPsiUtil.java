@@ -5,11 +5,9 @@ import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiWhiteSpace;
+import com.intellij.psi.*;
 import com.intellij.psi.impl.CheckUtil;
+import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiFileReference;
@@ -254,6 +252,12 @@ public class AvroIdlPsiUtil {
 		return AvroIdlEnumConstantReference.forDefault(owner);
 	}
 
+	@NotNull
+	public static PsiReference[] getReferences(@NotNull AvroIdlJsonStringLiteral owner) {
+		PsiFileReference ref = getReference(owner);
+		return ref != null ? new PsiReference[]{ref} : ReferenceProvidersRegistry.getReferencesFromProviders(owner);
+	}
+
 	@Nullable
 	public static PsiFileReference getReference(@NotNull AvroIdlJsonStringLiteral owner) {
 		if (owner.getParent() instanceof AvroIdlImportDeclaration) {
@@ -291,6 +295,11 @@ public class AvroIdlPsiUtil {
 	@Nullable
 	public static PsiFileReference getLastFileReference(@NotNull AvroIdlJsonStringLiteral owner) {
 		return getReference(owner);
+	}
+
+	@Nullable
+	public static Object getValue(@NotNull AvroIdlJsonStringLiteral owner) {
+		return AvroIdlUtil.getJsonString(owner);
 	}
 
 	@NotNull

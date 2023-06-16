@@ -2,8 +2,9 @@
 protocol Imported {
 	import schema "ContractType.avsc";
 
+	// https://www.google.com/
 	record Employee {
-		string name;
+		string name = "https://www.google.com/";
 		ContractType contract_type;
 		decimal(9,2) salary;
 	}

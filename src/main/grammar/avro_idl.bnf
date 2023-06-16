@@ -299,8 +299,8 @@ private ReferenceType2 ::= Identifier { pin=1 }
 
 JsonValue ::= (JsonStringLiteral | INT_LITERAL | FLOAT_LITERAL | TRUE | FALSE | NULL | JsonObject | JsonArray) { recoverWhile=recoverJsonValue }
 JsonStringLiteral ::= STRING_LITERAL { extends=JsonValue
-	implements="com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceOwner"
-	methods=[getReference getLastFileReference]
+	implements=["com.intellij.psi.PsiLiteralValue" "com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceOwner"]
+	methods=[getValue getReference getReferences getLastFileReference]
 }
 JsonObject ::= LEFT_BRACE [ JsonPair (COMMA JsonPair)* ] RIGHT_BRACE { pin=1
 	implements="com.intellij.psi.PsiListLikeElement"

@@ -9,6 +9,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 import opwvhk.intellij.avro_idl.psi.*;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiFileReference;
 
 public class AvroIdlJsonStringLiteralImpl extends AvroIdlJsonValueImpl implements AvroIdlJsonStringLiteral {
@@ -35,8 +36,18 @@ public class AvroIdlJsonStringLiteralImpl extends AvroIdlJsonValueImpl implement
   }
 
   @Override
+  public @Nullable Object getValue() {
+    return AvroIdlPsiUtil.getValue(this);
+  }
+
+  @Override
   public @Nullable PsiFileReference getReference() {
     return AvroIdlPsiUtil.getReference(this);
+  }
+
+  @Override
+  public @NotNull PsiReference[] getReferences() {
+    return AvroIdlPsiUtil.getReferences(this);
   }
 
   @Override
