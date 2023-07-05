@@ -5,6 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiListLikeElement;
+import com.intellij.navigation.ItemPresentation;
 import com.intellij.util.IncorrectOperationException;
 
 public interface AvroIdlMessageDeclaration extends AvroIdlWithSchemaProperties, AvroIdlNameIdentifierOwner, PsiListLikeElement {
@@ -28,6 +29,8 @@ public interface AvroIdlMessageDeclaration extends AvroIdlWithSchemaProperties, 
   @Nullable @NonNls String getName();
 
   PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException;
+
+  @NotNull ItemPresentation getPresentation();
 
   @NotNull List<AvroIdlFormalParameter> getComponents();
 

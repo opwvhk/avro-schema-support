@@ -4,6 +4,7 @@ package opwvhk.intellij.avro_idl.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.intellij.navigation.ItemPresentation;
 import com.intellij.util.IncorrectOperationException;
 
 public interface AvroIdlVariableDeclarator extends AvroIdlWithSchemaProperties, AvroIdlAnnotatedNameIdentifierOwner {
@@ -21,5 +22,7 @@ public interface AvroIdlVariableDeclarator extends AvroIdlWithSchemaProperties, 
   @Nullable @NonNls String getName();
 
   PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException;
+
+  @NotNull ItemPresentation getPresentation();
 
 }

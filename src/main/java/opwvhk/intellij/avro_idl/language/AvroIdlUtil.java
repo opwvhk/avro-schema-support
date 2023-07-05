@@ -3,11 +3,9 @@ package opwvhk.intellij.avro_idl.language;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.json.psi.*;
-import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
@@ -43,23 +41,40 @@ public class AvroIdlUtil {
 	public static final Key<Boolean> IS_ERROR_KEY = Key.create("isError");
 
 	@NotNull
-	public static List<NavigationItem> findNavigableNamedSchemasInProject(Project project) {
-		List<NavigationItem> result = new ArrayList<>();
+	public static List<AvroIdlNameIdentifierOwner> findDeclarationsInScope(@NotNull GlobalSearchScope scope) {
 
-		final PsiManager psiManager = PsiManager.getInstance(project);
+		// Choice:
+		// Only schemas, fields, messages, and parameters are considered symbols.
+		// Namespaces are not, as these can be specified in multiple locations.
+
+		List<AvroIdlNameIdentifierOwner> result = new ArrayList<>();
+
+		final PsiManager psiManager = PsiManager.getInstance(requireNonNull(scope.getProject()));
 		FileTypeIndex.processFiles(AvroIdlFileType.INSTANCE, virtualFile -> {
+			// All AvroIdl PSI classes implement NavigationItem
 			ifType(psiManager.findFile(virtualFile), AvroIdlFile.class)
 					.flatMap(AvroIdlUtil::readNamedSchemas)
-					.forEach(namedSchemaDeclaration -> {
-						result.add(
-								(NavigationItem) namedSchemaDeclaration); // All AvroIdl PSI classes implement NavigationItem
-					});
+					.flatMap(namedSchema -> Stream.concat(Stream.of(namedSchema),
+							ifType(namedSchema, AvroIdlRecordDeclaration.class)
+									.map(AvroIdlRecordDeclaration::getRecordBody)
+									.filter(Objects::nonNull)
+									.map(AvroIdlRecordBody::getFieldDeclarationList)
+									.flatMap(List::stream)
+									.map(AvroIdlFieldDeclaration::getVariableDeclaratorList)
+									.flatMap(List::stream)
+					))
+					.forEach(result::add);
 			return true;
-		}, GlobalSearchScope.allScope(project));
+		}, scope);
 		return result;
 	}
 
-
+	/**
+	 * Read all named schemas from a file. Does not follow imports.
+	 *
+	 * @param idlFile an IDL file
+	 * @return all named schema declarations in the file
+	 */
 	private static Stream<AvroIdlNamedSchemaDeclaration> readNamedSchemas(@NotNull AvroIdlFile idlFile) {
 		return Stream.of(idlFile)
 				.flatMap(avroIdlFile -> Stream.of(avroIdlFile.getChildren()))
@@ -128,11 +143,6 @@ public class AvroIdlUtil {
 				return false;
 			});
 		}
-	}
-
-	@NotNull
-	public static Stream<LookupElement> findAllSchemaNamesAvailableInIdl(@NotNull AvroIdlFile idlFile) {
-		return findAllSchemaNamesAvailableInIdl(idlFile, false, "");
 	}
 
 	@NotNull

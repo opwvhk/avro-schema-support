@@ -25,6 +25,7 @@ version = "213.5.3-SNAPSHOT"
 
 repositories {
 	mavenCentral()
+	mavenLocal()
 }
 java {
 	toolchain {
@@ -75,7 +76,7 @@ intellij {
 	//plugins.set(listOf("PythonCore"))
 	// Use this for more elaborate testing (especially when debugging the grammar)
 	val psiViewerVersion = version.get().replace(".", "").substring(2, 5) + "-SNAPSHOT"
-	//plugins.set(listOf("com.intellij.java", "PsiViewer:$psiViewerVersion", "markdown"))
+	plugins.set(listOf("com.intellij.java", "PsiViewer:$psiViewerVersion", "markdown"))
 	/*
 	Other (bundled) plugins:
 	org.intellij.intelliLang
@@ -105,7 +106,7 @@ tasks {
 		version.set(project.version.toString())
 		// Notes on versions: usually the last 3 build numbers (without atch level) represent about 80% of the users.
 		// See https://plugins.jetbrains.com/docs/marketplace/product-versions-in-use-statistics.html for more information.
-		sinceBuild.set("211") // IntelliJ 2020.3.4, PyCharm 2020.3.5
+		sinceBuild.set("211") // Version 2021.1
 		// Find last EAP version (the build version until the first dot):
 		// curl 'https://data.services.jetbrains.com/products/releases?code=IIU&code=IIC&code=PCP&code=PCC&latest=true&type=eap' 2>/dev/null|jq -r '.[][0].build'|cut -d . -f 1|sort -r|head -n 1
 		untilBuild.set(lastBuild)
@@ -119,6 +120,7 @@ tasks {
 			<p>Version 213.5.3:</p>
 			<ul data-version="213.5.3">
 				<li>Improved grammar (string literal syntax)</li>
+				<li>Implemented better symbols (adds symbol search)</li>
 			</ul>
 			<p>Version 213.5.2:</p>
 			<ul data-version="213.5.2">

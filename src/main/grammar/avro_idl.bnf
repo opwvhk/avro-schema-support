@@ -234,7 +234,7 @@ FieldDeclaration ::= Type VariableDeclarator ( COMMA VariableDeclarator )* SEMIC
 VariableDeclarator ::= VariableDeclarator1 | VariableDeclarator2 { recoverWhile=recoverVariableDeclarator
 	extends=WithSchemaProperties
 	implements="opwvhk.intellij.avro_idl.psi.AvroIdlAnnotatedNameIdentifierOwner"
-	methods=[getNameIdentifier getTextOffset getName setName]
+	methods=[getNameIdentifier getTextOffset getName setName getPresentation]
 }
 private VariableDeclarator1 ::= SchemaProperty+ Identifier DefaultValueAssignment { pin=1 }
 private VariableDeclarator2 ::= Identifier DefaultValueAssignment { pin=1 }
@@ -244,7 +244,7 @@ private recoverVariableDeclarator ::= !(SEMICOLON|RIGHT_BRACE|RIGHT_PAREN|COMMA)
 MessageDeclaration ::= MessageDeclaration1 | MessageDeclaration2 {
 	extends=WithSchemaProperties
 	implements=["opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner" "com.intellij.psi.PsiListLikeElement"]
-	methods=[getNameIdentifier getTextOffset getName setName getComponents]
+	methods=[getNameIdentifier getTextOffset getName setName getPresentation getComponents]
 }
 private MessageDeclaration1 ::= SchemaProperty+ ResultType MessageSignature SEMICOLON { pin=2 }
 private MessageDeclaration2 ::= ResultType MessageSignature SEMICOLON { pin=1 }

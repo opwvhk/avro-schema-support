@@ -358,7 +358,35 @@ public class AvroIdlPsiUtil {
 		return new ItemPresentation() {
 			@Override
 			public @NotNull String getPresentableText() {
-				return ((AvroIdlEnumDeclaration) element.getParent().getParent()).getName() + "." + element.getName();
+				String parentName = ((AvroIdlEnumDeclaration) element.getParent().getParent()).getName();
+				return element.getName() + " in " + parentName;
+			}
+
+			@Override
+			public @NotNull String getLocationString() {
+				return element.getContainingFile().getName();
+			}
+
+			@Override
+			public @NotNull Icon getIcon(boolean unused) {
+				return AvroIdlIcons.LOGO;
+			}
+		};
+	}
+
+	@NotNull
+	public static ItemPresentation getPresentation(final AvroIdlVariableDeclarator element) {
+		return new ItemPresentation() {
+			@Override
+			public @NotNull String getPresentableText() {
+				PsiElement typeOwner = element.getParent();
+				String parentName;
+				if (typeOwner instanceof AvroIdlFormalParameter) {
+					parentName = ((AvroIdlMessageDeclaration) typeOwner.getParent()).getName();
+				} else {
+					parentName = ((AvroIdlRecordDeclaration) typeOwner.getParent().getParent()).getName();
+				}
+				return element.getName() + " in " + parentName;
 			}
 
 			@Override
