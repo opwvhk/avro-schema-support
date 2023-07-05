@@ -116,6 +116,10 @@ tasks {
 		*/
 		//language=HTML
 		val changeLog = """
+			<p>Version 213.5.3:</p>
+			<ul data-version="213.5.3">
+				<li>Improved grammar (string literal syntax)</li>
+			</ul>
 			<p>Version 213.5.2:</p>
 			<ul data-version="213.5.2">
 				<li>Improved grammar (fixes #82, #83)</li>
