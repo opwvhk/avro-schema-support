@@ -51,7 +51,6 @@ public class AvroIdlUtil {
 
 		final PsiManager psiManager = PsiManager.getInstance(requireNonNull(scope.getProject()));
 		FileTypeIndex.processFiles(AvroIdlFileType.INSTANCE, virtualFile -> {
-			// All AvroIdl PSI classes implement NavigationItem
 			ifType(psiManager.findFile(virtualFile), AvroIdlFile.class)
 					.flatMap(AvroIdlUtil::readNamedSchemas)
 					.flatMap(namedSchema -> Stream.concat(Stream.of(namedSchema),
