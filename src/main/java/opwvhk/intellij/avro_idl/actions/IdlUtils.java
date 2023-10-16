@@ -30,6 +30,8 @@ public final class IdlUtils {
 			"idl", "import", "int", "local_timestamp_ms", "long", "map", "namespace", "null", "oneway", "protocol",
 			"record", "schema", "string", "throws",
 			"timestamp_ms", "time_ms", "true", "union", "uuid", "void");
+	private static final EnumSet<Schema.Type> NULLABLE_TYPES = EnumSet.complementOf(
+			EnumSet.of(Schema.Type.ARRAY, Schema.Type.MAP, Schema.Type.UNION));
 
 	static {
 		SCHEMA_FACTORY = getFieldValue(getField(Schema.class, "FACTORY"), null);
@@ -337,13 +339,13 @@ public final class IdlUtils {
 			writer.append('>');
 		} else if (type == Schema.Type.UNION) {
 			// Note: unions cannot have properties
-			List<Schema> types = schema.getTypes();
-			if (schema.isNullable() && types.size() == 2) {
-				Schema nonNullSchema = !types.get(0).isNullable() ? types.get(0) : types.get(1);
-				writeFieldSchema(nonNullSchema, writer, jsonGen, alreadyDeclared, toDeclare, recordNameSpace);
+			Schema schemaForNullableSyntax = getNullableUnionType(schema);
+			if (schemaForNullableSyntax != null) {
+				writeFieldSchema(schemaForNullableSyntax, writer, jsonGen, alreadyDeclared, toDeclare, recordNameSpace);
 				writer.append('?');
 			} else {
 				writer.append("union{");
+				List<Schema> types = schema.getTypes();
 				Iterator<Schema> iterator = types.iterator();
 				if (iterator.hasNext()) {
 					writeFieldSchema(iterator.next(), writer, jsonGen, alreadyDeclared, toDeclare, recordNameSpace);
@@ -385,6 +387,23 @@ public final class IdlUtils {
 			writeJsonProperties(schema, propertiesToSkip, writer, jsonGen, null);
 			writer.append(typeName);
 		}
+	}
+
+	/**
+	 * Get the type from a nullable 2-type union if that type is eligible for the '?'-syntax.
+	 *
+	 * @param unionSchema a union schema
+	 * @return the non-null schema in a nullable 2-type union iff not a container
+	 */
+	private static Schema getNullableUnionType(Schema unionSchema) {
+		List<Schema> types = unionSchema.getTypes();
+		if (unionSchema.isNullable() && types.size() == 2) {
+			Schema nonNullSchema = !types.get(0).isNullable() ? types.get(0) : types.get(1);
+			if (NULLABLE_TYPES.contains(nonNullSchema.getType())) {
+				return nonNullSchema;
+			}
+		}
+		return null;
 	}
 
 	private static void writeSchemaAttributes(Schema schema, Writer writer, JsonGenerator jsonGen) throws IOException {

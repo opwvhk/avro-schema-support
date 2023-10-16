@@ -68,6 +68,8 @@ intellij {
 	//version.set("2022.3.2")
 	//version.set("2022.3.3")
 	//version.set("2023.1")
+	//version.set("2023.2")
+	//version.set("2023.2.1")
 
 	// Note: without the java plugin tests will fail (so don't remove it even if the plugin does not need it)
 	plugins.set(listOf("com.intellij.java"))
@@ -121,6 +123,7 @@ tasks {
 			<ul data-version="213.5.3">
 				<li>Improved grammar (string literal syntax)</li>
 				<li>Implemented better symbols (adds symbol search)</li>
+				<li>Fix #106: converting to IDL now handles optional collections correctly
 			</ul>
 			<p>Version 213.5.2:</p>
 			<ul data-version="213.5.2">
@@ -133,7 +136,7 @@ tasks {
 			<ul data-version="213.5.1">
 				<li>Upgraded dependencies</li>
 			</ul>
-			""";
+			"""
 		changeLog += """
 			<p>Version 213.5.0:</p>
 			<ul data-version="213.5.0">
@@ -144,7 +147,7 @@ tasks {
 			</li>
 			<li>Added disposed check in menu actions (issue #73)</li>
 			</ul>
-			""";
+			"""
 		changeLog += """
 			<p>Version 213.4.3:</p>
 			<ul data-version="213.4.3">
@@ -166,7 +169,7 @@ tasks {
 			<li>Implement #42: Renaming a schema or field now adds an alias for the old name</li>
 			<li>Add new settings for #42, making the behaviour congigurable (by default, only fields receive an alias)</li>
 			</ul>
-			""";
+			"""
 		//changeLog += """
 		//	<p>Version 213.3.1:</p>
 		//	<ul data-version="213.3.1">
@@ -179,7 +182,7 @@ tasks {
 		//	<li>Fix #37 (generating IDL can yield invalid names with Avro <= 1.11.0)</li>
 		//	<li>Added error report submitter (submit crash reports directly to GitHub)</li>
 		//	</ul>
-		//	""";
+		//	"""
 		//changeLog += """
 		//	<p>Version 213.2.1:</p>
 		//	<ul data-version="213.2.1">
@@ -192,7 +195,7 @@ tasks {
 		//	<li>Added support for Kotlin style nullable types (new in Avro 1.11.1)</li>
 		//	<li>Added inspection for documentation comments to detect and apply fixes for improvements since Avro 1.11.1</li>
 		//	</ul>
-		//	""";
+		//	"""
 		//changeLog += """
 		//	<p>Version 213.1.0:</p>
 		//	<ul data-version="213.1.0">
@@ -202,7 +205,7 @@ tasks {
 		//	<li>Improved brace handling</li>
 		//	<li>Improved references to schemata in JSON (<code>.avsc</code>/<code>.avpr</code>)</li>
 		//	</ul>
-		//	""";
+		//	"""
 		//changeLog += """
 		//	<p>Version 213.0.1:</p>
 		//	<ul data-version="213.0.1">
@@ -217,7 +220,7 @@ tasks {
 		//	<li>Improved quote & brace handling: now supports all "", {}, [] and <> pairs</li>
 		//	<li>Using IntelliJ version 2021.3 to test</li>
 		//	</ul>
-		//	""";
+		//	"""
 		//changeLog += """
 		//	<p>Version 203.1.2:</p>
 		//	<ul data-version="203.1.2">
@@ -239,7 +242,7 @@ tasks {
 		//	<li>Adjusted IDL parsing to allow dangling doc comments</li>
 		//	<li>Added warnings for dangling doc comments (the Avro IDL compiler ignores these)</li>
 		//	</ul>
-		//	""";
+		//	"""
 		//changeLog += """
 		//	<p>Version 203.0.3:</p>
 		//	<ul data-version="203.0.3">
@@ -261,7 +264,7 @@ tasks {
 		//	<li>Added refactoring actions to convert Avro IDL to and from Avro schemas and Avro protocols.</li>
 		//	<li>Added file icon variant for dark mode</li>
 		//	</ul>
-		//	""";
+		//	"""
 		//changeLog += """
 		//	<p>Version 0.2.1:</p>
 		//	<ul data-version="0.2.1">
