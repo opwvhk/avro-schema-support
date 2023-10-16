@@ -21,7 +21,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "213.5.3"
+version = "213.5.4-SNAPSHOT"
 
 repositories {
 	mavenCentral()
@@ -119,6 +119,10 @@ tasks {
 		*/
 		//language=HTML
 		var changeLog = """
+			<p>Version 213.5.4:</p>
+			<ul data-version="213.5.4">
+				<li>...</li>
+			</ul>
 			<p>Version 213.5.3:</p>
 			<ul data-version="213.5.3">
 				<li>Improved grammar (string literal syntax)</li>
