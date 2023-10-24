@@ -30,13 +30,14 @@ repositories {
 java {
 	toolchain {
 		languageVersion.set(JavaLanguageVersion.of(11))
+		//languageVersion.set(JavaLanguageVersion.of(17))
 	}
 }
 
 dependencies {
-	implementation("org.apache.avro", "avro-compiler", "1.11.1").exclude("org.slf4j")
-	implementation("org.apache.commons", "commons-text", "1.10.0")
-	implementation("org.json", "json", "20230227")
+	implementation("org.apache.avro:avro-compiler:1.11.3") { exclude("org.slf4j") }
+	implementation("org.apache.commons:commons-text:1.10.0")
+	implementation("org.json:json:20231013")
 	implementation("org.kohsuke", "github-api", "1.314")
 	testImplementation("junit", "junit", "4.13.2")
 	testImplementation("org.assertj", "assertj-core", "3.24.2")
@@ -46,52 +47,37 @@ dependencies {
 intellij {
 	//type.set("PC")
 
-	//version.set("2020.3.4")
-	//version.set("2021.1.3")
-	//version.set("2021.2.4")
-	//version.set("2021.3")
-	//version.set("2021.3.1")
-	//version.set("2021.3.2")
-	version.set("2021.3.3")
-	//version.set("2022.1")
-	//version.set("2022.1.1")
-	//version.set("2022.1.2")
-	//version.set("2022.1.3")
-	//version.set("2022.1.4")
-	//version.set("2022.2")
-	//version.set("2022.2.1")
-	//version.set("2022.2.2")
-	//version.set("2022.2.3")
+	version.set("2022.1.4")
 	//version.set("2022.2.4")
+	// From here, the new UI is available
 	//version.set("2022.3")
-	//version.set("2022.3.1")
-	//version.set("2022.3.2")
 	//version.set("2022.3.3")
 	//version.set("2023.1")
 	//version.set("2023.2")
-	//version.set("2023.2.1")
+	//version.set("2023.2.3")
 
 	// Note: without the java plugin tests will fail (so don't remove it even if the plugin does not need it)
-	plugins.set(listOf("com.intellij.java"))
+	plugins.add("com.intellij.java")
 
 	// Use this instead of Java when testing with PyCharm (see 'type' above)
-	//plugins.set(listOf("PythonCore"))
+	//plugins.add("PythonCore")
 	// Use this for more elaborate testing (especially when debugging the grammar)
 	val psiViewerVersion = version.get().replace(".", "").substring(2, 5) + "-SNAPSHOT"
-	plugins.set(listOf("com.intellij.java", "PsiViewer:$psiViewerVersion", "markdown"))
+	plugins.add("PsiViewer:$psiViewerVersion")
+	plugins.add("markdown")
 	/*
 	Other (bundled) plugins:
-	org.intellij.intelliLang
-	Git4Idea
-	com.intellij.tasks
-	Lombook Plugin
-	org.intellij.plugins.markdown
-	org.jetbrains.idea.maven
-	org.jetbrains.kotlin
-	org.editorconfig.editorconfigjetbrains
-	org.jetbrains.plugins.github
-	org.jetbrains.idea.maven.model
-	com.intellij.copyright
+	plugins.add("org.intellij.intelliLang")
+	plugins.add("Git4Idea")
+	plugins.add("com.intellij.tasks")
+	plugins.add("Lombook Plugin") // Yes, the typo is part of the official name
+	plugins.add("org.intellij.plugins.markdown")
+	plugins.add("org.jetbrains.idea.maven")
+	plugins.add("org.jetbrains.kotlin")
+	plugins.add("org.editorconfig.editorconfigjetbrains")
+	plugins.add("org.jetbrains.plugins.github")
+	plugins.add("org.jetbrains.idea.maven.model")
+	plugins.add("com.intellij.copyright")
 	*/
 }
 
@@ -108,7 +94,7 @@ tasks {
 		version.set(project.version.toString())
 		// Notes on versions: usually the last 3 build numbers (without atch level) represent about 80% of the users.
 		// See https://plugins.jetbrains.com/docs/marketplace/product-versions-in-use-statistics.html for more information.
-		sinceBuild.set("211") // Version 2021.1
+		sinceBuild.set("221") // Version 2022.1
 		// Find last EAP version (the build version until the first dot):
 		// curl 'https://data.services.jetbrains.com/products/releases?code=IIU&code=IIC&code=PCP&code=PCC&latest=true&type=eap' 2>/dev/null|jq -r '.[][0].build'|cut -d . -f 1|sort -r|head -n 1
 		untilBuild.set(lastBuild)
