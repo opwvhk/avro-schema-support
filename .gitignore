@@ -4,3 +4,5 @@
 # Gradle
 .gradle
 build
+# PLugin specifig
+github.properties
