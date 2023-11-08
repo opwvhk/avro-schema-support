@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="64" height="64" viewBox="0 0 64 64">
+	<!--<rect fill="#2b2d30" x="0" y="0" width="64" height="64"/>-->
+	<!-- Pigeon v3.2, lightened to purple&green of v6.2, 64x64, 4px border -->
+	<path fill="#2cdd97" d="M 38.78 22.33 L 50.64 11.14 L 60 17.72 L 50.85 21.68 L 51.17 37.62 Z"/>
+	<!--<path fill="#ffff00" d="M 56.72 15.42 L56.8 19.11 L 60 17.72 Z"/>-->
+	<path fill="#ffff00" d="M 55.32 14.43 L55.43 19.70 L 60 17.72 Z"/>
+	<path fill="#a681ea" d="M 38.78 22.33 L 40.55 20.68 L 51.08 33.27 L 51.17 37.62 Z"/>
+	<path fill="#cccccc" d="M 31.93 13.9 L 25.08 57.9 L 51.17 37.62 Z"/>
+	<path fill="#999999" d="M 27.13 44.73 L 10.06 44.2 L 25.08 57.9 Z"/>
+	<path fill="#eeeeee" d="M 28.51 35.9 L 31.93 13.9 L 4 6 Z"/>
+	<path fill="#999999" d="M 4 6 L 12.17 8.31 L 11.37 15 Z"/>
+	<path fill="#999999" d="M 15.73 20.3 L 17.17 22.07 L 19.28 10.31 L 17.44 9.8 Z"/>
+	<path fill="#999999" d="M 21.12 10.84 L 22.84 11.34 L 20.6 26.26 L 19.02 24.31 Z"/>
+</svg>

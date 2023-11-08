@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="96pt"
+   height="64pt"
+   viewBox="0 0 96 64"
+   version="1.1"
+   id="svg2419"
+   sodipodi:docname="Apache-Avro-Logo-v3.2.svg"
+   inkscape:version="1.3 (0e150ed, 2023-07-21)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2419" />
+  <sodipodi:namedview
+     id="namedview2419"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="pt"
+     inkscape:zoom="4.7695689"
+     inkscape:cx="56.399227"
+     inkscape:cy="113.00812"
+     inkscape:window-width="2512"
+     inkscape:window-height="1387"
+     inkscape:window-x="1728"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2419" />
+    <path transform="translate(60,14)" fill="none" stroke="#3b3b3b" d="M 1 8 L 8 1 L 13 6 L 6 13 Z L 8 8 L 8 1 Z" stroke-linejoin="round"/>
+  <g
+     id="g4684"
+     transform="matrix(1.31329,0,0,1.3132961,-10.44619,-13.542482)">
+    <path
+       d="M 32.164,20.969 27.043,54.383 46.758,38.996 Z m 0,0"
+       fill="#999999"
+       id="path2411" />
+    <path
+       d="m 37.418,27.441 9.031,-8.492 0.278,14.188 0.039,5.871 z m 0,0"
+       fill="#1cac81"
+       id="path2412" />
+    <path
+       d="m 37.402,27.453 1.383,-1.289 7.965,9.574 0.02,3.274"
+       fill="#8b72b9"
+       id="path2413" />
+    <path
+       d="m 28.582,44.355 -13.004,-0.39 11.465,10.254 z m 0,0"
+       fill="#666666"
+       id="path2414" />
+    <path
+       d="M 29.594,37.66 32.16,20.957 11,14.973 Z m 0,0"
+       fill="#cccccc"
+       id="path2415" />
+    <path
+       d="m 11.062,15.059 c -0.027,-0.036 6.083,1.617 6.149,1.679 0.039,0.035 -0.551,5.188 -0.598,5.129 -1.699,-2.195 -3.801,-4.676 -5.551,-6.808 z m 0,0"
+       fill="#666666"
+       id="path2416" />
+    <path
+       d="m 46.379,18.941 0.156,7.934 6.985,-2.953 z m 0,0"
+       fill="#168967"
+       id="path2417" />
+    <path
+       d="m 19.879,25.797 1.094,1.359 1.601,-8.91 -1.363,-0.391 z m 4.113,-7.129 1.352,0.34 -1.793,11.273 -1.16,-1.406 z m 0,0"
+       fill="#666666"
+       id="path2418" />
+    <path
+       d="m 50.977,22.074 0.05,2.934 2.614,-1.082 z m 0,0"
+       fill="#ffcc00"
+       id="path2419" />
+  </g>
+</svg>

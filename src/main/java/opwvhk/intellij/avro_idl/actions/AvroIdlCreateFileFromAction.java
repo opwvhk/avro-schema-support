@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class AvroIdlCreateFileFromAction extends CreateFileFromTemplateAction implements DumbAware {
 	public AvroIdlCreateFileFromAction() {
-		super("Avro IDL File", "Create a new Avro IDL file", AvroIdlIcons.FILE);
+		super("Avro IDL File", "Create a new Avro IDL file", AvroIdlIcons.AVSC_FILE);
 	}
 
 	@Override
@@ -27,10 +27,10 @@ public class AvroIdlCreateFileFromAction extends CreateFileFromTemplateAction im
 		 */
 		builder.setTitle("New Avro IDL File")
 				// TODO: Enable schema templates when Avro supports the schema syntax (Avro 1.12.0)
-				//.addKind("Empty Schema IDL", AvroIdlIcons.FILE, "AvroIDL_EmptySchema")
-				.addKind("Empty Protocol IDL", AvroIdlIcons.FILE, "AvroIDL_EmptyProtocol")
-				//.addKind("Example schema", AvroIdlIcons.FILE, "AvroIDL_ExampleSchema")
-				.addKind("Example protocol", AvroIdlIcons.FILE, "AvroIDL_ExampleProtocol")
+				//.addKind("Empty Schema IDL", AvroIdlIcons.AVDL_FILE, "AvroIDL_EmptySchema")
+				.addKind("Empty Protocol IDL", AvroIdlIcons.AVDL_FILE, "AvroIDL_EmptyProtocol")
+				//.addKind("Example schema", AvroIdlIcons.AVDL_FILE, "AvroIDL_ExampleSchema")
+				.addKind("Example protocol", AvroIdlIcons.AVDL_FILE, "AvroIDL_ExampleProtocol")
 				.setValidator(new NonEmptyInputValidator());
 	}
 

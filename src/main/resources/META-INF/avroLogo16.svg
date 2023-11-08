@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0, 4, 16, 16">
-	<g fill="#0040ff" fill-opacity=".7"  fill-rule="evenodd">
-		<!-- Triangle, left wing, right wing -->
-		<polygon points="1 15 15 15 8 9"/>
-		<path d="M 6.84 10 L 1 10 C 1 10 2 12 4 12.43 Z"/>
-		<path d="M 9.16 10 L 15 10 C 15 10 14 12 12 12.43 Z"/>
-	</g>
-</svg>
