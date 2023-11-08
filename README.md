@@ -1,4 +1,4 @@
-<img align="right" height="160" src="src/main/resources/META-INF/pluginIcon.svg" alt="Pigeon Logo"/>IntelliJ plugin supporting Apache Avro™ IDL
+<img align="right" height="160" src="src/main/resources/META-INF/pluginIcon.svg" alt="Pigeon Logo"/>IntelliJ plugin for Apache Avro™ IDL
 ===========================================
 
 Plugin for IntelliJ to handle Avro™ IDL schemas. Provides full support for IDL (<code>.avdl</code>)
