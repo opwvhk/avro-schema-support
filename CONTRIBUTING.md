@@ -13,6 +13,13 @@ Other things, such as bug reports, pull requests, etc. are also welcome.
 
 **Working on your first Pull Request?** You can learn how from this *free* series [How to Contribute to an Open Source Project on GitHub](https://kcd.im/pull-request)
 
+The short version:
+1. Fork the repository
+2. Make your changes in your fork (using a new branch is advisable)
+3. Test your changes, and verify any UI changes visually.
+   A complete starting point is `./gradlew test runPLugin`
+4. Open a PR to merge your changes in the target repo
+
 
 Development Notes
 -----------------
