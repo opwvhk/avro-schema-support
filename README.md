@@ -1,4 +1,4 @@
-IntelliJ plugin supporting Apache Avro™ IDL
+<img align="right" height="40" src="src/main/resources/META-INF/pluginIcon.svg" alt="Pigeon Logo"/>IntelliJ plugin supporting Apache Avro™ IDL
 ===========================================
 
 Plugin for IntelliJ to handle Avro™ IDL schemas. Provides full support for IDL (<code>.avdl</code>)
@@ -33,3 +33,14 @@ Please don't file bug reports as a review. GitHub is the place where you can fin
 [support for fixing bugs and making improvements](https://github.com/opwvhk/avro-schema-support/issues), as well as a
 [discussion forum to ask questions](https://github.com/opwvhk/avro-schema-support/discussions).
 
+
+
+Trademarks, Logo's, etc.
+------------------------
+
+The pigeon logo was created by **Emma K** ([emmak3l :octocat:](https://github.com/emmak3l)),
+and is used for this plugin with permission.
+
+The names Apache Avro, Avro™, Apache®, and the Apache Avro paper plane logo are either registered
+trademarks or trademarks of The Apache Software Foundation. They are used in the project to signal
+intended compatibility, and are not authoritative.
