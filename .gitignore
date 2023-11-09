@@ -4,5 +4,5 @@
 # Gradle
 .gradle
 build
-# PLugin specifig
+# Plugin specific
 github.properties
