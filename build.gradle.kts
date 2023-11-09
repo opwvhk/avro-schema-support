@@ -21,7 +21,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "213.5.4-SNAPSHOT"
+version = "221.4.0"
 
 repositories {
 	mavenCentral()
@@ -105,9 +105,9 @@ tasks {
 		*/
 		//language=HTML
 		var changeLog = """
-			<p>Version 213.5.4:</p>
-			<ul data-version="213.5.4">
-				<li>...</li>
+			<p>Version 221.4.0:</p>
+			<ul data-version="221.4.0">
+				<li>Using IntelliJ version 2021.4 to test</li>
 			</ul>
 			<p>Version 213.5.3:</p>
 			<ul data-version="213.5.3">
@@ -270,14 +270,14 @@ tasks {
 		//	<li>Extra build for IntelliJ 2020.3</li>
 		//	</ul>
 		//	<p>Version 0.1.0:</p>
-	    //    <ul data-version="0.1.0">
+		//    <ul data-version="0.1.0">
 		//	<li>Initial release</li>
 		//	<li>Full parsing of Avro .avdl files, based on Avro 1.10 syntax</li>
 		//	<li>Syntax highlighting & formatting</li>
 		//	<li>Code completion based on syntax and supported references</li>
 		//	<li>Some semantic checks</li>
 		//	<li>Some refactoring support (renaming & deleting named types)</li>
-	    //    </ul>
+		//    </ul>
 		//	"""
 		changeNotes.set(changeLog)
 	}
@@ -304,6 +304,11 @@ tasks {
 		// To save time (but a less complete check) is to keep only the last patch release of each minor release:
 		// curl 'https://data.services.jetbrains.com/products/releases?code=IIU&code=IIC&code=PCP&code=PCC&type=eap&type=release' 2>/dev/null |
 		//   jq -r 'to_entries|map({key,"value":.value|map({majorVersion,version}|select(.majorVersion|test("202.\\..")))|unique|group_by(.majorVersion)|map(last(.[]))|map(.version)}|{key,"version":.value[]}|(.key+"-"+.version))|.[]'
+	}
+
+	publishPlugin {
+		// jetbrainsToken is set in ~/.gradle/gradle.properties, so the secret is not stored in git
+		token.set(providers.gradleProperty("jetbrainsToken"))
 	}
 }
 
