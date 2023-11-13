@@ -36,7 +36,7 @@ java {
 
 dependencies {
 	implementation("org.apache.avro:avro-compiler:1.11.3") { exclude("org.slf4j") }
-	implementation("org.apache.commons:commons-text:1.10.0")
+	implementation("org.apache.commons:commons-text:1.11.0")
 	implementation("org.json:json:20231013")
 	implementation("org.kohsuke", "github-api", "1.317")
 	testImplementation("junit", "junit", "4.13.2")
