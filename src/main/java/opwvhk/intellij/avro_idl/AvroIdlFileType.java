@@ -40,6 +40,6 @@ public class AvroIdlFileType extends LanguageFileType {
 	@Override
 	@Nullable
 	public Icon getIcon() {
-		return AvroIdlIcons.FILE;
+		return AvroIdlIcons.AVDL_FILE;
 	}
 }

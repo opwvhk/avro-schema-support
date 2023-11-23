@@ -1,11 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16">
-<rect fill="white" width="16" height="16" fill-rule="evenodd" mask="url(#mask)"/>
-<!--<use xlink:href="#avro" fill="#0040ff" fill-opacity=".7" transform="translate(8 16) scale(8)"/>-->
-<defs>
-	<path id="avro" d="M 0.5,0 h -0.5 l 0.214,-0.184 s -0.143,-0.03 -0.214,-0.173 h 0.417 l 0.083,-0.072 l 0.083,0.072 h 0.417 s -0.071,0.143 -0.214,0.173 l 0.214,0.184 z"/>
-	<mask id="mask">
-		<rect width="16" height="16" fill="white"/>
-		<use xlink:href="#avro" transform="translate(8 16) scale(8)" fill="black" stroke="black" stroke-width="0.2"/>
-	</mask>
-</defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+	<rect fill="white" width="16" height="16" fill-rule="evenodd" mask="url(#mask)"/>
+	<use href="#avro"/>
+	<defs>
+		<path id="avro" fill="#1cccfc" d="M 15 14 L 12 8 L 8 10 Z"/>
+		<mask id="mask">
+			<rect width="16" height="16" fill="white"/>
+			<path fill="black" d="M 16 14 L 12.5 7 H 11.5 L 7 9.5 V 10.5 L 15 15 H 16 Z"/>
+		</mask>
+	</defs>
 </svg>

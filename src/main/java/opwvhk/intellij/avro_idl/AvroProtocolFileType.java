@@ -40,6 +40,6 @@ public class AvroProtocolFileType extends LanguageFileType {
 	@Override
 	@Nullable
 	public Icon getIcon() {
-		return AvroIdlIcons.FILE;
+		return AvroIdlIcons.AVPR_FILE;
 	}
 }

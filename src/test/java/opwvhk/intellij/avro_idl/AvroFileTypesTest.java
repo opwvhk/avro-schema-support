@@ -14,8 +14,8 @@ public class AvroFileTypesTest {
 
 	@Test
 	public void validateIcons() {
-		assertThat(AvroIdlFileType.INSTANCE.getIcon()).isSameAs(AvroIdlIcons.FILE);
-		assertThat(AvroProtocolFileType.INSTANCE.getIcon()).isSameAs(AvroIdlIcons.FILE);
-		assertThat(AvroSchemaFileType.INSTANCE.getIcon()).isSameAs(AvroIdlIcons.FILE);
+		assertThat(AvroIdlFileType.INSTANCE.getIcon()).isSameAs(AvroIdlIcons.AVDL_FILE);
+		assertThat(AvroProtocolFileType.INSTANCE.getIcon()).isSameAs(AvroIdlIcons.AVPR_FILE);
+		assertThat(AvroSchemaFileType.INSTANCE.getIcon()).isSameAs(AvroIdlIcons.AVSC_FILE);
 	}
 }

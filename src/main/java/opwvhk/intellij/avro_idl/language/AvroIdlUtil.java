@@ -20,6 +20,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import groovy.json.StringEscapeUtils;
 import opwvhk.intellij.avro_idl.AvroIdlFileType;
+import opwvhk.intellij.avro_idl.AvroIdlIcons;
 import opwvhk.intellij.avro_idl.psi.*;
 import org.apache.avro.Protocol;
 import org.apache.avro.Schema;
@@ -315,10 +316,10 @@ public class AvroIdlUtil {
 			return LookupElementBuilder.create(psiElement, schemaName);
 		} else if (namespace.equals(currentNamespace)) {
 			return LookupElementBuilder.create(psiElement, schemaName).withLookupString(schemaFullName)
-					.withTypeText(namespace);
+					.withTypeText(namespace, AvroIdlIcons.getAvroIdlIcon(psiElement), false);
 		} else {
 			return LookupElementBuilder.create(psiElement, schemaFullName).withLookupString(schemaName)
-					.withTypeText(namespace);
+					.withTypeText(namespace, AvroIdlIcons.getAvroIdlIcon(psiElement), false);
 		}
 	}
 
