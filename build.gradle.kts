@@ -107,6 +107,7 @@ tasks {
 		var changeLog = """
 			<p>Version 221.4.0:</p>
 			<ul data-version="221.4.0">
+				<li>Added new plugin logo and updated icons</li>
 				<li>Using IntelliJ version 2021.4 to test</li>
 			</ul>
 			<p>Version 213.5.3:</p>
