@@ -21,7 +21,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "221.4.1-SNAPSHOT"
+version = "221.4.1"
 
 repositories {
 	mavenCentral()
@@ -108,11 +108,10 @@ tasks {
 		var changeLog = """
 			<p>Version 221.4.1:</p>
 			<ul data-version="221.4.1">
-				<li>...</li>
+				<li>Added new plugin logo and updated icons</li>
 			</ul>
 			<p>Version 221.4.0:</p>
 			<ul data-version="221.4.0">
-				<li>Added new plugin logo and updated icons</li>
 				<li>Using IntelliJ version 2021.4 to test</li>
 			</ul>
 			<p>Version 213.5.3:</p>
