@@ -1,7 +1,6 @@
 package opwvhk.intellij.avro_idl;
 
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.util.NlsContexts;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

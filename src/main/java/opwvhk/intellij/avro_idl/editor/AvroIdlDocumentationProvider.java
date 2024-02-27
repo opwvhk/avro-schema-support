@@ -28,7 +28,6 @@ import java.util.stream.Stream;
 import static com.intellij.lang.documentation.DocumentationMarkup.*;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
-@SuppressWarnings("UnstableApiUsage")
 public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider {
 	public static final TokenSet DECIMAL_TYPE_DECLARATION_ELEMENTS = TokenSet.create(DECIMAL, INT_LITERAL, COMMA,
 			LEFT_PAREN, RIGHT_PAREN);

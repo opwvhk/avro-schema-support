@@ -54,7 +54,7 @@
 	</extensionPoints>
 	<extensions defaultExtensionNs="com.intellij">
 		<notificationGroup id="avro.idl.updates" key="notification.group.avro.idl.updates"
-		                   displayType="STICKY_BALLOON" icon="opwvhk.intellij.avro_idl.AvroIdlIcons.LOGO"/>
+		                   displayType="STICKY_BALLOON"/>
 		<postStartupActivity implementation="opwvhk.intellij.avro_idl.AvroIdlPluginUpdateStartupActivity"/>
 		<errorHandler implementation="opwvhk.intellij.avro_idl.AvroIdlErrorReportSubmitter"/>
 		<!-- File type & Language -->

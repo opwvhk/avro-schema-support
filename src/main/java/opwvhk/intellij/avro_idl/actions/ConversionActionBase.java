@@ -202,7 +202,6 @@ abstract class ConversionActionBase extends DumbAwareAction {
 				content == null ? null : UIUtil.uiTraverser(content.getComponent()).filter(ConsoleView.class).first();
 		if (content != null && console != null) {
 			// The console already exists. Clear it.
-			//console.print("\n\n\n", ConsoleViewContentType.SYSTEM_OUTPUT);
 			console.clear();
 		} else {
 			// The console doesn't exist yet. Create it.

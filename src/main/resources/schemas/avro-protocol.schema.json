@@ -2,9 +2,483 @@
 	"$id": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-protocol.schema.json",
 	"$schema": "http://json-schema.org/draft-07/schema#",
 	"title": "avro-protocol",
-	"description": "JSON Schema for an Apache Avro protocol, version 1.11.1",
+	"description": "JSON Schema for an Apache Avro protocol, version 1.11.3",
 	"$ref": "#/definitions/protocol",
 	"definitions": {
+		"schema": {
+			"description": "An Avro schema; either a schema name, anonymous (primitive type, annotated primitive type, array, map, union) or named (fixed, enum, record/error)",
+			"anyOf": [
+				{
+					"type": "string",
+					"oneOf": [
+						{
+							"$ref": "#/definitions/fullName"
+						},
+						{
+							"$ref": "#/definitions/primitiveType"
+						}
+					]
+				},
+				{
+					"type": "object",
+					"required": [
+						"type"
+					],
+					"properties": {
+						"type": {
+							"description": "The type of the schema; can be a record/error, enum, fixed, array, map or primitive type",
+							"enum": [
+								"null",
+								"boolean",
+								"int",
+								"long",
+								"float",
+								"double",
+								"string",
+								"bytes",
+								"array",
+								"map",
+								"fixed",
+								"enum",
+								"record",
+								"error"
+							],
+							"x-intellij-enum-metadata": {
+								"null": {
+									"description": "no value; used in unions to make values optional"
+								},
+								"boolean": {
+									"description": "a binary value"
+								},
+								"int": {
+									"description": "32-bit signed integer"
+								},
+								"long": {
+									"description": "64-bit signed integer"
+								},
+								"float": {
+									"description": "single precision (32-bit) IEEE 754 floating-point number"
+								},
+								"double": {
+									"description": "double precision (64-bit) IEEE 754 floating-point number"
+								},
+								"string": {
+									"description": "unicode character sequence"
+								},
+								"bytes": {
+									"description": "sequence of 8-bit unsigned bytes"
+								},
+								"array": {
+									"description": "an array of items"
+								},
+								"map": {
+									"description": "a map of values by string keys"
+								},
+								"fixed": {
+									"description": "a fixed-length named type"
+								},
+								"enum": {
+									"description": "a named type with explicit values (symbols)"
+								},
+								"record": {
+									"description": "a named type with fields"
+								},
+								"error": {
+									"description": "a named type with fields, thrown my protocol messages"
+								}
+							}
+						},
+						"doc": {
+							"type": "string",
+							"description": "Documentation for the schema."
+						},
+						"logicalType": {
+							"description": "If a standard type doesn't suit, you can specify a logical type. This is a logical representation of an underlying value, like a timestamp is the number of milliseconds since 1970-01-01T00:00:00.000Z",
+							"oneOf": [
+								{
+									"$ref": "#/definitions/stdLogicalTypes"
+								},
+								{
+									"type": "string",
+									"not": {
+										"$ref": "#/definitions/stdLogicalTypes"
+									}
+								}
+							]
+						},
+						"precision": {
+							"type": "integer",
+							"minimum": 1,
+							"maximum": 2147483647,
+							"description": "The number of digits in a decimal logical type."
+						},
+						"scale": {
+							"type": "integer",
+							"minimum": 0,
+							"maximum": 2147483647,
+							"description": "The number of decimal places in a decimal logical type."
+						}
+					},
+					"allOf": [
+						{
+							"$ref": "#/definitions/arrayItems"
+						},
+						{
+							"$ref": "#/definitions/mapValues"
+						},
+						{
+							"$ref": "#/definitions/typesWithName"
+						},
+						{
+							"$ref": "#/definitions/fixedSize"
+						},
+						{
+							"$ref": "#/definitions/enumSymbols"
+						},
+						{
+							"$ref": "#/definitions/recordFields"
+						}
+					]
+				},
+				{
+					"type": "array",
+					"$ref": "#/definitions/union"
+				}
+			]
+		},
+		"fullName": {
+			"description": "a full name is a dot separated sequence of one or more simple names (letters, digits and underscores, but doesn't start with a digit), but not equal to a primitive type",
+			"type": "string",
+			"pattern": "^[A-Za-z_][A-Za-z0-9_]*([.][A-Za-z_][A-Za-z0-9_]*)*$",
+			"not": {
+				"$ref": "#/definitions/primitiveType"
+			}
+		},
+		"simpleName": {
+			"description": "a simple name is an identifier (letters, digits and underscores, but doesn't start with a digit), but not equal to a primitive type",
+			"type": "string",
+			"pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+			"not": {
+				"$ref": "#/definitions/primitiveType"
+			}
+		},
+		"primitiveType": {
+			"description": "A primitive type",
+			"type": "string",
+			"enum": [
+				"null",
+				"boolean",
+				"int",
+				"long",
+				"float",
+				"double",
+				"string",
+				"bytes"
+			],
+			"x-intellij-enum-metadata": {
+				"null": {
+					"description": "no value; used in unions to make values optional"
+				},
+				"boolean": {
+					"description": "a binary value"
+				},
+				"int": {
+					"description": "32-bit signed integer"
+				},
+				"long": {
+					"description": "64-bit signed integer"
+				},
+				"float": {
+					"description": "single precision (32-bit) IEEE 754 floating-point number"
+				},
+				"double": {
+					"description": "double precision (64-bit) IEEE 754 floating-point number"
+				},
+				"string": {
+					"description": "unicode character sequence"
+				},
+				"bytes": {
+					"description": "sequence of 8-bit unsigned bytes"
+				}
+			}
+		},
+		"arrayItems": {
+			"if": {
+				"properties": {
+					"type": {
+						"const": "array"
+					}
+				}
+			},
+			"then": {
+				"description": "An array of (typed) items",
+				"required": [
+					"items"
+				],
+				"properties": {
+					"items": {
+						"description": "The type of the items of the array.",
+						"$ref": "#/definitions/schema"
+					}
+				}
+			}
+		},
+		"mapValues": {
+			"if": {
+				"properties": {
+					"type": {
+						"const": "map"
+					}
+				}
+			},
+			"then": {
+				"description": "A map with string keys and (typed) values",
+				"required": [
+					"values"
+				],
+				"properties": {
+					"values": {
+						"description": "The type of the values in the map (keys are always strings).",
+						"$ref": "#/definitions/schema"
+					}
+				}
+			}
+		},
+		"typesWithName": {
+			"if": {
+				"properties": {
+					"type": {
+						"enum": [
+							"fixed",
+							"enum",
+							"record",
+							"error"
+						]
+					}
+				}
+			},
+			"then": {
+				"required": [
+					"name"
+				],
+				"properties": {
+					"name": {
+						"$ref": "#/definitions/fullName",
+						"description": "The name of the type. Can be a simple name (with separate namespace) or a full name."
+					},
+					"namespace": {
+						"$ref": "#/definitions/fullName",
+						"description": "The namespace of the type; ignored if the name is not a simple name."
+					},
+					"aliases": {
+						"$ref": "#/definitions/aliases"
+					}
+				}
+			}
+		},
+		"fixedSize": {
+			"if": {
+				"properties": {
+					"type": {
+						"const": "fixed"
+					}
+				}
+			},
+			"then": {
+				"description": "A fixed size type",
+				"required": [
+					"size"
+				],
+				"properties": {
+					"size": {
+						"type": "integer",
+						"minimum": 0,
+						"description": "The size (in bytes) of this type."
+					}
+				}
+			}
+		},
+		"enumSymbols": {
+			"if": {
+				"properties": {
+					"type": {
+						"const": "enum"
+					}
+				}
+			},
+			"then": {
+				"description": "A type with a fixed set of possible values",
+				"required": [
+					"symbols"
+				],
+				"properties": {
+					"symbols": {
+						"description": "The symbols this enum has.",
+						"type": "array",
+						"items": {
+							"$ref": "#/definitions/simpleName"
+						},
+						"minItems": 1,
+						"uniqueItems": true
+					},
+					"default": {
+						"description": "The enum value to use during schema resolution for unknown/unmatched values of the write schema",
+						"$ref": "#/definitions/simpleName"
+					}
+				}
+			}
+		},
+		"recordFields": {
+			"if": {
+				"properties": {
+					"type": {
+						"enum": [
+							"record",
+							"error"
+						]
+					}
+				}
+			},
+			"then": {
+				"description": "A record or error",
+				"required": [
+					"fields"
+				],
+				"properties": {
+					"fields": {
+						"description": "The fields of the record/error.",
+						"type": "array",
+						"items": {
+							"$ref": "#/definitions/field"
+						}
+					}
+				}
+			}
+		},
+		"union": {
+			"description": "A union of schemas",
+			"type": "array",
+			"uniqueItems": true,
+			"items": {
+				"allOf": [
+					{
+						"$ref": "#/definitions/schema"
+					},
+					{
+						"not": {
+							"$ref": "#/definitions/union"
+						}
+					}
+				]
+			}
+		},
+		"namedType": {
+			"allOf": [
+				{
+					"properties": {
+						"type": {
+							"enum": [
+								"fixed",
+								"enum",
+								"record",
+								"error"
+							]
+						}
+					}
+				},
+				{
+					"$ref": "#/definitions/schema"
+				}
+			]
+		},
+		"field": {
+			"description": "A field in a record",
+			"type": "object",
+			"required": [
+				"name",
+				"type"
+			],
+			"properties": {
+				"name": {
+					"$ref": "#/definitions/simpleName"
+				},
+				"aliases": {
+					"$ref": "#/definitions/aliases"
+				},
+				"doc": {
+					"type": "string"
+				},
+				"type": {
+					"$ref": "#/definitions/schema"
+				},
+				"default": {
+					"description": "default value, a JSON value that can be mapped to the field schema"
+				},
+				"order": {
+					"enum": [
+						"ascending",
+						"descending",
+						"ignore"
+					]
+				}
+			}
+		},
+		"aliases": {
+			"description": "Aliases of a schema, field, ... (potentially invalid). Can be used to fix/change/evolve names, but not to relocate elements.",
+			"type": "array",
+			"minItems": 1,
+			"uniqueItems": true,
+			"items": {
+				"type": "string"
+			}
+		},
+		"stdLogicalTypes": {
+			"type": "string",
+			"enum": [
+				"decimal",
+				"uuid",
+				"date",
+				"time-millis",
+				"time-micros",
+				"timestamp-millis",
+				"timestamp-micros",
+				"local-timestamp-millis",
+				"local-timestamp-micros",
+				"duration"
+			],
+			"x-intellij-enum-metadata": {
+				"decimal": {
+					"description": "arbitrary-precision signed decimal number of the form unscaled × 10^(-scale); annotates fixed or bytes types"
+				},
+				"uuid": {
+					"description": "a universally unique identifier (UUID); annotates a string, formatted as per RFC-4122"
+				},
+				"date": {
+					"description": "a date without time zone; annotates an int type, with the number of days from 1 January 1970 (ISO calendar)"
+				},
+				"time-millis": {
+					"description": "a time of day, with no time zone or date; annotates an int type, with the number of milliseconds since midnight, 00:00:00.000"
+				},
+				"time-micros": {
+					"description": "a time of day, with no time zone or date; annotates a long type, with the number of microseconds since midnight, 00:00:00.000000"
+				},
+				"timestamp-millis": {
+					"description": "an instant on the global timeline; annotates a long type, with the number of milliseconds since 1970-01-01T00:00:00.000Z"
+				},
+				"timestamp-micros": {
+					"description": "an instant on the global timeline; annotates a long type, with the number of microseconds since 1970-01-01T00:00:00.000000Z"
+				},
+				"local-timestamp-millis": {
+					"description": "a timestamp in a local timezone (undefined); annotates a long type, with the number of milliseconds since 1970-01-01T00:00:00.000"
+				},
+				"local-timestamp-micros": {
+					"description": "a timestamp in a local timezone (undefined); annotates a long type, with the number of microseconds since 1970-01-01T00:00:00.000000"
+				},
+				"duration": {
+					"description": "an amount of time defined by a number of months, days and milliseconds; annotates a fixed type with size 12, that stores 3 unsigned, little-endian unsigned integers"
+				}
+			}
+		},
 		"protocol": {
 			"description": "An Avro protocol definition",
 			"type": "object",
@@ -13,10 +487,10 @@
 			],
 			"properties": {
 				"protocol": {
-					"$ref": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/fullName"
+					"$ref": "#/definitions/fullName"
 				},
 				"namespace": {
-					"$ref": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/fullName"
+					"$ref": "#/definitions/fullName"
 				},
 				"doc": {
 					"type": "string"
@@ -25,7 +499,7 @@
 					"type": "array",
 					"uniqueItems": true,
 					"items": {
-						"$ref": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/namedType"
+						"$ref": "#/definitions/namedType"
 					}
 				},
 				"messages": {
@@ -57,7 +531,7 @@
 					"description": "Message request parameters; treated as an anonymous records schema",
 					"type": "array",
 					"items": {
-						"$ref": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/field"
+						"$ref": "#/definitions/field"
 					},
 					"uniqueItems": true
 				},
@@ -69,7 +543,7 @@
 							"const": "void"
 						},
 						{
-							"$ref": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/schema"
+							"$ref": "#/definitions/schema"
 						}
 					]
 				},
@@ -80,7 +554,7 @@
 					"items": {
 						"allOf": [
 							{
-								"$ref": "https://raw.githubusercontent.com/opwvhk/avro-schema-support/master/src/main/resources/schemas/avro-schema.schema.json#/definitions/schema"
+								"$ref": "#/definitions/schema"
 							},
 							{
 								"properties": {
