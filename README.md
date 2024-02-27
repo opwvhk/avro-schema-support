@@ -1,3 +1,6 @@
+![Plugin version in JetBrains Marketplace](https://img.shields.io/jetbrains/plugin/v/net.sf.opk.avro-schema-support?color=brightgreen)
+
+
 <img align="right" height="160" src="src/main/resources/META-INF/pluginIcon.svg" alt="Pigeon Logo"/>IntelliJ plugin for Apache Avro™ IDL
 ===========================================
 
