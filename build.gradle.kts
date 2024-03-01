@@ -45,8 +45,14 @@ dependencies {
 	testImplementation("org.assertj", "assertj-core", "3.24.2")
 }
 
+idea {
+	module {
+		isDownloadSources = true
+	}
+}
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
+	downloadSources.set(true)
 	//type.set("PC")
 
 	version.set("2022.1.4")
@@ -109,7 +115,7 @@ tasks {
 		var changeLog = """
 			<p>Version 221.4.2:</p>
 			<ul data-version="221.4.2">
-				<li>...</li>
+				<li>Improved the JSON-Schemata for <code>.avsc</code> and <code>.avpr</code> files</li>
 			</ul>
 			<p>Version 221.4.1:</p>
 			<ul data-version="221.4.1">
