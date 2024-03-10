@@ -36,7 +36,7 @@ java {
 
 dependencies {
 	implementation("org.apache.avro:avro-compiler:1.11.3") { exclude("org.slf4j") }
-	implementation("org.apache.commons:commons-compress:1.26.0")
+	implementation("org.apache.commons:commons-compress:1.26.1")
 	implementation("org.apache.commons:commons-text:1.11.0")
 	implementation("org.apache.commons:commons-lang3:3.14.0")
 	implementation("org.json:json:20240205")
