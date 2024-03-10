@@ -39,7 +39,7 @@ dependencies {
 	implementation("org.apache.commons:commons-compress:1.26.0")
 	implementation("org.apache.commons:commons-text:1.11.0")
 	implementation("org.apache.commons:commons-lang3:3.14.0")
-	implementation("org.json:json:20240205")
+	implementation("org.json:json:20240303")
 	implementation("org.kohsuke", "github-api", "1.317")
 	testImplementation("junit", "junit", "4.13.2")
 	testImplementation("org.assertj", "assertj-core", "3.24.2")
