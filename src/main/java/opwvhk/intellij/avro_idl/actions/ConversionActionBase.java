@@ -5,7 +5,6 @@ import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.impl.TrustedProjects;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileChooser.*;
@@ -20,6 +19,7 @@ import com.intellij.openapi.vfs.VirtualFileWrapper;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.search.FilenameIndex;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.ProjectScope;
 import com.intellij.ui.UIBundle;
 import com.intellij.ui.content.Content;
@@ -97,9 +97,8 @@ abstract class ConversionActionBase extends DumbAwareAction {
 		final String fileName = suggestedBaseName + "." + destinationFileType.getDefaultExtension();
 
 		// Replacement for getVirtualFilesByName is not available in 2020.3.4
-		//noinspection deprecation
-		Collection<VirtualFile> files = FilenameIndex.getVirtualFilesByName(project, fileName,
-				ProjectScope.getContentScope(project));
+		GlobalSearchScope contentScope = ProjectScope.getContentScope(project);
+		Collection<VirtualFile> files = FilenameIndex.getVirtualFilesByName(fileName, contentScope);
 		VirtualFile firstItem = ContainerUtil.getFirstItem(files);
 		VirtualFile baseDir = firstItem != null ? firstItem.getParent() : suggestedTargetDirectory;
 
@@ -147,12 +146,10 @@ abstract class ConversionActionBase extends DumbAwareAction {
 	}
 
 	public void update(@NotNull AnActionEvent e) {
-		// Note: because conversions call external code, only enable the refactoring for trusted projects.
 		Project project = e.getProject();
 		boolean actionAvailable = false;
 
-		//noinspection UnstableApiUsage
-		if (project != null && !project.isDisposed() && TrustedProjects.isTrusted(project)) {
+		if (project != null && !project.isDisposed()) {
 			List<VirtualFile> files = getFiles(e);
 			actionAvailable = !files.isEmpty();
 		}

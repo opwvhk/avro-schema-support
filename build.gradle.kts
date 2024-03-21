@@ -55,14 +55,19 @@ intellij {
 	downloadSources.set(true)
 	//type.set("PC")
 
+	// Try to compile against a version >= 1year old, to prevent forcing people to upgrade too much
+	// Goal: support at least 90% of users, which in March 2024 means version 2022.1 until the most recent one.
+	// Source: https://plugins.jetbrains.com/docs/marketplace/product-versions-in-use-statistics.html
 	version.set("2022.1.4")
 	//version.set("2022.2.4")
 	// From here, the new UI is available
 	//version.set("2022.3")
+	// From here, refactor code for compatibility / deprecated code usage
 	//version.set("2022.3.3")
 	//version.set("2023.1")
 	//version.set("2023.2")
 	//version.set("2023.2.3")
+	//version.set("2023.3.6")
 
 	// Note: without the java plugin tests will fail (so don't remove it even if the plugin does not need it)
 	plugins.add("com.intellij.java")
@@ -72,6 +77,7 @@ intellij {
 	// Use this for more elaborate testing (especially when debugging the grammar)
 	val psiViewerVersion = version.get().replace(".", "").substring(2, 5) + "-SNAPSHOT"
 	plugins.add("PsiViewer:$psiViewerVersion")
+	//plugins.add("PsiViewer:233.2")
 	plugins.add("markdown")
 	/*
 	Other (bundled) plugins:

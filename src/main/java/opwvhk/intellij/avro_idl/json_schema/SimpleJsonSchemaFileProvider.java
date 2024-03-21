@@ -20,7 +20,7 @@ class SimpleJsonSchemaFileProvider implements JsonSchemaFileProvider {
 		this.fileTypeName = fileType.getName();
 		this.fileTypeType = fileType.getClass();
 		this.resourcePath = resourcePath;
-		this.jsonSchemaFile = NullableLazyValue.createValue(() ->
+		this.jsonSchemaFile = NullableLazyValue.lazyNullable(() ->
 				JsonSchemaProviderFactory.getResourceFile(SimpleJsonSchemaFileProvider.class, this.resourcePath)
 		);
 	}

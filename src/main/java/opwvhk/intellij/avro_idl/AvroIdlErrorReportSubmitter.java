@@ -10,7 +10,6 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.ErrorReportSubmitter;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.diagnostic.SubmittedReportInfo;
@@ -90,8 +89,7 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 				reportInfo = new SubmittedReportInfo(null, null, FAILED);
 				String markdownErrorReport = String.format(MARKDOWN_GITHUB_FAILURE, repository, markdownText);
 				ApplicationManager.getApplication()
-						.invokeLater(() -> openInScratchFile(parentComponent, markdownErrorReport),
-								ModalityState.NON_MODAL);
+						.invokeLater(() -> openInScratchFile(parentComponent, markdownErrorReport));
 			}
 		}
 		consumer.consume(reportInfo);

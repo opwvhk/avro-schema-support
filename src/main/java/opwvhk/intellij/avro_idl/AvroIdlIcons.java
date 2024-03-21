@@ -12,11 +12,15 @@ import javax.swing.*;
  * The set of all icons used by the plugin for representing Apache Avro™ IDL.
  */
 public class AvroIdlIcons {
+	// For newer platform versions, we must use the classloader instead of the class.
+	//private static final ClassLoader MY_CLASS_LOADER = AvroIdlIcons.class.getClassLoader();
+	@SuppressWarnings("GrazieInspection")
+	private static final Class<?> MY_CLASS_LOADER = AvroIdlIcons.class;
 	private static final IconManager ICON_MANAGER = IconManager.getInstance();
-	public static final Icon LOGO = ICON_MANAGER.getIcon("/icons/avroLogo16.svg", AvroIdlIcons.class);
+	public static final Icon LOGO = ICON_MANAGER.getIcon("/icons/avroLogo16.svg", MY_CLASS_LOADER);
 	public static final Icon AVDL_FILE = LOGO;
 	public static final Icon AVSC_FILE = LOGO;
-	public static final Icon AVPR_FILE = ICON_MANAGER.getIcon("/icons/pigeon.svg", AvroIdlIcons.class);
+	public static final Icon AVPR_FILE = ICON_MANAGER.getIcon("/icons/pigeon.svg", MY_CLASS_LOADER);
 
 	@Nullable
 	public static Icon getAvroIdlIcon(PsiElement element) {
@@ -56,12 +60,12 @@ public class AvroIdlIcons {
 
 	public static final class Nodes {
 		public static final Icon AVRO_RECORD = LOGO;
-		public static final Icon AVRO_ERROR = ICON_MANAGER.getIcon("/icons/nodes/error.svg", AvroIdlIcons.class);
-		public static final Icon AVRO_FIELD = ICON_MANAGER.getIcon("/icons/nodes/field.svg", AvroIdlIcons.class);
-		public static final Icon AVRO_FIXED = ICON_MANAGER.getIcon("/icons/nodes/fixed.svg", AvroIdlIcons.class);
-		public static final Icon AVRO_ENUM = ICON_MANAGER.getIcon("/icons/nodes/enum.svg", AvroIdlIcons.class);
-		public static final Icon AVRO_SYMBOL = ICON_MANAGER.getIcon("/icons/nodes/enum_symbol.svg", AvroIdlIcons.class);
-		public static final Icon AVRO_PROTOCOL = ICON_MANAGER.getIcon("/icons/nodes/protocol.svg", AvroIdlIcons.class);
-		public static final Icon AVRO_MESSAGE = ICON_MANAGER.getIcon("/icons/nodes/message.svg", AvroIdlIcons.class);
+		public static final Icon AVRO_ERROR = ICON_MANAGER.getIcon("/icons/nodes/error.svg", MY_CLASS_LOADER);
+		public static final Icon AVRO_FIELD = ICON_MANAGER.getIcon("/icons/nodes/field.svg", MY_CLASS_LOADER);
+		public static final Icon AVRO_FIXED = ICON_MANAGER.getIcon("/icons/nodes/fixed.svg", MY_CLASS_LOADER);
+		public static final Icon AVRO_ENUM = ICON_MANAGER.getIcon("/icons/nodes/enum.svg", MY_CLASS_LOADER);
+		public static final Icon AVRO_SYMBOL = ICON_MANAGER.getIcon("/icons/nodes/enum_symbol.svg", MY_CLASS_LOADER);
+		public static final Icon AVRO_PROTOCOL = ICON_MANAGER.getIcon("/icons/nodes/protocol.svg", MY_CLASS_LOADER);
+		public static final Icon AVRO_MESSAGE = ICON_MANAGER.getIcon("/icons/nodes/message.svg", MY_CLASS_LOADER);
 	}
 }
