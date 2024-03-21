@@ -14,6 +14,11 @@ public class AvroSchemaLanguage extends JsonLanguage {
 	public static final AvroSchemaLanguage INSTANCE = new AvroSchemaLanguage();
 
 	protected AvroSchemaLanguage() {
-		super("Avro Schema", "text/vnd.apache.avro-schema");
+		super("AvroSchema", "text/vnd.apache.avro-schema");
+	}
+
+	@Override
+	public @NotNull String getDisplayName() {
+		return "Avro Schema";
 	}
 }

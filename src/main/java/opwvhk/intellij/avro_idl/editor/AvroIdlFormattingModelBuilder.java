@@ -21,7 +21,7 @@ import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
 public class AvroIdlFormattingModelBuilder implements FormattingModelBuilder {
 	private SpacingBuilder createSpaceBuilder(CodeStyleSettings settings) {
-		final CommonCodeStyleSettings avroIdlSettings = settings.getCommonSettings(AvroIdlLanguage.INSTANCE.getID());
+		final CommonCodeStyleSettings avroIdlSettings = settings.getCommonSettings(AvroIdlLanguage.INSTANCE.getDisplayName());
 
 		// IntelliJ applies spacing rules in order: the first match wins
 

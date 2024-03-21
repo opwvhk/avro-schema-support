@@ -16,4 +16,9 @@ public class AvroIdlLanguage extends Language {
 	protected AvroIdlLanguage() {
 		super("AvroIDL", "text/vnd.apache.avro-avro_idl");
 	}
+
+	@Override
+	public @NotNull String getDisplayName() {
+		return "Avro IDL";
+	}
 }
