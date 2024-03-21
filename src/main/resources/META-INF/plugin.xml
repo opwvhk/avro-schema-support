@@ -54,7 +54,7 @@
 	</extensionPoints>
 	<extensions defaultExtensionNs="com.intellij">
 		<notificationGroup id="avro.idl.updates" key="notification.group.avro.idl.updates"
-		                   displayType="STICKY_BALLOON"/>
+		                   displayType="BALLOON"/>
 		<postStartupActivity implementation="opwvhk.intellij.avro_idl.AvroIdlPluginUpdateStartupActivity"/>
 		<errorHandler implementation="opwvhk.intellij.avro_idl.AvroIdlErrorReportSubmitter"/>
 		<!-- File type & Language -->
@@ -137,13 +137,13 @@
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlNamingConventionInspection"/>
 
 		<!-- Avro Schema & Protocol files (JSON derivative) -->
-		<fileType name="Avro Schema" fieldName="INSTANCE" language="Avro Schema" extensions="avsc"
+		<fileType name="Avro Schema" fieldName="INSTANCE" language="AvroSchema" extensions="avsc"
 		          implementationClass="opwvhk.intellij.avro_idl.AvroSchemaFileType"/>
-		<lang.parserDefinition language="Avro Schema"
+		<lang.parserDefinition language="AvroSchema"
 		                       implementationClass="opwvhk.intellij.avro_idl.syntax.AvroSchemaParserDefinition"/>
-		<fileType name="Avro Protocol" fieldName="INSTANCE" language="Avro Protocol" extensions="avpr"
+		<fileType name="Avro Protocol" fieldName="INSTANCE" language="AvroProtocol" extensions="avpr"
 		          implementationClass="opwvhk.intellij.avro_idl.AvroProtocolFileType"/>
-		<lang.parserDefinition language="Avro Protocol"
+		<lang.parserDefinition language="AvroProtocol"
 		                       implementationClass="opwvhk.intellij.avro_idl.syntax.AvroProtocolParserDefinition"/>
 	</extensions>
 	<extensions defaultExtensionNs="opwvhk.avro.idl">

@@ -122,6 +122,7 @@ tasks {
 			<p>Version 221.4.2:</p>
 			<ul data-version="221.4.2">
 				<li>Improved the JSON-Schemata for <code>.avsc</code> and <code>.avpr</code> files</li>
+				<li>Redesigned update notice to match new UI style</li>
 			</ul>
 			<p>Version 221.4.1:</p>
 			<ul data-version="221.4.1">

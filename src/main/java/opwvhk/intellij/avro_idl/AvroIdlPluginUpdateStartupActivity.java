@@ -2,12 +2,12 @@ package opwvhk.intellij.avro_idl;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.actions.ShowSettingsUtilImpl;
+import com.intellij.ide.browsers.BrowserLauncher;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationAction;
-import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
@@ -17,7 +17,8 @@ import opwvhk.intellij.avro_idl.actions.AvroIdlNotifications;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.event.HyperlinkEvent;
+import java.net.URI;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,6 +35,8 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 	private static final PluginId MY_PLUGIN_ID = PluginId.getId("net.sf.opk.avro-schema-support");
 	public static final PluginId OLD_PLUGIN_ID = PluginId.getId("claims.bold.intellij.avro");
 	private static final String SNAPSHOT_SUFFIX = "-SNAPSHOT";
+	private static final Pattern CHANGE_NOTES_PATTERN = Pattern.compile(
+			"(?s)<ul data-version=\"(?<version>[^\"]+)\">.*?</ul>");
 
 	@NotNull
 	public static IdeaPluginDescriptor getMyPluginDescriptor() {
@@ -90,73 +93,47 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 	private void notifyUserOfUpdate(@NotNull Project project, @NotNull IdeaPluginDescriptor plugin,
 	                                @NotNull String newVersion, @Nullable String oldVersion) {
 		String changeNotes = plugin.getChangeNotes();
-		if (oldVersion == null || changeNotes == null) {
-			//noinspection SpellCheckingInspection
-			AvroIdlNotifications.showNotification(project, NotificationType.INFORMATION, true,
-					"Avro IDL Support installed.",
+		Consumer<Notification> addNotificationActions = notification -> {
+			notification.addAction(NotificationAction.createSimple("Ask questions",
+					() -> BrowserLauncher.getInstance().browse(URI.create(
+							"https://github.com/opwvhk/avro-schema-support/discussions"))));
+			notification.addAction(NotificationAction.createSimple("Report issues",
+					() -> BrowserLauncher.getInstance()
+							.browse(URI.create("https://github.com/opwvhk/avro-schema-support/issues"))));
+			// Values for idToSelect are in searchableOptions.xml; use this XPath: /option/configurable[configurable_name="AvroIDL"]@id
+			// (note: searchableOptions.xml is created when building the plugin)
+			notification.addAction(NotificationAction.createSimple("Open preferences",
+					() -> ShowSettingsUtilImpl.showSettingsDialog(project, "", "Avro IDL")));
+		};
+
+        String notificationTitle = oldVersion == null ?
+                "Avro IDL Support " + newVersion + " installed." :
+                "Avro IDL Support updated to version " + newVersion;
+
+		if (oldVersion != null && !oldVersion.equals(newVersion) && changeNotes != null) {
+			StringBuilder changes = collectNewChanges(oldVersion, changeNotes);
+            AvroIdlNotifications.showNotification(project, NotificationType.INFORMATION, false,
+					notificationTitle, "This is what has changed:</b><br/><br/>" + changes,
+					addNotificationActions);
+		} else {
+			AvroIdlNotifications.showNotification(project, NotificationType.INFORMATION, true, notificationTitle,
 					plugin.getName() + " version " + newVersion + " was successfully installed.<br/>" +
-							"If you like, you can customize " +
-							"<a href=\"reference.settingsdialog.IDE.editor.colors.Avro IDL#\">Colors</a>, " +
-							"<a href=\"preferences.sourceCode.Avro IDL#\">Code Style</a>, and <a href=\"Errors#Avro IDL\">Inspections</a>.<br/><br/>" +
-							"Please <a href=\"https://github.com/opwvhk/avro-schema-support/issues\">report bugs</a> and " +
-							"<a href=\"https://github.com/opwvhk/avro-schema-support/discussions\">ask questions</a> via GitHub.",
-					notification -> notification.setListener(createUrlOpeningListener(project)));
-		} else if (!oldVersion.equals(newVersion)) {
-			// Collect the changes since the previously installed version (but for at most 3 versions).
-			StringBuilder changes = new StringBuilder();
-			Matcher matcher = Pattern.compile("(?s)<ul data-version=\"(?<version>[^\"]+)\">.*?</ul>")
-					.matcher(changeNotes);
-			int count = 0;
-			while (matcher.find()) {
-				final String version = matcher.group("version");
-				if (version.equals(oldVersion)) {
-					break;
-				}
-				count++;
-				if (count > 3) {
-					break;
-				}
-				changes.append(version).append(":").append(matcher.group());
-			}
-			AvroIdlNotifications.showNotification(project, NotificationType.INFORMATION, false,
-					"Avro IDL Support updated to version" + newVersion,
-					"All <a href=\"#Avro IDL\">settings are here</a>.<br/>" +
-							"Please <a href=\"https://github.com/opwvhk/avro-schema-support/issues\">report bugs</a> and " +
-							"<a href=\"https://github.com/opwvhk/avro-schema-support/discussions\">questions</a> via GitHub.<br/><br/>" +
-							"<b>This is what has changed:</b><br/><br/>" + changes,
-					notification -> notification.setListener(createUrlOpeningListener(project)));
+							"The actions point to useful next steps.", addNotificationActions);
 		}
 	}
 
-	/**
-	 * Create a notification listener to support links. This extends the default (supporting hyperlinks), to allow linking into the settings dialog.
-	 * <p>
-	 * To link into the settings, build a link with: [a settings id] + '#' + [a search filter]
-	 * <p>
-	 * Useful settings ids are in searchableOptions.xml (created by building the plugin), using the XPath: //configurable[configurable_name="AvroIDL"]@id
-	 *
-	 * @param project the current project
-	 * @return the notification listener
-	 */
 	@NotNull
-	private NotificationListener.UrlOpeningListener createUrlOpeningListener(@NotNull Project project) {
-		return new NotificationListener.UrlOpeningListener(false) {
-			@Override
-			protected void hyperlinkActivated(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
-				final String link = event.getDescription();
-				if (link != null && link.contains("#") && !link.contains(":")) {
-					int hashPos = link.indexOf("#");
-					String idToSelect = link.substring(0, hashPos); // link.contains("#"), so hashPos >= 0
-					String searchFilter = link.substring(hashPos + 1);
-					if (!project.isDisposed()) {
-						// Values for idToSelect are in searchableOptions.xml; use this XPath: /option/configurable[configurable_name="AvroIDL"]@id
-						// (note: searchableOptions.xml is created when building the plugin)
-						ShowSettingsUtilImpl.showSettingsDialog(project, idToSelect, searchFilter);
-					}
-				} else {
-					super.hyperlinkActivated(notification, event);
-				}
-			}
-		};
+	private static StringBuilder collectNewChanges(@NotNull String oldVersion, String changeNotes) {
+		// Collect the changes since the previously installed version (but for at most 3 versions).
+		StringBuilder changes = new StringBuilder();
+		Matcher matcher = CHANGE_NOTES_PATTERN.matcher(changeNotes);
+		matcher.results()
+				.takeWhile(mr -> !mr.group(1).equals(oldVersion))
+				.limit(3)
+				.forEach(mr -> {
+					final String version = mr.group(1);
+					changes.append(version).append(":").append(matcher.group());
+				});
+		return changes;
 	}
 }
