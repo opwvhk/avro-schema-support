@@ -41,6 +41,8 @@ dependencies {
 	implementation("org.apache.commons:commons-lang3:3.14.0")
 	implementation("org.json:json:20240303")
 	implementation("org.kohsuke", "github-api", "1.317")
+	implementation("io.jsonwebtoken", "jjwt-impl", "0.10.5")
+	implementation("io.jsonwebtoken", "jjwt-jackson", "0.10.5")
 	testImplementation("junit", "junit", "4.13.2")
 	testImplementation("org.assertj", "assertj-core", "3.24.2")
 }
@@ -123,6 +125,7 @@ tasks {
 			<ul data-version="221.4.2">
 				<li>Improved the JSON-Schemata for <code>.avsc</code> and <code>.avpr</code> files</li>
 				<li>Redesigned update notice to match new UI style</li>
+				<li>Report errors using a GitHub app</li>
 			</ul>
 			<p>Version 221.4.1:</p>
 			<ul data-version="221.4.1">

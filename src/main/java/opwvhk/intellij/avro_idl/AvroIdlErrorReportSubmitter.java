@@ -22,6 +22,8 @@ import com.intellij.openapi.util.NlsActions;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.util.Consumer;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.kohsuke.github.*;
@@ -29,7 +31,13 @@ import org.kohsuke.github.*;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Properties;
+import java.security.Key;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -175,13 +183,61 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 		return matcher.find() ? matcher.group(1) : null;
 	}
 
-	private GitHub connectToGitHub() throws IOException {
+	private GitHub connectToGitHub() throws Exception {
 		Properties props = new Properties();
 		try (InputStream resource = getClass().getResourceAsStream("/META-INF/github.properties")) {
 			props.load(resource);
 		}
-		return GitHubBuilder.fromProperties(props).build();
+
+		String keyFile = props.getProperty("key_file");
+		String appId = props.getProperty("app_id");
+		String instId = props.getProperty("inst_id");
+
+		// Create a JWT (local operation) to connect as the generic app.
+		String jwtToken = createJWT(appId, keyFile);
+		GitHub jwtGitHub = new GitHubBuilder().withJwtToken(jwtToken).build();
+		GHApp pluginGitHubApp = jwtGitHub.getApp();
+		// Then, create an installation token (remote operation) to connect as a specific app (for the plugin repo).
+		GHAppInstallation pluginInstallation = pluginGitHubApp.getInstallationById(Long.parseLong(instId));
+		GHAppInstallationToken installationToken = pluginInstallation.createToken().create();
+		GitHub repoSpecificGitHub = new GitHubBuilder().withAppInstallationToken(installationToken.getToken()).build();
+		// Then use the latter to authenticate (and be able to search & create issues).
+		return repoSpecificGitHub;
 	}
+
+	private PrivateKey keyFromResource(String keyResourceName)
+			throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+		try (InputStream inputStream = getClass().getResourceAsStream(keyResourceName)) {
+			byte[] keyBytes = Objects.requireNonNull(inputStream).readAllBytes();
+			PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+			KeyFactory kf = KeyFactory.getInstance("RSA");
+			return kf.generatePrivate(spec);
+		}
+	}
+
+	private String createJWT(String githubAppId, String keyFile)
+			throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+		// We need to define two timestamps between which out JWT will be valid, according to the GitHub server clock.
+		// The "issues at" timestamp must be in the past, and the expiration timestamp must be at most 10 minutes into
+		// the future.
+
+		// Guard against (large) clock drift: issue the token 4 minutes in the past, with a maximum expiration window
+		// (of 10 min.), to the token is valid unless the local clock drift is outside the interval (-6 min, 4 min).
+		long nowMillis = System.currentTimeMillis() - 240_000;
+		long expMillis = nowMillis + 600_000;
+
+		//We will sign our JWT with our private key
+        Key signingKey = keyFromResource("/META-INF/" + keyFile);
+
+		//Build the JWT by its claims and serializes it to a compact, URL-safe string
+		return Jwts.builder()
+				.setIssuedAt(new Date(nowMillis))
+				.setExpiration(new Date(expMillis))
+				.setIssuer(githubAppId)
+				.signWith(signingKey, SignatureAlgorithm.RS256)
+				.compact();
+	}
+
 
 	private GHIssue findIssue(GitHub gitHub, String searchString) throws IOException {
 		GHIssueSearchBuilder searchBuilder = gitHub.searchIssues()
