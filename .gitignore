@@ -5,6 +5,5 @@
 .gradle
 build
 # Plugin specific
-github.properties
 *.pem
 *.der
