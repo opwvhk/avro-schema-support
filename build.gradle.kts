@@ -21,7 +21,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "221.4.3-SNAPSHOT"
+version = "223.3.0-SNAPSHOT"
 
 repositories {
 	mavenCentral()
@@ -55,31 +55,33 @@ idea {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
 	downloadSources.set(true)
-	//type.set("PC")
 
-	// Try to compile against a version >= 1year old, to prevent forcing people to upgrade too much
-	// Goal: support at least 90% of users, which in March 2024 means version 2022.1 until the most recent one.
+	// JetBrains advises to support the current and at least 2 previous major releases. The last major release is used
+	// by about half of the users, the last 3 major releases by approx. 80%.
+	// In March 2024, this means versions >= 2022.3.
 	// Source: https://plugins.jetbrains.com/docs/marketplace/product-versions-in-use-statistics.html
-	version.set("2022.1.4")
-	//version.set("2022.2.4")
-	// From here, the new UI is available
-	//version.set("2022.3")
+
+	// Set type (Intellij/PyCharm Community), version, base plugin and PSI Viewer plugin at once:
+	// Last minor versions differ, and the PSIViewer versions are not regular
+	// Also, tests require the base plugin (java/PythonCore; so don't remove it even if the plugin does not need it)
+
+	type.set("IC"); version.set("2022.3.3"); plugins.addAll("com.intellij.java", "PsiViewer:2022.3")
+	//type.set("IC"); version.set("2023.1.6"); plugins.addAll("com.intellij.java", "PsiViewer:231-SNAPSHOT")
 	// From here, refactor code for compatibility / deprecated code usage
-	//version.set("2022.3.3")
-	//version.set("2023.1")
-	//version.set("2023.2")
-	//version.set("2023.2.3")
-	//version.set("2023.3.6")
+	//type.set("IC"); version.set("2023.2.6"); plugins.addAll("com.intellij.java", "PsiViewer:232.2")
+	//type.set("IC"); version.set("2023.3.6"); plugins.addAll("com.intellij.java", "PsiViewer:233.2")
+	// EAP
+	//type.set("IC"); version.set("2024.1"); plugins.addAll("com.intellij.java", "PsiViewer:241-SNAPSHOT")
 
-	// Note: without the java plugin tests will fail (so don't remove it even if the plugin does not need it)
-	plugins.add("com.intellij.java")
+	//type.set("PC"); version.set("2022.3.3"); plugins.addAll("PythonCore", "PsiViewer:2022.3")
+	//type.set("PC"); version.set("2023.1.5"); plugins.addAll("PythonCore", "PsiViewer:231-SNAPSHOT")
+	// From here, refactor code for compatibility / deprecated code usage
+	//type.set("PC"); version.set("2023.2.6"); plugins.addAll("PythonCore", "PsiViewer:232.2")
+	//type.set("PC"); version.set("2023.3.5"); plugins.addAll("PythonCore", "PsiViewer:233.2")
+	// EAP
+	//type.set("PC"); version.set("2024.1"); plugins.addAll("PythonCore", "PsiViewer:241-SNAPSHOT")
 
-	// Use this instead of Java when testing with PyCharm (see 'type' above)
-	//plugins.add("PythonCore")
-	// Use this for more elaborate testing (especially when debugging the grammar)
-	val psiViewerVersion = version.get().replace(".", "").substring(2, 5) + "-SNAPSHOT"
-	plugins.add("PsiViewer:$psiViewerVersion")
-	//plugins.add("PsiViewer:233.2")
+	// Extra plugin(s); not needed, but maybe useful during development:
 	plugins.add("markdown")
 	/*
 	Other (bundled) plugins:
@@ -108,9 +110,9 @@ tasks {
 
 	patchPluginXml {
 		version.set(project.version.toString())
-		// Notes on versions: usually the last 3 build numbers (without atch level) represent about 80% of the users.
+		// Notes on versions: usually the last 3 major releases represent about 80% of the users.
 		// See https://plugins.jetbrains.com/docs/marketplace/product-versions-in-use-statistics.html for more information.
-		sinceBuild.set("221") // Version 2022.1
+		sinceBuild.set("223") // Version 2022.3
 		// Find last EAP version (the build version until the first dot):
 		// curl 'https://data.services.jetbrains.com/products/releases?code=IIU&code=IIC&code=PCP&code=PCC&latest=true&type=eap' 2>/dev/null|jq -r '.[][0].build'|cut -d . -f 1|sort -r|head -n 1
 		untilBuild.set(lastBuild)
@@ -121,6 +123,10 @@ tasks {
 		*/
 		//language=HTML
 		var changeLog = """
+			<p>Version 223.3.0:</p>
+			<ul data-version="223.3.0">
+				<li>Using IntelliJ version 2022.3.3 to test</li>
+			</ul>
 			<p>Version 221.4.2:</p>
 			<ul data-version="221.4.2">
 				<li>Improved the JSON-Schemata for <code>.avsc</code> and <code>.avpr</code> files</li>
