@@ -1,5 +1,3 @@
-@file:Suppress("SpellCheckingInspection")
-
 import org.jetbrains.intellij.tasks.RunPluginVerifierTask.FailureLevel
 import java.util.*
 
@@ -82,16 +80,18 @@ intellij {
 
 	// Extra plugin(s); not needed, but maybe useful during development:
 	plugins.add("markdown")
+	@Suppress("UNUSED_VARIABLE") val lombokPluginName = "Lombook Plugin" // Yes, the typo is part of the official name
+	@Suppress("UNUSED_VARIABLE") val editorConfigPluginName = "org.editorconfig.editorconfigjetbrains"
+	/* Other (bundled) plugins: */
 	/*
-	Other (bundled) plugins:
 	plugins.add("org.intellij.intelliLang")
 	plugins.add("Git4Idea")
 	plugins.add("com.intellij.tasks")
-	plugins.add("Lombook Plugin") // Yes, the typo is part of the official name
+	plugins.add(lombokPluginName)
 	plugins.add("org.intellij.plugins.markdown")
 	plugins.add("org.jetbrains.idea.maven")
 	plugins.add("org.jetbrains.kotlin")
-	plugins.add("org.editorconfig.editorconfigjetbrains")
+	plugins.add(editorConfigPluginName)
 	plugins.add("org.jetbrains.plugins.github")
 	plugins.add("org.jetbrains.idea.maven.model")
 	plugins.add("com.intellij.copyright")
