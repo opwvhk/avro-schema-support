@@ -79,7 +79,7 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 			String message = IdeBundle.message("plugin.manager.replace.plugin.0.by.plugin.1", offendingPluginName,
 					myName);
 
-			AvroIdlNotifications.showNotification(project, NotificationType.WARNING, true, title, message,
+			AvroIdlNotifications.showNotification(project, NotificationType.WARNING, title, message,
 					notification -> notification.addAction(
 									NotificationAction.createSimple(IdeBundle.message("button.disable"), () -> {
 										PluginManager.disablePlugin(OLD_PLUGIN_ID.getIdString());
@@ -107,18 +107,17 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 		};
 
         String notificationTitle = oldVersion == null ?
-                "Avro IDL Support " + newVersion + " installed." :
-                "Avro IDL Support updated to version " + newVersion;
+		        plugin.getName() + " " + newVersion + " installed." :
+		        plugin.getName() + " updated to version " + newVersion;
 
 		if (oldVersion != null && !oldVersion.equals(newVersion) && changeNotes != null) {
 			StringBuilder changes = collectNewChanges(oldVersion, changeNotes);
-            AvroIdlNotifications.showNotification(project, NotificationType.INFORMATION, false,
-					notificationTitle, "This is what has changed:</b><br/><br/>" + changes,
+            AvroIdlNotifications.showNotification(project, NotificationType.INFORMATION,
+		            notificationTitle, "This is what has changed:</b><br/><br/>" + changes,
 					addNotificationActions);
 		} else {
-			AvroIdlNotifications.showNotification(project, NotificationType.INFORMATION, true, notificationTitle,
-					plugin.getName() + " version " + newVersion + " was successfully installed.<br/>" +
-							"The actions point to useful next steps.", addNotificationActions);
+			AvroIdlNotifications.showNotification(project, NotificationType.INFORMATION, notificationTitle, null,
+					addNotificationActions);
 		}
 	}
 

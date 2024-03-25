@@ -348,7 +348,7 @@ public class AvroIdlPsiUtil {
 
 			@Override
 			public @NotNull Icon getIcon(boolean unused) {
-				return AvroIdlIcons.LOGO;
+				return AvroIdlIcons.AVDL_FILE;
 			}
 		};
 	}
@@ -369,7 +369,7 @@ public class AvroIdlPsiUtil {
 
 			@Override
 			public @NotNull Icon getIcon(boolean unused) {
-				return AvroIdlIcons.LOGO;
+				return AvroIdlIcons.AVRO_LOGO;
 			}
 		};
 	}
@@ -396,7 +396,7 @@ public class AvroIdlPsiUtil {
 
 			@Override
 			public @NotNull Icon getIcon(boolean unused) {
-				return AvroIdlIcons.LOGO;
+				return AvroIdlIcons.AVRO_LOGO;
 			}
 		};
 	}

@@ -48,7 +48,7 @@ public class AvroIdlEnumConstantReference extends AvroIdlAbstractReference {
 		return findConstants()
 				.filter(enumValue -> enumValue.getName() != null && !enumValue.getName().isBlank())
 				.map(enumValue -> LookupElementBuilder.create(enumValue.getName())
-						.withTypeText(enumValue.getContainingFile().getName(), AvroIdlIcons.LOGO, false))
+						.withTypeText(enumValue.getContainingFile().getName(), AvroIdlIcons.AVRO_LOGO, false))
 				.toArray();
 	}
 }

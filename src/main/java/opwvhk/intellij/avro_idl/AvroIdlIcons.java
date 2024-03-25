@@ -17,10 +17,11 @@ public class AvroIdlIcons {
 	@SuppressWarnings("GrazieInspection")
 	private static final Class<?> MY_CLASS_LOADER = AvroIdlIcons.class;
 	private static final IconManager ICON_MANAGER = IconManager.getInstance();
-	public static final Icon LOGO = ICON_MANAGER.getIcon("/icons/avroLogo16.svg", MY_CLASS_LOADER);
-	public static final Icon AVDL_FILE = LOGO;
-	public static final Icon AVSC_FILE = LOGO;
-	public static final Icon AVPR_FILE = ICON_MANAGER.getIcon("/icons/pigeon.svg", MY_CLASS_LOADER);
+	public static final Icon PLUGIN_ICON = ICON_MANAGER.getIcon("/icons/pigeon.svg", MY_CLASS_LOADER);
+	public static final Icon AVRO_LOGO = ICON_MANAGER.getIcon("/icons/avroLogo16.svg", MY_CLASS_LOADER);
+	public static final Icon AVDL_FILE = AVRO_LOGO;
+	public static final Icon AVSC_FILE = AVRO_LOGO;
+	public static final Icon AVPR_FILE = PLUGIN_ICON;
 
 	@Nullable
 	public static Icon getAvroIdlIcon(PsiElement element) {
@@ -59,7 +60,7 @@ public class AvroIdlIcons {
 	}
 
 	public static final class Nodes {
-		public static final Icon AVRO_RECORD = LOGO;
+		public static final Icon AVRO_RECORD = AVRO_LOGO;
 		public static final Icon AVRO_ERROR = ICON_MANAGER.getIcon("/icons/nodes/error.svg", MY_CLASS_LOADER);
 		public static final Icon AVRO_FIELD = ICON_MANAGER.getIcon("/icons/nodes/field.svg", MY_CLASS_LOADER);
 		public static final Icon AVRO_FIXED = ICON_MANAGER.getIcon("/icons/nodes/fixed.svg", MY_CLASS_LOADER);

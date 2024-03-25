@@ -18,7 +18,7 @@ public class AvroIdlColorSettingsPage implements ColorSettingsPage {
 	@Override
 	@Nullable
 	public Icon getIcon() {
-		return AvroIdlIcons.LOGO;
+		return AvroIdlIcons.PLUGIN_ICON;
 	}
 
 	@Override
