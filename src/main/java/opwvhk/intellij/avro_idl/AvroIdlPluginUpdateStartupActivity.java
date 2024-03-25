@@ -94,16 +94,16 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 	                                @NotNull String newVersion, @Nullable String oldVersion) {
 		String changeNotes = plugin.getChangeNotes();
 		Consumer<Notification> addNotificationActions = notification -> {
+			// Values for idToSelect are in searchableOptions.xml; use this XPath: /option/configurable[configurable_name="AvroIDL"]@id
+			// (note: searchableOptions.xml is created when building the plugin)
+			notification.addAction(NotificationAction.createSimple("Open preferences",
+					() -> ShowSettingsUtilImpl.showSettingsDialog(project, "", "Avro IDL")));
 			notification.addAction(NotificationAction.createSimple("Ask questions",
 					() -> BrowserLauncher.getInstance().browse(URI.create(
 							"https://github.com/opwvhk/avro-schema-support/discussions"))));
 			notification.addAction(NotificationAction.createSimple("Report issues",
 					() -> BrowserLauncher.getInstance()
 							.browse(URI.create("https://github.com/opwvhk/avro-schema-support/issues"))));
-			// Values for idToSelect are in searchableOptions.xml; use this XPath: /option/configurable[configurable_name="AvroIDL"]@id
-			// (note: searchableOptions.xml is created when building the plugin)
-			notification.addAction(NotificationAction.createSimple("Open preferences",
-					() -> ShowSettingsUtilImpl.showSettingsDialog(project, "", "Avro IDL")));
 		};
 
         String notificationTitle = oldVersion == null ?
