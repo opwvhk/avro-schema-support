@@ -19,7 +19,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "223.3.0-SNAPSHOT"
+version = "221.4.3"
 
 repositories {
 	mavenCentral()
@@ -27,7 +27,8 @@ repositories {
 }
 java {
 	toolchain {
-		languageVersion.set(JavaLanguageVersion.of(17))
+		languageVersion.set(JavaLanguageVersion.of(11))
+		//languageVersion.set(JavaLanguageVersion.of(17))
 	}
 }
 
@@ -62,7 +63,8 @@ intellij {
 	// Last minor versions differ, and the PSIViewer versions are not regular
 	// Also, tests require the base plugin (java/PythonCore; so don't remove it even if the plugin does not need it)
 
-	type.set("IC"); version.set("2022.3.3"); plugins.addAll("com.intellij.java", "PsiViewer:2022.3")
+	type.set("IC"); version.set("2022.1.4"); plugins.addAll("com.intellij.java", "PsiViewer:221-SNAPSHOT")
+	//type.set("IC"); version.set("2022.3.3"); plugins.addAll("com.intellij.java", "PsiViewer:2022.3")
 	//type.set("IC"); version.set("2023.1.6"); plugins.addAll("com.intellij.java", "PsiViewer:231-SNAPSHOT")
 	// From here, refactor code for compatibility / deprecated code usage
 	//type.set("IC"); version.set("2023.2.6"); plugins.addAll("com.intellij.java", "PsiViewer:232.2")
@@ -107,11 +109,16 @@ tasks {
 		systemProperty("idea.force.use.core.classloader", "true")
 	}
 
+	runIde {
+		jvmArgs("-XX:+UnlockDiagnosticVMOptions")
+	}
+
 	patchPluginXml {
 		version.set(project.version.toString())
 		// Notes on versions: usually the last 3 major releases represent about 80% of the users.
 		// See https://plugins.jetbrains.com/docs/marketplace/product-versions-in-use-statistics.html for more information.
-		sinceBuild.set("223") // Version 2022.3
+		sinceBuild.set("221") // Version 2022.1
+		//sinceBuild.set("223") // Version 2022.3
 		// Find last EAP version (the build version until the first dot):
 		// curl 'https://data.services.jetbrains.com/products/releases?code=IIU&code=IIC&code=PCP&code=PCC&latest=true&type=eap' 2>/dev/null|jq -r '.[][0].build'|cut -d . -f 1|sort -r|head -n 1
 		untilBuild.set(lastBuild)
@@ -120,11 +127,17 @@ tasks {
 		<li>Added inspection suggesting the schema syntax where appropriate</li>
 		</ul>
 		*/
+		/*
+		<p>Version 223.3.0:</p>
+		<ul data-version="223.3.0">
+			<li>Using IntelliJ version 2022.3.3 to test</li>
+		</ul>
+		*/
 		//language=HTML
 		var changeLog = """
-			<p>Version 223.3.0:</p>
-			<ul data-version="223.3.0">
-				<li>Using IntelliJ version 2022.3.3 to test</li>
+			<p>Version 221.4.3:</p>
+			<ul data-version="221.4.2">
+				<li>Fix regression in update notifications</li>
 			</ul>
 			<p>Version 221.4.2:</p>
 			<ul data-version="221.4.2">

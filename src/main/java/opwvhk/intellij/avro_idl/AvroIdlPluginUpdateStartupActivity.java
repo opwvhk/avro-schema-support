@@ -71,7 +71,8 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 		IdeaPluginDescriptor descriptor = PluginManagerCore.getPlugin(OLD_PLUGIN_ID);
 		if (descriptor != null && !PluginManagerCore.isDisabled(OLD_PLUGIN_ID)) {
 
-			// The old Avro plugin by Abigail Buccaneer is both installed and enabled. This can cause problems, so offer to disable it.
+			// The old Avro plugin by Abigail Buccaneer is both installed and enabled.
+			// This can cause problems, so offer to disable it.
 
 			String offendingPluginName = descriptor.getName();
 			// Reuses the strings used by the PluginReplacement extension point, but now the other way around.
@@ -80,12 +81,10 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 					myName);
 
 			AvroIdlNotifications.showNotification(project, NotificationType.WARNING, title, message,
-					notification -> notification.addAction(
-									NotificationAction.createSimple(IdeBundle.message("button.disable"), () -> {
-										PluginManager.disablePlugin(OLD_PLUGIN_ID.getIdString());
-										notification.expire();
-									}))
-							.addAction(NotificationAction.createSimple(Messages.getNoButton(), notification::expire)));
+					notification -> notification
+							.addAction(NotificationAction.createSimpleExpiring(IdeBundle.message("button.disable"),
+									() -> PluginManager.disablePlugin(OLD_PLUGIN_ID.getIdString())))
+							.addAction(NotificationAction.createSimpleExpiring(Messages.getNoButton(), () -> {})));
 		}
 	}
 
@@ -93,6 +92,9 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 	private void notifyUserOfUpdate(@NotNull Project project, @NotNull IdeaPluginDescriptor plugin,
 	                                @NotNull String newVersion, @Nullable String oldVersion) {
 		String changeNotes = plugin.getChangeNotes();
+		String notificationTitle = oldVersion == null ?
+				plugin.getName() + " " + newVersion + " installed." :
+				plugin.getName() + " updated to version " + newVersion;
 		Consumer<Notification> addNotificationActions = notification -> {
 			// Values for idToSelect are in searchableOptions.xml; use this XPath: /option/configurable[configurable_name="AvroIDL"]@id
 			// (note: searchableOptions.xml is created when building the plugin)
@@ -106,15 +108,13 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 							.browse(URI.create("https://github.com/opwvhk/avro-schema-support/issues"))));
 		};
 
-        String notificationTitle = oldVersion == null ?
-		        plugin.getName() + " " + newVersion + " installed." :
-		        plugin.getName() + " updated to version " + newVersion;
-
-		if (oldVersion != null && !oldVersion.equals(newVersion) && changeNotes != null) {
-			StringBuilder changes = collectNewChanges(oldVersion, changeNotes);
-            AvroIdlNotifications.showNotification(project, NotificationType.INFORMATION,
-		            notificationTitle, "This is what has changed:</b><br/><br/>" + changes,
-					addNotificationActions);
+		if (oldVersion != null) {
+			CharSequence changes = collectNewChanges(oldVersion, changeNotes);
+			if (changes.length() > 0) {
+				AvroIdlNotifications.showNotification(project, NotificationType.INFORMATION,
+						notificationTitle, "This is what has changed:</b><br/><br/>" + changes,
+						addNotificationActions);
+			}
 		} else {
 			AvroIdlNotifications.showNotification(project, NotificationType.INFORMATION, notificationTitle, null,
 					addNotificationActions);
@@ -122,7 +122,11 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 	}
 
 	@NotNull
-	private static StringBuilder collectNewChanges(@NotNull String oldVersion, String changeNotes) {
+	private static CharSequence collectNewChanges(@NotNull String oldVersion, String changeNotes) {
+		if (changeNotes == null) {
+			return "";
+		}
+
 		// Collect the changes since the previously installed version (but for at most 3 versions).
 		StringBuilder changes = new StringBuilder();
 		Matcher matcher = CHANGE_NOTES_PATTERN.matcher(changeNotes);
