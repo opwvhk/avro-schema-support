@@ -19,7 +19,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "221.4.3"
+version = "223.3.0-SNAPSHOT"
 
 repositories {
 	mavenCentral()
@@ -27,8 +27,8 @@ repositories {
 }
 java {
 	toolchain {
-		languageVersion.set(JavaLanguageVersion.of(11))
-		//languageVersion.set(JavaLanguageVersion.of(17))
+		//languageVersion.set(JavaLanguageVersion.of(11))
+		languageVersion.set(JavaLanguageVersion.of(17))
 	}
 }
 
@@ -63,8 +63,8 @@ intellij {
 	// Last minor versions differ, and the PSIViewer versions are not regular
 	// Also, tests require the base plugin (java/PythonCore; so don't remove it even if the plugin does not need it)
 
-	type.set("IC"); version.set("2022.1.4"); plugins.addAll("com.intellij.java", "PsiViewer:221-SNAPSHOT")
-	//type.set("IC"); version.set("2022.3.3"); plugins.addAll("com.intellij.java", "PsiViewer:2022.3")
+	//type.set("IC"); version.set("2022.1.4"); plugins.addAll("com.intellij.java", "PsiViewer:221-SNAPSHOT")
+	type.set("IC"); version.set("2022.3.3"); plugins.addAll("com.intellij.java", "PsiViewer:2022.3")
 	//type.set("IC"); version.set("2023.1.6"); plugins.addAll("com.intellij.java", "PsiViewer:231-SNAPSHOT")
 	// From here, refactor code for compatibility / deprecated code usage
 	//type.set("IC"); version.set("2023.2.6"); plugins.addAll("com.intellij.java", "PsiViewer:232.2")
@@ -127,14 +127,13 @@ tasks {
 		<li>Added inspection suggesting the schema syntax where appropriate</li>
 		</ul>
 		*/
-		/*
-		<p>Version 223.3.0:</p>
-		<ul data-version="223.3.0">
-			<li>Using IntelliJ version 2022.3.3 to test</li>
-		</ul>
-		*/
 		//language=HTML
 		var changeLog = """
+			<p>Version 223.3.0:</p>
+			<ul data-version="223.3.0">
+				<li>Using IntelliJ version 2022.3.3 to test</li>
+				<li>Fix cosmetic bug in error report</li>
+			</ul>
 			<p>Version 221.4.3:</p>
 			<ul data-version="221.4.2">
 				<li>Fix regression in update notifications</li>

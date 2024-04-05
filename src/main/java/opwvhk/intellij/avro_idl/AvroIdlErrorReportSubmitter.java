@@ -44,8 +44,8 @@ import java.util.regex.Pattern;
 import static com.intellij.openapi.diagnostic.SubmittedReportInfo.SubmissionStatus.*;
 
 public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
-	private static final Pattern EXCEPTION_MESSAGE = Pattern.compile("^[^:]++: ((?:(?!\\R\t).)*+)\\R\t");
-	private static final Pattern FIRST_STACK_LINE = Pattern.compile("^(?:(?!\\R\t).)*+\\R\t((?:(?!\\R\t).)*+)\\R\t");
+	private static final Pattern EXCEPTION_MESSAGE = Pattern.compile("^[^:]++:\\s*+((?:(?!\\R).)*+)");
+	private static final Pattern FIRST_STACK_LINE = Pattern.compile("^(?:(?!\\R).)*+\\R\\s*+((?:(?!\\R).)*+)");
 	private static final String MARKDOWN_GITHUB_FAILURE = "Please file this bug report at: https://github.com/%s/issues/new\n\n%s";
 
 	private final String repository = "opwvhk/avro-schema-support";
@@ -86,8 +86,7 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 				GHIssue issue = findIssue(gitHub, searchTerm);
 				boolean duplicate = issue != null;
 				if (!duplicate) {
-					issue = createIssue(gitHub, "Crash Report " + getExceptionMessage(errorMessage), markdownText,
-							"crash report");
+					issue = createIssue(gitHub, "Crash Report: " + errorMessage, markdownText, "crash report");
 				}
 				String issueUrl = issue.getHtmlUrl().toExternalForm();
 				int issueNumber = issue.getNumber();
@@ -172,10 +171,6 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 					.append(PluginManagerCore.isDisabled(descriptor.getPluginId()) ? "; disabled" : "")
 					.append(")\n");
 		}
-	}
-
-	private static String getExceptionMessage(CharSequence text) {
-		return getFirstMatchingGroup(EXCEPTION_MESSAGE, text);
 	}
 
 	private static String getFirstMatchingGroup(Pattern pattern, CharSequence text) {
