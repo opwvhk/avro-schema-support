@@ -29,7 +29,7 @@ Writing a review in JetBrains Marketplace is very valuable. Reviews:
 
 **If you like what you see:**
 
-Please go to the [Avro Schema Support](https://plugins.jetbrains.com/plugin/15728-apache-avro-idl-schema-support) plugin
+Please go to the [Avro Schema Support](https://plugins.jetbrains.com/plugin/15728-apache-avro-schema-support) plugin
 page in the JetBrains Marketplace. Log in with your JetBrains account and write a review.
 
 **If you find that something is not working as you expect it to work:**
