@@ -500,6 +500,7 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 	public void _testDocumentation() {
 		myFixture.configureByFiles("DocumentationTestData.java", "DocumentationTestData.simple");
 		final PsiElement originalElement = myFixture.getElementAtCaret();
+		// TODO: Upgrade API when requiring at least 2023.1
 		PsiElement element = DocumentationManager
 				.getInstance(getProject())
 				.findTargetElement(myFixture.getEditor(), originalElement.getContainingFile(), originalElement);
