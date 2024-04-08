@@ -367,7 +367,7 @@
 				},
 				"response": {
 					"description": "Message response type; can be any schema, and void is an alias for the null type",
-					"anyOf": [
+					"oneOf": [
 						{"type": "string", "const": "void"},
 						{"$ref": "#/definitions/schema"}
 					]
