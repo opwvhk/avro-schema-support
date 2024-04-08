@@ -9,11 +9,13 @@ import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationAction;
 import com.intellij.notification.NotificationType;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.ui.Messages;
 import opwvhk.intellij.avro_idl.actions.AvroIdlNotifications;
+import opwvhk.intellij.avro_idl.language.AvroIdlUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,6 +34,8 @@ import static java.util.Objects.requireNonNull;
  * and the installation account are inaccessible).</p>
  */
 public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbAware {
+	private static final Logger LOG = Logger.getInstance(AvroIdlUtil.class);
+
 	private static final PluginId MY_PLUGIN_ID = PluginId.getId("net.sf.opk.avro-schema-support");
 	public static final PluginId OLD_PLUGIN_ID = PluginId.getId("claims.bold.intellij.avro");
 	private static final String SNAPSHOT_SUFFIX = "-SNAPSHOT";
@@ -52,19 +56,10 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 
 		String oldVersion = settings.getPluginVersion();
 		String newVersion = versionOf(plugin);
+		LOG.info("Collecting changes for the Avro Schema Plugin (%s) since version %s".formatted(newVersion, oldVersion));
 
 		notifyUserOfUpdate(project, plugin, newVersion, oldVersion);
 		settings.setPluginVersion(newVersion);
-	}
-
-	@NotNull
-	private String versionOf(IdeaPluginDescriptor plugin) {
-		String pluginVersion = plugin.getVersion();
-		if (pluginVersion.endsWith(SNAPSHOT_SUFFIX)) {
-			return pluginVersion.substring(0, pluginVersion.length() - SNAPSHOT_SUFFIX.length());
-		} else {
-			return pluginVersion;
-		}
 	}
 
 	private void checkForReplacedPlugin(@NotNull Project project, String myName) {
@@ -85,6 +80,16 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 							.addAction(NotificationAction.createSimpleExpiring(IdeBundle.message("button.disable"),
 									() -> PluginManager.disablePlugin(OLD_PLUGIN_ID.getIdString())))
 							.addAction(NotificationAction.createSimpleExpiring(Messages.getNoButton(), () -> {})));
+		}
+	}
+
+	@NotNull
+	private String versionOf(IdeaPluginDescriptor plugin) {
+		String pluginVersion = plugin.getVersion();
+		if (pluginVersion.endsWith(SNAPSHOT_SUFFIX)) {
+			return pluginVersion.substring(0, pluginVersion.length() - SNAPSHOT_SUFFIX.length());
+		} else {
+			return pluginVersion;
 		}
 	}
 
@@ -109,8 +114,8 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 		};
 
 		if (oldVersion != null) {
-			CharSequence changes = collectNewChanges(oldVersion, changeNotes);
-			if (changes.length() > 0) {
+			CharSequence changes = collectNewChanges(newVersion, oldVersion, changeNotes);
+			if (!changes.isEmpty()) {
 				AvroIdlNotifications.showNotification(project, NotificationType.INFORMATION,
 						notificationTitle, "This is what has changed:</b><br/><br/>" + changes,
 						addNotificationActions);
@@ -122,8 +127,11 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 	}
 
 	@NotNull
-	private static CharSequence collectNewChanges(@NotNull String oldVersion, String changeNotes) {
-		if (changeNotes == null) {
+	private static CharSequence collectNewChanges(@NotNull String newVersion, @NotNull String oldVersion,
+	                                              String changeNotes) {
+		// Check if we need to do anything. Change notes are only missing in case of a programmer error,
+		// and the 2nd check is to guard against bugs in the change notes.
+		if (changeNotes == null || newVersion.equals(oldVersion)) {
 			return "";
 		}
 
@@ -135,7 +143,7 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 				.limit(3)
 				.forEach(mr -> {
 					final String version = mr.group(1);
-					changes.append(version).append(":").append(matcher.group());
+					changes.append("<p>").append(version).append(":</p>").append(matcher.group());
 				});
 		return changes;
 	}
