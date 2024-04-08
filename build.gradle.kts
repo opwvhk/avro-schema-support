@@ -204,7 +204,7 @@ tasks {
 		//	<ul data-version="213.4.0">
 		//	<li>Added code to help diagnose issues #39, #43 & #44 (NoClassDefFoundError for existing class)</li>
 		//	<li>Implement #42: Renaming a schema or field now adds an alias for the old name</li>
-		//	<li>Add new settings for #42, making the behaviour congigurable (by default, only fields receive an alias)</li>
+		//	<li>Add new settings for #42, making the behaviour configurable (by default, only fields receive an alias)</li>
 		//	</ul>
 		//	"""
 		//changeLog += """

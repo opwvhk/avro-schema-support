@@ -11,7 +11,7 @@ When you wish to contribute, please open an issue. Even a question can be a help
 
 Other things, such as bug reports, pull requests, etc. are also welcome.
 
-**Working on your first Pull Request?** You can learn how from this *free* series [How to Contribute to an Open Source Project on GitHub](https://kcd.im/pull-request)
+**Working on your first Pull Request?** You can learn how from this *free* series [How to Contribute to an Open Source Project on GitHub](https://kcd.im/pull-request).
 
 The short version:
 1. Fork the repository
