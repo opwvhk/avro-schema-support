@@ -26,7 +26,16 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.kohsuke.github.*;
+import org.kohsuke.github.GHApp;
+import org.kohsuke.github.GHAppInstallation;
+import org.kohsuke.github.GHAppInstallationToken;
+import org.kohsuke.github.GHDirection;
+import org.kohsuke.github.GHIssue;
+import org.kohsuke.github.GHIssueBuilder;
+import org.kohsuke.github.GHIssueSearchBuilder;
+import org.kohsuke.github.GitHub;
+import org.kohsuke.github.GitHubBuilder;
+import org.kohsuke.github.PagedSearchIterable;
 
 import java.awt.*;
 import java.io.IOException;
