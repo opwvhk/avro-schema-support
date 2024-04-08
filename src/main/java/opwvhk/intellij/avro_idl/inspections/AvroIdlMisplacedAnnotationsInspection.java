@@ -29,28 +29,18 @@ public class AvroIdlMisplacedAnnotationsInspection extends BaseAvroIdlInspection
 			}
 		} else if (name != null) {
 			// This method needs the name, but annotations without a name are already parse errors anyway.
-			final boolean isMisplaced;
-			switch (name) {
-				case "aliases":
-					isMisplaced = !(parent instanceof AvroIdlProtocolDeclaration ||
-							parent instanceof AvroIdlNamedSchemaDeclaration ||
-							parent instanceof AvroIdlVariableDeclarator);
-					break;
-				case "order":
-					isMisplaced = !(parent instanceof AvroIdlVariableDeclarator);
-					break;
-				case "logicalType":
-					isMisplaced =
-							!(parent instanceof AvroIdlType) && !(parent instanceof AvroIdlNamedSchemaDeclaration);
-					break;
-				case "precision":
-				case "scale":
-					// These annotations have a meaning combination with @logicalType("decimal"), but may occur by themselves as well.
-				default:
+			final boolean isMisplaced = switch (name) {
+				case "aliases" -> !(parent instanceof AvroIdlProtocolDeclaration ||
+						parent instanceof AvroIdlNamedSchemaDeclaration ||
+						parent instanceof AvroIdlVariableDeclarator);
+				case "order" -> !(parent instanceof AvroIdlVariableDeclarator);
+				case "logicalType" ->
+						!(parent instanceof AvroIdlType) && !(parent instanceof AvroIdlNamedSchemaDeclaration);
+				// These annotations have a meaning combination with @logicalType("decimal"), but may occur by themselves as well.
+				default ->
 					// Annotations with a different name are custom annotations and hence not checked.
-					isMisplaced = false;
-					break;
-			}
+						false;
+			};
 			if (isMisplaced) {
 				quickFix = new RemoveAnnotationQuickFix(element, name);
 			}

@@ -72,8 +72,7 @@ public class AvroIdlStructureViewElement extends PsiTreeElementBase<PsiElement> 
 	public String getPresentableText() {
 		if (getValue() instanceof AvroIdlNamedSchemaDeclaration) {
 			return text(((AvroIdlNamedSchemaDeclaration) getValue()).getFullName());
-		} else if (getValue() instanceof AvroIdlMessageDeclaration) {
-			final AvroIdlMessageDeclaration messageDeclaration = (AvroIdlMessageDeclaration) getValue();
+		} else if (getValue() instanceof AvroIdlMessageDeclaration messageDeclaration) {
 			String messageName = text(messageDeclaration.getName());
 			StringJoiner parameters = new StringJoiner(", ");
 			for (AvroIdlFormalParameter formalParameter : messageDeclaration.getFormalParameterList()) {
@@ -94,8 +93,7 @@ public class AvroIdlStructureViewElement extends PsiTreeElementBase<PsiElement> 
 			return text("%s(%s)%s", messageName, parameters, messageAttributes);
 		} else if (getValue() instanceof PsiNamedElement) {
 			return text(((PsiNamedElement) getValue()).getName());
-		} else if (getValue() instanceof AvroIdlImportDeclaration) {
-			final AvroIdlImportDeclaration value = (AvroIdlImportDeclaration) getValue();
+		} else if (getValue() instanceof AvroIdlImportDeclaration value) {
 			final AvroIdlImportType importType = value.getImportType();
 			final String imported = AvroIdlUtil.getJsonString(value.getJsonStringLiteral());
 			if (importType == null) {

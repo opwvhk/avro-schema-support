@@ -266,17 +266,7 @@ public class AvroIdlPsiUtil {
 			final IElementType importElementType = importType.map(PsiElement::getFirstChild).map(PsiElement::getNode)
 					.map(ASTNode::getElementType).orElse(null);
 
-			final FileType[] suitableFileTypes;
-			if (importElementType == IDL) {
-				suitableFileTypes = new FileType[]{AvroIdlFileType.INSTANCE};
-			} else if (importElementType == PROTOCOL) {
-				suitableFileTypes = new FileType[]{AvroProtocolFileType.INSTANCE};
-			} else if (importElementType == SCHEMA) {
-				suitableFileTypes = new FileType[]{AvroSchemaFileType.INSTANCE};
-			} else {
-				suitableFileTypes = new FileType[]{AvroIdlFileType.INSTANCE, AvroProtocolFileType.INSTANCE,
-						AvroSchemaFileType.INSTANCE};
-			}
+			final FileType[] suitableFileTypes = getSuitableFileTypes(importElementType);
 
 			// Copied from FileReferenceSet(PsiElement) to add the suitableFileTypes parameter
 			TextRange range = ElementManipulators.getValueTextRange(owner);
@@ -290,6 +280,21 @@ public class AvroIdlPsiUtil {
 		} else {
 			return null;
 		}
+	}
+
+	private static FileType @NotNull [] getSuitableFileTypes(IElementType importElementType) {
+		final FileType[] suitableFileTypes;
+		if (importElementType == IDL) {
+			suitableFileTypes = new FileType[]{AvroIdlFileType.INSTANCE};
+		} else if (importElementType == PROTOCOL) {
+			suitableFileTypes = new FileType[]{AvroProtocolFileType.INSTANCE};
+		} else if (importElementType == SCHEMA) {
+			suitableFileTypes = new FileType[]{AvroSchemaFileType.INSTANCE};
+		} else {
+			suitableFileTypes = new FileType[]{AvroIdlFileType.INSTANCE, AvroProtocolFileType.INSTANCE,
+					AvroSchemaFileType.INSTANCE};
+		}
+		return suitableFileTypes;
 	}
 
 	@Nullable

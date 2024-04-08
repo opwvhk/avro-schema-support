@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class AvroIdlCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
 	@Override
-	public @Nullable CustomCodeStyleSettings createCustomSettings(CodeStyleSettings settings) {
+	public @Nullable CustomCodeStyleSettings createCustomSettings(@NotNull CodeStyleSettings settings) {
 		return new AvroIdlCodeStyleSettings(settings);
 	}
 
@@ -30,7 +30,7 @@ public class AvroIdlCodeStyleSettingsProvider extends CodeStyleSettingsProvider 
 	                                                @NotNull CodeStyleSettings modelSettings) {
 		return new CodeStyleAbstractConfigurable(settings, modelSettings, this.getConfigurableDisplayName()) {
 			@Override
-			protected CodeStyleAbstractPanel createPanel(CodeStyleSettings settings) {
+			protected @NotNull CodeStyleAbstractPanel createPanel(@NotNull CodeStyleSettings settings) {
 				return new AvroIdlCodeStyleMainPanel(getCurrentSettings(), settings);
 			}
 		};

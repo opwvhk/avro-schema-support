@@ -94,7 +94,7 @@ public class AvroIdlElementFactory {
 			buffer.append(String.format("// Optional: main schema (using it creates a .avsc equivalent file)%n"));
 			buffer.append(String.format("schema %s;%n", firstSchemaDeclaration));
 		}
-		if (buffer.length() > 0) {
+		if (!buffer.isEmpty()) {
 			buffer.append(String.format("%n"));
 		}
 		return createDummyFile(buffer);

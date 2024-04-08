@@ -33,8 +33,7 @@ public class AvroIdlNamingConventionInspection extends AbstractNamingConventionI
 		return new PsiElementVisitor() {
 			@Override
 			public void visitElement(@NotNull PsiElement element) {
-				if (element instanceof AvroIdlNameIdentifierOwner) {
-					AvroIdlNameIdentifierOwner owner = (AvroIdlNameIdentifierOwner) element;
+				if (element instanceof AvroIdlNameIdentifierOwner owner) {
 					String name = owner.getName();
 					if (name != null) {
 						checkName(owner, name, holder);

@@ -88,60 +88,61 @@ public class AvroIdlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleS
 
 	@Override
 	public String getCodeSample(@NotNull SettingsType settingsType) {
-		return "namespace org.example;\n" +
-				"\n" +
-				"\n" +
-				"\n" +
-				"schema array<Employee>;\n" +
-				"\n" +
-				"\n" +
-				"\n" +
-				"import idl \"simple.avdl\";\n" +
-				"\n" +
-				"\n" +
-				"\n" +
-				"import idl \"reserved_words.avdl\";\n" +
-				"\n" +
-				"\n" +
-				"\n" +
-				" enum ContractType {\n" +
-				"    TEMPORARY," +
-				"\n" +
-				"\n" +
-				"\n" +
-				"    FIXED\n" +
-				"\n" +
-				"\n" +
-				"\n" +
-				"} = TEMPORARY;\n" +
-				"\n" +
-				"\n" +
-				"\n" +
-				"@my-annotation([\"any\", \"json\"])\n" +
-				"record Employee {\n" +
-				"\n" +
-				"\n" +
-				"\n" +
-				"    string name;\n" +
-				"\n" +
-				"\n" +
-				"\n" +
-				"    Employee? manager = null;\n" +
-				"\n" +
-				"\n" +
-				"\n" +
-				"    ContractType contract = \"FIXED\";\n" +
-				"\n" +
-				"\n" +
-				"\n" +
-				"    decimal(9, 2) salary;\n" +
-				"\n" +
-				"\n" +
-				"\n" +
-				"    array<string> skills = [];\n" +
-				"\n" +
-				"\n" +
-				"\n" +
-				"}";
+		return """
+		       namespace org.example;
+
+
+
+		       schema array<Employee>;
+
+
+
+		       import idl "simple.avdl";
+
+
+
+		       import idl "reserved_words.avdl";
+
+
+
+		        enum ContractType {
+		           TEMPORARY,\
+
+
+
+		           FIXED
+
+
+
+		       } = TEMPORARY;
+
+
+
+		       @my-annotation(["any", "json"])
+		       record Employee {
+
+
+
+		           string name;
+
+
+
+		           Employee? manager = null;
+
+
+
+		           ContractType contract = "FIXED";
+
+
+
+		           decimal(9, 2) salary;
+
+
+
+		           array<string> skills = [];
+
+
+
+		       }""";
 	}
 }

@@ -56,6 +56,11 @@ abstract class ConversionActionBase extends DumbAwareAction {
 		this.destinationFileType = destinationFileType;
 	}
 
+	@Override
+	public @NotNull ActionUpdateThread getActionUpdateThread() {
+		return ActionUpdateThread.BGT;
+	}
+
 	protected void convertFile(@NotNull Project project, @NotNull ConsoleView console, @NotNull VirtualFile file) {
 		throw new UnsupportedOperationException(
 				"Cannot convert file; please override convertFile(Project, ConsoleView, VirtualFile) or convertFiles(Project, ConsoleView, List<VirtualFile>)");
@@ -132,8 +137,7 @@ abstract class ConversionActionBase extends DumbAwareAction {
 		final List<String> result = new ArrayList<>();
 		final List<FileNameMatcher> associations = FileTypeManager.getInstance().getAssociations(fileType);
 		for (FileNameMatcher association : associations) {
-			if (association instanceof ExtensionFileNameMatcher) {
-				ExtensionFileNameMatcher extensionFileNameMatcher = (ExtensionFileNameMatcher) association;
+			if (association instanceof ExtensionFileNameMatcher extensionFileNameMatcher) {
 				result.add(extensionFileNameMatcher.getExtension());
 			}
 		}

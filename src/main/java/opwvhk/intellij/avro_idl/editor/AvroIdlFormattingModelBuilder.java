@@ -151,10 +151,4 @@ public class AvroIdlFormattingModelBuilder implements FormattingModelBuilder {
 		return FormattingModelProvider.createFormattingModelForPsiFile(psiElement.getContainingFile(), block,
 				codeStyleSettings);
 	}
-
-	@Override
-	@Nullable
-	public TextRange getRangeAffectingIndent(PsiFile psiFile, int i, ASTNode astNode) {
-		return null;
-	}
 }
