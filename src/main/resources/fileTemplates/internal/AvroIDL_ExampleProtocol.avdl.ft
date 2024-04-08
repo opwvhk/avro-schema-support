@@ -49,11 +49,11 @@ protocol ${NAME} {
 	 */
 	record LogicalTypes {
 		// Hardcoded logical types:
-		decimal(6,2)acurateNumber;
+		decimal(6,2) accurateNumber;
 		uuid aUniqueIdentifier;
 		date aDate;
 		time_ms aTimeInMilliseconds;
-		timestamp_ms aTimeInMilliseconds;
+		timestamp_ms aTimestampInMilliseconds;
 		local_timestamp_ms aTimestamp;
 		// You can apply any logical type to its underlying representation
 		@logicalType("time-micros")
@@ -61,7 +61,7 @@ protocol ${NAME} {
 		@logicalType("decimal")
 		@precision(6)
 		@scale(2)
-		bytes acurateNumber;
+		bytes accurateNumber2;
 	}
 
 	/**
@@ -73,8 +73,8 @@ protocol ${NAME} {
 		// Complex union; probably not useful when generating code. The default value MUST validate as the first type.
 		union{string, date, int} dateDescription = "tomorrow";
 		// Most common unions: make a field optional
-		union{null, string} defaultsToEmpty = null;
-		union{string, null} defaultsToSomeText = "default value";
+		string? defaultsToEmpty = null;
+		string? defaultsToSomeText = "default value";
 		// Alternative, shorthand syntax (since Avro 1.11.1): translates to union{null, ??? } or union{ ??? ,null} depending on the default value
 		string? defaultsToEmptyNew = null;
 		string? defaultsToSomeTextNew = "default value";
