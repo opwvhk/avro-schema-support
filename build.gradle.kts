@@ -1,3 +1,4 @@
+import org.gradle.tooling.BuildException
 import org.jetbrains.intellij.tasks.RunPluginVerifierTask.FailureLevel
 import java.util.*
 
@@ -354,7 +355,31 @@ tasks {
 		//   jq -r 'to_entries|map({key,"value":.value|map({majorVersion,version}|select(.majorVersion|test("202.\\..")))|unique|group_by(.majorVersion)|map(last(.[]))|map(.version)}|{key,"version":.value[]}|(.key+"-"+.version))|.[]'
 	}
 
+	/** Fail the build if it has a SNAPSHOT version */
+	register<DefaultTask>("requireNonSnapshotBuild") {
+		doFirst {
+			val version = project.version.toString()
+			if (version == "unspecified") {
+				throw GradleException("No version set")
+			}
+			if (version.endsWith("-SNAPSHOT")) {
+				throw GradleException("Cannot publish snapshot builds")
+			}
+		}
+	}
+
+	/** Copies files from "build/distributions" to "demo" directory */
+	register<Copy>("archiveBuildArtifact") {
+		println("Archiving Build Artifacts")
+		from(layout.buildDirectory.dir("distributions"))
+		include("**/*.*")
+		into(layout.projectDirectory.dir("../archive-avro-schema-support"))
+	}
+
 	publishPlugin {
+		dependsOn("requireNonSnapshotBuild")
+		finalizedBy("archiveBuildArtifact")
+
 		// jetbrainsToken is set in ~/.gradle/gradle.properties, so the secret is not stored in git
 		token.set(providers.gradleProperty("jetbrainsToken"))
 	}
