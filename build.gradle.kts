@@ -134,8 +134,10 @@ tasks {
 				<li>Using IntelliJ version 2022.3.3 to test</li>
 				<li>Fix cosmetic bug in error report</li>
 			</ul>
+		"""
+		changeLog += """
 			<p>Version 221.4.3:</p>
-			<ul data-version="221.4.2">
+			<ul data-version="221.4.3">
 				<li>Fix regression in update notifications</li>
 			</ul>
 			<p>Version 221.4.2:</p>
@@ -152,57 +154,59 @@ tasks {
 			<ul data-version="221.4.0">
 				<li>Using IntelliJ version 2021.4 to test</li>
 			</ul>
-			<p>Version 213.5.3:</p>
-			<ul data-version="213.5.3">
-				<li>Improved grammar (string literal syntax)</li>
-				<li>Implemented better symbols (adds symbol search)</li>
-				<li>Fix #106: converting to IDL now handles optional collections correctly
-			</ul>
-			<p>Version 213.5.2:</p>
-			<ul data-version="213.5.2">
-				<li>Improved grammar (fixes #82, #83)</li>
-				<li>Added duplicate name detection (fixes #84; does not evaluate aliases)</li>
-				<li>Fixed #91: improper range in JSON string literal</li>
-				<li>Added reference detection to JSON strings other than in import statements (#92)</li>
-			</ul>
-			<p>Version 213.5.1:</p>
-			<ul data-version="213.5.1">
-				<li>Upgraded dependencies</li>
-			</ul>
-			"""
-		changeLog += """
-			<p>Version 213.5.0:</p>
-			<ul data-version="213.5.0">
-			<li>
-				Renamed internal language ID (issue #78).<br/>
-				<b>This invalidates previously generated <code>.editorconfig</code> settings!</b><br/>
-				To fix, replace "ij_avro idl_" with "ij_avroidl_" in your <code>.editorconfig</code> files.
-			</li>
-			<li>Added disposed check in menu actions (issue #73)</li>
-			</ul>
-			"""
-		changeLog += """
-			<p>Version 213.4.3:</p>
-			<ul data-version="213.4.3">
-			<li>Fixed issue #77: editor support for angle brackets was broken</li>
-			</ul>
-			<p>Version 213.4.2:</p>
-			<ul data-version="213.4.2">
-			<li>Updated API token for crash reporting</li>
-			</ul>
-			<p>Version 213.4.1:</p>
-			<ul data-version="213.4.1">
-			<li>Fix #64 (bug in formatting preferences)</li>
-			<li>Layout change for code style tab "Other"</li>
-			<li>Reverted code to help diagnose crashes</li>
-			</ul>
-			<p>Version 213.4.0:</p>
-			<ul data-version="213.4.0">
-			<li>Added code to help diagnose issues #39, #43 & #44 (NoClassDefFoundError for existing class)</li>
-			<li>Implement #42: Renaming a schema or field now adds an alias for the old name</li>
-			<li>Add new settings for #42, making the behaviour congigurable (by default, only fields receive an alias)</li>
-			</ul>
-			"""
+		"""
+		//changeLog += """
+		//	<p>Version 213.5.3:</p>
+		//	<ul data-version="213.5.3">
+		//		<li>Improved grammar (string literal syntax)</li>
+		//		<li>Implemented better symbols (adds symbol search)</li>
+		//		<li>Fix #106: converting to IDL now handles optional collections correctly
+		//	</ul>
+		//	<p>Version 213.5.2:</p>
+		//	<ul data-version="213.5.2">
+		//		<li>Improved grammar (fixes #82, #83)</li>
+		//		<li>Added duplicate name detection (fixes #84; does not evaluate aliases)</li>
+		//		<li>Fixed #91: improper range in JSON string literal</li>
+		//		<li>Added reference detection to JSON strings other than in import statements (#92)</li>
+		//	</ul>
+		//	<p>Version 213.5.1:</p>
+		//	<ul data-version="213.5.1">
+		//		<li>Upgraded dependencies</li>
+		//	</ul>
+		//	"""
+		//changeLog += """
+		//	<p>Version 213.5.0:</p>
+		//	<ul data-version="213.5.0">
+		//	<li>
+		//		Renamed internal language ID (issue #78).<br/>
+		//		<b>This invalidates previously generated <code>.editorconfig</code> settings!</b><br/>
+		//		To fix, replace "ij_avro idl_" with "ij_avroidl_" in your <code>.editorconfig</code> files.
+		//	</li>
+		//	<li>Added disposed check in menu actions (issue #73)</li>
+		//	</ul>
+		//	"""
+		//changeLog += """
+		//	<p>Version 213.4.3:</p>
+		//	<ul data-version="213.4.3">
+		//	<li>Fixed issue #77: editor support for angle brackets was broken</li>
+		//	</ul>
+		//	<p>Version 213.4.2:</p>
+		//	<ul data-version="213.4.2">
+		//	<li>Updated API token for crash reporting</li>
+		//	</ul>
+		//	<p>Version 213.4.1:</p>
+		//	<ul data-version="213.4.1">
+		//	<li>Fix #64 (bug in formatting preferences)</li>
+		//	<li>Layout change for code style tab "Other"</li>
+		//	<li>Reverted code to help diagnose crashes</li>
+		//	</ul>
+		//	<p>Version 213.4.0:</p>
+		//	<ul data-version="213.4.0">
+		//	<li>Added code to help diagnose issues #39, #43 & #44 (NoClassDefFoundError for existing class)</li>
+		//	<li>Implement #42: Renaming a schema or field now adds an alias for the old name</li>
+		//	<li>Add new settings for #42, making the behaviour congigurable (by default, only fields receive an alias)</li>
+		//	</ul>
+		//	"""
 		//changeLog += """
 		//	<p>Version 213.3.1:</p>
 		//	<ul data-version="213.3.1">
