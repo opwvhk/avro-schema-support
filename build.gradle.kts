@@ -117,8 +117,8 @@ tasks {
 		version.set(project.version.toString())
 		// Notes on versions: usually the last 3 major releases represent about 80% of the users.
 		// See https://plugins.jetbrains.com/docs/marketplace/product-versions-in-use-statistics.html for more information.
-		sinceBuild.set("221") // Version 2022.1
-		//sinceBuild.set("223") // Version 2022.3
+		//sinceBuild.set("221") // Version 2022.1
+		sinceBuild.set("223") // Version 2022.3
 		// Find last EAP version (the build version until the first dot):
 		// curl 'https://data.services.jetbrains.com/products/releases?code=IIU&code=IIC&code=PCP&code=PCC&latest=true&type=eap' 2>/dev/null|jq -r '.[][0].build'|cut -d . -f 1|sort -r|head -n 1
 		untilBuild.set(lastBuild)
@@ -132,6 +132,7 @@ tasks {
 			<p>Version 223.3.0:</p>
 			<ul data-version="223.3.0">
 				<li>Using IntelliJ version 2022.3.3 to test</li>
+				<li>Refactor code for new Java & SDK versions</li>
 				<li>Fix cosmetic bug in error report</li>
 			</ul>
 		"""
