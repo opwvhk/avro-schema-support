@@ -40,7 +40,7 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 	public static final PluginId OLD_PLUGIN_ID = PluginId.getId("claims.bold.intellij.avro");
 	private static final String SNAPSHOT_SUFFIX = "-SNAPSHOT";
 	private static final Pattern CHANGE_NOTES_PATTERN = Pattern.compile(
-			"(?s)<ul data-version=\"(?<version>[^\"]+)\">.*?</ul>");
+			"(?s)(?<=\\R|\\A)\\s*<p>Version (?<version>[^:]+):</p>.*?<ul[^>]*>.*?</ul>\\s*(?:\\R|\\Z)");
 
 	@NotNull
 	public static IdeaPluginDescriptor getMyPluginDescriptor() {

@@ -1,4 +1,3 @@
-import org.gradle.tooling.BuildException
 import org.jetbrains.intellij.tasks.RunPluginVerifierTask.FailureLevel
 import java.util.*
 
@@ -20,7 +19,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "223.3.0-SNAPSHOT"
+version = "223.3.1-SNAPSHOT"
 
 repositories {
 	mavenCentral()
@@ -130,202 +129,174 @@ tasks {
 		*/
 		//language=HTML
 		var changeLog = """
-			<p>Version 223.3.0:</p>
-			<ul data-version="223.3.0">
+			<p>Version 223.3.1:</p><ul>
+				<li>Make update notifications more resilient</li>
+			</ul>
+			<p>Version 223.3.0:</p><ul>
 				<li>Using IntelliJ version 2022.3.3 to test</li>
 				<li>Refactor code for new Java & SDK versions</li>
 				<li>Fix cosmetic bug in error report</li>
 			</ul>
 		"""
 		changeLog += """
-			<p>Version 221.4.3:</p>
-			<ul data-version="221.4.3">
+			<p>Version 221.4.3:</p><ul>
 				<li>Fix regression in update notifications</li>
 			</ul>
-			<p>Version 221.4.2:</p>
-			<ul data-version="221.4.2">
+			<p>Version 221.4.2:</p><ul>
 				<li>Improved the JSON-Schemata for <code>.avsc</code> and <code>.avpr</code> files</li>
 				<li>Redesigned update notice to match new UI style</li>
 				<li>Report errors using a GitHub app</li>
 			</ul>
-			<p>Version 221.4.1:</p>
-			<ul data-version="221.4.1">
+			<p>Version 221.4.1:</p><ul>
 				<li>Added new plugin logo and updated icons</li>
 			</ul>
-			<p>Version 221.4.0:</p>
-			<ul data-version="221.4.0">
+			<p>Version 221.4.0:</p><ul>
 				<li>Using IntelliJ version 2021.4 to test</li>
 			</ul>
 		"""
 		//changeLog += """
-		//	<p>Version 213.5.3:</p>
-		//	<ul data-version="213.5.3">
+		//	<p>Version 213.5.3:</p><ul>
 		//		<li>Improved grammar (string literal syntax)</li>
 		//		<li>Implemented better symbols (adds symbol search)</li>
 		//		<li>Fix #106: converting to IDL now handles optional collections correctly
 		//	</ul>
-		//	<p>Version 213.5.2:</p>
-		//	<ul data-version="213.5.2">
+		//	<p>Version 213.5.2:</p><ul>
 		//		<li>Improved grammar (fixes #82, #83)</li>
 		//		<li>Added duplicate name detection (fixes #84; does not evaluate aliases)</li>
 		//		<li>Fixed #91: improper range in JSON string literal</li>
 		//		<li>Added reference detection to JSON strings other than in import statements (#92)</li>
 		//	</ul>
-		//	<p>Version 213.5.1:</p>
-		//	<ul data-version="213.5.1">
+		//	<p>Version 213.5.1:</p><ul>
 		//		<li>Upgraded dependencies</li>
 		//	</ul>
 		//	"""
 		//changeLog += """
-		//	<p>Version 213.5.0:</p>
-		//	<ul data-version="213.5.0">
-		//	<li>
-		//		Renamed internal language ID (issue #78).<br/>
-		//		<b>This invalidates previously generated <code>.editorconfig</code> settings!</b><br/>
-		//		To fix, replace "ij_avro idl_" with "ij_avroidl_" in your <code>.editorconfig</code> files.
-		//	</li>
-		//	<li>Added disposed check in menu actions (issue #73)</li>
+		//	<p>Version 213.5.0:</p><ul>
+		//		<li>
+		//			Renamed internal language ID (issue #78).<br/>
+		//			<b>This invalidates previously generated <code>.editorconfig</code> settings!</b><br/>
+		//			To fix, replace "ij_avro idl_" with "ij_avroidl_" in your <code>.editorconfig</code> files.
+		//		</li>
+		//		<li>Added disposed check in menu actions (issue #73)</li>
 		//	</ul>
 		//	"""
 		//changeLog += """
-		//	<p>Version 213.4.3:</p>
-		//	<ul data-version="213.4.3">
-		//	<li>Fixed issue #77: editor support for angle brackets was broken</li>
+		//	<p>Version 213.4.3:</p><ul>
+		//		<li>Fixed issue #77: editor support for angle brackets was broken</li>
 		//	</ul>
-		//	<p>Version 213.4.2:</p>
-		//	<ul data-version="213.4.2">
-		//	<li>Updated API token for crash reporting</li>
+		//	<p>Version 213.4.2:</p><ul>
+		//		<li>Updated API token for crash reporting</li>
 		//	</ul>
-		//	<p>Version 213.4.1:</p>
-		//	<ul data-version="213.4.1">
-		//	<li>Fix #64 (bug in formatting preferences)</li>
-		//	<li>Layout change for code style tab "Other"</li>
-		//	<li>Reverted code to help diagnose crashes</li>
+		//	<p>Version 213.4.1:</p><ul>
+		//		<li>Fix #64 (bug in formatting preferences)</li>
+		//		<li>Layout change for code style tab "Other"</li>
+		//		<li>Reverted code to help diagnose crashes</li>
 		//	</ul>
-		//	<p>Version 213.4.0:</p>
-		//	<ul data-version="213.4.0">
-		//	<li>Added code to help diagnose issues #39, #43 & #44 (NoClassDefFoundError for existing class)</li>
-		//	<li>Implement #42: Renaming a schema or field now adds an alias for the old name</li>
-		//	<li>Add new settings for #42, making the behaviour configurable (by default, only fields receive an alias)</li>
+		//	<p>Version 213.4.0:</p><ul>
+		//		<li>Added code to help diagnose issues #39, #43 & #44 (NoClassDefFoundError for existing class)</li>
+		//		<li>Implement #42: Renaming a schema or field now adds an alias for the old name</li>
+		//		<li>Add new settings for #42, making the behaviour configurable (by default, only fields receive an alias)</li>
 		//	</ul>
 		//	"""
 		//changeLog += """
-		//	<p>Version 213.3.1:</p>
-		//	<ul data-version="213.3.1">
-		//	<li>Fix #38 (Incorrect error message in JSON files with multiple invalid names)</li>
-		//	<li>Fix #40 (cannot set caret in inspection actions when used for preview)</li>
+		//	<p>Version 213.3.1:</p><ul>
+		//		<li>Fix #38 (Incorrect error message in JSON files with multiple invalid names)</li>
+		//		<li>Fix #40 (cannot set caret in inspection actions when used for preview)</li>
 		//	</ul>
-		//	<p>Version 213.3.0:</p>
-		//	<ul data-version="213.3.0">
-		//	<li>Fix #36 (incorrectly recognizing nullable primitive types)</li>
-		//	<li>Fix #37 (generating IDL can yield invalid names with Avro <= 1.11.0)</li>
-		//	<li>Added error report submitter (submit crash reports directly to GitHub)</li>
+		//	<p>Version 213.3.0:</p><ul>
+		//		<li>Fix #36 (incorrectly recognizing nullable primitive types)</li>
+		//		<li>Fix #37 (generating IDL can yield invalid names with Avro <= 1.11.0)</li>
+		//		<li>Added error report submitter (submit crash reports directly to GitHub)</li>
 		//	</ul>
 		//	"""
 		//changeLog += """
-		//	<p>Version 213.2.1:</p>
-		//	<ul data-version="213.2.1">
-		//	<li>Fixed bug #27 (a ClassCastException)</li>
-		//	<li>Cleaned up the code (to prevent more bugs like #27)</li>
+		//	<p>Version 213.2.1:</p><ul>
+		//		<li>Fixed bug #27 (a ClassCastException)</li>
+		//		<li>Cleaned up the code (to prevent more bugs like #27)</li>
 		//	</ul>
-		//	<p>Version 213.2.0:</p>
-		//	<ul data-version="213.2.0">
-		//	<li>Using Avro 1.11.1 for conversions</li>
-		//	<li>Added support for Kotlin style nullable types (new in Avro 1.11.1)</li>
-		//	<li>Added inspection for documentation comments to detect and apply fixes for improvements since Avro 1.11.1</li>
+		//	<p>Version 213.2.0:</p><ul>
+		//		<li>Using Avro 1.11.1 for conversions</li>
+		//		<li>Added support for Kotlin style nullable types (new in Avro 1.11.1)</li>
+		//		<li>Added inspection for documentation comments to detect and apply fixes for improvements since Avro 1.11.1</li>
 		//	</ul>
 		//	"""
 		//changeLog += """
-		//	<p>Version 213.1.0:</p>
-		//	<ul data-version="213.1.0">
-		//	<li>Added quick fixes for missing schema / enum symbol references</li>
-		//	<li>Added declaration documentation for "quick info" popups</li>
-		//	<li>Added move left/right handing for list-like syntax</li>
-		//	<li>Improved brace handling</li>
-		//	<li>Improved references to schemata in JSON (<code>.avsc</code>/<code>.avpr</code>)</li>
+		//	<p>Version 213.1.0:</p><ul>
+		//		<li>Added quick fixes for missing schema / enum symbol references</li>
+		//		<li>Added declaration documentation for "quick info" popups</li>
+		//		<li>Added move left/right handing for list-like syntax</li>
+		//		<li>Improved brace handling</li>
+		//		<li>Improved references to schemata in JSON (<code>.avsc</code>/<code>.avpr</code>)</li>
 		//	</ul>
 		//	"""
 		//changeLog += """
-		//	<p>Version 213.0.1:</p>
-		//	<ul data-version="213.0.1">
-		//	<li>Fixed issue #22</li>
+		//	<p>Version 213.0.1:</p><ul>
+		//		<li>Fixed issue #22</li>
 		//	</ul>
-		//	<p>Version 213.0.0:</p>
-		//	<ul data-version="213.0.0">
-		//	<li>New File dialog for IDL files</li>
-		//	<li>New: inspections for naming conventions and warnings</li>
-		//	<li>Improved refactoring actions (converting IDL from/to schema/protocol files)</li>
-		//	<li>Extended formatting & syntax highlighting options</li>
-		//	<li>Improved quote & brace handling: now supports all "", {}, [] and <> pairs</li>
-		//	<li>Using IntelliJ version 2021.3 to test</li>
+		//	<p>Version 213.0.0:</p><ul>
+		//		<li>New File dialog for IDL files</li>
+		//		<li>New: inspections for naming conventions and warnings</li>
+		//		<li>Improved refactoring actions (converting IDL from/to schema/protocol files)</li>
+		//		<li>Extended formatting & syntax highlighting options</li>
+		//		<li>Improved quote & brace handling: now supports all "", {}, [] and <> pairs</li>
+		//		<li>Using IntelliJ version 2021.3 to test</li>
 		//	</ul>
 		//	"""
 		//changeLog += """
-		//	<p>Version 203.1.2:</p>
-		//	<ul data-version="203.1.2">
-		//	<li>Fixed exception when writing a schema as IDL (issue #16)</li>
-		//	<li>Improved formatting of message properties</li>
-		//	<li>Improved file import references</li>
-		//	<li>Fixed range exception in references</li>
-		//	<li>Added error for annotations on references (triggers a bug in Avro &lt; 1.11.1, breaks in later Avro versions)</li>
-		//	<li>Improve identifier parsing to match the Avro IDL grammar</li>
+		//	<p>Version 203.1.2:</p><ul>
+		//		<li>Fixed exception when writing a schema as IDL (issue #16)</li>
+		//		<li>Improved formatting of message properties</li>
+		//		<li>Improved file import references</li>
+		//		<li>Fixed range exception in references</li>
+		//		<li>Added error for annotations on references (triggers a bug in Avro &lt; 1.11.1, breaks in later Avro versions)</li>
+		//		<li>Improve identifier parsing to match the Avro IDL grammar</li>
 		//	</ul>
-		//	<p>Version 203.1.1:</p>
-		//	<ul data-version="203.1.1">
-		//	<li>Fixed NPE in import resolution (issue #14)</li>
-		//	<li>Adjusted IDL parsing: improved detection of annotations for messages</li>
-		//	<li>Adjusted IDL parsing: allows for more dangling doc comments as allowed by the official parser</li>
+		//	<p>Version 203.1.1:</p><ul>
+		//		<li>Fixed NPE in import resolution (issue #14)</li>
+		//		<li>Adjusted IDL parsing: improved detection of annotations for messages</li>
+		//		<li>Adjusted IDL parsing: allows for more dangling doc comments as allowed by the official parser</li>
 		//	</ul>
-		//	<p>Version 203.1.0:</p>
-		//	<ul data-version="203.1.0">
-		//	<li>Adjusted IDL parsing to allow dangling doc comments</li>
-		//	<li>Added warnings for dangling doc comments (the Avro IDL compiler ignores these)</li>
+		//	<p>Version 203.1.0:</p><ul>
+		//		<li>Adjusted IDL parsing to allow dangling doc comments</li>
+		//		<li>Added warnings for dangling doc comments (the Avro IDL compiler ignores these)</li>
 		//	</ul>
 		//	"""
 		//changeLog += """
-		//	<p>Version 203.0.3:</p>
-		//	<ul data-version="203.0.3">
-		//	<li>Added startup check for incompatibilities (i.e., is the other Avro plugin active?)</li>
+		//	<p>Version 203.0.3:</p><ul>
+		//		<li>Added startup check for incompatibilities (i.e., is the other Avro plugin active?)</li>
 		//	</ul>
-		//	<p>Version 203.0.2:</p>
-		//	<ul data-version="203.0.2">
-		//	<li>IDL parser now also allows annotations before doc comments (issue #12).</li>
+		//	<p>Version 203.0.2:</p><ul>
+		//		<li>IDL parser now also allows annotations before doc comments (issue #12).</li>
 		//	</ul>
-		//	<p>Version 203.0.1:</p>
-		//	<ul data-version="203.0.1">
-		//	<li>Fixed NPEs upon file traversal for plugin actions (issue #9, #11).</li>
-		//	<li>Renamed defined languages to prevent name clashes.</li>
+		//	<p>Version 203.0.1:</p><ul>
+		//		<li>Fixed NPEs upon file traversal for plugin actions (issue #9, #11).</li>
+		//		<li>Renamed defined languages to prevent name clashes.</li>
 		//	</ul>
-		//	<p>Version 203.0.0:</p>
-		//	<ul data-version="203.0.0">
-		//	<li>Changed version number to match IntelliJ builds</li>
-		//	<li>Migrated away from deprecated API: minimum supported version is now 2020.3</li>
-		//	<li>Added refactoring actions to convert Avro IDL to and from Avro schemas and Avro protocols.</li>
-		//	<li>Added file icon variant for dark mode</li>
+		//	<p>Version 203.0.0:</p><ul>
+		//		<li>Changed version number to match IntelliJ builds</li>
+		//		<li>Migrated away from deprecated API: minimum supported version is now 2020.3</li>
+		//		<li>Added refactoring actions to convert Avro IDL to and from Avro schemas and Avro protocols.</li>
+		//		<li>Added file icon variant for dark mode</li>
 		//	</ul>
 		//	"""
 		//changeLog += """
-		//	<p>Version 0.2.1:</p>
-		//	<ul data-version="0.2.1">
-		//	<li>Add Avro Schema and Avro Protocol languages, allowing language injection</li>
+		//	<p>Version 0.2.1:</p><ul>
+		//		<li>Add Avro Schema and Avro Protocol languages, allowing language injection</li>
 		//	</ul>
-		//	<p>Version 0.2.0:</p>
-		//	<ul data-version="0.2.0">
-		//	<li>Add support for imports</li>
-		//	<li>Add file types and JSON schemas for <code>.avsc</code> &amp; <code>.avpr</code></li>
+		//	<p>Version 0.2.0:</p><ul>
+		//		<li>Add support for imports</li>
+		//		<li>Add file types and JSON schemas for <code>.avsc</code> &amp; <code>.avpr</code></li>
 		//	</ul>
-		//	<p>Version 0.1.1:</p>
-		//	<ul data-version="0.1.1">
-		//	<li>Extra build for IntelliJ 2020.3</li>
+		//	<p>Version 0.1.1:</p><ul>
+		//		<li>Extra build for IntelliJ 2020.3</li>
 		//	</ul>
-		//	<p>Version 0.1.0:</p>
-		//    <ul data-version="0.1.0">
-		//	<li>Initial release</li>
-		//	<li>Full parsing of Avro .avdl files, based on Avro 1.10 syntax</li>
-		//	<li>Syntax highlighting & formatting</li>
-		//	<li>Code completion based on syntax and supported references</li>
-		//	<li>Some semantic checks</li>
-		//	<li>Some refactoring support (renaming & deleting named types)</li>
+		//	<p>Version 0.1.0:</p><ul>
+		//		<li>Initial release</li>
+		//		<li>Full parsing of Avro .avdl files, based on Avro 1.10 syntax</li>
+		//		<li>Syntax highlighting & formatting</li>
+		//		<li>Code completion based on syntax and supported references</li>
+		//		<li>Some semantic checks</li>
+		//		<li>Some refactoring support (renaming & deleting named types)</li>
 		//    </ul>
 		//	"""
 		changeNotes.set(changeLog)
