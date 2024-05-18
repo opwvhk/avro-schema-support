@@ -61,11 +61,11 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 
 	@Override
 	public @Nullable String getPrivacyNoticeText() {
-		return "<html>I agree to my hardware configuration, software configuration, product information, and the error details shown above " +
+		return "I agree to my hardware configuration, software configuration, product information, and the error details shown above " +
 				"being published in the GitHub repository <a href=\"https://github.com/" + repository + "/issues\">" +
 				repository + "</a> " +
 				"to allow volunteers provide support if they have time.  \n" +
-				"The reported exception data are not expected to contain any personal data.</html>";
+				"The reported exception data are not expected to contain any personal data.";
 	}
 
 	@Override
