@@ -8,6 +8,8 @@ import org.apache.avro.Schema;
 import org.apache.avro.compiler.idl.Idl;
 import org.apache.avro.compiler.idl.ParseException;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class IdlUtilsTest {
+
 	@Test
 	public void idlUtilsUtilitiesThrowRuntimeExceptionsOnProgrammerError() {
 		assertThatThrownBy(() -> IdlUtils.getField(Object.class, "noSuchField"))
