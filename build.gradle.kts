@@ -69,8 +69,9 @@ intellij {
 	// From here, refactor code for compatibility / deprecated code usage
 	//type.set("IC"); version.set("2023.2.6"); plugins.addAll("com.intellij.java", "PsiViewer:232.2")
 	//type.set("IC"); version.set("2023.3.6"); plugins.addAll("com.intellij.java", "PsiViewer:233.2")
+	//type.set("IC"); version.set("2024.1.1"); plugins.addAll("com.intellij.java", "PsiViewer:241-SNAPSHOT")
 	// EAP
-	//type.set("IC"); version.set("2024.1"); plugins.addAll("com.intellij.java", "PsiViewer:241-SNAPSHOT")
+	//type.set("IC"); version.set("2024.2"); plugins.addAll("com.intellij.java", "PsiViewer:242-SNAPSHOT")
 
 	//type.set("PC"); version.set("2022.3.3"); plugins.addAll("PythonCore", "PsiViewer:2022.3")
 	//type.set("PC"); version.set("2023.1.5"); plugins.addAll("PythonCore", "PsiViewer:231-SNAPSHOT")

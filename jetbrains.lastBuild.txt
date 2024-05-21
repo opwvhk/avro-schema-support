@@ -1,2 +1,2 @@
 # Highest released build number for IntelliJ IDEA Ultimate / Community edition and PyCharm Professional / PyCharm Community edition
-241
+242
