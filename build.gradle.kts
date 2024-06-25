@@ -63,23 +63,28 @@ intellij {
 	// Last minor versions differ, and the PSIViewer versions are not regular
 	// Also, tests require the base plugin (java/PythonCore; so don't remove it even if the plugin does not need it)
 
-	//type.set("IC"); version.set("2022.1.4"); plugins.addAll("com.intellij.java", "PsiViewer:221-SNAPSHOT")
-	type.set("IC"); version.set("2022.3.3"); plugins.addAll("com.intellij.java", "PsiViewer:2022.3")
-	//type.set("IC"); version.set("2023.1.6"); plugins.addAll("com.intellij.java", "PsiViewer:231-SNAPSHOT")
+	type.set("IC")
+	plugins.addAll("com.intellij.java")
+	//version.set("2022.1.4")
+	version.set("2022.3.3")
+	//version.set("2023.1.6")
 	// From here, refactor code for compatibility / deprecated code usage
-	//type.set("IC"); version.set("2023.2.6"); plugins.addAll("com.intellij.java", "PsiViewer:232.2")
-	//type.set("IC"); version.set("2023.3.6"); plugins.addAll("com.intellij.java", "PsiViewer:233.2")
-	//type.set("IC"); version.set("2024.1.1"); plugins.addAll("com.intellij.java", "PsiViewer:241-SNAPSHOT")
+	//version.set("2023.2.6")
+	//version.set("2023.3.6")
+	//version.set("2024.1.4")
 	// EAP
-	//type.set("IC"); version.set("2024.2"); plugins.addAll("com.intellij.java", "PsiViewer:242-SNAPSHOT")
+	//version.set("2024.2")
 
-	//type.set("PC"); version.set("2022.3.3"); plugins.addAll("PythonCore", "PsiViewer:2022.3")
-	//type.set("PC"); version.set("2023.1.5"); plugins.addAll("PythonCore", "PsiViewer:231-SNAPSHOT")
+	//type.set("PC")
+	//plugins.addAll("PythonCore")
+	//version.set("2022.3.3")
+	//version.set("2023.1.5")
 	// From here, refactor code for compatibility / deprecated code usage
-	//type.set("PC"); version.set("2023.2.6"); plugins.addAll("PythonCore", "PsiViewer:232.2")
-	//type.set("PC"); version.set("2023.3.5"); plugins.addAll("PythonCore", "PsiViewer:233.2")
+	//version.set("2023.2.6")
+	//version.set("2023.3.5")
+	//version.set("2024.1.4")
 	// EAP
-	//type.set("PC"); version.set("2024.1"); plugins.addAll("PythonCore", "PsiViewer:241-SNAPSHOT")
+	//version.set("2024.2")
 
 	// Extra plugin(s); not needed, but maybe useful during development:
 	plugins.add("markdown")
