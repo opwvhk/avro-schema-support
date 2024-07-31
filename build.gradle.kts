@@ -137,6 +137,7 @@ tasks {
 		var changeLog = """
 			<p>Version 223.3.1:</p><ul>
 				<li>Make update notifications more resilient</li>
+				<li>Fix exception on intention preview</li>
 			</ul>
 			<p>Version 223.3.0:</p><ul>
 				<li>Using IntelliJ version 2022.3.3 to test</li>

@@ -99,18 +99,13 @@ public class AvroIdlAvoidSchemaSyntaxInspection extends BaseAvroIdlInspection<Ps
 			parent.addBefore(protocol, firstChildToMove);
 			parent.deleteChildRange(firstChildToMove, lastChildToMove);
 
-			Optional.ofNullable(PsiTreeUtil.findChildOfType(file, AvroIdlProtocolDeclaration.class))
-					.map(AvroIdlProtocolDeclaration::getNameIdentifier)
-					.ifPresent(elem -> Optional.ofNullable(editor).ifPresent(ed -> selectElement(ed, elem)));
-
-			// Place the cursor at the protocol name
-			selectElement(editor,
-					Optional.ofNullable(PsiTreeUtil.findChildOfType(file, AvroIdlProtocolDeclaration.class))
-							.map(AvroIdlProtocolDeclaration::getNameIdentifier)
-							.orElse(null));
-
 			// The default indent change breaks formatting of doc (and block?) comments. Triggering a reformat keeps them intact.
 			CodeStyleManager.getInstance(project).reformat(parent);
+
+			// Place the cursor at the protocol name
+			Optional.ofNullable(PsiTreeUtil.findChildOfType(file, AvroIdlProtocolDeclaration.class))
+					.map(AvroIdlProtocolDeclaration::getNameIdentifier)
+					.ifPresent(e -> selectElement(editor, e));
 		}
 
 		private PsiElement coalesce(PsiElement... items) {

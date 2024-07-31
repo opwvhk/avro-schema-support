@@ -3,12 +3,8 @@ package opwvhk.intellij.avro_idl.inspections;
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.editor.CaretState;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -17,10 +13,7 @@ import opwvhk.intellij.avro_idl.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
-
-import static java.util.Objects.requireNonNull;
 
 public class AvroIdlUseSchemaSyntaxInspection extends BaseAvroIdlInspection<AvroIdlProtocolDeclaration> {
 	public AvroIdlUseSchemaSyntaxInspection() {
@@ -85,17 +78,10 @@ public class AvroIdlUseSchemaSyntaxInspection extends BaseAvroIdlInspection<Avro
 			docComment.ifPresent(e -> parent.deleteChildRange(e, e));
 			parent.deleteChildRange(element, element);
 
-			if (editor != null && mainSchemaDeclaration != null) {
-				// The text range of the main schema reference (note: elementFactory only creates complete declarations)
-				TextRange range = requireNonNull(mainSchemaDeclaration.getType()).getTextRange();
-
-				// Remove all carets but the "main"
-				final LogicalPosition typeStartPosition = editor.offsetToLogicalPosition(range.getStartOffset());
-				final LogicalPosition typeEndPosition = editor.offsetToLogicalPosition(range.getEndOffset());
-				editor.getCaretModel().setCaretsAndSelections(
-						List.of(new CaretState(typeStartPosition, typeStartPosition, typeEndPosition)));
-				editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
-			}
+			// Place the cursor at the main schema declaration
+			Optional.ofNullable(mainSchemaDeclaration)
+					.map(AvroIdlMainSchemaDeclaration::getType)
+					.ifPresent(e -> selectElement(editor, e));
 		}
 
 		private PsiElement getDocumentationElement(PsiElement declaration) {

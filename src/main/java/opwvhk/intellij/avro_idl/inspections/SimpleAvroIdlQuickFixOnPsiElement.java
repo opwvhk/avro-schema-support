@@ -1,5 +1,6 @@
 package opwvhk.intellij.avro_idl.inspections;
 
+import com.intellij.codeInsight.intention.preview.IntentionPreviewUtils;
 import com.intellij.codeInspection.LocalQuickFixAndIntentionActionOnPsiElement;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
@@ -66,8 +67,8 @@ public abstract class SimpleAvroIdlQuickFixOnPsiElement<E extends PsiElement>
 		invoke(project, file, editor, (E) startElement);
 	}
 
-	protected void selectElement(Editor editor, PsiElement element) {
-		if (editor != null && element != null) {
+	protected void selectElement(Editor editor, @NotNull PsiElement element) {
+		if (editor != null && !IntentionPreviewUtils.isIntentionPreviewActive()) {
 			TextRange range = element.getTextRange();
 			// Remove all carets but the "main"
 			LogicalPosition typeStartPosition = editor.offsetToLogicalPosition(range.getStartOffset());
