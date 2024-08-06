@@ -22,32 +22,26 @@ class AvroIdlCompletionContributor extends CompletionContributor {
 		super.fillCompletionVariants(parameters, result);
 	}
 
-	@SuppressWarnings("CommentedOutCode")
 	public AvroIdlCompletionContributor() {
 
 		// Empty file: namespace annotation for protocol, or the protocol, namespace, schema, record, enum & fixed keywords
 
-		// TODO: Uncomment schema syntax completions when Avro supports the schema syntax (Avro 1.12.0)
 		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParent(
 				psiElement(PsiErrorElement.class).atStartOf(psiElement(AvroIdlFile.class))
 		), "6@namespace(\"\u0000\")", "protocol ");
-		/*
 		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParent(
 			psiElement(PsiErrorElement.class).atStartOf(psiElement(AvroIdlFile.class))
 		), "6@namespace(\"\u0000\")", "protocol ", "9namespace ", "8schema ", "1import ", "3record ", "4enum ", "4fixed ");
-		*/
 		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).afterSiblingSkipping(
 				psiElement().whitespaceCommentOrError(), psiElement(AvroIdlProtocolDeclaration.class)
 		), "6@namespace(\"\u0000\")", "protocol ");
 
 		// After a namespace declaration: schema, record, enum & fixed keywords
 
-		/*
 		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParent(
 			psiElement(PsiErrorElement.class).withParent(AvroIdlNamespaceDeclaration.class)
 				.afterLeafSkipping(psiElement().whitespaceCommentOrError(), psiElement(AvroIdlTypes.SEMICOLON))
 		), "9schema ", "4import ", "6record ", "enum ", "fixed ");
-		*/
 
 
 		// Complete declaration types
@@ -59,13 +53,11 @@ class AvroIdlCompletionContributor extends CompletionContributor {
 				psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParents(AvroIdlIdentifier.class,
 						AvroIdlReferenceType.class, AvroIdlMessageDeclaration.class),
 				"import ", "9record ", "error ", "7enum ", "7fixed ", "3void ");
-		/*
 		addBasicCompletion(
 			psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParent(
 				psiElement(PsiErrorElement.class).withParent(AvroIdlMainSchemaDeclaration.class)
 					.afterLeafSkipping(psiElement().whitespaceCommentOrError(), psiElement(AvroIdlTypes.SEMICOLON))
 			), "import ", "9record ", "7enum ", "7fixed ");
-		*/
 		addBasicCompletion(psiElement(AvroIdlTypes.IDENTIFIER_TOKEN).withParent(
 				psiElement(PsiErrorElement.class).afterSiblingSkipping(psiElement().whitespaceCommentOrError(),
 						psiElement(AvroIdlImportDeclaration.class))

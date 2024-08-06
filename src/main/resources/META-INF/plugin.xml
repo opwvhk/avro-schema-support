@@ -5,51 +5,49 @@
 		Oscar Westra van Holthe - Kind
 	</vendor>
 
-	<!--
-	TODO: When Avro 1.12.0 is released, add this to the 1st paragraph:
-	This includes the <code>.avsc</code> equivalent schema syntax (new in Avro 1.12.0)!
-	-->
 	<description><![CDATA[
-	<p>
-		Extend IntelliJ, PyCharm and other JetBrains IDEs to more easily work with Avro&trade; schemata and protocols in
-		both IDL or JSON format.
-	</p>
-	<p>
-		<br/>
-		IDL (<code>.avdl</code>) features include:
-	</p>
-	<ul>
-		<li>Syntax & error highlighting</li>
-		<li>Code completion</li>
-		<li>Formatting (configurable)</li>
-		<li>Inspections and quick fixes</li>
-		<li>Navigation, renaming, quote/brace pairs, etc.</li>
-		<li>Converting Avro schemas/protocols from/to IDL</li>
-	</ul>
-	<p>
-		<br/>
-		JSON (<code>.avsc</code>/<code>.avpr</code>) features include:
-	</p>
-	<ul>
-		<li>Syntax & some error highlighting</li>
-		<li>Code completion</li>
-	</ul>
-	<p>
-		<br/>
-		Please note that the JSON features are limited, as they are provided by IntelliJ JSON support combined with JSON
-		schemas packaged in the plugin. Especially error detection is extremely limited, as are inspection.
-	</p>
-	<h3>Trademarks, Logo's, etc.</h3>
-	<p>
-		The pigeon logo was created by Emma K (<a href="https://github.com/emmak3l">emmak3l</a> on GitHub), and is used
-		for this plugin with permission. She is also the creator of the
-		<a href="https://avro.apache.org/">Apache Avro</a> logo.
-	</p>
-	<p>
-		The names Apache Avro, Avro™, Apache®, and the Apache Avro paper plane logo are either registered trademarks or
-		trademarks of The Apache Software Foundation. They are used in this plugin to signal intended compatibility, and
-		are not intended to suggest endorsement.
-	</p>
+		<p>
+			Extend IntelliJ, PyCharm and other JetBrains IDEs to more easily work with Avro&trade; schemata and
+			protocols in both JSON and IDL format, including the <code>.avsc</code> equivalent schema syntax
+			(new in Avro 1.12.0)!
+		</p>
+		<p>
+			<br/>
+			IDL (<code>.avdl</code>) features include:
+		</p>
+		<ul>
+			<li>Syntax &amp; error highlighting for protocols (the original syntax)</li>
+			<li>Syntax &amp; error highlighting for schemas (the new <code>.avsc</code> equivalent syntax)</li>
+			<li>Code completion</li>
+			<li>Formatting (configurable)</li>
+			<li>Inspections and quick fixes</li>
+			<li>Navigation, renaming, quote/brace pairs, etc.</li>
+			<li>Converting Avro schemas/protocols from/to IDL</li>
+		</ul>
+		<p>
+			<br/>
+			JSON (<code>.avsc</code>/<code>.avpr</code>) features include:
+		</p>
+		<ul>
+			<li>Syntax & some error highlighting</li>
+			<li>Code completion</li>
+		</ul>
+		<p>
+			<br/>
+			Please note that the JSON features are limited, as they are provided by IntelliJ JSON support combined with
+			JSON schemas packaged in the plugin. Especially error detection is extremely limited, as are inspections.
+		</p>
+		<h3>Trademarks, Logo's, etc.</h3>
+		<p>
+			The pigeon logo was created by Emma K (<a href="https://github.com/emmak3l">emmak3l</a> on GitHub), and is
+			used for this plugin with permission. She is also the creator of the
+			<a href="https://avro.apache.org/">Apache Avro</a> logo.
+		</p>
+		<p>
+			The names Apache Avro, Avro™, Apache®, and the Apache Avro paper plane logo are either registered trademarks
+			or trademarks of The Apache Software Foundation. They are used in this plugin to signal intended
+			compatibility, and are not intended to suggest endorsement.
+		</p>
 	]]></description>
 
 	<!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html on how to target different products -->
@@ -134,15 +132,12 @@
 		<localInspection language="AvroIDL" groupKey="inspection.group.avro" key="inspection.avoid.nullable.shorthand"
 		                 level="ERROR" enabledByDefault="false"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlAvoidNullableShorthandInspection"/>
-		<!-- TODO: Enable when Avro supports the schema syntax (Avro 1.12.0) -->
-		<!--
 		<localInspection language="AvroIDL" groupKey="inspection.group.avro" key="inspection.use.schema.syntax"
 		                 level="WEAK WARNING" enabledByDefault="true"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlUseSchemaSyntaxInspection"/>
 		<localInspection language="AvroIDL" groupKey="inspection.group.avro" key="inspection.avoid.schema.syntax"
 		                 level="ERROR" enabledByDefault="false"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlAvoidSchemaSyntaxInspection"/>
-		-->
 		<localInspection language="AvroIDL" groupKey="inspection.group.avro" key="inspection.naming.convention"
 		                 level="TYPO" enabledByDefault="false"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlNamingConventionInspection"/>

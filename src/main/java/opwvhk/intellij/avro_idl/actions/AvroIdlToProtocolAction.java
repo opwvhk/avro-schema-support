@@ -12,8 +12,8 @@ import com.intellij.openapi.vfs.VirtualFileWrapper;
 import opwvhk.intellij.avro_idl.AvroIdlFileType;
 import opwvhk.intellij.avro_idl.AvroProtocolFileType;
 import org.apache.avro.Protocol;
-import org.apache.avro.compiler.idl.Idl;
-import org.apache.avro.compiler.idl.ParseException;
+import org.apache.avro.idl.IdlFile;
+import org.apache.avro.idl.IdlReader;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -33,9 +33,11 @@ public class AvroIdlToProtocolAction extends ConversionActionBase {
 
 		console.print("Parsing IDL file\n", NORMAL_OUTPUT);
 		final Protocol protocol;
-		try (final Idl idl = new Idl(file.toNioPath().toFile())) {
-			protocol = idl.CompilationUnit();
-		} catch (RuntimeException | ParseException | IOException e) {
+		try {
+			final IdlReader idlReader = new IdlReader();
+			IdlFile idlFile = idlReader.parse(file.toNioPath());
+			protocol = idlFile.getProtocol();
+		} catch (RuntimeException | IOException e) {
 			console.print("Failed to parse " + file.getName() + "; please resolve errors first.\n", ERROR_OUTPUT);
 			writeStackTrace(console, e);
 			return;

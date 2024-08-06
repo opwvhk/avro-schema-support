@@ -12,6 +12,7 @@ import opwvhk.intellij.avro_idl.AvroIdlFileType;
 import opwvhk.intellij.avro_idl.AvroProtocolFileType;
 import org.apache.avro.AvroRuntimeException;
 import org.apache.avro.Protocol;
+import org.apache.avro.idl.IdlUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;

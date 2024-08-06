@@ -26,10 +26,9 @@ public class AvroIdlCreateFileFromAction extends CreateFileFromTemplateAction im
 		 * To avoid this kind of bugs, all template files for this plugin have a plugin specific prefix.
 		 */
 		builder.setTitle("New Avro IDL File")
-				// TODO: Enable schema templates when Avro supports the schema syntax (Avro 1.12.0)
-				//.addKind("Empty Schema IDL", AvroIdlIcons.AVDL_FILE, "AvroIDL_EmptySchema")
+				.addKind("Empty Schema IDL", AvroIdlIcons.AVDL_FILE, "AvroIDL_EmptySchema")
 				.addKind("Empty Protocol IDL", AvroIdlIcons.AVDL_FILE, "AvroIDL_EmptyProtocol")
-				//.addKind("Example schema", AvroIdlIcons.AVDL_FILE, "AvroIDL_ExampleSchema")
+				.addKind("Example schema", AvroIdlIcons.AVDL_FILE, "AvroIDL_ExampleSchema")
 				.addKind("Example protocol", AvroIdlIcons.AVDL_FILE, "AvroIDL_ExampleProtocol")
 				.setValidator(new NonEmptyInputValidator());
 	}

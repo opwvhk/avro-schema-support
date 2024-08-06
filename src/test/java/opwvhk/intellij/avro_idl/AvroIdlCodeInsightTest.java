@@ -285,8 +285,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		);
 	}
 
-	// TODO: Uncomment these tests when using Avro 1.12.0
-	/*
 	@SuppressWarnings("unchecked")
 	public void testSchemaSyntaxInspectionWithoutNamespaceOrSchema() {
 		myFixture.enableInspections(AvroIdlUseSchemaSyntaxInspection.class);
@@ -422,7 +420,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		myFixture.launchAction(quickFix);
 		myFixture.checkResultByFile("SchemaSyntaxWithoutNamespaceFixed.avdl");
 	}
-	*/
 
 	public void testMissingSchemaAddRecordQuickFix() {
 		List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("MissingSchema.avdl");

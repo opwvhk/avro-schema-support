@@ -12,8 +12,9 @@ import com.intellij.openapi.vfs.VirtualFileWrapper;
 import opwvhk.intellij.avro_idl.AvroIdlFileType;
 import opwvhk.intellij.avro_idl.AvroSchemaFileType;
 import org.apache.avro.AvroRuntimeException;
-import org.apache.avro.JsonProperties;
 import org.apache.avro.Schema;
+import org.apache.avro.SchemaParser;
+import org.apache.avro.idl.IdlUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -23,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.intellij.execution.ui.ConsoleViewContentType.*;
-import static java.util.Collections.emptyList;
 
 public class AvroSchemaToIdlAction extends ConversionActionBase {
 	public AvroSchemaToIdlAction() {
@@ -36,20 +36,20 @@ public class AvroSchemaToIdlAction extends ConversionActionBase {
 				SYSTEM_OUTPUT);
 		console.print("to a single " + AvroIdlFileType.INSTANCE.getDisplayName() + " file\n", SYSTEM_OUTPUT);
 
-		final List<Schema> schemas = new ArrayList<>();
-		final Schema.Parser parser = new Schema.Parser();
+		final SchemaParser parser = new SchemaParser();
 		for (VirtualFile file : files) {
 			try {
 				console.print("Parsing ", SYSTEM_OUTPUT);
 				console.printHyperlink(file.getName(), new OpenFileHyperlinkInfo(project, file, 0));
 				console.print("\n", SYSTEM_OUTPUT);
-				schemas.add(parser.parse(file.toNioPath().toFile()));
+				parser.parse(file.toNioPath());
 			} catch (AvroRuntimeException | IOException e) {
 				console.print("Failed to parse Avro schema in " + file.getName() + "\n", ERROR_OUTPUT);
 				writeStackTrace(console, e);
 				return;
 			}
 		}
+		final List<Schema> schemas = new ArrayList<>(parser.getParsedNamedSchemas());
 
 		console.print("Asking for file to write Avro IDL to...\n", NORMAL_OUTPUT);
 		final VirtualFileWrapper wrapper = askForTargetFile(project, "Save as Avro IDL",
@@ -66,11 +66,7 @@ public class AvroSchemaToIdlAction extends ConversionActionBase {
 						final String protocolName = virtualFile.getNameWithoutExtension();
 						final String namespace = schemas.get(0)
 								.getNamespace(); // Assume the first schema has the correct namespace.
-						// TODO: switch to schemas when Avro supports the schema syntax (Avro 1.12.0).
-						//IdlUtils.writeIdlSchemas(writer, namespace, schemas);
-						JsonProperties emptyProperties = Schema.create(Schema.Type.NULL);
-						IdlUtils.writeIdlProtocol(writer, emptyProperties, namespace, protocolName, schemas,
-								emptyList());
+						IdlUtils.writeIdlSchemas(writer, namespace, schemas);
 
 						console.print("Wrote Avro IDL \"", NORMAL_OUTPUT);
 						console.print(protocolName, NORMAL_OUTPUT);

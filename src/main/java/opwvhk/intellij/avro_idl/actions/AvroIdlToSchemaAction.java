@@ -11,13 +11,12 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWrapper;
 import opwvhk.intellij.avro_idl.AvroIdlFileType;
 import opwvhk.intellij.avro_idl.AvroSchemaFileType;
-import org.apache.avro.Protocol;
 import org.apache.avro.Schema;
-import org.apache.avro.compiler.idl.Idl;
-import org.apache.avro.compiler.idl.ParseException;
-import org.apache.avro.compiler.schema.SchemaVisitor;
-import org.apache.avro.compiler.schema.SchemaVisitorAction;
-import org.apache.avro.compiler.schema.Schemas;
+import org.apache.avro.SchemaFormatter;
+import org.apache.avro.util.SchemaVisitor;
+import org.apache.avro.idl.IdlFile;
+import org.apache.avro.idl.IdlReader;
+import org.apache.avro.util.Schemas;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -38,28 +37,28 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 		console.print(" to one or more " + AvroSchemaFileType.INSTANCE.getDisplayName() + " files\n", SYSTEM_OUTPUT);
 
 		List<Schema> rootSchemas;
-		try (final Idl idl = new Idl(file.toNioPath().toFile())) {
+		try {
+			IdlReader idlReader = new IdlReader();
+			IdlFile idlFile = idlReader.parse(file.toNioPath());
 			console.print(String.format("Parsing IDL file %s\n", file.getName()), NORMAL_OUTPUT);
-			final Protocol protocol = idl.CompilationUnit();
-			if (protocol.getTypes().isEmpty()) {
+			if (idlFile.getNamedSchemas().isEmpty()) {
 				console.print("No root schemas found: aborting.\n", NORMAL_OUTPUT);
 				return;
 			}
 
 			// Find all root schemas (schemas not used by other schemas).
 			console.print("Finding root schemas\n", NORMAL_OUTPUT);
-			final String schemaNames = protocol.getTypes().stream().map(Schema::getName)
-					.collect(Collectors.joining(", "));
+			final String schemaNames = String.join(", ", idlFile.getNamedSchemas().keySet());
 			console.print("Initial schemas from protocol: " + schemaNames + "\n", NORMAL_OUTPUT);
 
 			// Use one instance to ensure we discover common roots
 			final SchemaVisitor<List<Schema>> rootSchemaDiscoveringVisitor = new RootSchemaDiscoveringVisitor(console);
-			protocol.getTypes().forEach(rootCandidate -> Schemas.visit(rootCandidate, rootSchemaDiscoveringVisitor));
+			idlFile.getNamedSchemas().values().forEach(root -> Schemas.visit(root, rootSchemaDiscoveringVisitor));
 			rootSchemas = rootSchemaDiscoveringVisitor.get();
 			console.print(
 					"Root schemas: " + rootSchemas.stream().map(Schema::getName).collect(Collectors.joining(", ")) +
 							"\n", NORMAL_OUTPUT);
-		} catch (RuntimeException | ParseException | IOException e) {
+		} catch (RuntimeException | IOException e) {
 			console.print(String.format("Failed to parse Avro IDL in %s: please resolve errors first.", file.getName()),
 					ERROR_OUTPUT);
 			writeStackTrace(console, e);
@@ -107,7 +106,7 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 
 	private void writeSchema(@NotNull Project project, @NotNull ConsoleView console, VirtualFile destination,
 	                         Schema schema) throws IOException {
-		VfsUtil.saveText(destination, schema.toString(true));
+		VfsUtil.saveText(destination, SchemaFormatter.format("json/pretty", schema));
 		console.print("Wrote Avro Schema \"", NORMAL_OUTPUT);
 		console.print(schema.getName(), NORMAL_OUTPUT);
 		console.print("\" to ", NORMAL_OUTPUT);

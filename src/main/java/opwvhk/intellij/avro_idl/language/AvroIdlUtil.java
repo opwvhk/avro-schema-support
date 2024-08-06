@@ -24,6 +24,7 @@ import opwvhk.intellij.avro_idl.AvroIdlIcons;
 import opwvhk.intellij.avro_idl.psi.*;
 import org.apache.avro.Protocol;
 import org.apache.avro.Schema;
+import org.apache.avro.SchemaParser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -148,13 +149,13 @@ public class AvroIdlUtil {
 	@NotNull
 	public static Stream<LookupElement> findAllSchemaNamesAvailableInIdl(AvroIdlFile idlFile, boolean errorsOnly,
 	                                                                     @NotNull String currentNamespace) {
-		return findAllSchemaNamesAvailableInIdl(idlFile, errorsOnly, currentNamespace, new Schema.Parser());
+		return findAllSchemaNamesAvailableInIdl(idlFile, errorsOnly, currentNamespace, new SchemaParser());
 	}
 
 	@NotNull
 	private static Stream<LookupElement> findAllSchemaNamesAvailableInIdl(AvroIdlFile idlFile, boolean errorsOnly,
 	                                                                      @NotNull String currentNamespace,
-	                                                                      @NotNull Schema.Parser avroSchemaParser) {
+	                                                                      @NotNull SchemaParser avroSchemaParser) {
 		final Module module = ModuleUtil.findModuleForPsiElement(idlFile);
 		return Stream.concat(
 				readNamedSchemas(idlFile)
@@ -173,7 +174,7 @@ public class AvroIdlUtil {
 	                                                                           AvroIdlImportDeclaration importDeclaration,
 	                                                                           boolean errorsOnly,
 	                                                                           @NotNull String currentNamespace,
-	                                                                           @NotNull Schema.Parser avroSchemaParser) {
+	                                                                           @NotNull SchemaParser avroSchemaParser) {
 		AvroIdlImportType importTypeElement = importDeclaration.getImportType();
 		final AvroIdlJsonStringLiteral importedFileReferenceElement = importDeclaration.getJsonStringLiteral();
 		VirtualFile importedFile = findReferencedFile(module, importedFileReferenceElement);
@@ -199,7 +200,7 @@ public class AvroIdlUtil {
 		} else if (importType == AvroIdlTypes.SCHEMA) {
 			try (InputStream inputStream = importedFile.getInputStream()) {
 				avroSchemaParser.parse(inputStream);
-				return avroSchemaParser.getTypes().values().stream()
+				return avroSchemaParser.getParsedNamedSchemas().stream()
 						.filter(schema -> !errorsOnly || schema.isError())
 						.map(schema -> createLookupElement(currentNamespace, importedFileReferenceElement, psiManager,
 								importedFile, schema));

@@ -27,13 +27,12 @@ repositories {
 }
 java {
 	toolchain {
-		//languageVersion.set(JavaLanguageVersion.of(11))
 		languageVersion.set(JavaLanguageVersion.of(17))
 	}
 }
 
 dependencies {
-	implementation("org.apache.avro:avro-compiler:1.11.3") { exclude("org.slf4j") }
+	implementation("org.apache.avro:avro-idl:1.12.0") { exclude("org.slf4j") }
 	implementation("org.apache.commons:commons-compress:1.26.2")
 	implementation("org.apache.commons:commons-text:1.12.0")
 	implementation("org.apache.commons:commons-lang3:3.15.0")
@@ -128,14 +127,11 @@ tasks {
 		// Find last EAP version (the build version until the first dot):
 		// curl 'https://data.services.jetbrains.com/products/releases?code=IIU&code=IIC&code=PCP&code=PCC&latest=true&type=eap' 2>/dev/null|jq -r '.[][0].build'|cut -d . -f 1|sort -r|head -n 1
 		untilBuild.set(lastBuild)
-		/*
-		<li>Added IDL syntax for the schema syntax (new in Avro 1.12.0)</li>
-		<li>Added inspection suggesting the schema syntax where appropriate</li>
-		</ul>
-		*/
 		//language=HTML
 		var changeLog = """
 			<p>Version 223.3.1:</p><ul>
+				<li>Added IDL syntax for the schema syntax (new in Avro 1.12.0)</li>
+				<li>Added inspection suggesting the schema syntax where appropriate</li>
 				<li>Make update notifications more resilient</li>
 				<li>Fix exception on intention preview</li>
 			</ul>
