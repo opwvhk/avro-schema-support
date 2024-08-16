@@ -4,6 +4,7 @@ import com.intellij.codeInsight.intention.preview.IntentionPreviewUtils;
 import com.intellij.codeInspection.LocalQuickFixAndIntentionActionOnPsiElement;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
+import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.CaretState;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
@@ -57,14 +58,16 @@ public abstract class SimpleAvroIdlQuickFixOnPsiElement<E extends PsiElement>
 	@SuppressWarnings("unchecked")
 	public void invoke(@NotNull Project project, @NotNull PsiFile file, @NotNull PsiElement startElement,
 	                   @NotNull PsiElement endElement) {
-		invoke(project, file, (Editor) null, (E) startElement);
+		CommandProcessor.getInstance().executeCommand(project,
+				() -> invoke(project, file, (Editor) null, (E) startElement), text, null);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor,
 	                   @NotNull PsiElement startElement, @NotNull PsiElement endElement) {
-		invoke(project, file, editor, (E) startElement);
+		CommandProcessor.getInstance().executeCommand(project,
+				() -> invoke(project, file, editor, (E) startElement), text, null);
 	}
 
 	protected void selectElement(Editor editor, @NotNull PsiElement element) {
