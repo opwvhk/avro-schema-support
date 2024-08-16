@@ -55,17 +55,12 @@ import static com.intellij.openapi.diagnostic.SubmittedReportInfo.SubmissionStat
 public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 	private static final Pattern EXCEPTION_MESSAGE = Pattern.compile("^[^:]++:\\s*+((?:(?!\\R).)*+)");
 	private static final Pattern FIRST_STACK_LINE = Pattern.compile("^(?:(?!\\R).)*+\\R\\s*+((?:(?!\\R).)*+)");
-	private static final String MARKDOWN_GITHUB_FAILURE = "Please file this bug report at: https://github.com/%s/issues/new\n\n%s";
 
 	private final String repository = "opwvhk/avro-schema-support";
 
 	@Override
 	public @Nullable String getPrivacyNoticeText() {
-		return "I agree to my hardware configuration, software configuration, product information, and the error details shown above " +
-				"being published in the GitHub repository <a href=\"https://github.com/" + repository + "/issues\">" +
-				repository + "</a> " +
-				"to allow volunteers provide support if they have time.  \n" +
-				"The reported exception data are not expected to contain any personal data.";
+		return TextBundle.message("error.reporter.notice.anonymous", repository);
 	}
 
 	@Override
@@ -103,7 +98,8 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 						duplicate ? DUPLICATE : NEW_ISSUE);
 			} catch (Exception e) {
 				reportInfo = new SubmittedReportInfo(null, null, FAILED);
-				String markdownErrorReport = String.format(MARKDOWN_GITHUB_FAILURE, repository, markdownText);
+				String markdownErrorReport = TextBundle.message("error.reporter.failure.manual.fix", repository,
+						markdownText);
 				ApplicationManager.getApplication()
 						.invokeLater(() -> openInScratchFile(parentComponent, markdownErrorReport));
 			}

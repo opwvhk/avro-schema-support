@@ -1,5 +1,6 @@
 package opwvhk.intellij.avro_idl.naming;
 
+import opwvhk.intellij.avro_idl.TextBundle;
 import opwvhk.intellij.avro_idl.psi.AvroIdlMessageDeclaration;
 
 public class AvroIdlMessageNamingConvention extends AvroIdlNamingConvention {
@@ -9,6 +10,6 @@ public class AvroIdlMessageNamingConvention extends AvroIdlNamingConvention {
 
 	@Override
 	public String getElementDescription() {
-		return "Message";
+		return TextBundle.message("naming.message");
 	}
 }

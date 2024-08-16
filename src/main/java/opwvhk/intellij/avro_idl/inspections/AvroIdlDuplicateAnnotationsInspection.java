@@ -6,6 +6,7 @@ import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
+import opwvhk.intellij.avro_idl.TextBundle;
 import opwvhk.intellij.avro_idl.psi.AvroIdlAnnotatedNameIdentifierOwner;
 import opwvhk.intellij.avro_idl.psi.AvroIdlNamespaceProperty;
 import opwvhk.intellij.avro_idl.psi.AvroIdlSchemaProperty;
@@ -31,7 +32,7 @@ public class AvroIdlDuplicateAnnotationsInspection extends BaseAvroIdlInspection
 				.collect(Collectors.groupingBy(AvroIdlDuplicateAnnotationsInspection::getAnnotationName));
 		annotationsByName.entrySet().removeIf(entry -> entry.getValue().size() <= 1);
 
-		final String description = "Duplicate annotation (only the last will take effect)";
+		final String description = TextBundle.message("inspection.duplicate.annotations.problem");
 		annotationsByName.forEach((annotationName, annotationList) -> {
 			final LocalQuickFix deleteAllButLast = new RemoveDuplicateAnnotationsQuickFix(element, annotationName);
 			annotationList.forEach(duplicate -> holder.registerProblem(duplicate, description, deleteAllButLast));
@@ -49,7 +50,7 @@ public class AvroIdlDuplicateAnnotationsInspection extends BaseAvroIdlInspection
 
 		public RemoveDuplicateAnnotationsQuickFix(@NotNull AvroIdlAnnotatedNameIdentifierOwner annotatedElement,
 		                                          String annotationName) {
-			super(annotatedElement, "Delete all @" + annotationName + " annotations except the last");
+			super(annotatedElement, TextBundle.message("inspection.duplicate.annotations.fix", annotationName));
 			this.annotationName = annotationName;
 		}
 

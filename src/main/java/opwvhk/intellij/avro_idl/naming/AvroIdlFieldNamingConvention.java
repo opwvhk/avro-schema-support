@@ -1,5 +1,6 @@
 package opwvhk.intellij.avro_idl.naming;
 
+import opwvhk.intellij.avro_idl.TextBundle;
 import opwvhk.intellij.avro_idl.psi.AvroIdlVariableDeclarator;
 
 public class AvroIdlFieldNamingConvention extends AvroIdlNamingConvention {
@@ -9,6 +10,6 @@ public class AvroIdlFieldNamingConvention extends AvroIdlNamingConvention {
 
 	@Override
 	public String getElementDescription() {
-		return "Field";
+		return TextBundle.message("naming.field");
 	}
 }

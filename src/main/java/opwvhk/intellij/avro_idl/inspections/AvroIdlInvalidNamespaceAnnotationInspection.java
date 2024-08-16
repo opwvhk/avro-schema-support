@@ -3,6 +3,7 @@ package opwvhk.intellij.avro_idl.inspections;
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiElement;
+import opwvhk.intellij.avro_idl.TextBundle;
 import opwvhk.intellij.avro_idl.language.AvroIdlAnnotator;
 import opwvhk.intellij.avro_idl.naming.RenameFix;
 import opwvhk.intellij.avro_idl.psi.AvroIdlNamespaceProperty;
@@ -24,7 +25,7 @@ public class AvroIdlInvalidNamespaceAnnotationInspection extends BaseAvroIdlInsp
 			PsiElement nameIdentifier = element.getNameIdentifier();
 			holder.registerProblem(
 					Objects.requireNonNull(nameIdentifier, "Bug: name identifier is null, but the name is not..."),
-					"The namespace is not composed of valid identifiers", new RenameFix());
+					TextBundle.message("inspection.invalid.namespace.annotation.problem"), new RenameFix());
 		}
 	}
 }

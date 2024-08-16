@@ -8,6 +8,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.TreeUtil;
+import opwvhk.intellij.avro_idl.TextBundle;
 import opwvhk.intellij.avro_idl.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,14 +30,14 @@ public class AvroIdlAvoidNullableShorthandInspection extends BaseAvroIdlInspecti
 	protected void visitElement(@NotNull AvroIdlNullableType element, @NotNull ProblemsHolder holder,
 	                            @NotNull LocalInspectionToolSession session) {
 		if (ReplaceWithUnionQuickFix.isAvailableFor(element)) {
-			ReplaceWithUnionQuickFix replaceWithShorthand = new ReplaceWithUnionQuickFix(element);
-			holder.registerProblem(element, "Use union instead of optional type", replaceWithShorthand);
+			ReplaceWithUnionQuickFix replaceWithUnion = new ReplaceWithUnionQuickFix(element);
+			holder.registerProblem(element, TextBundle.message("inspection.avoid.nullable.shorthand.problem"), replaceWithUnion);
 		}
 	}
 
 	private static class ReplaceWithUnionQuickFix extends SimpleAvroIdlQuickFixOnPsiElement<AvroIdlNullableType> {
 		public ReplaceWithUnionQuickFix(@NotNull AvroIdlNullableType element) {
-			super(element, "Replace with union of type with null");
+			super(element, TextBundle.message("inspection.avoid.nullable.shorthand.fix"));
 		}
 
 		private static boolean isAvailableFor(@NotNull AvroIdlNullableType element) {

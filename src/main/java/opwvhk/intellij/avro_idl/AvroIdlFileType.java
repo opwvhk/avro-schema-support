@@ -28,7 +28,7 @@ public class AvroIdlFileType extends LanguageFileType {
 	@Override
 	@NotNull
 	public String getDescription() {
-		return "Apache Avro™ IDL";
+		return TextBundle.message("filetype.avdl.description");
 	}
 
 	@Override

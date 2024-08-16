@@ -5,6 +5,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
+import opwvhk.intellij.avro_idl.TextBundle;
 import opwvhk.intellij.avro_idl.inspections.SimpleAvroIdlQuickFixOnPsiElement;
 import opwvhk.intellij.avro_idl.psi.*;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +23,7 @@ public class AddEnumSymbolFix extends SimpleAvroIdlQuickFixOnPsiElement<PsiEleme
 	 * @param element the identifier element of an enum default
 	 */
 	public AddEnumSymbolFix(@NotNull PsiElement element) {
-		super(element, "Create symbol");
+		super(element, TextBundle.message("syntax.unknown.enum.default.fix"));
 	}
 
 	@Override

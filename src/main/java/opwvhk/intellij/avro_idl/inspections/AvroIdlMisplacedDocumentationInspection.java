@@ -8,6 +8,7 @@ import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
+import opwvhk.intellij.avro_idl.TextBundle;
 import opwvhk.intellij.avro_idl.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,9 +19,6 @@ public class AvroIdlMisplacedDocumentationInspection extends BaseAvroIdlInspecti
 		super(PsiComment.class);
 	}
 
-	/**
-	 *
-	 */
 	@Override
 	protected void visitElement(@NotNull PsiComment element,
 	                            @NotNull ProblemsHolder holder,
@@ -39,9 +37,9 @@ public class AvroIdlMisplacedDocumentationInspection extends BaseAvroIdlInspecti
 
 		if (!validDocumentation) {
 			holder.registerProblem(element,
-					"Misplaced documentation comment: documentation comments should be placed directly before declarations",
-					new RemoveDocumentationQuickFix(element, "Delete misplaced documentation comment"),
-					new MakeCommentQuickFix(element, "Replace with multiline comment")
+					TextBundle.message("inspection.misplaced.documentation.description"),
+					new RemoveDocumentationQuickFix(element, TextBundle.message("inspection.misplaced.documentation.fixRemove")),
+					new MakeCommentQuickFix(element, TextBundle.message("inspection.misplaced.documentation.fixComment"))
 			);
 		}
 	}

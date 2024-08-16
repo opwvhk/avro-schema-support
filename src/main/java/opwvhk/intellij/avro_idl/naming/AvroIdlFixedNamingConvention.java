@@ -1,5 +1,6 @@
 package opwvhk.intellij.avro_idl.naming;
 
+import opwvhk.intellij.avro_idl.TextBundle;
 import opwvhk.intellij.avro_idl.psi.AvroIdlFixedDeclaration;
 
 public class AvroIdlFixedNamingConvention extends AvroIdlNamingConvention {
@@ -9,6 +10,6 @@ public class AvroIdlFixedNamingConvention extends AvroIdlNamingConvention {
 
 	@Override
 	public String getElementDescription() {
-		return "Fixed";
+		return TextBundle.message("naming.fixed");
 	}
 }

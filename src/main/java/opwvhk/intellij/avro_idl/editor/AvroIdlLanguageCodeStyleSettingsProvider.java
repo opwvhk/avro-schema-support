@@ -7,6 +7,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
 import opwvhk.intellij.avro_idl.AvroIdlLanguage;
+import opwvhk.intellij.avro_idl.TextBundle;
 import org.jetbrains.annotations.NotNull;
 
 public class AvroIdlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsProvider {
@@ -57,8 +58,10 @@ public class AvroIdlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleS
 			consumer.showStandardOptions("SPACE_AROUND_ASSIGNMENT_OPERATORS",
 					"SPACE_AFTER_COMMA",
 					"SPACE_AFTER_COMMA_IN_TYPE_ARGUMENTS");
-			consumer.renameStandardOption("SPACE_AROUND_ASSIGNMENT_OPERATORS", "Assignment operator (=)");
-			consumer.moveStandardOption("SPACE_AFTER_COMMA_IN_TYPE_ARGUMENTS", "Within messages");
+			consumer.renameStandardOption("SPACE_AROUND_ASSIGNMENT_OPERATORS",
+					TextBundle.message("code.style.space_around_assignment_operators.title"));
+			consumer.moveStandardOption("SPACE_AFTER_COMMA_IN_TYPE_ARGUMENTS",
+					TextBundle.message("code.style.space_after_comma_in_type_arguments.group"));
 		} else if (settingsType == SettingsType.WRAPPING_AND_BRACES_SETTINGS) {
 			consumer.showStandardOptions("RIGHT_MARGIN", "WRAP_ON_TYPING", "KEEP_LINE_BREAKS");
 		} else if (settingsType == SettingsType.BLANK_LINES_SETTINGS) {
@@ -71,13 +74,17 @@ public class AvroIdlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleS
 					, "BLANK_LINES_AROUND_FIELD"
 					, "BLANK_LINES_AROUND_METHOD"
 			);
-			consumer.renameStandardOption("BLANK_LINES_AROUND_CLASS", "Around named type");
-			consumer.renameStandardOption("BLANK_LINES_AFTER_PACKAGE", "After namespace declaration");
+			consumer.renameStandardOption("BLANK_LINES_AROUND_CLASS",
+					TextBundle.message("code.style.blank_lines_around_class.title"));
+			consumer.renameStandardOption("BLANK_LINES_AFTER_PACKAGE",
+					TextBundle.message("code.style.blank_lines_after_package.title"));
 		} else if (settingsType == SettingsType.LANGUAGE_SPECIFIC) {
 			consumer.showCustomOption(AvroIdlCodeStyleSettings.class, "ADD_ALIAS_ON_SCHEMA_RENAME",
-					"Add alias on schema rename", "Aliases");
+					TextBundle.message("code.style.add_alias_on_schema_rename.title"),
+					TextBundle.message("code.style.add_alias_on_schema_rename.group"));
 			consumer.showCustomOption(AvroIdlCodeStyleSettings.class, "ADD_ALIAS_ON_FIELD_RENAME",
-					"Add alias on field rename", "Aliases");
+					TextBundle.message("code.style.add_alias_on_field_rename.title"),
+					TextBundle.message("code.style.add_alias_on_field_rename.group"));
 		}
 	}
 
@@ -88,6 +95,7 @@ public class AvroIdlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleS
 
 	@Override
 	public String getCodeSample(@NotNull SettingsType settingsType) {
+		//noinspection InconsistentTextBlockIndent
 		return """
 		       namespace org.example;
 

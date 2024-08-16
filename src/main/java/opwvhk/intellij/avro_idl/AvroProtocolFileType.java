@@ -27,7 +27,7 @@ public class AvroProtocolFileType extends LanguageFileType {
 	public String getDescription() {
 		// False positive: this "description" is used as a name
 		//noinspection DialogTitleCapitalization
-		return "Apache Avro™ Protocol";
+		return TextBundle.message("filetype.avpr.description");
 	}
 
 	@Override

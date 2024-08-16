@@ -4,6 +4,7 @@ import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
+import opwvhk.intellij.avro_idl.TextBundle;
 
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
 
@@ -52,20 +53,19 @@ public interface AvroIdlSyntaxColors {
 	TextAttributesKey[] TYPE_KEYS = new TextAttributesKey[]{TYPE};
 
 	AttributesDescriptor[] DESCRIPTORS = new AttributesDescriptor[]{
-			new AttributesDescriptor("Comments//Documentation comment", DOC_COMMENT),
-			new AttributesDescriptor("Comments//Block comment", BLOCK_COMMENT),
-			new AttributesDescriptor("Comments//Line comment", LINE_COMMENT),
-			new AttributesDescriptor("Bad character", BAD_CHAR),
-			new AttributesDescriptor("String", STRING),
-			new AttributesDescriptor("Number", NUMBER),
-			new AttributesDescriptor("Braces and Operators//Braces", BRACES),
-			new AttributesDescriptor("Braces and Operators//Parentheses", PARENTHESES),
-			new AttributesDescriptor("Braces and Operators//Brackets", BRACKETS),
-			new AttributesDescriptor("Braces and Operators//Semicolon", SEMICOLON),
-			new AttributesDescriptor("Braces and Operators//Comma", COMMA),
-			new AttributesDescriptor("Braces and Operators//Equals", EQUALS),
-			new AttributesDescriptor("Keywords", KEYWORD),
-			new AttributesDescriptor("Types", TYPE),
-			new AttributesDescriptor("Annotations", ANNOTATION)
-	};
+			new AttributesDescriptor(TextBundle.message("options.AvroIdl.color.descriptor.documentation.comment"), DOC_COMMENT),
+			new AttributesDescriptor(TextBundle.message("options.AvroIdl.color.descriptor.block.comment"), BLOCK_COMMENT),
+			new AttributesDescriptor(TextBundle.message("options.AvroIdl.color.descriptor.line.comment"), LINE_COMMENT),
+			new AttributesDescriptor(TextBundle.message("options.AvroIdl.color.descriptor.bad.character"), BAD_CHAR),
+			new AttributesDescriptor(TextBundle.message("options.AvroIdl.color.descriptor.string"), STRING),
+			new AttributesDescriptor(TextBundle.message("options.AvroIdl.color.descriptor.number"), NUMBER),
+			new AttributesDescriptor(TextBundle.message("options.AvroIdl.color.descriptor.braces"), BRACES),
+			new AttributesDescriptor(TextBundle.message("options.AvroIdl.color.descriptor.parentheses"), PARENTHESES),
+			new AttributesDescriptor(TextBundle.message("options.AvroIdl.color.descriptor.brackets"), BRACKETS),
+			new AttributesDescriptor(TextBundle.message("options.AvroIdl.color.descriptor.semicolon"), SEMICOLON),
+			new AttributesDescriptor(TextBundle.message("options.AvroIdl.color.descriptor.comma"), COMMA),
+			new AttributesDescriptor(TextBundle.message("options.AvroIdl.color.descriptor.equals"), EQUALS),
+			new AttributesDescriptor(TextBundle.message("options.AvroIdl.color.descriptor.keywords"), KEYWORD),
+			new AttributesDescriptor(TextBundle.message("options.AvroIdl.color.descriptor.types"), TYPE),
+			new AttributesDescriptor(TextBundle.message("options.AvroIdl.color.descriptor.annotations"), ANNOTATION)	};
 }

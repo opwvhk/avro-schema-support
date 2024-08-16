@@ -6,6 +6,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import opwvhk.intellij.avro_idl.TextBundle;
 import opwvhk.intellij.avro_idl.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +48,8 @@ public class AvroIdlMisplacedAnnotationsInspection extends BaseAvroIdlInspection
 		}
 
 		if (quickFix != null) {
-			holder.registerProblem(element, "The @" + quickFix.getAnnotationName() + " annotation has no effect here",
+			holder.registerProblem(element,
+					TextBundle.message("inspection.misplaced.annotations.problem", quickFix.getAnnotationName()),
 					quickFix);
 		}
 	}
@@ -56,7 +58,7 @@ public class AvroIdlMisplacedAnnotationsInspection extends BaseAvroIdlInspection
 		private final String annotationName;
 
 		public RemoveAnnotationQuickFix(@NotNull AvroIdlSchemaProperty element, @NotNull String annotationName) {
-			super(element, "Remove the @" + annotationName + " annotation");
+			super(element, TextBundle.message("inspection.misplaced.annotations.fix", annotationName));
 			this.annotationName = annotationName;
 		}
 

@@ -8,12 +8,15 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
+import opwvhk.intellij.avro_idl.TextBundle;
 import opwvhk.intellij.avro_idl.language.AvroIdlUtil;
 import opwvhk.intellij.avro_idl.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+
+import static java.util.Objects.requireNonNull;
 
 public class AvroIdlUseSchemaSyntaxInspection extends BaseAvroIdlInspection<AvroIdlProtocolDeclaration> {
 	public AvroIdlUseSchemaSyntaxInspection() {
@@ -30,7 +33,8 @@ public class AvroIdlUseSchemaSyntaxInspection extends BaseAvroIdlInspection<Avro
 				PsiElement protocolKeyword = protocolKeywordNode.getPsi();
 				ReplaceProtocolWithSchemaSyntaxQuickFix replaceWithShorthand = new ReplaceProtocolWithSchemaSyntaxQuickFix(
 						element);
-				holder.registerProblem(protocolKeyword, "Schema syntax available", replaceWithShorthand);
+				holder.registerProblem(protocolKeyword, TextBundle.message("inspection.use.schema.syntax"),
+						replaceWithShorthand);
 			}
 		}
 	}
@@ -39,7 +43,7 @@ public class AvroIdlUseSchemaSyntaxInspection extends BaseAvroIdlInspection<Avro
 	private static class ReplaceProtocolWithSchemaSyntaxQuickFix
 			extends SimpleAvroIdlQuickFixOnPsiElement<AvroIdlProtocolDeclaration> {
 		public ReplaceProtocolWithSchemaSyntaxQuickFix(@NotNull AvroIdlProtocolDeclaration element) {
-			super(element, "Replace with schema syntax");
+			super(element, TextBundle.message("inspection.use.schema.syntax.fix"));
 		}
 
 		private static boolean isAvailableFor(@NotNull AvroIdlProtocolDeclaration element) {
@@ -60,8 +64,8 @@ public class AvroIdlUseSchemaSyntaxInspection extends BaseAvroIdlInspection<Avro
 			}
 			PsiElement parent = element.getParent();
 			Optional<PsiElement> docComment = Optional.ofNullable(getDocumentationElement(element));
-			AvroIdlProtocolBody protocolBody = element.getProtocolBody();
-			assert protocolBody != null : "Inconsistency with isAvailableFor()";
+			AvroIdlProtocolBody protocolBody = requireNonNull(element.getProtocolBody(),
+					"Inconsistency with isAvailableFor()");
 
 			AvroIdlElementFactory elementFactory = new AvroIdlElementFactory(project);
 			AvroIdlFile schemaSyntaxHeader = elementFactory.createSchemaSyntaxHeader(element);

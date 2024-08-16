@@ -19,6 +19,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.util.PsiUtilCore;
+import opwvhk.intellij.avro_idl.TextBundle;
 import opwvhk.intellij.avro_idl.inspections.SimpleAvroIdlQuickFixOnPsiElement;
 import opwvhk.intellij.avro_idl.psi.*;
 import org.jetbrains.annotations.NotNull;
@@ -84,7 +85,8 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 
 		final String identifier = getIdentifier(element);
 		if (referencedElement == null) {
-			AnnotationBuilder annotationBuilder = holder.newAnnotation(ERROR, "Unknown schema: " + identifier);
+			AnnotationBuilder annotationBuilder = holder.newAnnotation(ERROR,
+					TextBundle.message("syntax.unknown.schema", identifier));
 			annotationBuilder = annotationBuilder.withFix(
 					new AddEmptyRecordSchemaFix(element, identifier, mustBeAnError));
 			if (!mustBeAnError) {
@@ -94,7 +96,7 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 			}
 			annotationBuilder.create();
 		} else if (mustBeAnError && !reference.resolvesToError()) {
-			holder.newAnnotation(ERROR, "Not an error: " + identifier).create();
+			holder.newAnnotation(ERROR, TextBundle.message("syntax.not.an.error", identifier)).create();
 		}
 	}
 
@@ -116,7 +118,7 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 				return;
 			}
 		}
-		holder.newAnnotation(ERROR, "Enum default must be one of the enum constants")
+		holder.newAnnotation(ERROR, TextBundle.message("syntax.unknown.enum.default"))
 				.withFix(new AddEnumSymbolFix(element)).create();
 	}
 
@@ -126,57 +128,58 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 		final Predicate<String> validName = isVariableName ? VALID_SIMPLE_NAME : VALID_IDENTIFIER;
 
 		final Map<PsiElement, NameAndLink> duplicateNameElements;
-		final String identifiedElement;
+		final String problemMessage;
 		if (isVariableName) {
 			final PsiElement valueHolder = element.getParent().getParent().getParent();
 			if (valueHolder instanceof AvroIdlRecordBody) {
-				duplicateNameElements = getDuplicateNames(valueHolder,
+				duplicateNameElements = getCachedDuplicateNames(valueHolder,
 						() -> Stream.of(((AvroIdlRecordBody) valueHolder))
 								.map(AvroIdlRecordBody::getFieldDeclarationList)
 								.flatMap(List::stream)
 								.map(AvroIdlFieldDeclaration::getVariableDeclaratorList)
 								.flatMap(List::stream)
 				);
-				identifiedElement = "Field";
+				problemMessage = "syntax.duplicate.field.name";
 			} else {
-				duplicateNameElements = getDuplicateNames(valueHolder,
+				duplicateNameElements = getCachedDuplicateNames(valueHolder,
 						() -> Stream.of(((AvroIdlMessageDeclaration) valueHolder))
 								.map(AvroIdlMessageDeclaration::getFormalParameterList)
 								.flatMap(List::stream)
 								.map(AvroIdlFormalParameter::getVariableDeclarator)
 								.flatMap(Stream::ofNullable));
-				identifiedElement = "Message parameter";
+				problemMessage = "syntax.duplicate.message.parameter";
 			}
 		} else if (element.getParent() instanceof AvroIdlEnumConstant) {
 			AvroIdlEnumBody enumBody = (AvroIdlEnumBody) element.getParent().getParent();
-			duplicateNameElements = getDuplicateNames(enumBody,
+			duplicateNameElements = getCachedDuplicateNames(enumBody,
 					() -> enumBody.getEnumConstantList().stream().flatMap(Stream::ofNullable));
-			identifiedElement = "Enum constant";
+			problemMessage = "syntax.duplicate.enum.constant";
 		} else if (element.getParent() instanceof AvroIdlNamedSchemaDeclaration) {
 			PsiElement valueHolder = element.getParent().getParent();
-			duplicateNameElements = getDuplicateNames(valueHolder,
+			duplicateNameElements = getCachedDuplicateNames(valueHolder,
 					() -> ((Stream<?>) Stream.of(valueHolder.getChildren()))
 							.filter(AvroIdlNamedSchemaDeclaration.class::isInstance)
 							.map(AvroIdlNamedSchemaDeclaration.class::cast)
 			);
-			identifiedElement = "Schema";
+			problemMessage = "syntax.duplicate.schema";
 		} else {
 			duplicateNameElements = Collections.emptyMap();
-			identifiedElement = null;
+			problemMessage = null;
 		}
 		NameAndLink linkToDuplicate = duplicateNameElements.get(element);
-		if (linkToDuplicate != null) {
-			String message = duplicateElementMessage(identifiedElement, linkToDuplicate.name);
-			String tooltip = "<html>" + duplicateElementMessage(identifiedElement, linkToDuplicate.link) + "</html>";
+		if (problemMessage != null && linkToDuplicate != null) {
+			String message = TextBundle.message(problemMessage, linkToDuplicate.name);
+			String tooltip = "<html>" + TextBundle.message(problemMessage, linkToDuplicate.link) + "</html>";
 			holder.newAnnotation(ERROR, message).range(element).tooltip(tooltip).create();
 		}
 		if (!validName.test(identifier)) {
-			holder.newAnnotation(ERROR, invalidIdentifierMessage("", identifier)).range(element).create();
+			holder.newAnnotation(ERROR, TextBundle.message("syntax.not.a.valid.identifier", identifier))
+					.range(element).create();
 		}
 	}
 
-	private static Map<PsiElement, NameAndLink> getDuplicateNames(PsiElement contextElement,
-	                                                              Supplier<Stream<PsiNameIdentifierOwner>> findNames) {
+	private static Map<PsiElement, NameAndLink> getCachedDuplicateNames(
+			PsiElement contextElement, Supplier<Stream<PsiNameIdentifierOwner>> findNames) {
 		return CachedValuesManager.getCachedValue(contextElement, () -> {
 			Map<String, List<PsiElement>> elementsByName = new HashMap<>();
 			findNames.get().forEach(
@@ -207,11 +210,6 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 		});
 	}
 
-	@NotNull
-	private String invalidIdentifierMessage(@NotNull String suffix, @NotNull String invalidIdentifier) {
-		return "Not a valid identifier" + suffix + ": " + invalidIdentifier;
-	}
-
 	private void annotateSchemaProperty(@NotNull AvroIdlSchemaProperty element, @NotNull AnnotationHolder holder) {
 		final AvroIdlJsonValue jsonValue = element.getJsonValue();
 		if (jsonValue == null) {
@@ -224,9 +222,9 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 		final AvroIdlWithSchemaProperties parent = (AvroIdlWithSchemaProperties) element.getParent();
 
 		if (parent instanceof AvroIdlReferenceType) {
-			holder.newAnnotation(ERROR,
-							"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile.")
-					.withFix(new DeleteSchemaProperty(element, "Delete annotation from reference"))
+			holder.newAnnotation(ERROR, TextBundle.message("syntax.annotated.type.reference"))
+					.withFix(new DeleteSchemaProperty(element,
+							TextBundle.message("syntax.annotated.type.reference.fix")))
 					.create();
 		}
 
@@ -258,7 +256,7 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 		assert jsonValue != null : "The caller should have verified jsonValue != null";
 		final String namespace = element.getName();
 		if (namespace == null) {
-			holder.newAnnotation(ERROR, "@namespace annotations must contain a string").range(jsonValue).create();
+			holder.newAnnotation(ERROR, TextBundle.message("syntax.invalid.annotation.namespace")).range(jsonValue).create();
 		}
 	}
 
@@ -279,23 +277,25 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 				}
 				String alias = AvroIdlUtil.getJsonString(jsonArrayElement);
 				if (alias == null) {
-					holder.newAnnotation(ERROR, "@aliases elements must be strings").range(jsonArrayElement).create();
+					holder.newAnnotation(ERROR, TextBundle.message("syntax.invalid.annotation.aliases.array"))
+							.range(jsonArrayElement).create();
 				} else if (parent instanceof AvroIdlVariableDeclarator) {
 					if (!VALID_SIMPLE_NAME_IN_STRING.test(alias)) {
-						holder.newAnnotation(ERROR, invalidIdentifierMessage("", alias)).range(jsonArrayElement)
-								.create();
+						holder.newAnnotation(ERROR, TextBundle.message("syntax.not.a.valid.identifier", alias))
+								.range(jsonArrayElement).create();
 					}
 				} else {
 					// Protocol or named schema
 					if (!VALID_IDENTIFIER_IN_STRING.test(alias)) {
-						holder.newAnnotation(ERROR, invalidIdentifierMessage(" (with namespace)", alias))
+						holder.newAnnotation(ERROR,
+										TextBundle.message("syntax.not.a.valid.identifierWithNamespace", alias))
 								.range(jsonArrayElement).create();
 					}
 				}
 			}
 		} else {
-			holder.newAnnotation(ERROR, "@aliases annotations must contain an array of identifiers (strings)")
-					.range(jsonValue).create();
+			holder.newAnnotation(ERROR, TextBundle.message("syntax.invalid.annotation.aliases")).range(jsonValue)
+					.create();
 		}
 	}
 
@@ -308,8 +308,7 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 
 		String order = AvroIdlUtil.getJsonString(jsonValue);
 		if (!VALID_ORDER.test(order)) {
-			holder.newAnnotation(ERROR,
-							"@order annotation must contain one of: \"ascending\", \"descending\", \"ignore\"").range(jsonValue)
+			holder.newAnnotation(ERROR, TextBundle.message("syntax.invalid.annotation.order")).range(jsonValue)
 					.create();
 		}
 	}
@@ -323,7 +322,7 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 
 		String logicalType = AvroIdlUtil.getJsonString(jsonValue);
 		if (logicalType == null) {
-			holder.newAnnotation(ERROR, "@logicalType annotation must contain a string naming the logical type")
+			holder.newAnnotation(ERROR, TextBundle.message("syntax.invalid.annotation.logicalType"))
 					.range(jsonValue).create();
 			return;
 		}
@@ -338,22 +337,22 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 					isCorrectType = primitiveType == AvroIdlTypes.BYTES;
 				}
 				if (!isCorrectType) {
-					holder.newAnnotation(ERROR,
-							"The logical type 'decimal' requires the underlying type bytes or fixed").create();
+					holder.newAnnotation(ERROR, TextBundle.message("syntax.invalid.annotation.logicalType.decimal"))
+							.create();
 				}
 
 				AvroIdlJsonValue precisionValue = findSchemaProperty(parent, "precision");
 				if (precisionValue == null) {
 					holder.newAnnotation(ERROR,
-									"@logicalType(\"decimal\") requires a sibling @precision annotation with a number between 1 and 2^31-1")
-							.create();
+							TextBundle.message("syntax.invalid.annotation.logicalType.decimal.precision")).create();
 				}
 				break;
 			case "date":
 			case "time-millis":
 				if (findPrimitiveType(parent) != AvroIdlTypes.INT) {
 					holder.newAnnotation(ERROR,
-							"The logical type '" + logicalType + "' requires the underlying type int").create();
+							TextBundle.message("syntax.invalid.annotation.logicalType.requires.underlying.int",
+									logicalType)).create();
 				}
 				break;
 			case "time-micros":
@@ -363,7 +362,8 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 			case "local-timestamp-micros":
 				if (findPrimitiveType(parent) != AvroIdlTypes.LONG) {
 					holder.newAnnotation(ERROR,
-							"The logical type '" + logicalType + "' requires the underlying type long").create();
+							TextBundle.message("syntax.invalid.annotation.logicalType.requires.underlying.long",
+									logicalType)).create();
 				}
 				break;
 			case "duration":
@@ -373,8 +373,8 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 					isCorrectDuration = intLiteral != null && Integer.parseInt(intLiteral.getText()) == 12;
 				}
 				if (!isCorrectDuration) {
-					holder.newAnnotation(ERROR,
-							"The logical type 'duration' requires the underlying type fixed, of 12 bytes").create();
+					holder.newAnnotation(ERROR, TextBundle.message("syntax.invalid.annotation.logicalType.duration"))
+							.create();
 				}
 				break;
 		}
@@ -415,8 +415,8 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 
 		Long precision = AvroIdlUtil.getJsonIntValue(jsonValue);
 		if (precision == null || precision < 1 || precision > Integer.MAX_VALUE) {
-			holder.newAnnotation(ERROR, "@precision must contain a number between 1 and 2^31-1").range(jsonValue)
-					.create();
+			holder.newAnnotation(ERROR, TextBundle.message("syntax.invalid.annotation.decimal.precision"))
+					.range(jsonValue).create();
 			return;
 		}
 
@@ -440,8 +440,9 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 					long maxPrecision = Math.round(Math.floor(Math.log10(2) * (8 * (int) fixedSize - 1)));
 					if (precision > maxPrecision) {
 						final String referencedName = fixedDeclaration.getFullName();
-						holder.newAnnotation(ERROR, String.format("%s, a fixed(%d), cannot store %d digits (max %d)",
-								referencedName, fixedSize, precision, maxPrecision)).range(jsonValue).create();
+						holder.newAnnotation(ERROR,
+								TextBundle.message("syntax.invalid.annotation.decimal.precision.insufficient",
+										referencedName, fixedSize, precision, maxPrecision)).range(jsonValue).create();
 					}
 				}
 			}
@@ -471,15 +472,9 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 		}
 
 		if (isIncorrect) {
-			holder.newAnnotation(ERROR, "@scale must contain a non-negative number of at most the value of @precision")
-					.range(jsonValue).create();
+			holder.newAnnotation(ERROR, TextBundle.message("syntax.invalid.annotation.decimal.scale")).range(jsonValue)
+					.create();
 		}
-
-	}
-
-	@NotNull
-	private String duplicateElementMessage(String type, String name) {
-		return String.format("%s '%s' is already defined", type, name);
 	}
 
 	private void annotateOneWay(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
@@ -488,7 +483,7 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 			final IElementType primitiveType = findPrimitiveType(
 					((AvroIdlMessageDeclaration) messageDeclaration).getType());
 			if (primitiveType != VOID && primitiveType != NULL) {
-				holder.newAnnotation(ERROR, "Oneway messages must have a void or null return type").create();
+				holder.newAnnotation(ERROR, TextBundle.message("syntax.oneway.message")).create();
 			}
 		}
 	}

@@ -28,6 +28,7 @@ import com.intellij.refactoring.RenameRefactoring;
 import com.intellij.refactoring.rename.RenameHandler;
 import com.intellij.refactoring.rename.RenameHandlerRegistry;
 import com.intellij.util.IncorrectOperationException;
+import opwvhk.intellij.avro_idl.TextBundle;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,13 +55,17 @@ public class RenameFix implements RefactoringQuickFix {
 	@Override
 	@NotNull
 	public String getFamilyName() {
-		return "Rename";
+		return TextBundle.message("naming.fix.group");
 	}
 
 	@Override
 	@NotNull
 	public String getName() {
-		return targetName == null ? "Rename" : "Rename to '" + targetName + "'";
+		if (targetName == null) {
+			return TextBundle.message("naming.fix.name");
+		} else {
+			return TextBundle.message("naming.fix.name.with.target", targetName);
+		}
 	}
 
 	@Override

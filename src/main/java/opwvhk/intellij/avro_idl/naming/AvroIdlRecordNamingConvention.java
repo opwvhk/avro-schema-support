@@ -1,17 +1,17 @@
 package opwvhk.intellij.avro_idl.naming;
 
+import opwvhk.intellij.avro_idl.TextBundle;
 import opwvhk.intellij.avro_idl.psi.AvroIdlNameIdentifierOwner;
 import opwvhk.intellij.avro_idl.psi.AvroIdlRecordDeclaration;
 
 public class AvroIdlRecordNamingConvention extends AvroIdlNamingConvention {
-
 	public AvroIdlRecordNamingConvention() {
 		super(AvroIdlRecordDeclaration.class, 3, 32, IDENTIFIER_START_UPPERCASE);
 	}
 
 	@Override
 	public String getElementDescription() {
-		return "Record";
+		return TextBundle.message("naming.record");
 	}
 
 	@Override

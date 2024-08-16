@@ -13,6 +13,7 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.impl.source.tree.TreeUtil;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
+import opwvhk.intellij.avro_idl.TextBundle;
 import opwvhk.intellij.avro_idl.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,16 +40,15 @@ public class AvroIdlAvoidSchemaSyntaxInspection extends BaseAvroIdlInspection<Ps
 	                            @NotNull ProblemsHolder holder,
 	                            @NotNull LocalInspectionToolSession session) {
 		if (ReplaceSchemaSyntaxWithProtocolQuickFix.isAvailableFor(element)) {
-			ReplaceSchemaSyntaxWithProtocolQuickFix replaceWithShorthand = new ReplaceSchemaSyntaxWithProtocolQuickFix(
-					element);
-			holder.registerProblem(element, "Use of schema syntax", replaceWithShorthand);
+			holder.registerProblem(element, TextBundle.message("inspection.avoid.schema.syntax"),
+					new ReplaceSchemaSyntaxWithProtocolQuickFix(element));
 		}
 	}
 
 
 	private static class ReplaceSchemaSyntaxWithProtocolQuickFix extends SimpleAvroIdlQuickFixOnPsiElement<PsiElement> {
 		public ReplaceSchemaSyntaxWithProtocolQuickFix(@NotNull PsiElement element) {
-			super(element, "Replace with protocol");
+			super(element, TextBundle.message("inspection.avoid.schema.syntax.fix"));
 		}
 
 		private static boolean isAvailableFor(@NotNull PsiElement element) {

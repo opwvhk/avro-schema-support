@@ -5,6 +5,7 @@ import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
+import opwvhk.intellij.avro_idl.TextBundle;
 import opwvhk.intellij.avro_idl.psi.AvroIdlElementFactory;
 import opwvhk.intellij.avro_idl.psi.AvroIdlNullableType;
 import opwvhk.intellij.avro_idl.psi.AvroIdlType;
@@ -24,13 +25,13 @@ public class AvroIdlUseNullableShorthandInspection extends BaseAvroIdlInspection
 	                            @NotNull LocalInspectionToolSession session) {
 		if (ReplaceWithShorthandQuickFix.isAvailableFor(element)) {
 			ReplaceWithShorthandQuickFix replaceWithShorthand = new ReplaceWithShorthandQuickFix(element);
-			holder.registerProblem(element, "Union can be simplified", replaceWithShorthand);
+			holder.registerProblem(element, TextBundle.message("inspection.use.nullable.shorthand"), replaceWithShorthand);
 		}
 	}
 
 	private static class ReplaceWithShorthandQuickFix extends SimpleAvroIdlQuickFixOnPsiElement<AvroIdlUnionType> {
 		public ReplaceWithShorthandQuickFix(@NotNull AvroIdlUnionType element) {
-			super(element, "Replace union with shorthand notation");
+			super(element, TextBundle.message("inspection.use.nullable.shorthand.fix"));
 		}
 
 		@Nullable

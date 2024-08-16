@@ -1,5 +1,6 @@
 package opwvhk.intellij.avro_idl.naming;
 
+import opwvhk.intellij.avro_idl.TextBundle;
 import opwvhk.intellij.avro_idl.psi.AvroIdlNamespaceIdentifierOwner;
 
 public class AvroIdlNamespaceNamingConvention extends AvroIdlNamingConvention {
@@ -9,6 +10,6 @@ public class AvroIdlNamespaceNamingConvention extends AvroIdlNamingConvention {
 
 	@Override
 	public String getElementDescription() {
-		return "Namespace";
+		return TextBundle.message("naming.namespace");
 	}
 }

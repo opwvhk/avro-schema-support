@@ -1,5 +1,6 @@
 package opwvhk.intellij.avro_idl.naming;
 
+import opwvhk.intellij.avro_idl.TextBundle;
 import opwvhk.intellij.avro_idl.psi.AvroIdlProtocolDeclaration;
 
 public class AvroIdlProtocolNamingConvention extends AvroIdlNamingConvention {
@@ -9,6 +10,6 @@ public class AvroIdlProtocolNamingConvention extends AvroIdlNamingConvention {
 
 	@Override
 	public String getElementDescription() {
-		return "Protocol";
+		return TextBundle.message("naming.protocol");
 	}
 }

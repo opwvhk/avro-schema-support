@@ -10,6 +10,7 @@ import com.intellij.psi.presentation.java.SymbolPresentationUtil;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
+import opwvhk.intellij.avro_idl.TextBundle;
 import opwvhk.intellij.avro_idl.psi.*;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
@@ -57,7 +58,7 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 		if (element instanceof AvroIdlNameIdentifierOwner) {
 			final String name = ((AvroIdlNameIdentifierOwner) element).getName();
 			final String file = SymbolPresentationUtil.getFilePathPresentation(element.getContainingFile());
-			return "\"" + name + "\" in " + file;
+			return TextBundle.message("quick.navigate.info.name.in.file", name, file);
 		}
 		return null;
 	}
