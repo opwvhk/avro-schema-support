@@ -19,7 +19,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "223.3.1"
+version = "223.3.2-SNAPSHOT"
 
 repositories {
 	mavenCentral()
@@ -71,8 +71,8 @@ intellij {
 	//version.set("2023.2.6")
 	//version.set("2023.3.6")
 	//version.set("2024.1.4")
-	// EAP
 	//version.set("2024.2")
+	// EAP
 
 	//type.set("PC")
 	//plugins.addAll("PythonCore")
@@ -82,8 +82,8 @@ intellij {
 	//version.set("2023.2.6")
 	//version.set("2023.3.5")
 	//version.set("2024.1.4")
-	// EAP
 	//version.set("2024.2")
+	// EAP
 
 	// Extra plugin(s); not needed, but maybe useful during development:
 	plugins.add("markdown")
@@ -129,6 +129,10 @@ tasks {
 		untilBuild.set(lastBuild)
 		//language=HTML
 		var changeLog = """
+			<p>Version 223.3.2:</p><ul>
+				<li>Wrap actions in 'commands' for undo (fixed #160, #161)</li>
+				<li>Refactored hardcoded texts into a resource bundle</li>
+			</ul>
 			<p>Version 223.3.1:</p><ul>
 				<li>Added IDL syntax for the schema syntax (new in Avro 1.12.0)</li>
 				<li>Added inspection suggesting the schema syntax where appropriate</li>
