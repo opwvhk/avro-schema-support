@@ -14,7 +14,6 @@ import javax.swing.*;
 public class AvroIdlIcons {
 	// For newer platform versions, we must use the classloader instead of the class.
 	//private static final ClassLoader MY_CLASS_LOADER = AvroIdlIcons.class.getClassLoader();
-	@SuppressWarnings("GrazieInspection")
 	private static final Class<?> MY_CLASS_LOADER = AvroIdlIcons.class;
 	private static final IconManager ICON_MANAGER = IconManager.getInstance();
 	public static final Icon PLUGIN_ICON = ICON_MANAGER.getIcon("/icons/pigeon.svg", MY_CLASS_LOADER);
