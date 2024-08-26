@@ -33,7 +33,7 @@ java {
 
 dependencies {
 	implementation("org.apache.avro:avro-idl:1.12.0") { exclude("org.slf4j") }
-	implementation("org.apache.commons:commons-compress:1.27.0")
+	implementation("org.apache.commons:commons-compress:1.27.1")
 	implementation("org.apache.commons:commons-text:1.12.0")
 	implementation("org.apache.commons:commons-lang3:3.16.0")
 	implementation("org.json:json:20240303")
