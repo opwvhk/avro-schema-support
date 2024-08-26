@@ -88,14 +88,14 @@ public class AvroIdlElementFactory {
 
 		StringBuilder buffer = new StringBuilder();
 		if (!namespace.isEmpty()) {
-			buffer.append(String.format("namespace %s;%n", namespace));
+			buffer.append(String.format("namespace %s;\n", namespace));
 		}
 		if (firstSchemaDeclaration != null) {
-			buffer.append(String.format("// Optional: main schema (using it creates a .avsc equivalent file)%n"));
-			buffer.append(String.format("schema %s;%n", firstSchemaDeclaration));
+			buffer.append("// Optional: main schema (using it creates a .avsc equivalent file)\n");
+			buffer.append(String.format("schema %s;\n", firstSchemaDeclaration));
 		}
 		if (!buffer.isEmpty()) {
-			buffer.append(String.format("%n"));
+			buffer.append("\n");
 		}
 		return createDummyFile(buffer);
 	}
@@ -104,7 +104,7 @@ public class AvroIdlElementFactory {
 	public AvroIdlProtocolDeclaration createDummyProtocol(@Nullable String namespace) {
 		String protocolDefinition = "protocol Dummy { }";
 		if (namespace != null) {
-			protocolDefinition = String.format("@namespace(\"%s\")%n%s", namespace, protocolDefinition);
+			protocolDefinition = String.format("@namespace(\"%s\")\n%s", namespace, protocolDefinition);
 		}
 		return (AvroIdlProtocolDeclaration) createDummyFile(protocolDefinition).getFirstChild();
 	}
