@@ -70,7 +70,7 @@ intellij {
 	// From here, refactor code for compatibility / deprecated code usage
 	//version.set("2023.2.6")
 	//version.set("2023.3.6")
-	//version.set("2024.1.4")
+	//version.set("2024.1.6")
 	//version.set("2024.2")
 	// EAP
 
@@ -81,7 +81,7 @@ intellij {
 	// From here, refactor code for compatibility / deprecated code usage
 	//version.set("2023.2.6")
 	//version.set("2023.3.5")
-	//version.set("2024.1.4")
+	//version.set("2024.1.6")
 	//version.set("2024.2")
 	// EAP
 

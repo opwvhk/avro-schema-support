@@ -29,33 +29,33 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 
 		assertOrderedEquals(highlight,
 				Highlight.error("Many-Mistakes", "Not a valid identifier: Many-Mistakes"),
-				Highlight.error("Status", "Schema '12 monkeys.Status' is already defined"),
-				Highlight.error("Status", "Schema '12 monkeys.Status' is already defined"),
+				Highlight.error("Status", "Schema \"12 monkeys.Status\" is already defined"),
+				Highlight.error("Status", "Schema \"12 monkeys.Status\" is already defined"),
 				Highlight.error("12", "@namespace annotations must contain a string"),
 				Highlight.error("\"even-more-wrong\"", "Not a valid identifier (with namespace): even-more-wrong"),
 				Highlight.error("also-wrong", "Not a valid identifier: also-wrong"),
 				Highlight.error("C", "Enum default must be one of the enum constants"),
 				Highlight.error("my-data", "Not a valid identifier: my-data"),
-				Highlight.error("duplicate", "Field 'duplicate' is already defined"),
-				Highlight.error("duplicate", "Field 'duplicate' is already defined"),
+				Highlight.error("duplicate", "Field \"duplicate\" is already defined"),
+				Highlight.error("duplicate", "Field \"duplicate\" is already defined"),
 				Highlight.error("@namespace(\"unused\")",
-						"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile."),
+						"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fails to compile."),
 				Highlight.error("one-letter", "Not a valid identifier: one-letter"),
 				Highlight.error("23", "@logicalType annotation must contain a string naming the logical type"),
 				Highlight.error("34",
 						"@order annotation must contain one of: \"ascending\", \"descending\", \"ignore\""),
-				Highlight.error("@logicalType(\"date\")", "The logical type 'date' requires the underlying type int"),
+				Highlight.error("@logicalType(\"date\")", "The logical type \"date\" requires the underlying type \"int\""),
 				Highlight.error("\"wrong\"",
 						"@order annotation must contain one of: \"ascending\", \"descending\", \"ignore\""),
 				Highlight.error("@logicalType(\"time-millis\")",
-						"The logical type 'time-millis' requires the underlying type int"),
+						"The logical type \"time-millis\" requires the underlying type \"int\""),
 				Highlight.error("45", "@aliases annotations must contain an array of identifiers (strings)"),
 				Highlight.error("@logicalType(\"timestamp-millis\")",
-						"The logical type 'timestamp-millis' requires the underlying type long"),
+						"The logical type \"timestamp-millis\" requires the underlying type \"long\""),
 				Highlight.error("56", "@aliases elements must be strings"),
 				Highlight.error("\"invites-failure\"", "Not a valid identifier: invites-failure"),
 				Highlight.error("@logicalType(\"local-timestamp-millis\")",
-						"The logical type 'local-timestamp-millis' requires the underlying type long"),
+						"The logical type \"local-timestamp-millis\" requires the underlying type \"long\""),
 				Highlight.error("@logicalType(\"decimal\")",
 						"@logicalType(\"decimal\") requires a sibling @precision annotation with a number between 1 and 2^31-1"),
 				Highlight.error("true", "@precision must contain a number between 1 and 2^31-1"),
@@ -65,21 +65,23 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 						"@scale must contain a non-negative number of at most the value of @precision"),
 				Highlight.error("-2", "@scale must contain a non-negative number of at most the value of @precision"),
 				Highlight.error("@logicalType(\"decimal\")",
-						"The logical type 'decimal' requires the underlying type bytes or fixed"),
+						"The logical type \"decimal\" requires the underlying type \"bytes\" or \"fixed\""),
 				Highlight.error("8", "@scale must contain a non-negative number of at most the value of @precision"),
 				Highlight.error("@logicalType(\"decimal\")",
-						"The logical type 'decimal' requires the underlying type bytes or fixed"),
+						"The logical type \"decimal\" requires the underlying type \"bytes\" or \"fixed\""),
 				Highlight.error("@logicalType(\"decimal\")",
-						"The logical type 'decimal' requires the underlying type bytes or fixed"),
+						"The logical type \"decimal\" requires the underlying type \"bytes\" or \"fixed\""),
 				Highlight.error("@logicalType(\"decimal\")",
-						"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile."),
+						"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fails to compile."),
 				Highlight.error("@precision(40)",
-						"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile."),
+						"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fails to compile."),
 				Highlight.error("40", "hashes.MD5, a fixed(16), cannot store 40 digits (max 38)"),
 				Highlight.error("@scale(0)",
-						"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fail to compile."),
-				Highlight.error("DUP", "Enum constant 'DUP' is already defined"),
-				Highlight.error("DUP", "Enum constant 'DUP' is already defined"),
+						"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fails to compile."),
+				Highlight.error("@logicalType(\"duration\")", "The logical type \"duration\" requires the underlying type \"fixed\", of 12 bytes"),
+				Highlight.error("@logicalType(\"duration\")", "The logical type \"duration\" requires the underlying type \"fixed\", of 12 bytes"),
+				Highlight.error("DUP", "Enum constant \"DUP\" is already defined"),
+				Highlight.error("DUP", "Enum constant \"DUP\" is already defined"),
 				Highlight.error("67", "@aliases annotations must contain an array of identifiers (strings)"),
 				Highlight.error("78", "@aliases elements must be strings"),
 				Highlight.error("\"her-failure\"", "Not a valid identifier (with namespace): her-failure"),
@@ -87,9 +89,9 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 				Highlight.error("Whatever", "Unknown schema: Whatever"),
 				Highlight.error("do-stuff", "Not a valid identifier: do-stuff"),
 				Highlight.error("Something", "Unknown schema: Something"),
-				Highlight.error("one", "Message parameter 'one' is already defined"),
+				Highlight.error("one", "Message parameter \"one\" is already defined"),
 				Highlight.error("Something", "Unknown schema: Something"),
-				Highlight.error("one", "Message parameter 'one' is already defined"),
+				Highlight.error("one", "Message parameter \"one\" is already defined"),
 				Highlight.error("SomeError", "Unknown schema: SomeError"),
 				Highlight.error("hashes.MD5", "Not an error: hashes.MD5"),
 				Highlight.error("oneway", "Oneway messages must have a void or null return type")
@@ -305,7 +307,7 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("DataProtocol_empty.avdl");
 		assertEquals(1, quickFixes.size());
 		IntentionAction quickFix = quickFixes.get(0);
-		assertEquals("Replace with schema syntax", quickFix.getText());
+		assertEquals("Replace protocol with schema syntax", quickFix.getText());
 		myFixture.launchAction(quickFix);
 		myFixture.checkResultByFile("DataProtocolFixed_empty.avdl");
 	}
@@ -316,7 +318,7 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("DataProtocol_ns.avdl");
 		assertEquals(1, quickFixes.size());
 		IntentionAction quickFix = quickFixes.get(0);
-		assertEquals("Replace with schema syntax", quickFix.getText());
+		assertEquals("Replace protocol with schema syntax", quickFix.getText());
 		myFixture.launchAction(quickFix);
 		myFixture.checkResultByFile("DataProtocolFixed_ns.avdl");
 	}
@@ -341,7 +343,7 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("DataProtocol_record.avdl");
 		assertEquals(1, quickFixes.size());
 		IntentionAction quickFix = quickFixes.get(0);
-		assertEquals("Replace with schema syntax", quickFix.getText());
+		assertEquals("Replace protocol with schema syntax", quickFix.getText());
 		myFixture.launchAction(quickFix);
 		myFixture.checkResultByFile("DataProtocolFixed_record.avdl");
 	}
@@ -366,7 +368,7 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("DataProtocol_ns_record.avdl");
 		assertEquals(1, quickFixes.size());
 		IntentionAction quickFix = quickFixes.get(0);
-		assertEquals("Replace with schema syntax", quickFix.getText());
+		assertEquals("Replace protocol with schema syntax", quickFix.getText());
 		myFixture.launchAction(quickFix);
 		myFixture.checkResultByFile("DataProtocolFixed_ns_record.avdl");
 	}
@@ -391,7 +393,7 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("SchemaSyntax.avdl");
 		assertEquals(1, quickFixes.size());
 		IntentionAction quickFix = quickFixes.get(0);
-		assertEquals("Replace with protocol", quickFix.getText());
+		assertEquals("Replace schema syntax with protocol", quickFix.getText());
 		myFixture.launchAction(quickFix);
 		myFixture.checkResultByFile("SchemaSyntaxFixed.avdl");
 	}
@@ -416,7 +418,7 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("SchemaSyntaxWithoutNamespace.avdl");
 		assertEquals(1, quickFixes.size());
 		IntentionAction quickFix = quickFixes.get(0);
-		assertEquals("Replace with protocol", quickFix.getText());
+		assertEquals("Replace schema syntax with protocol", quickFix.getText());
 		myFixture.launchAction(quickFix);
 		myFixture.checkResultByFile("SchemaSyntaxWithoutNamespaceFixed.avdl");
 	}

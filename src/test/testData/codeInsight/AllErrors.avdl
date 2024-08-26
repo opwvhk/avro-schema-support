@@ -97,8 +97,15 @@ protocol Many-Mistakes {
 		@precision(40)
 		@scale(0)
 		hashes.MD5 notLogic14;
+        @logicalType("duration")
+        int duration1;
+        Duration duration2;
 	}
-	enum SillyEnum {
+
+    @logicalType("duration")
+    fixed Duration(5);
+
+    enum SillyEnum {
 		DUP, DUP
 	}
 
