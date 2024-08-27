@@ -2,9 +2,9 @@ package opwvhk.intellij.avro_idl;
 
 import com.intellij.codeInsight.generation.actions.CommentByBlockCommentAction;
 import com.intellij.codeInsight.generation.actions.CommentByLineCommentAction;
-import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 
-public class AvroIdlCommenterTest extends LightJavaCodeInsightFixtureTestCase {
+public class AvroIdlCommenterTest extends BasePlatformTestCase {
 
 	@Override
 	protected String getTestDataPath() {

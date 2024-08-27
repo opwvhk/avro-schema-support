@@ -7,13 +7,14 @@ import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.spellchecker.SpellCheckerSeveritiesProvider;
-import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import opwvhk.intellij.avro_idl.inspections.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase {
+@SuppressWarnings("unchecked")
+public class AvroIdlCodeInsightTest extends BasePlatformTestCase {
 
 	@Override
 	protected String getTestDataPath() {
@@ -44,7 +45,8 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 				Highlight.error("23", "@logicalType annotation must contain a string naming the logical type"),
 				Highlight.error("34",
 						"@order annotation must contain one of: \"ascending\", \"descending\", \"ignore\""),
-				Highlight.error("@logicalType(\"date\")", "The logical type \"date\" requires the underlying type \"int\""),
+				Highlight.error("@logicalType(\"date\")",
+						"The logical type \"date\" requires the underlying type \"int\""),
 				Highlight.error("\"wrong\"",
 						"@order annotation must contain one of: \"ascending\", \"descending\", \"ignore\""),
 				Highlight.error("@logicalType(\"time-millis\")",
@@ -78,8 +80,10 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 				Highlight.error("40", "hashes.MD5, a fixed(16), cannot store 40 digits (max 38)"),
 				Highlight.error("@scale(0)",
 						"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fails to compile."),
-				Highlight.error("@logicalType(\"duration\")", "The logical type \"duration\" requires the underlying type \"fixed\", of 12 bytes"),
-				Highlight.error("@logicalType(\"duration\")", "The logical type \"duration\" requires the underlying type \"fixed\", of 12 bytes"),
+				Highlight.error("@logicalType(\"duration\")",
+						"The logical type \"duration\" requires the underlying type \"fixed\", of 12 bytes"),
+				Highlight.error("@logicalType(\"duration\")",
+						"The logical type \"duration\" requires the underlying type \"fixed\", of 12 bytes"),
 				Highlight.error("DUP", "Enum constant \"DUP\" is already defined"),
 				Highlight.error("DUP", "Enum constant \"DUP\" is already defined"),
 				Highlight.error("67", "@aliases annotations must contain an array of identifiers (strings)"),
@@ -109,7 +113,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testDuplicateAnnotationsInspection() {
 		myFixture.enableInspections(AvroIdlDuplicateAnnotationsInspection.class);
 		myFixture.configureByFiles("DuplicateAnnotations.avdl");
@@ -122,7 +125,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testDuplicateAnnotationsInspectionQuickFix() {
 		myFixture.enableInspections(AvroIdlDuplicateAnnotationsInspection.class);
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("DuplicateAnnotations.avdl");
@@ -136,7 +138,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		myFixture.checkResultByFile("DuplicateAnnotationsFixed.avdl");
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testUseNullableShorthandInspection() {
 		myFixture.enableInspections(AvroIdlUseNullableShorthandInspection.class);
 		myFixture.configureByFiles("AllowShorthandNullable.avdl");
@@ -149,7 +150,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testUseNullableShorthandInspectionQuickFix() {
 		myFixture.enableInspections(AvroIdlUseNullableShorthandInspection.class);
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("AllowShorthandNullable.avdl");
@@ -161,7 +161,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		myFixture.checkResultByFile("AllowShorthandNullableFixed.avdl");
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testAvoidNullableShorthandInspection() {
 		myFixture.enableInspections(AvroIdlAvoidNullableShorthandInspection.class);
 		myFixture.configureByFiles("AllowShorthandNullableFixed.avdl");
@@ -174,7 +173,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testAvoidNullableShorthandInspectionQuickFix() {
 		myFixture.enableInspections(AvroIdlAvoidNullableShorthandInspection.class);
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("AllowShorthandNullableFixed.avdl");
@@ -186,7 +184,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		myFixture.checkResultByFile("AllowShorthandNullable.avdl");
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testMisplacedAnnotationsInspection() {
 		myFixture.enableInspections(AvroIdlMisplacedAnnotationsInspection.class);
 		myFixture.configureByFiles("MisplacedAnnotations.avdl");
@@ -200,7 +197,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testMisplacedDocumentationInspection() {
 		myFixture.enableInspections(AvroIdlMisplacedDocumentationInspection.class);
 		myFixture.configureByFiles("MisplacedDocumentation.avdl");
@@ -240,7 +236,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testMisplacedDocumentationInspectionQuickFixRemove() {
 		myFixture.enableInspections(AvroIdlMisplacedDocumentationInspection.class);
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("MisplacedDocumentation.avdl");
@@ -253,7 +248,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		myFixture.checkResultByFile("MisplacedDocumentationRemoved.avdl");
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testMisplacedDocumentationInspectionQuickFixChange() {
 		myFixture.enableInspections(AvroIdlMisplacedDocumentationInspection.class);
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("MisplacedDocumentation.avdl");
@@ -266,7 +260,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		myFixture.checkResultByFile("MisplacedDocumentationFixed.avdl");
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testNamingInspection() {
 		myFixture.enableInspections(AvroIdlNamingConventionInspection.class);
 		myFixture.configureByFiles("Naming.avdl");
@@ -287,7 +280,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testSchemaSyntaxInspectionWithoutNamespaceOrSchema() {
 		myFixture.enableInspections(AvroIdlUseSchemaSyntaxInspection.class);
 		myFixture.configureByFiles("DataProtocol_empty.avdl");
@@ -297,11 +289,10 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		// Luckily, the method returns highlights in the order they are in the file.
 
 		assertOrderedEquals(highlight,
-			Highlight.weakWarning("protocol", "Schema syntax available")
+				Highlight.weakWarning("protocol", "Schema syntax available")
 		);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testSchemaSyntaxInspectionWithoutNamespaceOrSchemaQuickFix() {
 		myFixture.enableInspections(AvroIdlUseSchemaSyntaxInspection.class);
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("DataProtocol_empty.avdl");
@@ -312,7 +303,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		myFixture.checkResultByFile("DataProtocolFixed_empty.avdl");
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testSchemaSyntaxInspectionWithoutSchemaQuickFix() {
 		myFixture.enableInspections(AvroIdlUseSchemaSyntaxInspection.class);
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("DataProtocol_ns.avdl");
@@ -323,7 +313,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		myFixture.checkResultByFile("DataProtocolFixed_ns.avdl");
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testSchemaSyntaxInspectionForRecordWithoutNamespace() {
 		myFixture.enableInspections(AvroIdlUseSchemaSyntaxInspection.class);
 		myFixture.configureByFiles("DataProtocol_record.avdl");
@@ -333,11 +322,10 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		// Luckily, the method returns highlights in the order they are in the file.
 
 		assertOrderedEquals(highlight,
-			Highlight.weakWarning("protocol", "Schema syntax available")
+				Highlight.weakWarning("protocol", "Schema syntax available")
 		);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testSchemaSyntaxInspectionForRecordWithoutNamespaceQuickFix() {
 		myFixture.enableInspections(AvroIdlUseSchemaSyntaxInspection.class);
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("DataProtocol_record.avdl");
@@ -348,7 +336,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		myFixture.checkResultByFile("DataProtocolFixed_record.avdl");
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testSchemaSyntaxInspectionForRecordWithNamespace() {
 		myFixture.enableInspections(AvroIdlUseSchemaSyntaxInspection.class);
 		myFixture.configureByFiles("DataProtocol_ns_record.avdl");
@@ -358,11 +345,10 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		// Luckily, the method returns highlights in the order they are in the file.
 
 		assertOrderedEquals(highlight,
-			Highlight.weakWarning("protocol", "Schema syntax available")
+				Highlight.weakWarning("protocol", "Schema syntax available")
 		);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testSchemaSyntaxInspectionForRecordWithNamespaceQuickFix() {
 		myFixture.enableInspections(AvroIdlUseSchemaSyntaxInspection.class);
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("DataProtocol_ns_record.avdl");
@@ -373,7 +359,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		myFixture.checkResultByFile("DataProtocolFixed_ns_record.avdl");
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testAvoidSchemaSyntaxInspection() {
 		myFixture.enableInspections(AvroIdlAvoidSchemaSyntaxInspection.class);
 		myFixture.configureByFiles("SchemaSyntax.avdl");
@@ -383,11 +368,10 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		// Luckily, the method returns highlights in the order they are in the file.
 
 		assertOrderedEquals(highlight,
-			Highlight.error("namespace", "Use of schema syntax")
+				Highlight.error("namespace", "Use of schema syntax")
 		);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testAvoidSchemaSyntaxInspectionQuickFix() {
 		myFixture.enableInspections(AvroIdlAvoidSchemaSyntaxInspection.class);
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("SchemaSyntax.avdl");
@@ -398,7 +382,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		myFixture.checkResultByFile("SchemaSyntaxFixed.avdl");
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testAvoidSchemaSyntaxInspectionWithoutNamespace() {
 		myFixture.enableInspections(AvroIdlAvoidSchemaSyntaxInspection.class);
 		myFixture.configureByFiles("SchemaSyntaxWithoutNamespace.avdl");
@@ -408,11 +391,10 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		// Luckily, the method returns highlights in the order they are in the file.
 
 		assertOrderedEquals(highlight,
-			Highlight.error("record", "Use of schema syntax")
+				Highlight.error("record", "Use of schema syntax")
 		);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testAvoidSchemaSyntaxInspectionWithoutNamespaceQuickFix() {
 		myFixture.enableInspections(AvroIdlAvoidSchemaSyntaxInspection.class);
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("SchemaSyntaxWithoutNamespace.avdl");
@@ -500,6 +482,7 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 		myFixture.configureByFiles("DocumentationTestData.java", "DocumentationTestData.simple");
 		final PsiElement originalElement = myFixture.getElementAtCaret();
 		// TODO: Upgrade API when requiring at least 2023.1
+		//noinspection deprecation
 		PsiElement element = DocumentationManager
 				.getInstance(getProject())
 				.findTargetElement(myFixture.getEditor(), originalElement.getContainingFile(), originalElement);
@@ -508,6 +491,8 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 			element = originalElement;
 		}
 
+		// TODO: Upgrade API when requiring at least 2023.1
+		//noinspection deprecation
 		final DocumentationProvider documentationProvider = DocumentationManager.getProviderFromElement(element);
 		final String generateDoc = documentationProvider.generateDoc(element, originalElement);
 		assertNotNull(generateDoc);
@@ -515,11 +500,7 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 	}
 
 	@SuppressWarnings("SameParameterValue")
-	private static class Highlight {
-		private final HighlightSeverity severity;
-		private final String text;
-		private final String description;
-
+	private record Highlight(HighlightSeverity severity, String text, String description) {
 		static Highlight error(String text, String description) {
 			return new Highlight(HighlightSeverity.ERROR, text, description);
 		}
@@ -563,11 +544,6 @@ public class AvroIdlCodeInsightTest extends LightJavaCodeInsightFixtureTestCase 
 			return severity.equals(highlight.severity) &&
 					text.equals(highlight.text) &&
 					description.equals(highlight.description);
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hash(severity, text, description);
 		}
 
 		@Override

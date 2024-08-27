@@ -4,12 +4,12 @@ import com.intellij.application.options.CodeStyle;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.util.containers.ContainerUtil;
 
 import java.util.function.BiConsumer;
 
-public class AvroIdlFormattingTest extends LightJavaCodeInsightFixtureTestCase {
+public class AvroIdlFormattingTest extends BasePlatformTestCase {
 	@Override
 	protected String getTestDataPath() {
 		return "src/test/testData/formatting";

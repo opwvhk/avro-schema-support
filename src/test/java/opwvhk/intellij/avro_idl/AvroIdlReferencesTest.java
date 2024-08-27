@@ -5,7 +5,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.usageView.UsageInfo;
 import opwvhk.intellij.avro_idl.editor.AvroIdlCodeStyleSettings;
 import opwvhk.intellij.avro_idl.psi.AvroIdlEnumDeclaration;
@@ -14,12 +14,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Objects;
 
 import static com.intellij.psi.TokenType.WHITE_SPACE;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.*;
 
-public class AvroIdlReferencesTest extends LightJavaCodeInsightFixtureTestCase {
+public class AvroIdlReferencesTest extends BasePlatformTestCase {
+	@Override
+	protected String getTestDataPath() {
+		return "src/test/testData/references";
+	}
+
 	public void testSchemaRenameWithoutAlias() {
 		myFixture.configureByFiles("BeforeSchemaRename.avdl");
 		AvroIdlCodeStyleSettings codeStyleSettings = CodeStyle.getCustomSettings(myFixture.getFile(),
@@ -54,11 +58,6 @@ public class AvroIdlReferencesTest extends LightJavaCodeInsightFixtureTestCase {
 				AvroIdlCodeStyleSettings.class);
 		codeStyleSettings.ADD_ALIAS_ON_FIELD_RENAME = true;
 		myFixture.checkResultByFile("AfterFieldRenameWithAlias.avdl", false);
-	}
-
-	@Override
-	protected String getTestDataPath() {
-		return "src/test/testData/references";
 	}
 
 	public void testReference() {
@@ -100,12 +99,8 @@ public class AvroIdlReferencesTest extends LightJavaCodeInsightFixtureTestCase {
 		return new Usage(resolvedFullName, referenceText, parentElement, grandParentElement);
 	}
 
-	private static class Usage {
-		private final String resolvedFullName;
-		private final String referenceText;
-		private final IElementType parentElement;
-		private final IElementType grandParentElement;
-
+	private record Usage(String resolvedFullName, String referenceText, IElementType parentElement,
+	                     IElementType grandParentElement) {
 		static Usage fromUsageInfo(UsageInfo usageInfo) {
 			final PsiReference reference = usageInfo.getReference();
 			if (reference != null) {
@@ -119,34 +114,6 @@ public class AvroIdlReferencesTest extends LightJavaCodeInsightFixtureTestCase {
 				}
 			}
 			return new Usage("", "", WHITE_SPACE, WHITE_SPACE);
-		}
-
-		Usage(String resolvedFullName, String referenceText, IElementType parentElement,
-		      IElementType grandParentElement) {
-			this.resolvedFullName = resolvedFullName;
-			this.referenceText = referenceText;
-			this.parentElement = parentElement;
-			this.grandParentElement = grandParentElement;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) {
-				return true;
-			}
-			if (o == null || getClass() != o.getClass()) {
-				return false;
-			}
-			Usage usage = (Usage) o;
-			return Objects.equals(resolvedFullName, usage.resolvedFullName) &&
-					Objects.equals(referenceText, usage.referenceText) &&
-					Objects.equals(parentElement, usage.parentElement) &&
-					Objects.equals(grandParentElement, usage.grandParentElement);
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hash(resolvedFullName, referenceText, parentElement, grandParentElement);
 		}
 
 		@Override

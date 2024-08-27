@@ -1,14 +1,14 @@
 package opwvhk.intellij.avro_idl;
 
 import com.intellij.codeInsight.completion.CompletionType;
-import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AvroIdlCodeCompletionsTest extends LightJavaCodeInsightFixtureTestCase {
+public class AvroIdlCodeCompletionsTest extends BasePlatformTestCase {
 
 	@Override
 	protected String getTestDataPath() {
