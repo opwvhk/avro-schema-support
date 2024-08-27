@@ -167,10 +167,11 @@ abstract class ConversionActionBase extends DumbAwareAction {
 		if (virtualFiles == null) {
 			return emptyList();
 		}
-		return Stream.of(virtualFiles).filter(this::canConvert).collect(Collectors.toList());
+		Project project = e.getProject();
+		return Stream.of(virtualFiles).filter(file -> canConvert(file, project)).collect(Collectors.toList());
 	}
 
-	protected boolean canConvert(@NotNull VirtualFile file) {
+	protected boolean canConvert(@NotNull VirtualFile file, Project project) {
 		// We can process any file (not a virtual file or injected code) that is of the right type.
 		return !file.isDirectory() && !(file instanceof VirtualFileWindow) && file.getFileType() == sourceFileType;
 	}

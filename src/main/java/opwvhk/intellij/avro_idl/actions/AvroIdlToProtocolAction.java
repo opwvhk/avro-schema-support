@@ -9,20 +9,40 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWrapper;
+import com.intellij.psi.PsiManager;
 import opwvhk.intellij.avro_idl.AvroIdlFileType;
 import opwvhk.intellij.avro_idl.AvroProtocolFileType;
+import opwvhk.intellij.avro_idl.psi.AvroIdlFile;
+import opwvhk.intellij.avro_idl.psi.AvroIdlProtocolDeclaration;
 import org.apache.avro.Protocol;
 import org.apache.avro.idl.IdlFile;
 import org.apache.avro.idl.IdlReader;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import static com.intellij.execution.ui.ConsoleViewContentType.*;
+import static opwvhk.intellij.avro_idl.language.AvroIdlUtil.ifType;
 
 public class AvroIdlToProtocolAction extends ConversionActionBase {
 	public AvroIdlToProtocolAction() {
 		super("Convert to Avro Protocol", AvroIdlFileType.INSTANCE, AvroProtocolFileType.INSTANCE);
+	}
+
+	@Override
+	protected boolean canConvert(@NotNull VirtualFile file, Project project) {
+		if (!super.canConvert(file, project)) {
+			return false;
+		}
+		// Find out if the file contains a protocol
+		PsiManager psiManager = PsiManager.getInstance(project);
+		return ifType(psiManager.findFile(file), AvroIdlFile.class)
+				.flatMap(avroIdlFile -> Stream.of(avroIdlFile.getChildren()))
+				.flatMap(child -> ifType(child, AvroIdlProtocolDeclaration.class))
+				.map(AvroIdlProtocolDeclaration::getFullName)
+				.anyMatch(Objects::nonNull);
 	}
 
 	@Override
