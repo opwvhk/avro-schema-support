@@ -23,7 +23,8 @@ public class AvroJsonSchemaPsiWalkerFactory implements JsonLikePsiWalkerFactory 
 
 	@Override
 	@NotNull
-	public JsonLikePsiWalker create(@NotNull JsonSchemaObject schemaObject) {
+	public JsonLikePsiWalker create(@SuppressWarnings("NullableProblems") JsonSchemaObject schemaObject) {
+		// We deliberately ignore a null schemaObject (as IntelliJ does pass null values)
 		return WALKER_INSTANCE;
 	}
 }
