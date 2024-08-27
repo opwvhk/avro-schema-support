@@ -48,11 +48,11 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 
 			// Find all root schemas (schemas not used by other schemas).
 			console.print("Finding root schemas\n", NORMAL_OUTPUT);
-			final String schemaNames = String.join(", ", idlFile.getNamedSchemas().keySet());
+			String schemaNames = String.join(", ", idlFile.getNamedSchemas().keySet());
 			console.print("Initial schemas from protocol: " + schemaNames + "\n", NORMAL_OUTPUT);
 
 			// Use one instance to ensure we discover common roots
-			final SchemaVisitor<List<Schema>> rootSchemaDiscoveringVisitor = new RootSchemaDiscoveringVisitor(console);
+			SchemaVisitor<List<Schema>> rootSchemaDiscoveringVisitor = new RootSchemaDiscoveringVisitor(console);
 			idlFile.getNamedSchemas().values().forEach(root -> Schemas.visit(root, rootSchemaDiscoveringVisitor));
 			rootSchemas = rootSchemaDiscoveringVisitor.get();
 			console.print(
@@ -64,10 +64,10 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 			writeStackTrace(console, e);
 			return;
 		}
-		final VirtualFile destination;
+		VirtualFile destination;
 		if (rootSchemas.size() == 1) {
 			console.print("Asking for file to write Avro Schema to...\n", NORMAL_OUTPUT);
-			final VirtualFileWrapper fileWrapper = askForTargetFile(project, "Save Avro Schema as", null,
+			VirtualFileWrapper fileWrapper = askForTargetFile(project, "Save Avro Schema as", null,
 					AvroSchemaFileType.INSTANCE,
 					file.getParent(), rootSchemas.get(0).getName());
 			if (fileWrapper != null) {
@@ -91,7 +91,7 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 					FileEditorManager.getInstance(project)
 							.openTextEditor(new OpenFileDescriptor(project, destination), true);
 				} else {
-					final String suffix = "." + findExtensionFor(AvroSchemaFileType.INSTANCE);
+					String suffix = "." + findExtensionFor(AvroSchemaFileType.INSTANCE);
 					for (Schema rootSchema : rootSchemas) {
 						VirtualFile schemaFile = destination.findOrCreateChildData(this, rootSchema.getName() + suffix);
 						writeSchema(project, console, schemaFile, rootSchema);
@@ -106,6 +106,7 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 
 	private void writeSchema(@NotNull Project project, @NotNull ConsoleView console, VirtualFile destination,
 	                         Schema schema) throws IOException {
+		Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
 		VfsUtil.saveText(destination, SchemaFormatter.format("json/pretty", schema));
 		console.print("Wrote Avro Schema \"", NORMAL_OUTPUT);
 		console.print(schema.getName(), NORMAL_OUTPUT);
@@ -146,7 +147,9 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 				// visitTerminal handles Enum & Fixed schemas
 				action = addNamedSchema(schema);
 			}
-			stack.push(schema);
+			if (action != SchemaVisitorAction.TERMINATE) {
+				stack.push(schema);
+			}
 			return action;
 		}
 
@@ -159,16 +162,13 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 		private SchemaVisitorAction addNamedSchema(Schema schema) {
 			if (stack.isEmpty()) {
 				if (usedNamedSchemas.contains(schema)) {
-					final String message =
-							"Skipping schema " + schema.getName() + ": it was used within a previous root.\n";
+					String message = "Skipping schema " + schema.getName() + ": it was used within a previous root.\n";
 					console.print(message, NORMAL_OUTPUT);
 					return SchemaVisitorAction.TERMINATE;
 				}
 				rootSchemaCandidates.add(schema);
-			} else if (usedNamedSchemas.add(schema)) {
-				final String message =
-						"Eliminating schema " + schema.getName() + ": it's used within " + stack.getLast().getName() +
-								"\n";
+			} else if (!usedNamedSchemas.add(schema)) {
+				String message = "Skipping schema " + schema.getName() + ": it is not a new root schema.\n";
 				console.print(message, NORMAL_OUTPUT);
 			}
 			return SchemaVisitorAction.CONTINUE;
@@ -176,7 +176,6 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 
 		@Override
 		public List<Schema> get() {
-			rootSchemaCandidates.removeAll(usedNamedSchemas);
 			return rootSchemaCandidates;
 		}
 	}
