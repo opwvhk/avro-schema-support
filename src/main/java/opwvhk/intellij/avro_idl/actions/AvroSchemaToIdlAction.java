@@ -12,6 +12,7 @@ import com.intellij.openapi.vfs.VirtualFileWrapper;
 import opwvhk.intellij.avro_idl.AvroIdlFileType;
 import opwvhk.intellij.avro_idl.AvroSchemaFileType;
 import org.apache.avro.AvroRuntimeException;
+import org.apache.avro.AvroTypeException;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaParser;
 import org.apache.avro.idl.IdlUtils;
@@ -49,7 +50,18 @@ public class AvroSchemaToIdlAction extends ConversionActionBase {
 				return;
 			}
 		}
-		final List<Schema> schemas = new ArrayList<>(parser.getParsedNamedSchemas());
+		final List<Schema> schemas;
+		try {
+			schemas = new ArrayList<>(parser.getParsedNamedSchemas());
+		} catch (AvroTypeException e) {
+			console.print(e.getMessage(), ERROR_OUTPUT);
+			console.print("\n\n", ERROR_OUTPUT);
+			console.print("This error usually means that the selected files reference schemata that they do " +
+					"not define. Though the Avro parser supports parsing incomplete schemata to overcome the lack of " +
+					"imports in .avsc/.avpr files, .avdl files are expected to either define or import all schemata " +
+					"they use. To fix this error, please select a complete set of schemata.\n", ERROR_OUTPUT);
+			return;
+		}
 
 		console.print("Asking for file to write Avro IDL to...\n", NORMAL_OUTPUT);
 		final VirtualFileWrapper wrapper = askForTargetFile(project, "Save as Avro IDL",
@@ -77,8 +89,11 @@ public class AvroSchemaToIdlAction extends ConversionActionBase {
 						FileEditorManager.getInstance(project)
 								.openTextEditor(new OpenFileDescriptor(project, virtualFile), true);
 					} catch (RuntimeException | IOException e) {
-						console.print("Failed to write the Avro IDL to " + virtualFile.getName() + "\n" +
-								e.getLocalizedMessage(), ERROR_OUTPUT);
+						console.print("Failed to write the Avro IDL to ", ERROR_OUTPUT);
+						console.print(virtualFile.getName(), ERROR_OUTPUT);
+						console.print("\n", ERROR_OUTPUT);
+						console.print(e.getLocalizedMessage(), ERROR_OUTPUT);
+						console.print("\n", ERROR_OUTPUT);
 						writeStackTrace(console, e);
 					}
 				});
