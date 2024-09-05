@@ -9,6 +9,7 @@ import com.intellij.openapi.editor.CaretState;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.ScrollType;
+import com.intellij.openapi.editor.impl.ImaginaryEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
@@ -56,18 +57,15 @@ public abstract class SimpleAvroIdlQuickFixOnPsiElement<E extends PsiElement>
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void invoke(@NotNull Project project, @NotNull PsiFile file, @NotNull PsiElement startElement,
-	                   @NotNull PsiElement endElement) {
-		CommandProcessor.getInstance().executeCommand(project,
-				() -> invoke(project, file, (Editor) null, (E) startElement), text, null);
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
 	public void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor,
 	                   @NotNull PsiElement startElement, @NotNull PsiElement endElement) {
-		CommandProcessor.getInstance().executeCommand(project,
-				() -> invoke(project, file, editor, (E) startElement), text, null);
+		Runnable action = () -> invoke(project, file, editor, (E) startElement);
+		if (editor instanceof ImaginaryEditor) {
+			// We're generating a preview: stay on the EDT (do not switch to a write thread)
+			action.run();
+		} else {
+			CommandProcessor.getInstance().executeCommand(project, action, text, null);
+		}
 	}
 
 	protected void selectElement(Editor editor, @NotNull PsiElement element) {
