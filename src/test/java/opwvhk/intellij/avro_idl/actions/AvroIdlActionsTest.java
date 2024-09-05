@@ -7,8 +7,6 @@ import com.intellij.openapi.vfs.VirtualFileWrapper;
 import com.intellij.testFramework.HeavyPlatformTestCase;
 import com.intellij.testFramework.MapDataContext;
 import com.intellij.testFramework.TestActionEvent;
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import com.intellij.testFramework.fixtures.TempDirTestFixture;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -20,10 +18,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AvroIdlActionsTest extends
-	//HeavyPlatformTestCase {
-	BasePlatformTestCase {
-
+public class AvroIdlActionsTest extends	HeavyPlatformTestCase {
 	private Path inputDirectory;
 	private Path outputDirectory;
 	private Path resultDirectory;
@@ -36,11 +31,7 @@ public class AvroIdlActionsTest extends
 		inputDirectory = testDirectory.resolve("input");
 		outputDirectory = testDirectory.resolve("output");
 
-		TempDirTestFixture tempDirFixture = myFixture.getTempDirFixture();
-		String tempDirPath = tempDirFixture.getTempDirPath();
-		VirtualFile testFilesDirectory = tempDirFixture.copyAll(getTestDirectoryName(), getTestDirectoryName());
-		VirtualFile resultVDirectory = tempDirFixture.findOrCreateDir(getTestDirectoryName() + "/results");
-		//VirtualFile resultVDirectory = getTempDir().createVirtualDir(getTestDirectoryName());
+		VirtualFile resultVDirectory = getTempDir().createVirtualDir(getTestDirectoryName());
 		ConversionActionBase.targetDirectory = resultVDirectory;
 		resultDirectory = resultVDirectory.toNioPath();
 
@@ -137,12 +128,6 @@ public class AvroIdlActionsTest extends
 	private static <T> T list(Path path, Function<Stream<Path>, T> function) throws IOException {
 		try (Stream<Path> stream = Files.list(path)) {
 			return function.apply(stream);
-		}
-	}
-
-	private static List<Path> list(Stream<Path> stream) throws IOException {
-		try (Stream<Path> s = stream) {
-			return s.toList();
 		}
 	}
 }
