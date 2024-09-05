@@ -130,7 +130,11 @@ tasks {
 		//language=HTML
 		var changeLog = """
 			<p>Version 223.3.2:</p><ul>
-				<li>Wrap actions in 'commands' for undo (fixed #160, #161)</li>
+				<li>Debug refactoring actions (fixes #168, #169)</li>
+				<li>Add workaround for JetBrains SDK bug (hopefully mitigates #127)</li>
+				<li>Use newline instead of platform linefeed when generating content (fixes #163)</li>
+				<li>Add better error message to IDL conversion (issue #167)</li>
+				<li>Wrap actions in 'commands' for undo (fixes #160, #161)</li>
 				<li>Refactored hardcoded texts into a resource bundle</li>
 			</ul>
 			<p>Version 223.3.1:</p><ul>

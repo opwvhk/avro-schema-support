@@ -1,0 +1,70 @@
+{
+  "protocol" : "SimpleProtocol",
+  "namespace" : "tests",
+  "doc" : "Doc comment.",
+  "types" : [ {
+    "type" : "record",
+    "name" : "SampleNode",
+    "fields" : [ {
+      "name" : "count",
+      "type" : "int",
+      "default" : 0
+    }, {
+      "name" : "subNodes",
+      "type" : {
+        "type" : "array",
+        "items" : {
+          "type" : "record",
+          "name" : "SamplePair",
+          "fields" : [ {
+            "name" : "method",
+            "type" : {
+              "type" : "record",
+              "name" : "Method",
+              "fields" : [ {
+                "name" : "name",
+                "type" : "string"
+              }, {
+                "name" : "purpose",
+                "type" : "string"
+              } ]
+            }
+          }, {
+            "name" : "node",
+            "type" : "SampleNode"
+          } ]
+        }
+      }
+    } ]
+  }, {
+    "type" : "record",
+    "name" : "SelfRef",
+    "fields" : [ {
+      "name" : "something",
+      "type" : "string"
+    }, {
+      "name" : "subNodes",
+      "type" : {
+        "type" : "array",
+        "items" : "SelfRef"
+      },
+      "default" : [ ]
+    } ]
+  } ],
+  "messages" : {
+    "buildNodeTree" : {
+      "request" : [ {
+        "name" : "declaration",
+        "type" : "string"
+      } ],
+      "response" : "SampleNode"
+    },
+    "buildRefTree" : {
+      "request" : [ {
+        "name" : "declaration",
+        "type" : "string"
+      } ],
+      "response" : "SelfRef"
+    }
+  }
+}

@@ -7,6 +7,7 @@ import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.ide.IdeBundle;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileChooser.*;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.*;
@@ -27,6 +28,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
 import java.awt.*;
@@ -74,11 +76,18 @@ abstract class ConversionActionBase extends DumbAwareAction {
 		console.print("\nAction complete.\n", ConsoleViewContentType.SYSTEM_OUTPUT);
 	}
 
+	@TestOnly
+	public static VirtualFile targetDirectory = null;
+
 	@SuppressWarnings("SameParameterValue")
 	@Nullable
 	protected VirtualFile askForTargetDirectory(@NotNull Project project, @Nullable String title,
 	                                            @Nullable String description,
 	                                            @Nullable VirtualFile suggestedTargetDirectory) {
+		if (ApplicationManager.getApplication().isUnitTestMode()) {
+			// Tests have no UI, and we don't want to manually fill in a dialog during tests anyway.
+			return targetDirectory;
+		}
 		final String nonNullTitle = title == null ? UIBundle.message("file.chooser.default.title") : title;
 		final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor()
 				.withTitle(nonNullTitle);
@@ -88,12 +97,19 @@ abstract class ConversionActionBase extends DumbAwareAction {
 		return FileChooser.chooseFile(descriptor, project, suggestedTargetDirectory);
 	}
 
+	@TestOnly
+	public static VirtualFileWrapper targetFile = null;
+
 	@Nullable
 	protected VirtualFileWrapper askForTargetFile(@NotNull Project project, @Nullable String title,
 	                                              @Nullable String description,
 	                                              @NotNull FileType fileType,
 	                                              @Nullable VirtualFile suggestedTargetDirectory,
 	                                              @NotNull String suggestedBaseName) {
+		if (ApplicationManager.getApplication().isUnitTestMode()) {
+			// Tests have no UI, and we don't want to manually fill in a dialog during tests anyway.
+			return targetFile;
+		}
 		// False positive: reuse of platform text
 		//noinspection DialogTitleCapitalization
 		final String nonNullTitle = title == null ? IdeBundle.message("dialog.title.save.as") : title;

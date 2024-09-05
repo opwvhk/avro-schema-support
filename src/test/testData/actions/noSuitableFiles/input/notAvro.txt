@@ -1,0 +1,1 @@
+Some random text that is guaranteed not to describe a schema.

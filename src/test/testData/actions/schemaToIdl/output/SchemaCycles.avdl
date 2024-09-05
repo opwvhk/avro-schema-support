@@ -1,0 +1,21 @@
+namespace tests;
+
+record SelfRef {
+    string something;
+    array<SelfRef> subNodes = [];
+}
+
+record SampleNode {
+    int count = 0;
+    array<SamplePair> subNodes;
+}
+
+record SamplePair {
+    Method method;
+    SampleNode node;
+}
+
+record Method {
+    string name;
+    string purpose;
+}

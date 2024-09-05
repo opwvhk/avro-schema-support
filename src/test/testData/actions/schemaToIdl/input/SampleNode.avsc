@@ -1,0 +1,36 @@
+{
+  "type" : "record",
+  "name" : "SampleNode",
+  "namespace" : "tests",
+  "fields" : [ {
+    "name" : "count",
+    "type" : "int",
+    "default" : 0
+  }, {
+    "name" : "subNodes",
+    "type" : {
+      "type" : "array",
+      "items" : {
+        "type" : "record",
+        "name" : "SamplePair",
+        "fields" : [ {
+          "name" : "method",
+          "type" : {
+            "type" : "record",
+            "name" : "Method",
+            "fields" : [ {
+              "name" : "name",
+              "type" : "string"
+            }, {
+              "name" : "purpose",
+              "type" : "string"
+            } ]
+          }
+        }, {
+          "name" : "node",
+          "type" : "SampleNode"
+        } ]
+      }
+    }
+  } ]
+}

@@ -1,0 +1,8 @@
+namespace tests;
+
+schema Message;
+
+record Message {
+    string sender;
+    string content;
+}
