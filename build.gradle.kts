@@ -129,6 +129,9 @@ tasks {
 		untilBuild.set(lastBuild)
 		//language=HTML
 		var changeLog = """
+			<p>Version 223.3.3:</p><ul>
+				<li>Use EDT when previewing quick fixes (fixes #177)</li>
+			</ul>
 			<p>Version 223.3.2:</p><ul>
 				<li>Debug refactoring actions (fixes #168, #169)</li>
 				<li>Add workaround for JetBrains SDK bug (hopefully mitigates #127)</li>
