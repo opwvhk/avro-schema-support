@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageInjectionConfiguration>
+	<!--
+	The platform does not support two injections at once (it defines both, but only the first one is active).
+	Define AvroIDL second, so injections work as "expected" (i.e., when a user upgrades from the Schema.parse() or
+	Schema.Parser.parse() methods, the injected language is the same by default).
+	-->
+	<injection language="AvroSchema" injector-id="java">
+		<display-name>SchemaParser (org.apache.avro)</display-name>
+		<place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("parse").withParameters("java.lang.CharSequence").definedInClass("org.apache.avro.SchemaParser"))]]></place>
+	</injection>
+	<injection language="AvroIDL" injector-id="java">
+		<display-name>SchemaParser (org.apache.avro)</display-name>
+		<place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("parse").withParameters("java.lang.CharSequence").definedInClass("org.apache.avro.SchemaParser"))]]></place>
+	</injection>
+	<injection language="AvroSchema" injector-id="java">
+		<display-name>JsonSchemaParser (org.apache.avro)</display-name>
+		<place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("parseInternal").withParameters("java.lang.String...").definedInClass("org.apache.avro.JsonSchemaParser"))]]></place>
+	</injection>
+	<injection language="AvroSchema" injector-id="java">
+		<display-name>Schema.Parser (org.apache.avro)</display-name>
+		<single-file value="true"/>
+		<place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("parse").withParameters("java.lang.String").definedInClass("org.apache.avro.Schema.Parser"))]]></place>
+		<place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("parse").withParameters("java.lang.String", "java.lang.String...").definedInClass("org.apache.avro.Schema.Parser"))]]></place>
+		<place><![CDATA[psiParameter().ofMethod(1, psiMethod().withName("parse").withParameters("java.lang.String", "java.lang.String...").definedInClass("org.apache.avro.Schema.Parser"))]]></place>
+	</injection>
+	<injection language="AvroSchema" injector-id="java">
+		<display-name>Schema (org.apache.avro)</display-name>
+		<single-file value="true"/>
+		<place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("parse").withParameters("java.lang.String").definedInClass("org.apache.avro.Schema"))]]></place>
+		<place><![CDATA[psiParameter().ofMethod(1, psiMethod().withName("parse").withParameters("java.lang.String", "boolean").definedInClass("org.apache.avro.Schema"))]]></place>
+	</injection>
+	<injection language="AvroProtocol" injector-id="java">
+		<display-name>Protocol (org.apache.avro)</display-name>
+		<single-file value="true"/>
+		<place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("parse").withParameters("java.lang.String").definedInClass("org.apache.avro.Protocol"))]]></place>
+		<place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("parse").withParameters("java.lang.String", "java.lang.String...").definedInClass("org.apache.avro.Protocol"))]]></place>
+		<place><![CDATA[psiParameter().ofMethod(1, psiMethod().withName("parse").withParameters("java.lang.String", "java.lang.String...").definedInClass("org.apache.avro.Protocol"))]]></place>
+	</injection>
+</LanguageInjectionConfiguration>

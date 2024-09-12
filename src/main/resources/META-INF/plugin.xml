@@ -54,6 +54,7 @@
 	<depends>com.intellij.modules.platform</depends>
 	<depends>com.intellij.modules.lang</depends>
 	<depends optional="true" config-file="plugin-json.xml">com.intellij.modules.json</depends>
+	<depends optional="true" config-file="plugin-intellilang.xml">org.intellij.intelliLang</depends>
 	<!-- Known incompatibilities -->
 	<incompatible-with>claims.bold.intellij.avro</incompatible-with>
 
