@@ -53,7 +53,7 @@
 	<!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html on how to target different products -->
 	<depends>com.intellij.modules.platform</depends>
 	<depends>com.intellij.modules.lang</depends>
-	<!-- TODO: unshelve JSON dependency with 2024.3 EAP -->
+	<depends optional="true" config-file="plugin-json.xml">com.intellij.modules.json</depends>
 	<!-- Known incompatibilities -->
 	<incompatible-with>claims.bold.intellij.avro</incompatible-with>
 
@@ -142,16 +142,6 @@
 		<localInspection language="AvroIDL" groupKey="inspection.group.avro" key="inspection.naming.convention"
 		                 level="TYPO" enabledByDefault="false"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlNamingConventionInspection"/>
-
-		<!-- Avro Schema & Protocol files (JSON derivative) -->
-		<fileType name="Avro Schema" fieldName="INSTANCE" language="AvroSchema" extensions="avsc"
-		          implementationClass="opwvhk.intellij.avro_idl.AvroSchemaFileType"/>
-		<lang.parserDefinition language="AvroSchema"
-		                       implementationClass="opwvhk.intellij.avro_idl.syntax.AvroSchemaParserDefinition"/>
-		<fileType name="Avro Protocol" fieldName="INSTANCE" language="AvroProtocol" extensions="avpr"
-		          implementationClass="opwvhk.intellij.avro_idl.AvroProtocolFileType"/>
-		<lang.parserDefinition language="AvroProtocol"
-		                       implementationClass="opwvhk.intellij.avro_idl.syntax.AvroProtocolParserDefinition"/>
 	</extensions>
 	<extensions defaultExtensionNs="opwvhk.avro.idl">
 		<!--
@@ -176,13 +166,6 @@
 		                   implementation="opwvhk.intellij.avro_idl.naming.AvroIdlProtocolNamingConvention"/>
 		<naming.convention id="AvroIdlMessageNamingConvention" order="before AvroIdlProtocolNamingConvention"
 		                   implementation="opwvhk.intellij.avro_idl.naming.AvroIdlMessageNamingConvention"/>
-	</extensions>
-	<extensions defaultExtensionNs="JavaScript">
-		<JsonSchema.ProviderFactory
-				implementation="opwvhk.intellij.avro_idl.json_schema.AvroJsonSchemaProviderFactory"/>
-	</extensions>
-	<extensions defaultExtensionNs="com.intellij.json">
-		<jsonLikePsiWalkerFactory implementation="opwvhk.intellij.avro_idl.json_schema.AvroJsonSchemaPsiWalkerFactory"/>
 	</extensions>
 	<actions>
 		<action id="AvroIdl.IdlToProtocol" class="opwvhk.intellij.avro_idl.actions.AvroIdlToProtocolAction">

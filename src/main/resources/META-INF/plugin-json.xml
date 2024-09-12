@@ -1,0 +1,21 @@
+<idea-plugin>
+	<resource-bundle>messages.TextBundle</resource-bundle>
+	<extensions defaultExtensionNs="com.intellij">
+		<!-- Avro Schema & Protocol files (JSON derivative) -->
+		<fileType name="Avro Schema" fieldName="INSTANCE" language="AvroSchema" extensions="avsc"
+		          implementationClass="opwvhk.intellij.avro_idl.AvroSchemaFileType"/>
+		<lang.parserDefinition language="AvroSchema"
+		                       implementationClass="opwvhk.intellij.avro_idl.syntax.AvroSchemaParserDefinition"/>
+		<fileType name="Avro Protocol" fieldName="INSTANCE" language="AvroProtocol" extensions="avpr"
+		          implementationClass="opwvhk.intellij.avro_idl.AvroProtocolFileType"/>
+		<lang.parserDefinition language="AvroProtocol"
+		                       implementationClass="opwvhk.intellij.avro_idl.syntax.AvroProtocolParserDefinition"/>
+	</extensions>
+	<extensions defaultExtensionNs="JavaScript">
+		<JsonSchema.ProviderFactory
+				implementation="opwvhk.intellij.avro_idl.json_schema.AvroJsonSchemaProviderFactory"/>
+	</extensions>
+	<extensions defaultExtensionNs="com.intellij.json">
+		<jsonLikePsiWalkerFactory implementation="opwvhk.intellij.avro_idl.json_schema.AvroJsonSchemaPsiWalkerFactory"/>
+	</extensions>
+</idea-plugin>

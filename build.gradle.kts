@@ -87,6 +87,7 @@ intellij {
 	@Suppress("UNUSED_VARIABLE") val lombokPluginName = "Lombook Plugin" // Yes, the typo is part of the official name
 	@Suppress("UNUSED_VARIABLE") val editorConfigPluginName = "org.editorconfig.editorconfigjetbrains"
 	/* Other (bundled) plugins: */
+	//plugins.add("com.intellij.modules.json") // TODO: Uncomment when it exists...
 	/*
 	plugins.add("org.intellij.intelliLang")
 	plugins.add("Git4Idea")
@@ -127,6 +128,7 @@ tasks {
 		var changeLog = """
 			<p>Version 232.0.0:</p><ul>
 				<li>Upgraded minimum supported JetBrains version to 2023.2</li>
+				<li>Add explicit dependency to JSON module</li>
 			</ul>
 			<p>Version 223.3.3:</p><ul>
 				<li>Use EDT when previewing quick fixes (fixes #177)</li>
