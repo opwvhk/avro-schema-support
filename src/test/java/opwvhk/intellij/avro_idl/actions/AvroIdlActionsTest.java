@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AvroIdlActionsTest extends	HeavyPlatformTestCase {
+public class AvroIdlActionsTest extends HeavyPlatformTestCase {
 	private Path inputDirectory;
 	private Path outputDirectory;
 	private Path resultDirectory;
@@ -91,7 +91,7 @@ public class AvroIdlActionsTest extends	HeavyPlatformTestCase {
 				list(inputDirectory, s -> s.map(vfs::refreshAndFindFileByNioFile).toArray(VirtualFile[]::new)));
 		dataContext.put(CommonDataKeys.PROJECT, getProject());
 
-		TestActionEvent event = new TestActionEvent(dataContext, action);
+		AnActionEvent event = TestActionEvent.createTestEvent(action, dataContext);
 		action.update(event);
 		Presentation p = event.getPresentation();
 		assertThat(p.isEnabled()).as("event %s", p.isEnabled() ? "enabled" : "disabled").isEqualTo(shouldExecute);

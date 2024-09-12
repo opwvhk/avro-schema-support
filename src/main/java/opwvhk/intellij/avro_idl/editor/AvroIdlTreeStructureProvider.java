@@ -42,8 +42,7 @@ public class AvroIdlTreeStructureProvider implements TreeStructureProvider {
 
 	@Override
 	@Nullable
-	//public Object getData(@NotNull Collection<? extends AbstractTreeNode<?>> selected, @NotNull String dataId) {
-	public Object getData(@NotNull Collection<AbstractTreeNode<?>> selected, @NotNull String dataId) {
+	public Object getData(@NotNull Collection<? extends AbstractTreeNode<?>> selected, @NotNull String dataId) {
 		return TreeStructureProvider.super.getData(selected, dataId);
 	}
 

@@ -5,8 +5,8 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import com.intellij.util.containers.ContainerUtil;
 
+import java.util.List;
 import java.util.function.BiConsumer;
 
 public class AvroIdlFormattingTest extends BasePlatformTestCase {
@@ -102,7 +102,7 @@ public class AvroIdlFormattingTest extends BasePlatformTestCase {
 		settingsAdjuster.accept(avroIdlCodeStyleSettings, avroIdlIndentOptions);
 		WriteCommandAction.writeCommandAction(getProject())
 				.run(() -> CodeStyleManager.getInstance(getProject()).reformatText(
-						myFixture.getFile(), ContainerUtil.newArrayList(myFixture.getFile().getTextRange())));
+						myFixture.getFile(), List.of(myFixture.getFile().getTextRange())));
 		myFixture.checkResultByFile(outputFile);
 	}
 }

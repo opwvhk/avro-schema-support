@@ -19,7 +19,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "223.3.3"
+version = "232.0.0-SNAPSHOT"
 
 repositories {
 	mavenCentral()
@@ -64,26 +64,23 @@ intellij {
 
 	type.set("IC")
 	plugins.addAll("com.intellij.java")
-	//version.set("2022.1.4")
-	version.set("2022.3.3")
-	//version.set("2023.1.6")
 	// From here, refactor code for compatibility / deprecated code usage
-	//version.set("2023.2.6")
+	version.set("2023.2.6")
 	//version.set("2023.3.6")
 	//version.set("2024.1.6")
-	//version.set("2024.2")
+	//version.set("2024.2.1")
 	// EAP
+	//version.set("2024.3")
 
 	//type.set("PC")
 	//plugins.addAll("PythonCore")
-	//version.set("2022.3.3")
-	//version.set("2023.1.5")
 	// From here, refactor code for compatibility / deprecated code usage
 	//version.set("2023.2.6")
 	//version.set("2023.3.5")
 	//version.set("2024.1.6")
-	//version.set("2024.2")
+	//version.set("2024.2.1")
 	// EAP
+	//version.set("2024.3")
 
 	// Extra plugin(s); not needed, but maybe useful during development:
 	plugins.add("markdown")
@@ -122,13 +119,15 @@ tasks {
 		version.set(project.version.toString())
 		// Notes on versions: usually the last 3 major releases represent about 80% of the users.
 		// See https://plugins.jetbrains.com/docs/marketplace/product-versions-in-use-statistics.html for more information.
-		//sinceBuild.set("221") // Version 2022.1
-		sinceBuild.set("223") // Version 2022.3
+		sinceBuild.set("232") // Version 2023.2
 		// Find last EAP version (the build version until the first dot):
 		// curl 'https://data.services.jetbrains.com/products/releases?code=IIU&code=IIC&code=PCP&code=PCC&latest=true&type=eap' 2>/dev/null|jq -r '.[][0].build'|cut -d . -f 1|sort -r|head -n 1
 		untilBuild.set(lastBuild)
 		//language=HTML
 		var changeLog = """
+			<p>Version 232.0.0:</p><ul>
+				<li>Upgraded minimum supported JetBrains version to 2023.2</li>
+			</ul>
 			<p>Version 223.3.3:</p><ul>
 				<li>Use EDT when previewing quick fixes (fixes #177)</li>
 			</ul>

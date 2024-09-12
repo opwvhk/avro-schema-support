@@ -1,10 +1,11 @@
 package opwvhk.intellij.avro_idl;
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
-import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.intention.IntentionAction;
+import com.intellij.lang.LanguageDocumentation;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.lang.documentation.DocumentationProvider;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import com.intellij.spellchecker.SpellCheckerSeveritiesProvider;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
@@ -15,6 +16,9 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
 public class AvroIdlCodeInsightTest extends BasePlatformTestCase {
+
+	private static final DocumentationProvider DOCUMENTATION_PROVIDER = LanguageDocumentation.INSTANCE.forLanguage(
+			AvroIdlLanguage.INSTANCE);
 
 	@Override
 	protected String getTestDataPath() {
@@ -481,20 +485,13 @@ public class AvroIdlCodeInsightTest extends BasePlatformTestCase {
 	public void _testDocumentation() {
 		myFixture.configureByFiles("DocumentationTestData.java", "DocumentationTestData.simple");
 		final PsiElement originalElement = myFixture.getElementAtCaret();
-		// TODO: Upgrade API when requiring at least 2023.1
-		//noinspection deprecation
-		PsiElement element = DocumentationManager
-				.getInstance(getProject())
-				.findTargetElement(myFixture.getEditor(), originalElement.getContainingFile(), originalElement);
-
+		Editor editor = myFixture.getEditor();
+		PsiElement element = DOCUMENTATION_PROVIDER.getCustomDocumentationElement(editor, originalElement.getContainingFile(), originalElement, editor.getCaretModel().getOffset());
 		if (element == null) {
 			element = originalElement;
 		}
 
-		// TODO: Upgrade API when requiring at least 2023.1
-		//noinspection deprecation
-		final DocumentationProvider documentationProvider = DocumentationManager.getProviderFromElement(element);
-		final String generateDoc = documentationProvider.generateDoc(element, originalElement);
+		final String generateDoc = DOCUMENTATION_PROVIDER.generateDoc(element, originalElement);
 		assertNotNull(generateDoc);
 		assertSameLinesWithFile(getTestDataPath() + "/" + "DocumentationTest.html.expected", generateDoc);
 	}

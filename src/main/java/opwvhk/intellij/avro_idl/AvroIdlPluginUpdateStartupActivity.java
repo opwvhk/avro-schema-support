@@ -11,8 +11,10 @@ import com.intellij.notification.NotificationAction;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupActivity;
+import com.intellij.openapi.startup.ProjectActivity;
 import com.intellij.openapi.ui.Messages;
+import kotlin.Unit;
+import kotlin.coroutines.Continuation;
 import opwvhk.intellij.avro_idl.actions.AvroIdlNotifications;
 import opwvhk.intellij.avro_idl.language.AvroIdlUtil;
 import org.jetbrains.annotations.NotNull;
@@ -24,13 +26,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Startup activity (actually a preloading activity because it runs earlier) to check if a known incompatible plugin is active. If so, offer to disable it.
+ * Startup activity to show plugin changes (once per version), and to check if a known incompatible plugin is active (if
+ * so, offer to disable it).
  *
- * <p>Reason to use this and not {@link com.intellij.ide.plugins.PluginReplacement PluginReplacement} is because the latter is backwards: you cannot define a
- * replacement for a conflicting but unmaintained plugin, as it needs to be defined in the plugin to be replaced (which you cannot do, because both the source
- * and the installation account are inaccessible).</p>
+ * <p>The reason to check for the plugin manually not via
+ * {@link com.intellij.ide.plugins.PluginReplacement PluginReplacement} is because the latter works backwards: you
+ * cannot define a replacement for a conflicting but unmaintained plugin, as it needs to be defined in the plugin to be
+ * replaced (which you cannot do, as it is no longer maintained).</p>
  */
-public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbAware {
+public class AvroIdlPluginUpdateStartupActivity implements ProjectActivity {//}.DumbAware {
 	private static final Logger LOG = Logger.getInstance(AvroIdlUtil.class);
 
 	private static final String SNAPSHOT_SUFFIX = "-SNAPSHOT";
@@ -38,7 +42,7 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 			"(?s)(?<=\\R|\\A)\\s*<p>Version (?<version>[^:]+):</p>.*?<ul[^>]*>.*?</ul>\\s*(?:\\R|\\Z)");
 
 	@Override
-	public void runActivity(@NotNull Project project) {
+	public @Nullable Object execute(@NotNull Project project, @NotNull Continuation<? super Unit> continuation) {
 		AvroIdlSettings settings = AvroIdlSettings.getInstance();
 		IdeaPluginDescriptor plugin = AvroIdlPluginUtils.getMyPluginDescriptor();
 
@@ -51,6 +55,7 @@ public class AvroIdlPluginUpdateStartupActivity implements StartupActivity.DumbA
 
 		notifyUserOfUpdate(project, plugin, newVersion, oldVersion);
 		settings.setPluginVersion(newVersion);
+		return null;
 	}
 
 	private void checkForReplacedPlugin(@NotNull Project project, String myName) {
