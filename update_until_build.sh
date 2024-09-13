@@ -7,7 +7,7 @@
 # Then locate the build number for each release, truncate it at the first dot, and find the highest.
 
 LAST_BUILD=$(curl \
-	'https://data.services.jetbrains.com/products/releases?code=IIU&code=IIC&code=PCP&code=PCC&latest=true&type=eap&type=release' 2>/dev/null |
+	'https://data.services.jetbrains.com/products/releases?code=IIU&code=IIC&code=PCP&code=PCC&latest=true&type=release' 2>/dev/null |
 	jq -r '.[][0].build' |
 	cut -d . -f 1 |
 	sort -r | head -n 1)

@@ -65,7 +65,7 @@ public class AvroIdlNamedSchemaReference extends AvroIdlAbstractReference {
 	}
 
 	@Override
-	public Object @NotNull [] getVariants() {
+	public @NotNull Object[] getVariants() {
 		final AvroIdlFile idlFile = (AvroIdlFile) myElement.getContainingFile();
 		AvroIdlFile idlFile2 = (AvroIdlFile) idlFile.getOriginalFile();
 		final String namespace = AvroIdlPsiUtil.getNamespace(myElement);

@@ -70,7 +70,7 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 	}
 
 	@Override
-	public boolean submit(IdeaLoggingEvent @NotNull [] events, @Nullable String additionalInfo,
+	public boolean submit(@NotNull IdeaLoggingEvent[] events, @Nullable String additionalInfo,
 	                      @NotNull Component parentComponent,
 	                      @NotNull Consumer<? super SubmittedReportInfo> consumer) {
 		SubmittedReportInfo reportInfo;
@@ -108,7 +108,7 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 		return true;
 	}
 
-	private static @NotNull String createCrashReportMarkdown(IdeaLoggingEvent @NotNull [] events,
+	private static @NotNull String createCrashReportMarkdown(@NotNull IdeaLoggingEvent[] events,
 	                                                         @Nullable String additionalInfo) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("# Crash Report\n");

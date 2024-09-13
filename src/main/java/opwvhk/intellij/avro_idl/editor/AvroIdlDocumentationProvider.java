@@ -221,7 +221,7 @@ public class AvroIdlDocumentationProvider extends AbstractDocumentationProvider 
 	}
 
 	@Override
-	public void collectDocComments(@NotNull PsiFile file, @NotNull Consumer<? super @NotNull PsiDocCommentBase> sink) {
+	public void collectDocComments(@NotNull PsiFile file, @NotNull Consumer<? super PsiDocCommentBase> sink) {
 		if (!(file instanceof AvroIdlFile)) {
 			return;
 		}

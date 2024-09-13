@@ -44,7 +44,7 @@ public class AvroIdlEnumConstantReference extends AvroIdlAbstractReference {
 	}
 
 	@Override
-	public Object @NotNull [] getVariants() {
+	public @NotNull Object[] getVariants() {
 		return findConstants()
 				.filter(enumValue -> enumValue.getName() != null && !enumValue.getName().isBlank())
 				.map(enumValue -> LookupElementBuilder.create(enumValue.getName())

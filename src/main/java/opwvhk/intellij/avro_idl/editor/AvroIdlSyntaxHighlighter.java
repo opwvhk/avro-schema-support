@@ -49,7 +49,7 @@ public class AvroIdlSyntaxHighlighter extends SyntaxHighlighterBase {
 	}
 
 	@Override
-	public TextAttributesKey @NotNull [] getTokenHighlights(IElementType tokenType) {
+	public @NotNull TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
 		if (DOC_COMMENT_TOKENS.contains(tokenType)) {
 			return DOC_COMMENT_KEYS;
 		}

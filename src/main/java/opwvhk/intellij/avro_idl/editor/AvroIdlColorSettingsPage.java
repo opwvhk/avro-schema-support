@@ -83,12 +83,12 @@ public class AvroIdlColorSettingsPage implements ColorSettingsPage {
 	}
 
 	@Override
-	public AttributesDescriptor @NotNull [] getAttributeDescriptors() {
+	public @NotNull AttributesDescriptor[] getAttributeDescriptors() {
 		return AvroIdlSyntaxColors.DESCRIPTORS;
 	}
 
 	@Override
-	public ColorDescriptor @NotNull [] getColorDescriptors() {
+	public @NotNull ColorDescriptor[] getColorDescriptors() {
 		return ColorDescriptor.EMPTY_ARRAY;
 	}
 

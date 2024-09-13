@@ -282,7 +282,7 @@ public class AvroIdlPsiUtil {
 		}
 	}
 
-	private static FileType @NotNull [] getSuitableFileTypes(IElementType importElementType) {
+	private static @NotNull FileType[] getSuitableFileTypes(IElementType importElementType) {
 		final FileType[] suitableFileTypes;
 		if (importElementType == IDL) {
 			suitableFileTypes = new FileType[]{AvroIdlFileType.INSTANCE};

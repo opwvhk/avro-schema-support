@@ -2,6 +2,7 @@
 /.idea/
 *.iml
 /out/
+/.intellijPlatform/
 # Gradle
 .gradle
 build

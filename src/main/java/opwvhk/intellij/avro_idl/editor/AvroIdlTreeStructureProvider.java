@@ -40,12 +40,6 @@ public class AvroIdlTreeStructureProvider implements TreeStructureProvider {
 		return result;
 	}
 
-	@Override
-	@Nullable
-	public Object getData(@NotNull Collection<? extends AbstractTreeNode<?>> selected, @NotNull String dataId) {
-		return TreeStructureProvider.super.getData(selected, dataId);
-	}
-
 	private static class AvroIdlNode extends BasePsiNode<PsiElement> {
 		private final AvroIdlStructureViewElement structureViewElement;
 
