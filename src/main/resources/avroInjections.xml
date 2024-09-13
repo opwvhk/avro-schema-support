@@ -4,6 +4,8 @@
 	The platform does not support two injections at once (it defines both, but only the first one is active).
 	Define AvroIDL second, so injections work as "expected" (i.e., when a user upgrades from the Schema.parse() or
 	Schema.Parser.parse() methods, the injected language is the same by default).
+
+	Also note: these injections work with any JVM language (tested with Scala)
 	-->
 	<injection language="AvroSchema" injector-id="java">
 		<display-name>SchemaParser (org.apache.avro)</display-name>
