@@ -62,7 +62,6 @@ dependencies {
 		//intellijIdeaCommunity("2024.3")
 		bundledPlugin("com.intellij.java")
 
-		// From here, refactor code for compatibility / deprecated code usage
 		//pycharmCommunity("2023.2.6")
 		//pycharmCommunity("2023.3.5")
 		//pycharmCommunity("2024.1.6")
