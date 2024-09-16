@@ -2,10 +2,11 @@
 <LanguageInjectionConfiguration>
 	<!--
 	The platform does not support two injections at once (it defines both, but only the first one is active).
-	Define AvroIDL second, so injections work as "expected" (i.e., when a user upgrades from the Schema.parse() or
-	Schema.Parser.parse() methods, the injected language is the same by default).
+	So we define the AvroIDL second, to make injections work as "expected" (i.e., when a user upgrades from the
+	Schema.parse() or Schema.Parser.parse() methods, the injected language is the same by default).
 
-	Also note: these injections work with any JVM language (tested with Scala)
+	Also note: these injections work with any JVM language (tested with Scala), except for Scala multi-line strings (at
+	least when used with stripMargins, as injection does not look beyond the method call).
 	-->
 	<injection language="AvroSchema" injector-id="java">
 		<display-name>SchemaParser (org.apache.avro)</display-name>
@@ -38,5 +39,19 @@
 		<place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("parse").withParameters("java.lang.String").definedInClass("org.apache.avro.Protocol"))]]></place>
 		<place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("parse").withParameters("java.lang.String", "java.lang.String...").definedInClass("org.apache.avro.Protocol"))]]></place>
 		<place><![CDATA[psiParameter().ofMethod(1, psiMethod().withName("parse").withParameters("java.lang.String", "java.lang.String...").definedInClass("org.apache.avro.Protocol"))]]></place>
+	</injection>
+
+	<!--
+	Python does not support IDL
+	-->
+	<injection language="AvroSchema" injector-id="python">
+		<display-name>parse (schema)</display-name>
+		<single-file value="true"/>
+		<place><![CDATA[pyStringLiteralMatches("^\\s*\\{").and(pyModuleFunctionArgument("parse", 0, "schema"))]]></place>
+	</injection>
+	<injection language="AvroProtocol" injector-id="python">
+		<display-name>parse (protocol)</display-name>
+		<single-file value="true"/>
+		<place><![CDATA[pyStringLiteralMatches("^\\s*\\{").and(pyModuleFunctionArgument("parse", 0, "protocol"))]]></place>
 	</injection>
 </LanguageInjectionConfiguration>
