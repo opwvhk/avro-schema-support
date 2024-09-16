@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
 import java.util.function.Consumer;
+import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -137,10 +138,8 @@ public class AvroIdlPluginUpdateStartupActivity implements ProjectActivity {//}.
 		matcher.results()
 				.takeWhile(mr -> !mr.group(1).equals(oldVersion))
 				.limit(3)
-				.forEach(mr -> {
-					final String version = mr.group(1);
-					changes.append("<p>").append(version).append(":</p>").append(matcher.group());
-				});
+				.map(MatchResult::group)
+				.forEach(changes::append);
 		return changes;
 	}
 }
