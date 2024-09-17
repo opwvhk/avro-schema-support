@@ -26,7 +26,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "232.0.0-SNAPSHOT"
+version = "232.0.0"
 
 repositories {
 	mavenLocal()
@@ -59,7 +59,7 @@ dependencies {
 		//intellijIdeaCommunity("2024.1.6")
 		//intellijIdeaCommunity("2024.2.1")
 		// EAP
-		//intellijIdeaCommunity("2024.3")
+		//create("IC","243.12818.47")
 		bundledPlugin("com.intellij.java")
 
 		//pycharmCommunity("2023.2.6")
