@@ -1,7 +1,7 @@
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.intellij.platform.gradle.models.ProductRelease
-import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask
+import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.FailureLevel.*
 import java.util.*
 
 plugins {
@@ -26,7 +26,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "232.0.0-SNAPSHOT"
+version = "232.0.0"
 
 repositories {
 	mavenLocal()
@@ -59,7 +59,7 @@ dependencies {
 		//intellijIdeaCommunity("2024.1.6")
 		//intellijIdeaCommunity("2024.2.1")
 		// EAP
-		//intellijIdeaCommunity("2024.3")
+		//create("IC","243.12818.47")
 		bundledPlugin("com.intellij.java")
 
 		//pycharmCommunity("2023.2.6")
@@ -294,20 +294,16 @@ intellijPlatform {
 		*/
 	}
 	pluginVerification {
-		failureLevel.set(EnumSet.complementOf(
-			EnumSet.of(
-				VerifyPluginTask.FailureLevel.SCHEDULED_FOR_REMOVAL_API_USAGES,
-				VerifyPluginTask.FailureLevel.DEPRECATED_API_USAGES,
-				VerifyPluginTask.FailureLevel.EXPERIMENTAL_API_USAGES
-			)
-		))
+		failureLevel.set(EnumSet.complementOf(EnumSet.of(
+			SCHEDULED_FOR_REMOVAL_API_USAGES, DEPRECATED_API_USAGES
+		)))
 		ides {
 			//recommended()
 			select {
 				types.set(listOf(
 					IntelliJPlatformType.IntellijIdeaCommunity, IntelliJPlatformType.PyCharmCommunity
 				))
-				channels.set(listOf(ProductRelease.Channel.RELEASE))
+				channels.set(listOf(ProductRelease.Channel.RELEASE, ProductRelease.Channel.EAP))
 				sinceBuild.set(firstBuild)
 				untilBuild.set(lastBuild)
 			}
@@ -330,9 +326,9 @@ tasks {
 		options.compilerArgs.add("-Xlint:unchecked")
 		options.isDeprecation = true
 	}
-	test {
-		systemProperty("idea.force.use.core.classloader", "true")
-	}
+	//test {
+	//	systemProperty("idea.force.use.core.classloader", "true")
+	//}
 	runIde {
 		jvmArgs("-XX:+UnlockDiagnosticVMOptions")
 	}

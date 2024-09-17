@@ -2,7 +2,6 @@ package opwvhk.intellij.avro_idl.language;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.json.psi.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
@@ -17,13 +16,11 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
 import groovy.json.StringEscapeUtils;
 import opwvhk.intellij.avro_idl.AvroIdlFileType;
 import opwvhk.intellij.avro_idl.AvroIdlIcons;
 import opwvhk.intellij.avro_idl.psi.*;
 import org.apache.avro.Protocol;
-import org.apache.avro.Schema;
 import org.apache.avro.SchemaParser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,6 +38,17 @@ public class AvroIdlUtil {
 	private static final Logger LOG = Logger.getInstance(AvroIdlUtil.class);
 	@NotNull
 	public static final Key<Boolean> IS_ERROR_KEY = Key.create("isError");
+	private static final boolean IS_JSON_AVAILABLE;
+	static {
+		boolean isJsonAvailable;
+		try {
+			Class.forName("com.intellij.json.JsonFileType");
+			isJsonAvailable = true;
+		} catch (ClassNotFoundException e) {
+			isJsonAvailable = false;
+		}
+		IS_JSON_AVAILABLE = isJsonAvailable;
+	}
 
 	@NotNull
 	public static List<AvroIdlNameIdentifierOwner> findDeclarationsInScope(@NotNull GlobalSearchScope scope) {
@@ -187,22 +195,22 @@ public class AvroIdlUtil {
 		if (importType == AvroIdlTypes.IDL) {
 			return ifType(psiManager.findFile(importedFile), AvroIdlFile.class).flatMap(idlFile ->
 					findAllSchemaNamesAvailableInIdl(idlFile, errorsOnly, currentNamespace, avroSchemaParser));
-		} else if (importType == AvroIdlTypes.PROTOCOL) {
+		} else if (importType == AvroIdlTypes.PROTOCOL && IS_JSON_AVAILABLE) {
 			try (InputStream inputStream = importedFile.getInputStream()) {
 				final Protocol protocol = Protocol.parse(inputStream);
 				return protocol.getTypes().stream()
 						.filter(schema -> !errorsOnly || schema.isError())
-						.map(schema -> createLookupElement(currentNamespace, importedFileReferenceElement, psiManager,
+						.map(schema -> AvroIdlJsonUtil.createLookupElementForSchemaInJsonFile(currentNamespace, importedFileReferenceElement, psiManager,
 								importedFile, schema));
 			} catch (Exception e) {
 				LOG.warn("Failed to read file " + importedFile.getCanonicalPath(), e);
 			}
-		} else if (importType == AvroIdlTypes.SCHEMA) {
+		} else if (importType == AvroIdlTypes.SCHEMA && IS_JSON_AVAILABLE) {
 			try (InputStream inputStream = importedFile.getInputStream()) {
 				avroSchemaParser.parse(inputStream);
 				return avroSchemaParser.getParsedNamedSchemas().stream()
 						.filter(schema -> !errorsOnly || schema.isError())
-						.map(schema -> createLookupElement(currentNamespace, importedFileReferenceElement, psiManager,
+						.map(schema -> AvroIdlJsonUtil.createLookupElementForSchemaInJsonFile(currentNamespace, importedFileReferenceElement, psiManager,
 								importedFile, schema));
 			} catch (Exception e) {
 				LOG.warn("Failed to read file " + importedFile.getCanonicalPath(), e);
@@ -236,69 +244,6 @@ public class AvroIdlUtil {
 	}
 
 	@NotNull
-	private static LookupElement createLookupElement(@NotNull String namespace,
-	                                                 AvroIdlJsonStringLiteral importedFileReferenceElement,
-	                                                 PsiManager psiManager,
-	                                                 VirtualFile importedFile, Schema schema) {
-		final PsiFile psiProtocolFile = psiManager.findFile(importedFile);
-		if (psiProtocolFile instanceof JsonFile) {
-			final PsiElement[] elements = PsiTreeUtil.collectElements(psiProtocolFile,
-					element -> isSchemaJsonObject(element, schema));
-			if (elements.length > 0) {
-				return lookupElement(elements[0], schema, namespace);
-			}
-		}
-		return lookupElement(importedFileReferenceElement, schema, namespace);
-	}
-
-	private static boolean isSchemaJsonObject(@NotNull PsiElement element, @NotNull Schema schema) {
-		if (!(element instanceof JsonObject)) {
-			return false;
-		}
-
-		JsonProperty nameProperty = ((JsonObject) element).findProperty("name");
-		if (nameProperty == null) {
-			return false;
-		}
-		JsonValue nameValue = nameProperty.getValue();
-		if (!(nameValue instanceof JsonStringLiteral)) {
-			return false;
-		}
-		String name = ElementManipulators.getValueText(nameValue);
-
-		if (name.contains(".")) {
-			return name.equals(schema.getFullName());
-		} else if (name.equals(schema.getName())) {
-			JsonElement parent = (JsonElement) element;
-			while (parent != null && !(parent instanceof JsonFile)) {
-				if (parent instanceof JsonObject) {
-					final JsonProperty namespaceProperty = ((JsonObject) parent).findProperty("namespace");
-					if (namespaceProperty != null) {
-						final JsonValue namespaceValue = namespaceProperty.getValue();
-						return namespaceValue instanceof JsonStringLiteral &&
-								ElementManipulators.getValueText(namespaceValue).equals(schema.getNamespace());
-					}
-				}
-				parent = (JsonElement) parent.getParent();
-			}
-		}
-		return false;
-	}
-
-	@NotNull
-	private static LookupElement lookupElement(@NotNull PsiElement psiElement, @NotNull Schema schema,
-	                                           @NotNull String currentNamespace) {
-		final String namespace0 = schema.getNamespace();
-		final String namespace = namespace0 == null ? "" : namespace0;
-		final String schemaName = schema.getName();
-		final String schemaFullName = schema.getFullName();
-		final LookupElement lookupElement = lookupElement(psiElement, schemaName, schemaFullName, namespace,
-				currentNamespace);
-		lookupElement.putUserData(IS_ERROR_KEY, schema.getType() == Schema.Type.RECORD && schema.isError());
-		return lookupElement;
-	}
-
-	@NotNull
 	private static LookupElement lookupElement(@NotNull AvroIdlNamedSchemaDeclaration schemaDeclaration,
 	                                           @NotNull String currentNamespace) {
 		final LookupElement lookupElement = lookupElement(schemaDeclaration,
@@ -310,7 +255,7 @@ public class AvroIdlUtil {
 	}
 
 	@NotNull
-	private static LookupElement lookupElement(@NotNull PsiElement psiElement, @NotNull String schemaName,
+	static LookupElement lookupElement(@NotNull PsiElement psiElement, @NotNull String schemaName,
 	                                           @NotNull String schemaFullName,
 	                                           @Nullable String namespace, @NotNull String currentNamespace) {
 		if (namespace == null || namespace.isEmpty()) {
