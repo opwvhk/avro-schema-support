@@ -67,6 +67,9 @@
 		<notificationGroup id="avro.idl.updates" key="notification.group.avro.idl.updates"
 		                   displayType="BALLOON"/>
 		<postStartupActivity implementation="opwvhk.intellij.avro_idl.AvroIdlPluginUpdateStartupActivity"/>
+		<!--
+		TODO: When requiring 2023.3+, check out https://plugins.jetbrains.com/docs/marketplace/exception-analyzer.html
+		-->
 		<errorHandler implementation="opwvhk.intellij.avro_idl.AvroIdlErrorReportSubmitter"/>
 		<!-- File type & Language -->
 		<fileType name="AvroIDL" fieldName="INSTANCE" language="AvroIDL" extensions="avdl"

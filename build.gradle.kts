@@ -71,7 +71,7 @@ dependencies {
 		//bundledPlugin("PythonCore")
 
 		// Plugin dependencies (optional):
-		//bundledPlugin("com.intellij.modules.json") // TODO: Uncomment when it exists...
+		//bundledPlugin("com.intellij.modules.json") // TODO: Uncomment when it exists (check at least when requiring 2024.3+)...
 		bundledPlugin("org.intellij.intelliLang")
 
 		// Extra plugin(s); not needed, but maybe useful during development:
@@ -326,9 +326,6 @@ tasks {
 		options.compilerArgs.add("-Xlint:unchecked")
 		options.isDeprecation = true
 	}
-	//test {
-	//	systemProperty("idea.force.use.core.classloader", "true")
-	//}
 	runIde {
 		jvmArgs("-XX:+UnlockDiagnosticVMOptions")
 	}
