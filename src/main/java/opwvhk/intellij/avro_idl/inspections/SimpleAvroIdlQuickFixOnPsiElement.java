@@ -4,6 +4,7 @@ import com.intellij.codeInsight.intention.preview.IntentionPreviewUtils;
 import com.intellij.codeInspection.LocalQuickFixAndIntentionActionOnPsiElement;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.CaretState;
 import com.intellij.openapi.editor.Editor;
@@ -62,7 +63,7 @@ public abstract class SimpleAvroIdlQuickFixOnPsiElement<E extends PsiElement>
 		Runnable action = () -> invoke(project, file, editor, (E) startElement);
 		if (editor instanceof ImaginaryEditor) {
 			// We're generating a preview: stay on the EDT (do not switch to a write thread)
-			action.run();
+			WriteAction.run(action::run);
 		} else {
 			CommandProcessor.getInstance().executeCommand(project, action, text, null);
 		}
