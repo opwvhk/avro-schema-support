@@ -12,10 +12,10 @@ plugins {
 
 // The first and last supported builds
 // The first build MUST be compatible with the platform & version in dependencies/intellijPlatform !
-// The last build is one more than the last release (to accommodate the EAP before it exists)
+// The last build is one more than the last release (to accommodate the EAP before it is released)
 val firstBuild = "232"
 val lastBuild = provider {
-	file("jetbrains.lastBuild.txt").readLines()
+	file("jetbrains.lastRelease.txt").readLines()
 		.asSequence()
 		.map { it.trim() }
 		.filterNot { it.isEmpty() || it.startsWith("#") }
@@ -26,7 +26,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "232.0.0"
+version = "232.0.1-SNAPSHOT"
 
 repositories {
 	mavenLocal()
