@@ -121,6 +121,9 @@ intellijPlatform {
 		}
 		//language=HTML
 		changeNotes.set("""
+			<p>Version 232.0.1:</p><ul>
+				<li>Improve threading for previewing quick fixes</li>
+			</ul>
 			<p>Version 232.0.0:</p><ul>
 				<li>Upgraded minimum supported JetBrains version to 2023.2</li>
 				<li>Add explicit dependency to JSON module</li>

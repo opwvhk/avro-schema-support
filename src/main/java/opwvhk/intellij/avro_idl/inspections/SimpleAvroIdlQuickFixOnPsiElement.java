@@ -4,13 +4,10 @@ import com.intellij.codeInsight.intention.preview.IntentionPreviewUtils;
 import com.intellij.codeInspection.LocalQuickFixAndIntentionActionOnPsiElement;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.CaretState;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.ScrollType;
-import com.intellij.openapi.editor.impl.ImaginaryEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
@@ -60,13 +57,7 @@ public abstract class SimpleAvroIdlQuickFixOnPsiElement<E extends PsiElement>
 	@SuppressWarnings("unchecked")
 	public void invoke(@NotNull Project project, @NotNull PsiFile file, @Nullable Editor editor,
 	                   @NotNull PsiElement startElement, @NotNull PsiElement endElement) {
-		Runnable action = () -> invoke(project, file, editor, (E) startElement);
-		if (editor instanceof ImaginaryEditor) {
-			// We're generating a preview: stay on the EDT (do not switch to a write thread)
-			WriteAction.run(action::run);
-		} else {
-			CommandProcessor.getInstance().executeCommand(project, action, text, null);
-		}
+		IntentionPreviewUtils.write(() -> invoke(project, file, editor, (E) startElement));
 	}
 
 	protected void selectElement(Editor editor, @NotNull PsiElement element) {
