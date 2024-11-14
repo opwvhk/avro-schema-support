@@ -57,7 +57,8 @@ dependencies {
 		intellijIdeaCommunity("2023.2.6")
 		//intellijIdeaCommunity("2023.3.6")
 		//intellijIdeaCommunity("2024.1.6")
-		//intellijIdeaCommunity("2024.2.1")
+		//intellijIdeaCommunity("2024.2.4")
+		//intellijIdeaCommunity("2024.3")
 		// EAP
 		//create("IC","243.12818.47")
 		bundledPlugin("com.intellij.java")
@@ -74,7 +75,7 @@ dependencies {
 		//bundledPlugin("com.intellij.modules.json") // TODO: Uncomment when it exists (check at least when requiring 2024.3+)...
 		bundledPlugin("org.intellij.intelliLang")
 
-		// Extra plugin(s); not needed, but maybe useful during development:
+		// Extra plugin(s); not needed for the plugin, but maybe useful during development:
 		bundledPlugin("org.intellij.plugins.markdown")
 		/* Other (bundled) plugins: */
 		// Define these variables to prevent spell checking errors in the comment below
@@ -123,6 +124,7 @@ intellijPlatform {
 		changeNotes.set("""
 			<p>Version 232.0.1:</p><ul>
 				<li>Improve threading for previewing quick fixes</li>
+				<li>Improve/refactor action tests</li>
 			</ul>
 			<p>Version 232.0.0:</p><ul>
 				<li>Upgraded minimum supported JetBrains version to 2023.2</li>

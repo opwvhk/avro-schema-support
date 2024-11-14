@@ -1,11 +1,12 @@
 package opwvhk.intellij.avro_idl.actions;
 
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ex.ActionUtil;
+import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWrapper;
 import com.intellij.testFramework.HeavyPlatformTestCase;
-import com.intellij.testFramework.MapDataContext;
 import com.intellij.testFramework.TestActionEvent;
 
 import java.io.IOException;
@@ -61,6 +62,7 @@ public class AvroIdlActionsTest extends HeavyPlatformTestCase {
 
 	public void testNoSuitableFiles() throws IOException {
 		AnAction action = ActionManager.getInstance().getAction("AvroIdl.IdlToProtocol");
+
 		executeTest(action, false);
 	}
 
@@ -85,19 +87,20 @@ public class AvroIdlActionsTest extends HeavyPlatformTestCase {
 	}
 
 	private void executeTest(AnAction action, boolean shouldExecute) throws IOException {
-		MapDataContext dataContext = new MapDataContext();
 		LocalFileSystem vfs = LocalFileSystem.getInstance();
-		dataContext.put(LangDataKeys.VIRTUAL_FILE_ARRAY,
-				list(inputDirectory, s -> s.map(vfs::refreshAndFindFileByNioFile).toArray(VirtualFile[]::new)));
-		dataContext.put(CommonDataKeys.PROJECT, getProject());
+		DataContext dataContext = SimpleDataContext.builder()
+				.add(LangDataKeys.VIRTUAL_FILE_ARRAY,
+						list(inputDirectory, s -> s.map(vfs::refreshAndFindFileByNioFile).toArray(VirtualFile[]::new)))
+				.add(CommonDataKeys.PROJECT, getProject())
+				.build();
 
 		AnActionEvent event = TestActionEvent.createTestEvent(action, dataContext);
-		action.update(event);
+		ActionUtil.performDumbAwareUpdate(action, event, false);
 		Presentation p = event.getPresentation();
 		assertThat(p.isEnabled()).as("event %s", p.isEnabled() ? "enabled" : "disabled").isEqualTo(shouldExecute);
 		assertThat(p.isVisible()).as("event %s", p.isVisible() ? "visible" : "hidden").isEqualTo(shouldExecute);
 
-		action.actionPerformed(event); // Outside if statement to verify it correctly handles null invocations
+		ActionUtil.performActionDumbAwareWithCallbacks(action, event);
 		if (shouldExecute) {
 			assertSameTextContentRecursive(resultDirectory, outputDirectory);
 		} else {

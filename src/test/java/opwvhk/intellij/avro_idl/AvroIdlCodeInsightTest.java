@@ -2,11 +2,7 @@ package opwvhk.intellij.avro_idl;
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.lang.LanguageDocumentation;
 import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.lang.documentation.DocumentationProvider;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
 import com.intellij.spellchecker.SpellCheckerSeveritiesProvider;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import opwvhk.intellij.avro_idl.inspections.*;
@@ -16,10 +12,6 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
 public class AvroIdlCodeInsightTest extends BasePlatformTestCase {
-
-	private static final DocumentationProvider DOCUMENTATION_PROVIDER = LanguageDocumentation.INSTANCE.forLanguage(
-			AvroIdlLanguage.INSTANCE);
-
 	@Override
 	protected String getTestDataPath() {
 		return "src/test/testData/codeInsight";
@@ -43,6 +35,7 @@ public class AvroIdlCodeInsightTest extends BasePlatformTestCase {
 				Highlight.error("my-data", "Not a valid identifier: my-data"),
 				Highlight.error("duplicate", "Field \"duplicate\" is already defined"),
 				Highlight.error("duplicate", "Field \"duplicate\" is already defined"),
+				// 11
 				Highlight.error("@namespace(\"unused\")",
 						"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fails to compile."),
 				Highlight.error("one-letter", "Not a valid identifier: one-letter"),
@@ -59,6 +52,7 @@ public class AvroIdlCodeInsightTest extends BasePlatformTestCase {
 				Highlight.error("@logicalType(\"timestamp-millis\")",
 						"The logical type \"timestamp-millis\" requires the underlying type \"long\""),
 				Highlight.error("56", "@aliases elements must be strings"),
+				// 21
 				Highlight.error("\"invites-failure\"", "Not a valid identifier: invites-failure"),
 				Highlight.error("@logicalType(\"local-timestamp-millis\")",
 						"The logical type \"local-timestamp-millis\" requires the underlying type \"long\""),
@@ -73,8 +67,10 @@ public class AvroIdlCodeInsightTest extends BasePlatformTestCase {
 				Highlight.error("@logicalType(\"decimal\")",
 						"The logical type \"decimal\" requires the underlying type \"bytes\" or \"fixed\""),
 				Highlight.error("8", "@scale must contain a non-negative number of at most the value of @precision"),
+				// 31
 				Highlight.error("@logicalType(\"decimal\")",
 						"The logical type \"decimal\" requires the underlying type \"bytes\" or \"fixed\""),
+				// Swap these two when using 2024.3
 				Highlight.error("@logicalType(\"decimal\")",
 						"The logical type \"decimal\" requires the underlying type \"bytes\" or \"fixed\""),
 				Highlight.error("@logicalType(\"decimal\")",
@@ -479,21 +475,6 @@ public class AvroIdlCodeInsightTest extends BasePlatformTestCase {
 
 		myFixture.launchAction(quickFix);
 		myFixture.checkResultByFile("MissingErrorFixed.avdl");
-	}
-
-	@SuppressWarnings("unused")
-	public void _testDocumentation() {
-		myFixture.configureByFiles("DocumentationTestData.java", "DocumentationTestData.simple");
-		final PsiElement originalElement = myFixture.getElementAtCaret();
-		Editor editor = myFixture.getEditor();
-		PsiElement element = DOCUMENTATION_PROVIDER.getCustomDocumentationElement(editor, originalElement.getContainingFile(), originalElement, editor.getCaretModel().getOffset());
-		if (element == null) {
-			element = originalElement;
-		}
-
-		final String generateDoc = DOCUMENTATION_PROVIDER.generateDoc(element, originalElement);
-		assertNotNull(generateDoc);
-		assertSameLinesWithFile(getTestDataPath() + "/" + "DocumentationTest.html.expected", generateDoc);
 	}
 
 	@SuppressWarnings("SameParameterValue")
