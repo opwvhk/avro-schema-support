@@ -122,7 +122,7 @@ intellijPlatform {
 		}
 		changeNotes.set("""
 			<p>Version 232.0.2:</p><ul>
-				<li>...</li>
+				<li>Fix filetype names</li>
 			</ul>
 			<p>Version 232.0.1:</p><ul>
 				<li>Improve threading for previewing quick fixes</li>
