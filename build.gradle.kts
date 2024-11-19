@@ -120,8 +120,10 @@ intellijPlatform {
 			sinceBuild.set(firstBuild)
 			untilBuild.set(lastBuild)
 		}
-		//language=HTML
 		changeNotes.set("""
+			<p>Version 232.0.2:</p><ul>
+				<li>...</li>
+			</ul>
 			<p>Version 232.0.1:</p><ul>
 				<li>Improve threading for previewing quick fixes</li>
 				<li>Improve/refactor action tests</li>
