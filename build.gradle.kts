@@ -106,7 +106,7 @@ dependencies {
 	implementation("org.apache.commons:commons-compress:1.27.1")
 	implementation("org.apache.commons:commons-text:1.13.0")
 	implementation("org.apache.commons:commons-lang3:3.17.0")
-	implementation("org.json:json:20241224")
+	implementation("org.json:json:20250107")
 	implementation("org.kohsuke", "github-api", "1.317")
 	implementation("io.jsonwebtoken", "jjwt-impl", "0.10.5")
 	implementation("io.jsonwebtoken", "jjwt-jackson", "0.10.5")
