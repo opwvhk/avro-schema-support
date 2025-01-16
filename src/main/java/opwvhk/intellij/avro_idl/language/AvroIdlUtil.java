@@ -86,6 +86,7 @@ public class AvroIdlUtil {
 	 */
 	private static Stream<AvroIdlNamedSchemaDeclaration> readNamedSchemas(@NotNull AvroIdlFile idlFile) {
 		return Stream.of(idlFile)
+				.filter(PsiFile::isValid)
 				.flatMap(avroIdlFile -> Stream.of(avroIdlFile.getChildren()))
 				.flatMap(child -> Stream.concat(
 						ifType(child, AvroIdlProtocolDeclaration.class)
@@ -99,6 +100,7 @@ public class AvroIdlUtil {
 
 	private static Stream<AvroIdlImportDeclaration> readImports(@NotNull AvroIdlFile idlFile) {
 		return Stream.of(idlFile)
+				.filter(PsiFile::isValid)
 				.flatMap(avroIdlFile -> Stream.of(avroIdlFile.getChildren()))
 				.flatMap(child -> Stream.concat(
 						ifType(child, AvroIdlProtocolDeclaration.class)
@@ -230,15 +232,20 @@ public class AvroIdlUtil {
 		assert importedFileReference != null;
 		return Optional.of(importedFileReferenceElement)
 				.map(PsiElement::getContainingFile)
+				.filter(PsiFile::isValid)
 				.map(PsiFile::getVirtualFile)
+				.filter(VirtualFile::isValid)
 				.map(VirtualFile::getParent)
+				.filter(VirtualFile::isValid)
 				.map(vFile -> vFile.findFileByRelativePath(importedFileReference))
+				.filter(VirtualFile::isValid)
 				.or(() -> Stream.ofNullable(module)
 						.map(ModuleRootManager::getInstance)
 						.map(rootMgr -> rootMgr.orderEntries().classes().getRoots())
 						.flatMap(Stream::of)
 						.map(root -> root.findFileByRelativePath(importedFileReference))
 						.filter(Objects::nonNull)
+						.filter(VirtualFile::isValid)
 						.findFirst()
 				).orElse(null);
 	}
