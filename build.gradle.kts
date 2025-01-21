@@ -15,12 +15,11 @@ plugins {
 // The last build is one more than the last release (to accommodate the EAP before it is released)
 val firstBuild = "232"
 val lastBuild = provider {
-	file("jetbrains.lastRelease.txt").readLines()
+	file("jetbrains.lastBuild.txt").readLines()
 		.asSequence()
 		.map { it.trim() }
 		.filterNot { it.isEmpty() || it.startsWith("#") }
 		.map { Integer.valueOf(it) }
-		.map { it + 1 }
 		.map { "$it.*" }
 		.first()
 }
@@ -58,7 +57,8 @@ dependencies {
 		//intellijIdeaCommunity("2023.3.6")
 		//intellijIdeaCommunity("2024.1.6")
 		//intellijIdeaCommunity("2024.2.4")
-		//intellijIdeaCommunity("2024.3")
+		//intellijIdeaCommunity("2024.3.2")
+		//intellijIdeaCommunity("2025.1")
 		// EAP
 		//create("IC","243.12818.47")
 		bundledPlugin("com.intellij.java")
@@ -67,8 +67,9 @@ dependencies {
 		//pycharmCommunity("2023.3.5")
 		//pycharmCommunity("2024.1.6")
 		//pycharmCommunity("2024.2.1")
+		//pycharmCommunity("2024.3.2")
+		//pycharmCommunity("2025.1")
 		// EAP
-		//pycharmCommunity("2024.3")
 		//bundledPlugin("PythonCore")
 
 		// Plugin dependencies (optional):
@@ -97,7 +98,6 @@ dependencies {
 
 		pluginVerifier()
 		zipSigner()
-		instrumentationTools()
 
 		testFramework(TestFrameworkType.Platform)
 	}
@@ -123,6 +123,7 @@ intellijPlatform {
 		changeNotes.set("""
 			<p>Version 232.0.2:</p><ul>
 				<li>Fix filetype names</li>
+				<li>Improve text bundles for 2025.1 requirements</li>
 			</ul>
 			<p>Version 232.0.1:</p><ul>
 				<li>Improve threading for previewing quick fixes</li>

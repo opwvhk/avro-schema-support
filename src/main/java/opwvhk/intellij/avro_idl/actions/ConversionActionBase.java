@@ -110,8 +110,6 @@ abstract class ConversionActionBase extends DumbAwareAction {
 			// Tests have no UI, and we don't want to manually fill in a dialog during tests anyway.
 			return targetFile;
 		}
-		// False positive: reuse of platform text
-		//noinspection DialogTitleCapitalization
 		final String nonNullTitle = title == null ? IdeBundle.message("dialog.title.save.as") : title;
 		final String nonNullDescription =
 				description == null ? IdeBundle.message("label.choose.target.file") : description;

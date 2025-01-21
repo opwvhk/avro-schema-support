@@ -1,6 +1,5 @@
 package opwvhk.intellij.avro_idl;
 
-import com.intellij.diagnostic.DiagnosticBundle;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
@@ -66,7 +65,7 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 	@Override
 	public @NotNull
 	@NlsActions.ActionText String getReportActionText() {
-		return DiagnosticBundle.message("error.report.impossible.action");
+		return TextBundle.diagnosticMessage("error.report.impossible.action");
 	}
 
 	@Override
