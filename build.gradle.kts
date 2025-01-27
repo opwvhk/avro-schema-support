@@ -121,6 +121,9 @@ intellijPlatform {
 			untilBuild.set(lastBuild)
 		}
 		changeNotes.set("""
+			<p>Version 232.0.3:</p><ul>
+				<li>Remove FileType instance references form JSON schema code</li>
+			</ul>
 			<p>Version 232.0.2:</p><ul>
 				<li>Fix filetype names</li>
 				<li>Improve text bundles for 2025.1 requirements</li>
