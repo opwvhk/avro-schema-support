@@ -27,7 +27,7 @@ public abstract class SimpleAvroIdlQuickFixOnPsiElement<E extends PsiElement>
 		this.text = text;
 	}
 
-	protected boolean isAvailable(@NotNull Project project, @NotNull PsiFile file, @NotNull E element) {
+	protected boolean isAvailable(@NotNull E element) {
 		return true;
 	}
 
@@ -47,10 +47,10 @@ public abstract class SimpleAvroIdlQuickFixOnPsiElement<E extends PsiElement>
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public boolean isAvailable(@NotNull Project project, @NotNull PsiFile file, @NotNull PsiElement startElement,
 	                           @NotNull PsiElement endElement) {
-		return isAvailable(project, file, (E) startElement);
+		//noinspection unchecked
+		return isAvailable((E) startElement);
 	}
 
 	@Override

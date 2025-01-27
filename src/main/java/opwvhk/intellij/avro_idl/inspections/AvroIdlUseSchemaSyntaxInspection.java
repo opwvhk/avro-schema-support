@@ -51,8 +51,7 @@ public class AvroIdlUseSchemaSyntaxInspection extends BaseAvroIdlInspection<Avro
 		}
 
 		@Override
-		protected boolean isAvailable(@NotNull Project project, @NotNull PsiFile file,
-		                              @NotNull AvroIdlProtocolDeclaration element) {
+		protected boolean isAvailable(@NotNull AvroIdlProtocolDeclaration element) {
 			return isAvailableFor(element);
 		}
 

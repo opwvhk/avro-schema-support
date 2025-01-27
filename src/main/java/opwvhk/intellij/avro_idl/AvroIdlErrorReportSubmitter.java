@@ -58,7 +58,7 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 	private final String repository = "opwvhk/avro-schema-support";
 
 	@Override
-	public @Nullable String getPrivacyNoticeText() {
+	public String getPrivacyNoticeText() {
 		return TextBundle.message("error.reporter.notice.anonymous", repository);
 	}
 

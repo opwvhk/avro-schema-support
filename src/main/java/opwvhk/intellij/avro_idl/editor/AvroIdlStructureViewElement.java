@@ -111,6 +111,9 @@ public class AvroIdlStructureViewElement extends PsiTreeElementBase<PsiElement> 
 
 	@NotNull
 	private String text(@NotNull String format, @Nullable Object... parameters) {
+		if (parameters == null) {
+			return "???";
+		}
 		for (Object parameter : parameters) {
 			if (parameter == null) {
 				return "???";

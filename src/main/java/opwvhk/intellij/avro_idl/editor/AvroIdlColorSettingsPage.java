@@ -31,47 +31,47 @@ public class AvroIdlColorSettingsPage implements ColorSettingsPage {
 	@NotNull
 	public String getDemoText() {
 		return """
-		       /**
-		        * An example protocol in Avro IDL
-		        */
-		       <annotation>@namespace("org.apache.avro.test")</annotation>
-		       protocol Simple {
+				/**
+				 * An example protocol in Avro IDL
+				 */
+				<annotation>@namespace("org.apache.avro.test")</annotation>
+				protocol Simple {
 
-		           <annotation>@aliases(["org.foo.KindOf"])</annotation>
-		           enum Kind {
-		               FOO,
-		               BAR, // the bar enum value
-		               BAZ
-		           }
+				    <annotation>@aliases(["org.foo.KindOf"])</annotation>
+				    enum Kind {
+				        FOO,
+				        BAR, // the bar enum value
+				        BAZ
+				    }
 
-		           fixed MD5(16);
+				    fixed MD5(16);
 
-		           record TestRecord {
-		               <annotation>@order("ignore")</annotation>
-		               string name;
+				    record TestRecord {
+				        <annotation>@order("ignore")</annotation>
+				        string name;
 
-		               <annotation>@order("descending")</annotation>
-		               Kind kind;
+				        <annotation>@order("descending")</annotation>
+				        Kind kind;
 
-		               MD5 hash;
+				        MD5 hash;
 
-		               union { MD5, null} <annotation>@aliases(["hash"])</annotation> nullableHash;
+				        union { MD5, null} <annotation>@aliases(["hash"])</annotation> nullableHash;
 
-		               array<long> arrayOfLongs;
-		           }
+				        array<long> arrayOfLongs;
+				    }
 
-		           error TestError {
-		               string message;
-		           }
+				    error TestError {
+				        string message;
+				    }
 
-		           string hello(string greeting);
-		           TestRecord echo(TestRecord `record`);
-		           int add(int arg1, int arg2);
-		           bytes echoBytes(bytes data);
-		           void `error`() throws TestError;
-		           void ping() oneway;
-		       }
-		       """;
+				    string hello(string greeting);
+				    TestRecord echo(TestRecord `record`);
+				    int add(int arg1, int arg2);
+				    bytes echoBytes(bytes data);
+				    void `error`() throws TestError;
+				    void ping() oneway;
+				}
+				""";
 	}
 
 	@Override

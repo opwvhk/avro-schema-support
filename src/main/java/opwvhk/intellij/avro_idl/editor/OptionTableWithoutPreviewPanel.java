@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
+@SuppressWarnings("unused")
 public abstract class OptionTableWithoutPreviewPanel extends WrappingAndBracesPanel {
 	private JPanel myPanel;
 

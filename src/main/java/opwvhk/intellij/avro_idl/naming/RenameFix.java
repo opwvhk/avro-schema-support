@@ -76,7 +76,7 @@ public class RenameFix implements RefactoringQuickFix {
 
 	@Override
 	@NotNull
-	public RefactoringActionHandler getHandler(DataContext context) {
+	public RefactoringActionHandler getHandler(@NotNull DataContext context) {
 		RenameHandler renameHandler = RenameHandlerRegistry.getInstance().getRenameHandler(context);
 		return renameHandler != null ? renameHandler : getHandler();
 	}

@@ -45,8 +45,7 @@ public class AvroIdlAvoidNullableShorthandInspection extends BaseAvroIdlInspecti
 		}
 
 		@Override
-		protected boolean isAvailable(@NotNull Project project, @NotNull PsiFile file,
-		                              @NotNull AvroIdlNullableType element) {
+		protected boolean isAvailable(@NotNull AvroIdlNullableType element) {
 			return isAvailableFor(element);
 		}
 

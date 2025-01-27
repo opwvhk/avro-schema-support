@@ -79,10 +79,10 @@ abstract class ConversionActionBase extends DumbAwareAction {
 	@TestOnly
 	public static VirtualFile targetDirectory = null;
 
-	@SuppressWarnings("SameParameterValue")
 	@Nullable
-	protected VirtualFile askForTargetDirectory(@NotNull Project project, @Nullable String title,
-	                                            @Nullable String description,
+	protected VirtualFile askForTargetDirectory(@NotNull Project project,
+	                                            @SuppressWarnings("SameParameterValue") @Nullable String title,
+	                                            @SuppressWarnings("SameParameterValue") @Nullable String description,
 	                                            @Nullable VirtualFile suggestedTargetDirectory) {
 		if (ApplicationManager.getApplication().isUnitTestMode()) {
 			// Tests have no UI, and we don't want to manually fill in a dialog during tests anyway.
@@ -110,6 +110,7 @@ abstract class ConversionActionBase extends DumbAwareAction {
 			// Tests have no UI, and we don't want to manually fill in a dialog during tests anyway.
 			return targetFile;
 		}
+		//noinspection DialogTitleCapitalization: from IDE message bundle, so correct enough
 		final String nonNullTitle = title == null ? IdeBundle.message("dialog.title.save.as") : title;
 		final String nonNullDescription =
 				description == null ? IdeBundle.message("label.choose.target.file") : description;

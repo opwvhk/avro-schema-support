@@ -24,9 +24,9 @@ public class AvroIdlDeclarationBlock extends AvroIdlBlock {
 	private int bodyStartIndex;
 	private int bodyEndIndex;
 
-	protected AvroIdlDeclarationBlock(@NotNull ASTNode node, @NotNull Wrap wrap, @Nullable Alignment alignment,
-	                                  Indent indent,
-	                                  @NotNull SpacingBuilder spacingBuilder) {
+	protected AvroIdlDeclarationBlock(@NotNull ASTNode node, @NotNull Wrap wrap,
+	                                  @SuppressWarnings("SameParameterValue") @Nullable Alignment alignment,
+	                                  Indent indent, @NotNull SpacingBuilder spacingBuilder) {
 		super(node, wrap, alignment, indent, spacingBuilder);
 
 		headerStartIndex = -1;

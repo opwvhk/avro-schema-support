@@ -16,7 +16,7 @@ public abstract class BaseAvroIdlInspection<T extends PsiElement> extends LocalI
 	}
 
 	protected abstract void visitElement(@NotNull T element, @NotNull ProblemsHolder holder,
-	                                     @NotNull LocalInspectionToolSession session);
+	                                     @SuppressWarnings("unused") @NotNull LocalInspectionToolSession session);
 
 	@Override
 	@NotNull
