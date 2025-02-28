@@ -13,7 +13,7 @@ plugins {
 // The first and last supported builds
 // The first build MUST be compatible with the platform & version in dependencies/intellijPlatform !
 // The last build is one more than the last release (to accommodate the EAP before it is released)
-val firstBuild = "232"
+val firstBuild = "241"
 val lastBuild = provider {
 	file("jetbrains.lastBuild.txt").readLines()
 		.asSequence()
@@ -25,7 +25,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "232.0.3-SNAPSHOT"
+version = "241.0.0-SNAPSHOT"
 
 repositories {
 	mavenLocal()
@@ -53,18 +53,13 @@ dependencies {
 		// Last minor versions differ, and the PSIViewer versions are not regular
 		// Also, tests require the base plugin (java/PythonCore; so don't remove it even if the plugin does not need it)
 
-		intellijIdeaCommunity("2023.2.6")
-		//intellijIdeaCommunity("2023.3.6")
-		//intellijIdeaCommunity("2024.1.6")
+		intellijIdeaCommunity("2024.1.6")
 		//intellijIdeaCommunity("2024.2.4")
 		//intellijIdeaCommunity("2024.3.2")
 		//intellijIdeaCommunity("2025.1")
 		// EAP
-		//create("IC","243.12818.47")
 		bundledPlugin("com.intellij.java")
 
-		//pycharmCommunity("2023.2.6")
-		//pycharmCommunity("2023.3.5")
 		//pycharmCommunity("2024.1.6")
 		//pycharmCommunity("2024.2.1")
 		//pycharmCommunity("2024.3.2")
@@ -121,7 +116,8 @@ intellijPlatform {
 			untilBuild.set(lastBuild)
 		}
 		changeNotes.set("""
-			<p>Version 232.0.3:</p><ul>
+			<p>Version 241.0.0:</p><ul>
+				<li>Upgraded minimum supported JetBrains version to 2024.1</li>
 				<li>Remove FileType instance references form JSON schema code</li>
 			</ul>
 			<p>Version 232.0.2:</p><ul>
