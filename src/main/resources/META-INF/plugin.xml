@@ -119,31 +119,31 @@
 		<langCodeStyleSettingsProvider
 				implementation="opwvhk.intellij.avro_idl.editor.AvroIdlLanguageCodeStyleSettingsProvider"/>
 		<!-- Inspections (can be turned off) -->
-		<localInspection language="AvroIDL" groupKey="inspection.group.avro" key="inspection.duplicate.annotations"
+		<localInspection language="AvroIDL" groupKey="inspection.group.avro.idl" key="inspection.duplicate.annotations"
 		                 level="WARNING" enabledByDefault="true"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlDuplicateAnnotationsInspection"/>
-		<localInspection language="AvroIDL" groupKey="inspection.group.avro" key="inspection.misplaced.annotations"
+		<localInspection language="AvroIDL" groupKey="inspection.group.avro.idl" key="inspection.misplaced.annotations"
 		                 level="WEAK WARNING" enabledByDefault="true"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlMisplacedAnnotationsInspection"/>
-		<localInspection language="AvroIDL" groupKey="inspection.group.avro" key="inspection.invalid.namespace.annotation"
+		<localInspection language="AvroIDL" groupKey="inspection.group.avro.idl" key="inspection.invalid.namespace.annotation"
 		                 level="WARNING" enabledByDefault="true"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlInvalidNamespaceAnnotationInspection"/>
-		<localInspection language="AvroIDL" groupKey="inspection.group.avro" key="inspection.misplaced.documentation"
+		<localInspection language="AvroIDL" groupKey="inspection.group.avro.idl" key="inspection.misplaced.documentation"
 		                 level="WARNING" enabledByDefault="true"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlMisplacedDocumentationInspection"/>
-		<localInspection language="AvroIDL" groupKey="inspection.group.avro" key="inspection.use.nullable.shorthand"
+		<localInspection language="AvroIDL" groupKey="inspection.group.avro.idl" key="inspection.use.nullable.shorthand"
 		                 level="WEAK WARNING" enabledByDefault="true"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlUseNullableShorthandInspection"/>
-		<localInspection language="AvroIDL" groupKey="inspection.group.avro" key="inspection.avoid.nullable.shorthand"
+		<localInspection language="AvroIDL" groupKey="inspection.group.avro.idl" key="inspection.avoid.nullable.shorthand"
 		                 level="ERROR" enabledByDefault="false"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlAvoidNullableShorthandInspection"/>
-		<localInspection language="AvroIDL" groupKey="inspection.group.avro" key="inspection.use.schema.syntax"
+		<localInspection language="AvroIDL" groupKey="inspection.group.avro.idl" key="inspection.use.schema.syntax"
 		                 level="WEAK WARNING" enabledByDefault="true"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlUseSchemaSyntaxInspection"/>
-		<localInspection language="AvroIDL" groupKey="inspection.group.avro" key="inspection.avoid.schema.syntax"
+		<localInspection language="AvroIDL" groupKey="inspection.group.avro.idl" key="inspection.avoid.schema.syntax"
 		                 level="ERROR" enabledByDefault="false"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlAvoidSchemaSyntaxInspection"/>
-		<localInspection language="AvroIDL" groupKey="inspection.group.avro" key="inspection.naming.convention"
+		<localInspection language="AvroIDL" groupKey="inspection.group.avro.idl" key="inspection.naming.convention"
 		                 level="TYPO" enabledByDefault="false"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlNamingConventionInspection"/>
 	</extensions>

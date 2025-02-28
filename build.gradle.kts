@@ -72,6 +72,7 @@ dependencies {
 		bundledPlugin("org.intellij.intelliLang")
 
 		// Extra plugin(s); not needed for the plugin, but maybe useful during development:
+		plugin("PsiViewer:241.14494.158-EAP-SNAPSHOT")
 		bundledPlugin("org.intellij.plugins.markdown")
 		/* Other (bundled) plugins: */
 		// Define these variables to prevent spell checking errors in the comment below
@@ -119,6 +120,7 @@ intellijPlatform {
 			<p>Version 241.0.0:</p><ul>
 				<li>Upgraded minimum supported JetBrains version to 2024.1</li>
 				<li>Remove FileType instance references form JSON schema code</li>
+				<li>Reenable JSON compliance checks (they were rewritten as inspections). Fixes #213.</li>
 			</ul>
 			<p>Version 232.0.2:</p><ul>
 				<li>Fix filetype names</li>

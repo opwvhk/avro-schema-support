@@ -6,10 +6,17 @@
 		          implementationClass="opwvhk.intellij.avro_idl.AvroSchemaFileType"/>
 		<lang.parserDefinition language="AvroSchema"
 		                       implementationClass="opwvhk.intellij.avro_idl.syntax.AvroSchemaParserDefinition"/>
+		<localInspection language="AvroSchema" enabledByDefault="true" level="ERROR"
+		                 groupKey="inspection.group.avro.schema" key="inspection.schema.json.compliance"
+		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroSchemaJsonStandardComplianceInspection"/>
+
 		<fileType name="Avro Protocol" fieldName="INSTANCE" language="AvroProtocol" extensions="avpr"
 		          implementationClass="opwvhk.intellij.avro_idl.AvroProtocolFileType"/>
 		<lang.parserDefinition language="AvroProtocol"
 		                       implementationClass="opwvhk.intellij.avro_idl.syntax.AvroProtocolParserDefinition"/>
+		<localInspection language="AvroProtocol" enabledByDefault="true" level="ERROR"
+		                 groupKey="inspection.group.avro.protocol" key="inspection.protocol.json.compliance"
+		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroProtocolJsonStandardComplianceInspection"/>
 	</extensions>
 	<extensions defaultExtensionNs="JavaScript">
 		<JsonSchema.ProviderFactory
