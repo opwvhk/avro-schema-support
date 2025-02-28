@@ -70,11 +70,11 @@ public class AvroIdlCodeInsightTest extends BasePlatformTestCase {
 				// 31
 				Highlight.error("@logicalType(\"decimal\")",
 						"The logical type \"decimal\" requires the underlying type \"bytes\" or \"fixed\""),
-				// Swap these two when using 2024.3
-				Highlight.error("@logicalType(\"decimal\")",
-						"The logical type \"decimal\" requires the underlying type \"bytes\" or \"fixed\""),
+				// Swap these two when using <2024.3
 				Highlight.error("@logicalType(\"decimal\")",
 						"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fails to compile."),
+				Highlight.error("@logicalType(\"decimal\")",
+						"The logical type \"decimal\" requires the underlying type \"bytes\" or \"fixed\""),
 				Highlight.error("@precision(40)",
 						"Type references must not be annotated: Avro < 1.11.1 changes the referenced type, Avro >= 1.11.1 fails to compile."),
 				Highlight.error("40", "hashes.MD5, a fixed(16), cannot store 40 digits (max 38)"),
