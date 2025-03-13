@@ -69,41 +69,43 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 	}
 
 	@Override
-	public boolean submit(@NotNull IdeaLoggingEvent[] events, @Nullable String additionalInfo,
+	public boolean submit(IdeaLoggingEvent @NotNull [] events, @Nullable String additionalInfo,
 	                      @NotNull Component parentComponent,
 	                      @NotNull Consumer<? super SubmittedReportInfo> consumer) {
-		SubmittedReportInfo reportInfo;
-		if (events.length == 0 && additionalInfo == null) {
-			// Nothing to submit
-			reportInfo = new SubmittedReportInfo(null, null, FAILED);
-		} else {
-			// The current implementation has only a single event...
-
-			String firstThrowableText = events[0].getThrowableText();
-			String searchTerm = getFirstMatchingGroup(FIRST_STACK_LINE, firstThrowableText);
-			String errorMessage = getFirstMatchingGroup(EXCEPTION_MESSAGE, firstThrowableText);
-			String markdownText = createCrashReportMarkdown(events, additionalInfo);
-
-			try {
-				GitHub gitHub = connectToGitHub();
-				GHIssue issue = findIssue(gitHub, searchTerm);
-				boolean duplicate = issue != null;
-				if (!duplicate) {
-					issue = createIssue(gitHub, "Crash Report: " + errorMessage, markdownText, "crash report");
-				}
-				String issueUrl = issue.getHtmlUrl().toExternalForm();
-				int issueNumber = issue.getNumber();
-				reportInfo = new SubmittedReportInfo(issueUrl, "issue " + issueNumber,
-						duplicate ? DUPLICATE : NEW_ISSUE);
-			} catch (Exception e) {
+		ApplicationManager.getApplication().invokeLater(() -> {
+			SubmittedReportInfo reportInfo;
+			if (events.length == 0 && additionalInfo == null) {
+				// Nothing to submit
 				reportInfo = new SubmittedReportInfo(null, null, FAILED);
-				String markdownErrorReport = TextBundle.message("error.reporter.failure.manual.fix", repository,
-						markdownText);
-				ApplicationManager.getApplication()
-						.invokeLater(() -> openInScratchFile(parentComponent, markdownErrorReport));
+			} else {
+				// The current implementation has only a single event...
+
+				String firstThrowableText = events[0].getThrowableText();
+				String searchTerm = getFirstMatchingGroup(FIRST_STACK_LINE, firstThrowableText);
+				String errorMessage = getFirstMatchingGroup(EXCEPTION_MESSAGE, firstThrowableText);
+				String markdownText = createCrashReportMarkdown(events, additionalInfo);
+
+				try {
+					GitHub gitHub = connectToGitHub();
+					GHIssue issue = findIssue(gitHub, searchTerm);
+					boolean duplicate = issue != null;
+					if (!duplicate) {
+						issue = createIssue(gitHub, "Crash Report: " + errorMessage, markdownText, "crash report");
+					}
+					String issueUrl = issue.getHtmlUrl().toExternalForm();
+					int issueNumber = issue.getNumber();
+					reportInfo = new SubmittedReportInfo(issueUrl, "issue " + issueNumber,
+							duplicate ? DUPLICATE : NEW_ISSUE);
+				} catch (Exception e) {
+					reportInfo = new SubmittedReportInfo(null, null, FAILED);
+					String markdownErrorReport = TextBundle.message("error.reporter.failure.manual.fix", repository,
+							markdownText);
+					ApplicationManager.getApplication()
+							.invokeLater(() -> openInScratchFile(parentComponent, markdownErrorReport));
+				}
 			}
-		}
-		consumer.consume(reportInfo);
+			consumer.consume(reportInfo);
+		});
 		return true;
 	}
 
