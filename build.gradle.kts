@@ -7,7 +7,7 @@ import java.util.*
 plugins {
 	`java-library`
 	id("java")
-	id("org.jetbrains.intellij.platform") version "2.3.0"
+	id("org.jetbrains.intellij.platform") version "2.4.0"
 }
 
 // The first and last supported builds
