@@ -117,6 +117,12 @@ intellijPlatform {
 			untilBuild.set(lastBuild)
 		}
 		changeNotes.set("""
+			<p>Version 241.0.1:</p><ul>
+				<li>
+					Made grammar more lenient: any Unicode/Java identifier is valid as-is, and any string when quoted by
+					backticks (backticks are quoted by doubling them).
+				</li>
+			</ul>
 			<p>Version 241.0.0:</p><ul>
 				<li>Upgraded minimum supported JetBrains version to 2024.1</li>
 				<li>Remove FileType instance references form JSON schema code</li>
