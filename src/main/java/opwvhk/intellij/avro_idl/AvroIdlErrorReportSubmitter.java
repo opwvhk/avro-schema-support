@@ -218,7 +218,7 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 	private String createJWT(String githubAppId, String keyFile)
 			throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 		// We need to define two timestamps between which out JWT will be valid, according to the GitHub server clock.
-		// The "issues at" timestamp must be in the past, and the expiration timestamp must be at most 10 minutes into
+		// The "issued at" timestamp must be in the past, and the expiration timestamp must be at most 10 minutes into
 		// the future.
 
 		// Guard against (large) clock drift: issue the token 4 minutes in the past, with a maximum expiration window
