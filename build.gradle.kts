@@ -1,8 +1,30 @@
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import org.jetbrains.intellij.platform.gradle.extensions.IntelliJPlatformDependenciesExtension
 import org.jetbrains.intellij.platform.gradle.models.ProductRelease
 import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.FailureLevel.*
+import org.jetbrains.intellij.pluginRepository.PluginRepositoryFactory
 import java.util.*
+
+val IntelliJPlatformDependenciesExtension.pluginRepository by lazy {
+	PluginRepositoryFactory.create("https://plugins.jetbrains.com")
+}
+
+fun IntelliJPlatformDependenciesExtension.pluginsInLatestCompatibleVersion(vararg pluginIds: String) =
+	plugins(provider {
+		pluginIds.map { pluginId ->
+			val platformType = intellijPlatform.productInfo.productCode
+			val platformVersion = intellijPlatform.productInfo.buildNumber
+
+			val plugin = pluginRepository.pluginManager.searchCompatibleUpdates(
+				build = "$platformType-$platformVersion",
+				xmlIds = listOf(pluginId),
+			).firstOrNull()
+				?: throw GradleException("No plugin update with id='$pluginId' compatible with '$platformType-$platformVersion' found in JetBrains Marketplace")
+
+			"${plugin.pluginXmlId}:${plugin.version}"
+		}
+	})
 
 plugins {
 	`java-library`
@@ -25,7 +47,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "241.0.1-SNAPSHOT"
+version = "241.0.1"
 
 repositories {
 	mavenLocal()
@@ -53,32 +75,32 @@ dependencies {
 		// Last minor versions differ, and the PSIViewer versions are not regular
 		// Also, tests require the base plugin (java/PythonCore; so don't remove it even if the plugin does not need it)
 
-		intellijIdeaCommunity("2024.1.6")
-		//intellijIdeaCommunity("2024.2.4")
-		//intellijIdeaCommunity("2024.3.2")
-		//intellijIdeaCommunity("2025.1")
+		//intellijIdeaCommunity("2024.1.7")
+		//intellijIdeaCommunity("2024.2.6")
+		//intellijIdeaCommunity("2024.3.5")
+		intellijIdeaCommunity("2025.1")
 		// EAP
 		bundledPlugin("com.intellij.java")
 
-		//pycharmCommunity("2024.1.6")
-		//pycharmCommunity("2024.2.1")
-		//pycharmCommunity("2024.3.2")
+		//pycharmCommunity("2024.1.7")
+		//pycharmCommunity("2024.2.6")
+		//pycharmCommunity("2024.3.5")
 		//pycharmCommunity("2025.1")
 		// EAP
 		//bundledPlugin("PythonCore")
 
 		// Plugin dependencies (optional):
-		//bundledPlugin("com.intellij.modules.json") // TODO: Uncomment when it exists (check at least when requiring 2024.3+)...
+		bundledPlugin("com.intellij.modules.json")
 		bundledPlugin("org.intellij.intelliLang")
 
 		// Extra plugin(s); not needed for the plugin, but maybe useful during development:
-		plugin("PsiViewer:241.14494.158-EAP-SNAPSHOT")
+		pluginsInLatestCompatibleVersion("PsiViewer")
 		bundledPlugin("org.intellij.plugins.markdown")
 		/* Other (bundled) plugins: */
 		// Define these variables to prevent spell checking errors in the comment below
-		@Suppress("UNUSED_VARIABLE")
+		@Suppress("UNUSED_VARIABLE", "unused")
 		val lombokPluginName = "Lombook Plugin" // Yes, the typo is part of the official name
-		@Suppress("UNUSED_VARIABLE")
+		@Suppress("UNUSED_VARIABLE", "unused")
 		val editorConfigPluginName = "org.editorconfig.editorconfigjetbrains"
 		/*
 		bundledPlugin("Git4Idea")
@@ -120,7 +142,9 @@ intellijPlatform {
 			<p>Version 241.0.1:</p><ul>
 				<li>
 					Made grammar more lenient: any Unicode/Java identifier is valid as-is, and any string when quoted by
-					backticks (backticks are quoted by doubling them).
+					backticks (backticks are quoted by doubling them). This causes less parse errors, and makes future
+					 error messages more flexible. As the Avro language is much more strict, there is no effective
+					 difference.
 				</li>
 			</ul>
 			<p>Version 241.0.0:</p><ul>
