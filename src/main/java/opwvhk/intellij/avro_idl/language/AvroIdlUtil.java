@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
@@ -114,6 +115,10 @@ public class AvroIdlUtil {
 
 	public static <T> Stream<T> ifType(@Nullable Object object, @NotNull Class<T> type) {
 		return type.isInstance(object) ? Stream.of(type.cast(object)) : Stream.empty();
+	}
+
+	public static <T, R extends T> Function<T, R> ifType(@NotNull Class<R> type) {
+		return object -> type.isInstance(object) ? type.cast(object) : null;
 	}
 
 	public static boolean hasMessages(@NotNull AvroIdlProtocolDeclaration protocolDeclaration) {

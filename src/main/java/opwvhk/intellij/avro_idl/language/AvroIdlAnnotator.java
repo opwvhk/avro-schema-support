@@ -33,6 +33,7 @@ import java.util.stream.Stream;
 
 import static com.intellij.lang.annotation.HighlightSeverity.ERROR;
 import static java.util.regex.Pattern.UNICODE_CHARACTER_CLASS;
+import static opwvhk.intellij.avro_idl.language.AvroIdlUtil.ifType;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.NULL;
 import static opwvhk.intellij.avro_idl.psi.AvroIdlTypes.VOID;
 
@@ -424,12 +425,10 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 		if (parent instanceof AvroIdlFixedDeclaration) {
 			fixedDeclaration = (AvroIdlFixedDeclaration) parent;
 		} else if (parent instanceof AvroIdlReferenceType) {
-			final PsiReference reference = parent.getReference();
-			assert reference != null;
-			final PsiElement referencedType = reference.resolve();
-			if (referencedType instanceof AvroIdlFixedDeclaration) {
-				fixedDeclaration = (AvroIdlFixedDeclaration) referencedType;
-			}
+			// This is unintended: annotations on type references are or cause bugs
+			// It might be intended, however, so we'll check just the same.
+			fixedDeclaration = Optional.ofNullable(parent.getReference())
+					.map(PsiReference::resolve).map(ifType(AvroIdlFixedDeclaration.class)).orElse(null);
 		}
 		if (fixedDeclaration != null) {
 			final PsiElement intLiteral = fixedDeclaration.getIntLiteral();
