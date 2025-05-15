@@ -89,7 +89,7 @@ dependencies {
 		// EAP
 		//bundledPlugin("PythonCore")
 
-		// Plugin dependencies (optional):
+		// Plugin dependencies (for optional dependencies in the plugin.xml):
 		bundledPlugin("com.intellij.modules.json")
 		bundledPlugin("org.intellij.intelliLang")
 
