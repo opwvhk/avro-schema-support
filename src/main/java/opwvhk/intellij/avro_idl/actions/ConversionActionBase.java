@@ -122,11 +122,15 @@ abstract class ConversionActionBase extends DumbAwareAction {
 		VirtualFile firstItem = ContainerUtil.getFirstItem(files);
 		VirtualFile baseDir = firstItem != null ? firstItem.getParent() : suggestedTargetDirectory;
 
-		// Using FileTypeManager.getInstance().getAssociations(FileType) to match allowed filenames would be preferable, except
-		// that you can't get a save dialog then (FileSaverDescriptor doesn't support it), and hence no overwrite confirmation.
-		FileSaverDescriptor descriptor = new FileSaverDescriptor(nonNullTitle, nonNullDescription,
-				findExtensionsFor(fileType).toArray(String[]::new));
-		return FileChooserFactory.getInstance().createSaveFileDialog(descriptor, project).save(baseDir, fileName);
+		// Note: the code in use is deprecated for IntellIJ 2025.x Use the commented out code instead.
+		//FileChooserDescriptor chooseDescriptor = FileChooserDescriptorFactory.createSingleFileDescriptor(fileType)
+		//		.withTitle(nonNullTitle).withDescription(nonNullDescription);
+		//FileSaverDescriptor saveDescriptor = new FileSaverDescriptor(chooseDescriptor);
+		FileSaverDescriptor saveDescriptor = new FileSaverDescriptor(nonNullTitle, nonNullDescription);
+		// withFileFilter() returns 'this'
+		saveDescriptor.withFileFilter(file -> FileTypeRegistry.getInstance().isFileOfType(file, fileType));
+
+		return FileChooserFactory.getInstance().createSaveFileDialog(saveDescriptor, project).save(baseDir, fileName);
 	}
 
 	/**
