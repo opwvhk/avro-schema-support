@@ -83,9 +83,9 @@
 		AT_NAMESPACE='@namespace'
 
 		// Use this to debug the grammar with the PSI preview
-		//IDENTIFIER_TOKEN="regexp:([\p{javaUnicodeIdentifierStart}\p{Sc}\p{Pc}\u2E2F][\p{javaUnicodeIdentifierPart}\p{Sc}\u2E2F]*|\`([^\`]|\\\`)*\`)([.-]([\p{javaUnicodeIdentifierStart}\p{Sc}\p{Pc}\u2E2F][\p{javaUnicodeIdentifierPart}\p{Sc}\u2E2F]*|\`([^\`]|\\\`)*\`))*"
+		IDENTIFIER_TOKEN="regexp:([\p{javaUnicodeIdentifierStart}\p{Sc}\p{Pc}\u2E2F][\p{javaUnicodeIdentifierPart}\p{Sc}\u2E2F]*|`([^`]|``)*`)([.-]([\p{javaUnicodeIdentifierStart}\p{Sc}\p{Pc}\u2E2F][\p{javaUnicodeIdentifierPart}\p{Sc}\u2E2F]*|`([^`]|``)*`))*"
 		// Use this when generating the lexer
-		IDENTIFIER_TOKEN="regexp:([\p{XID_Start}\p{Sc}\p{Pc}\u2E2F][\p{XID_Continue}\p{Sc}\u2E2F]*|\`([^\`]|\\\`)*\`)([.-]([\p{XID_Start}\p{Sc}\p{Pc}\u2E2F][\p{XID_Continue}\p{Sc}\u2E2F]*|\`([^\`]|\\\`)*\`))*"
+		//IDENTIFIER_TOKEN="regexp:([\p{XID_Start}\p{Sc}\p{Pc}\u2E2F][\p{XID_Continue}\p{Sc}\u2E2F]*|`([^`]|``)*`)([.-]([\p{XID_Start}\p{Sc}\p{Pc}\u2E2F][\p{XID_Continue}\p{Sc}\u2E2F]*|`([^`]|``)*`))*"
 	]
 
 	consumeTokenMethod("recover.*")="consumeTokenFast"

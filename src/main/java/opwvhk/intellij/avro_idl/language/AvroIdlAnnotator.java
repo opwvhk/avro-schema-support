@@ -104,7 +104,7 @@ public class AvroIdlAnnotator implements Annotator, DumbAware {
 	@NotNull
 	private String getIdentifier(@NotNull PsiElement element) {
 		String text = element.getText();
-		return text.startsWith("`") ? text.substring(1, text.length() - 2) : text;
+		return text.startsWith("`") ? text.substring(1, text.length() - 1).replace("``", "`") : text;
 	}
 
 	private void annotateEnumDefault(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
