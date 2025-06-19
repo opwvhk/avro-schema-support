@@ -47,7 +47,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "241.0.2-SNAPSHOT"
+version = "241.0.2"
 
 repositories {
 	mavenLocal()
@@ -139,6 +139,10 @@ intellijPlatform {
 			untilBuild.set(lastBuild)
 		}
 		changeNotes.set("""
+			<p>Version 241.0.2:</p><ul>
+				<li>Add support for JetBrains version 2025.2</li>
+				<li>Fix bugs #222 and #223 (IDL syntax handling)</li>
+			</ul>
 			<p>Version 241.0.1:</p><ul>
 				<li>
 					Made grammar more lenient: any Unicode/Java identifier is valid as-is, and any string when quoted by
@@ -165,6 +169,8 @@ intellijPlatform {
 				<li>Add explicit dependency to JSON module</li>
 				<li>Add Language injections for Avro</li>
 			</ul>
+		""".trimIndent())
+		/* Older changelog entries:
 			<p>Version 223.3.3:</p><ul>
 				<li>Use EDT when previewing quick fixes (fixes #177)</li>
 			</ul>
@@ -187,8 +193,6 @@ intellijPlatform {
 				<li>Refactor code for new Java & SDK versions</li>
 				<li>Fix cosmetic bug in error report</li>
 			</ul>
-		""".trimIndent())
-		/* Older changelog entries:
 			<p>Version 221.4.3:</p><ul>
 				<li>Fix regression in update notifications</li>
 			</ul>
