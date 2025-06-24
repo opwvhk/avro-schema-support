@@ -1,7 +1,6 @@
 package opwvhk.intellij.avro_idl;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.actions.ShowSettingsUtilImpl;
 import com.intellij.ide.browsers.BrowserLauncher;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
@@ -35,7 +34,7 @@ import java.util.regex.Pattern;
  * cannot define a replacement for a conflicting but unmaintained plugin, as it needs to be defined in the plugin to be
  * replaced (which you cannot do, as it is no longer maintained).</p>
  */
-public class AvroIdlPluginUpdateStartupActivity implements ProjectActivity {//}.DumbAware {
+public class AvroIdlPluginUpdateStartupActivity implements ProjectActivity {
 	private static final Logger LOG = Logger.getInstance(AvroIdlUtil.class);
 
 	private static final String SNAPSHOT_SUFFIX = "-SNAPSHOT";
@@ -98,13 +97,14 @@ public class AvroIdlPluginUpdateStartupActivity implements ProjectActivity {//}.
 				plugin.getName() + " " + newVersion + " installed." :
 				plugin.getName() + " updated to version " + newVersion;
 		Consumer<Notification> addNotificationActions = notification -> {
-			// Values for idToSelect are in searchableOptions.xml; use this XPath: /option/configurable[configurable_name="AvroIDL"]@id
-			// (note: searchableOptions.xml is created when building the plugin)
-			notification.addAction(NotificationAction.createSimple("Open preferences",
-					() -> ShowSettingsUtilImpl.showSettingsDialog(project, "", "Avro IDL")));
+			// Disabled because the IntelliJ settings dialog says "Not yet initialized"...
+			//// Values for idToSelect are in searchableOptions.xml; use this XPath: /option/configurable[configurable_name="AvroIDL"]@id
+			//// (note: searchableOptions.xml is created when building the plugin)
+			//notification.addAction(NotificationAction.createSimple("Open preferences",
+			//		() -> ShowSettingsUtilImpl.showSettingsDialog(project, "", "Avro IDL")));
 			notification.addAction(NotificationAction.createSimple("Ask questions",
-					() -> BrowserLauncher.getInstance().browse(URI.create(
-							"https://github.com/opwvhk/avro-schema-support/discussions"))));
+					() -> BrowserLauncher.getInstance()
+							.browse(URI.create("https://github.com/opwvhk/avro-schema-support/discussions"))));
 			notification.addAction(NotificationAction.createSimple("Report issues",
 					() -> BrowserLauncher.getInstance()
 							.browse(URI.create("https://github.com/opwvhk/avro-schema-support/issues"))));
