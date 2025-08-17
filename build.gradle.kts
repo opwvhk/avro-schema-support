@@ -29,7 +29,7 @@ fun IntelliJPlatformDependenciesExtension.pluginsInLatestCompatibleVersion(varar
 plugins {
 	`java-library`
 	id("java")
-	id("org.jetbrains.intellij.platform") version "2.7.1"
+	id("org.jetbrains.intellij.platform") version "2.7.2"
 }
 
 // The first and last supported builds
