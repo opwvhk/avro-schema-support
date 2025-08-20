@@ -61,21 +61,23 @@ public class AvroIdlUtil {
 		List<AvroIdlNameIdentifierOwner> result = new ArrayList<>();
 
 		final PsiManager psiManager = PsiManager.getInstance(requireNonNull(scope.getProject()));
-		FileTypeIndex.processFiles(AvroIdlFileType.INSTANCE, virtualFile -> {
-			ifType(psiManager.findFile(virtualFile), AvroIdlFile.class)
-					.flatMap(AvroIdlUtil::readNamedSchemas)
-					.flatMap(namedSchema -> Stream.concat(Stream.of(namedSchema),
-							ifType(namedSchema, AvroIdlRecordDeclaration.class)
-									.map(AvroIdlRecordDeclaration::getRecordBody)
-									.filter(Objects::nonNull)
-									.map(AvroIdlRecordBody::getFieldDeclarationList)
-									.flatMap(List::stream)
-									.map(AvroIdlFieldDeclaration::getVariableDeclaratorList)
-									.flatMap(List::stream)
-					))
-					.forEach(result::add);
-			return true;
-		}, scope);
+		if (!scope.getProject().isDisposed()) {
+			FileTypeIndex.processFiles(AvroIdlFileType.INSTANCE, virtualFile -> {
+				ifType(psiManager.findFile(virtualFile), AvroIdlFile.class)
+						.flatMap(AvroIdlUtil::readNamedSchemas)
+						.flatMap(namedSchema -> Stream.concat(Stream.of(namedSchema),
+								ifType(namedSchema, AvroIdlRecordDeclaration.class)
+										.map(AvroIdlRecordDeclaration::getRecordBody)
+										.filter(Objects::nonNull)
+										.map(AvroIdlRecordBody::getFieldDeclarationList)
+										.flatMap(List::stream)
+										.map(AvroIdlFieldDeclaration::getVariableDeclaratorList)
+										.flatMap(List::stream)
+						))
+						.forEach(result::add);
+				return true;
+			}, scope);
+		}
 		return result;
 	}
 
