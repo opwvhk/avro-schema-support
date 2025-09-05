@@ -1,8 +1,8 @@
 @namespace("tests")
 protocol SimpleProtocol {
-    record SampleNode {
-        int count = 0;
-        array<SamplePair> subNodes;
+    record Method {
+        string name;
+        string purpose;
     }
 
     record SamplePair {
@@ -10,9 +10,9 @@ protocol SimpleProtocol {
         SampleNode node;
     }
 
-    record Method {
-        string name;
-        string purpose;
+    record SampleNode {
+        int count = 0;
+        array<SamplePair> subNodes;
     }
 
     record SelfRef {

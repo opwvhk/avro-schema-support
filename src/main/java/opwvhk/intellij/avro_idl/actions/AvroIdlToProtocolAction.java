@@ -80,14 +80,16 @@ public class AvroIdlToProtocolAction extends ConversionActionBase {
 						console.printHyperlink(virtualFile.getName(),
 								new OpenFileHyperlinkInfo(project, virtualFile, 0));
 						console.print("\n", NORMAL_OUTPUT);
-						FileEditorManager.getInstance(project)
-								.openTextEditor(new OpenFileDescriptor(project, virtualFile), true);
 					} catch (RuntimeException | IOException e) {
 						console.print("Failed to write the AvroProtocol to " + virtualFile.getName() + "\n" +
 								e.getLocalizedMessage(), ERROR_OUTPUT);
 						writeStackTrace(console, e);
 					}
 				});
+				if (virtualFile.exists()) {
+					FileEditorManager.getInstance(project)
+							.openTextEditor(new OpenFileDescriptor(project, virtualFile), true);
+				}
 			}
 		}
 	}

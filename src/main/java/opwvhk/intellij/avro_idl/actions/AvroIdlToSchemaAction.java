@@ -88,8 +88,6 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 			try {
 				if (rootSchemas.size() == 1) {
 					writeSchema(project, console, destination, rootSchemas.get(0));
-					FileEditorManager.getInstance(project)
-							.openTextEditor(new OpenFileDescriptor(project, destination), true);
 				} else {
 					String suffix = "." + findExtensionFor(AvroSchemaFileType.INSTANCE);
 					for (Schema rootSchema : rootSchemas) {
@@ -102,6 +100,10 @@ public class AvroIdlToSchemaAction extends ConversionActionBase {
 				writeStackTrace(console, e);
 			}
 		});
+		if (rootSchemas.size() == 1 && destination.exists()) {
+			FileEditorManager.getInstance(project)
+					.openTextEditor(new OpenFileDescriptor(project, destination), true);
+		}
 	}
 
 	private void writeSchema(@NotNull Project project, @NotNull ConsoleView console, VirtualFile destination,

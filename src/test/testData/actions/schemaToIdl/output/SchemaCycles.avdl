@@ -5,9 +5,9 @@ record SelfRef {
     array<SelfRef> subNodes = [];
 }
 
-record SampleNode {
-    int count = 0;
-    array<SamplePair> subNodes;
+record Method {
+    string name;
+    string purpose;
 }
 
 record SamplePair {
@@ -15,7 +15,7 @@ record SamplePair {
     SampleNode node;
 }
 
-record Method {
-    string name;
-    string purpose;
+record SampleNode {
+    int count = 0;
+    array<SamplePair> subNodes;
 }

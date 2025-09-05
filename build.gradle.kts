@@ -137,6 +137,11 @@ intellijPlatform {
 			untilBuild.set(lastBuild)
 		}
 		changeNotes.set("""
+			<p>Version 243.0.0:</p><ul>
+				<li>Upgraded minimum supported JetBrains version to 2024.3</li>
+				<li>Disable upgrade notification links (avoids #230)</li>
+				<li>Fix bug #249 (a threading issue)</li>
+			</ul>
 			<p>Version 241.0.2:</p><ul>
 				<li>Add support for JetBrains version 2025.2</li>
 				<li>Fix bugs #222 and #223 (IDL syntax handling)</li>
