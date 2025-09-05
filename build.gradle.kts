@@ -35,7 +35,7 @@ plugins {
 // The first and last supported builds
 // The first build MUST be compatible with the platform & version in dependencies/intellijPlatform !
 // The last build is one more than the last release (to accommodate the EAP before it is released)
-val firstBuild = "241"
+val firstBuild = "243"
 val lastBuild = provider {
 	file("jetbrains.lastBuild.txt").readLines()
 		.asSequence()
@@ -47,7 +47,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "241.0.2"
+version = "243.0.0"
 
 repositories {
 	mavenLocal()
@@ -75,17 +75,15 @@ dependencies {
 		// Last minor versions differ, and the PSIViewer versions are not regular
 		// Also, tests require the base plugin (java/PythonCore; so don't remove it even if the plugin does not need it)
 
-		//intellijIdeaCommunity("2024.1.7")
-		//intellijIdeaCommunity("2024.2.6")
-		//intellijIdeaCommunity("2024.3.5")
-		intellijIdeaCommunity("2025.1")
+		intellijIdeaCommunity("2024.3.6")
+		//intellijIdeaCommunity("2025.1.5.1")
+		//intellijIdeaCommunity("2025.2.1")
 		// EAP
 		bundledPlugin("com.intellij.java")
 
-		//pycharmCommunity("2024.1.7")
-		//pycharmCommunity("2024.2.6")
-		//pycharmCommunity("2024.3.5")
-		//pycharmCommunity("2025.1")
+		//pycharmCommunity("2024.3.6")
+		//pycharmCommunity("2025.1.3.1")
+		//pycharmCommunity("2025.2.1.1")
 		// EAP
 		//bundledPlugin("PythonCore")
 
@@ -147,8 +145,8 @@ intellijPlatform {
 				<li>
 					Made grammar more lenient: any Unicode/Java identifier is valid as-is, and any string when quoted by
 					backticks (backticks are quoted by doubling them). This causes less parse errors, and makes future
-					 error messages more flexible. As the Avro language is much more strict, there is no effective
-					 difference.
+					error messages more flexible. As the Avro language is much more strict, there is no effective
+					difference.
 				</li>
 			</ul>
 			<p>Version 241.0.0:</p><ul>
@@ -207,8 +205,6 @@ intellijPlatform {
 			<p>Version 221.4.0:</p><ul>
 				<li>Using IntelliJ version 2021.4 to test</li>
 			</ul>
-		"""
-		changeLog += """
 			<p>Version 213.5.3:</p><ul>
 				<li>Improved grammar (string literal syntax)</li>
 				<li>Implemented better symbols (adds symbol search)</li>
