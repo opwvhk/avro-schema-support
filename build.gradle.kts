@@ -118,7 +118,7 @@ dependencies {
 		testFramework(TestFrameworkType.Platform)
 	}
 
-	implementation("org.apache.avro:avro-idl:1.12.0") { exclude("org.slf4j") }
+	implementation("org.apache.avro:avro-idl:1.12.1") { exclude("org.slf4j") }
 	implementation("org.apache.commons:commons-compress:1.28.0")
 	implementation("org.apache.commons:commons-text:1.14.0")
 	implementation("org.apache.commons:commons-lang3:3.19.0")
