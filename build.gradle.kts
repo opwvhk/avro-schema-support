@@ -1,7 +1,5 @@
-import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.intellij.platform.gradle.extensions.IntelliJPlatformDependenciesExtension
-import org.jetbrains.intellij.platform.gradle.models.ProductRelease
 import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.FailureLevel.*
 import org.jetbrains.intellij.pluginRepository.PluginRepositoryFactory
 import java.util.*
@@ -47,7 +45,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "243.0.0"
+version = "243.0.1"
 
 repositories {
 	mavenLocal()
@@ -77,19 +75,22 @@ dependencies {
 
 		intellijIdeaCommunity("2024.3.6")
 		//intellijIdeaCommunity("2025.1.5.1")
-		//intellijIdeaCommunity("2025.2.1")
+		//intellijIdeaCommunity("2025.2.4")
+		//intellijIdea("2025.3")
 		// EAP
 		bundledPlugin("com.intellij.java")
 
 		//pycharmCommunity("2024.3.6")
-		//pycharmCommunity("2025.1.3.1")
-		//pycharmCommunity("2025.2.1.1")
+		//pycharm("2025.1.3.1")
+		//pycharm("2025.2.1.1")
 		// EAP
 		//bundledPlugin("PythonCore")
 
 		// Plugin dependencies (for optional dependencies in the plugin.xml):
 		bundledPlugin("com.intellij.modules.json")
 		bundledPlugin("org.intellij.intelliLang")
+		// When targeting 2025.3 or later, language injection becomes a (bundled) module:
+		//bundledModule("intellij.platform.langInjection")
 
 		// Extra plugin(s); not needed for the plugin, but maybe useful during development:
 		pluginsInLatestCompatibleVersion("PsiViewer")
@@ -137,6 +138,9 @@ intellijPlatform {
 			untilBuild.set(lastBuild)
 		}
 		changeNotes.set("""
+			<p>Version 243.0.1:</p><ul>
+				<li>Add support for JetBrains version 2025.3</li>
+			</ul>
 			<p>Version 243.0.0:</p><ul>
 				<li>Upgraded minimum supported JetBrains version to 2024.3</li>
 				<li>Disable upgrade notification links (avoids #230)</li>
@@ -342,15 +346,7 @@ intellijPlatform {
 			SCHEDULED_FOR_REMOVAL_API_USAGES, DEPRECATED_API_USAGES
 		)))
 		ides {
-			//recommended()
-			select {
-				types.set(listOf(
-					IntelliJPlatformType.IntellijIdeaCommunity, IntelliJPlatformType.PyCharmCommunity
-				))
-				channels.set(listOf(ProductRelease.Channel.RELEASE, ProductRelease.Channel.EAP))
-				sinceBuild.set(firstBuild)
-				untilBuild.set(lastBuild)
-			}
+			recommended()
 		}
 	}
 	publishing {
