@@ -16,17 +16,17 @@ import org.jetbrains.annotations.Nullable;
 
 public class AvroIdlCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
 	@Override
-	public @Nullable CustomCodeStyleSettings createCustomSettings(@NotNull CodeStyleSettings settings) {
+	public @NotNull Language getLanguage() {
+		return AvroIdlLanguage.INSTANCE;
+	}
+
+	@Override
+	public @NotNull CustomCodeStyleSettings createCustomSettings(@NotNull CodeStyleSettings settings) {
 		return new AvroIdlCodeStyleSettings(settings);
 	}
 
 	@Override
-	public String getConfigurableDisplayName() {
-		return AvroIdlLanguage.INSTANCE.getDisplayName();
-	}
-
-	@NotNull
-	public CodeStyleConfigurable createConfigurable(@NotNull CodeStyleSettings settings,
+	public @NotNull CodeStyleConfigurable createConfigurable(@NotNull CodeStyleSettings settings,
 	                                                @NotNull CodeStyleSettings modelSettings) {
 		return new CodeStyleAbstractConfigurable(settings, modelSettings, this.getConfigurableDisplayName()) {
 			@Override

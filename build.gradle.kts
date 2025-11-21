@@ -45,7 +45,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "243.0.1"
+version = "243.0.2-SNAPSHOT"
 
 repositories {
 	mavenLocal()
@@ -122,13 +122,13 @@ dependencies {
 	implementation("org.apache.avro:avro-idl:1.12.1") { exclude("org.slf4j") }
 	implementation("org.apache.commons:commons-compress:1.28.0")
 	implementation("org.apache.commons:commons-text:1.14.0")
-	implementation("org.apache.commons:commons-lang3:3.19.0")
+	implementation("org.apache.commons:commons-lang3:3.20.0")
 	implementation("org.json:json:20250517")
-	implementation("org.kohsuke", "github-api", "1.317")
-	implementation("io.jsonwebtoken", "jjwt-impl", "0.10.5")
-	implementation("io.jsonwebtoken", "jjwt-jackson", "0.10.5")
+	implementation("org.kohsuke", "github-api", "1.327")
+	implementation("io.jsonwebtoken", "jjwt-impl", "0.12.6")
+	implementation("io.jsonwebtoken", "jjwt-jackson", "0.12.6")
 	testImplementation("junit", "junit", "4.13.2")
-	testImplementation("org.assertj", "assertj-core", "3.24.2")
+	testImplementation("org.assertj", "assertj-core", "3.27.6")
 }
 
 intellijPlatform {
@@ -138,6 +138,9 @@ intellijPlatform {
 			untilBuild.set(lastBuild)
 		}
 		changeNotes.set("""
+			<p>Version 243.0.2:</p><ul>
+				<li>Add support for JetBrains version 2025.3</li>
+			</ul>
 			<p>Version 243.0.1:</p><ul>
 				<li>Add support for JetBrains version 2025.3</li>
 			</ul>
@@ -163,6 +166,8 @@ intellijPlatform {
 				<li>Remove FileType instance references form JSON schema code</li>
 				<li>Reenable JSON compliance checks (they were rewritten as inspections). Fixes #213.</li>
 			</ul>
+		""".trimIndent())
+		/* Older changelog entries:
 			<p>Version 232.0.2:</p><ul>
 				<li>Fix filetype names</li>
 				<li>Improve text bundles for 2025.1 requirements</li>
@@ -176,8 +181,6 @@ intellijPlatform {
 				<li>Add explicit dependency to JSON module</li>
 				<li>Add Language injections for Avro</li>
 			</ul>
-		""".trimIndent())
-		/* Older changelog entries:
 			<p>Version 223.3.3:</p><ul>
 				<li>Use EDT when previewing quick fixes (fixes #177)</li>
 			</ul>
