@@ -45,7 +45,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "243.0.2"
+version = "243.0.3-SNAPSHOT"
 
 repositories {
 	mavenLocal()
@@ -138,8 +138,11 @@ intellijPlatform {
 			untilBuild.set(lastBuild)
 		}
 		changeNotes.set("""
+			<p>Version 243.0.3:</p><ul>
+				<li>...</li>
+			</ul>
 			<p>Version 243.0.2:</p><ul>
-				<li>Add support for JetBrains version 2025.3</li>
+				<li>Fix crash/issue #267</li>
 			</ul>
 			<p>Version 243.0.1:</p><ul>
 				<li>Add support for JetBrains version 2025.3</li>
