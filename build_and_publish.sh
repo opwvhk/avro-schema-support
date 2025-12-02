@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 if [[ "$(grep "^version" build.gradle.kts)" == *SNAPSHOT* ]]
 then
   echo "Publishing SNAPSHOT versions is not supported"
