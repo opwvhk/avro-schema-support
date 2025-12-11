@@ -3,6 +3,11 @@ Contributing
 
 Contributions are welcome!
 
+Would you like to contribute, but are you uncertain where to start? Please ask!
+
+If you prefer to browse a bit first, a good start are the [discussions](https://github.com/opwvhk/avro-schema-support/discussions),
+and [issues with the labels "help wanted" and "good first issue"](https://github.com/opwvhk/avro-schema-support/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22good%20first%20issue%22%2C%22help%20wanted%22).
+
 
 How to contribute
 -----------------
@@ -33,5 +38,5 @@ When changing the grammar, keep in mind:
 * When renaming/deleting BNF clauses, remember to delete the folder `src/main/gen/opwvhk/intellij/avro_idl/psi`
 * Always regenerate the code after changing the grammar and/or lexer
 
-There are no automated tests as hooking into IntelliJ and the effects of navigating its API are by far the trickiest bit.
-The code doing stuff with the result is trivial.
+There are not many automated tests as hooking into IntelliJ and the effects of navigating its API are by far the trickiest bit.
+The code doing stuff with the result is mostly trivial.
