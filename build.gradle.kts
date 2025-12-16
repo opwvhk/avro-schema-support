@@ -42,7 +42,7 @@ val lastBuild = provider {
 		.map { Integer.valueOf(it) }
 		.map { "$it.*" }
 		.first()
-}
+}!!
 
 group = "net.sf.opk"
 version = "243.0.3-SNAPSHOT"
@@ -124,11 +124,11 @@ dependencies {
 	implementation("org.apache.commons:commons-text:1.15.0")
 	implementation("org.apache.commons:commons-lang3:3.20.0")
 	implementation("org.json:json:20250517")
-	implementation("org.kohsuke", "github-api", "1.327")
-	implementation("io.jsonwebtoken", "jjwt-impl", "0.12.6")
-	implementation("io.jsonwebtoken", "jjwt-jackson", "0.12.6")
-	testImplementation("junit", "junit", "4.13.2")
-	testImplementation("org.assertj", "assertj-core", "3.27.6")
+	implementation("org.kohsuke:github-api:1.327")
+	implementation("io.jsonwebtoken:jjwt-impl:0.12.6")
+	implementation("io.jsonwebtoken:jjwt-jackson:0.12.6")
+	testImplementation("junit:junit:4.13.2")
+	testImplementation("org.assertj:assertj-core:3.27.6")
 }
 
 intellijPlatform {
