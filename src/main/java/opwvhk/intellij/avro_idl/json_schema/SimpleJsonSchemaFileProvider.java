@@ -1,7 +1,6 @@
 package opwvhk.intellij.avro_idl.json_schema;
 
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.jetbrains.jsonSchema.extension.JsonSchemaFileProvider;
 import com.jetbrains.jsonSchema.extension.JsonSchemaProviderFactory;
@@ -10,7 +9,7 @@ import com.jetbrains.jsonSchema.impl.JsonSchemaVersion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-class SimpleJsonSchemaFileProvider implements JsonSchemaFileProvider, DumbAware {
+class SimpleJsonSchemaFileProvider implements JsonSchemaFileProvider {
 	private final String fileTypeName;
 	private final String resourcePath;
 

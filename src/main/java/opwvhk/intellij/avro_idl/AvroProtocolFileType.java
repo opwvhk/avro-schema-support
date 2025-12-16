@@ -1,6 +1,8 @@
 package opwvhk.intellij.avro_idl;
 
+import com.intellij.json.JsonLanguage;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,13 +15,18 @@ public class AvroProtocolFileType extends LanguageFileType {
 	public static final AvroProtocolFileType INSTANCE = new AvroProtocolFileType();
 
 	protected AvroProtocolFileType() {
-		super(AvroProtocolLanguage.INSTANCE);
+		super(JsonLanguage.INSTANCE);
 	}
 
 	@Override
 	@NotNull
 	public String getName() {
 		return "Avro Protocol";
+	}
+
+	@Override
+	public @Nls @NotNull String getDisplayName() {
+		return getName();
 	}
 
 	@Override
