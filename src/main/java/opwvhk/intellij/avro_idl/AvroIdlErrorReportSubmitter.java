@@ -22,7 +22,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.util.Consumer;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.security.StandardSecureDigestAlgorithms;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.kohsuke.github.GHApp;
@@ -231,10 +231,10 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 
 		//Build the JWT by its claims and serializes it to a compact, URL-safe string
 		return Jwts.builder()
-				.setIssuedAt(new Date(nowMillis))
-				.setExpiration(new Date(expMillis))
-				.setIssuer(githubAppId)
-				.signWith(signingKey, SignatureAlgorithm.RS256)
+				.issuedAt(new Date(nowMillis))
+				.expiration(new Date(expMillis))
+				.issuer(githubAppId)
+				.signWith(signingKey, StandardSecureDigestAlgorithms.findBySigningKey(signingKey))
 				.compact();
 	}
 
@@ -251,7 +251,7 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 		if (issuesReported == 0) {
 			return null;
 		} else {
-			return ghIssues.toList().get(0);
+			return ghIssues.toList().getFirst();
 		}
 	}
 
