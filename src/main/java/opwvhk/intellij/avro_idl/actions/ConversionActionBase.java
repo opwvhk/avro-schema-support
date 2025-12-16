@@ -18,12 +18,14 @@ import com.intellij.openapi.util.NlsActions;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWrapper;
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.ProjectScope;
 import com.intellij.ui.UIBundle;
 import com.intellij.ui.content.Content;
+import com.intellij.ui.content.ContentManager;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
@@ -142,7 +144,7 @@ abstract class ConversionActionBase extends DumbAwareAction {
 	@SuppressWarnings("SameParameterValue")
 	@NotNull
 	protected String findExtensionFor(@NotNull FileType fileType) {
-		return findExtensionsFor(fileType).get(0);
+		return findExtensionsFor(fileType).getFirst();
 	}
 
 	/**
@@ -218,36 +220,47 @@ abstract class ConversionActionBase extends DumbAwareAction {
 	@NotNull
 	protected ConsoleView openConsole(@NotNull Project project) {
 		final ToolWindow buildToolWindow = BuildContentManager.getInstance(project).getOrCreateToolWindow();
-		Content content = buildToolWindow.getContentManager().findContent(consoleTitle);
+		ContentManager contentManager = buildToolWindow.getContentManager();
+		Content content = contentManager.findContent(consoleTitle);
 		ConsoleView console =
 				content == null ? null : UIUtil.uiTraverser(content.getComponent()).filter(ConsoleView.class).first();
-		if (content != null && console != null) {
+		boolean newConsole;
+		if (console != null) {
 			// The console already exists. Clear it.
 			console.clear();
+			newConsole = false;
 		} else {
 			// The console doesn't exist yet. Create it.
 			console = TextConsoleBuilderFactory.getInstance().createBuilder(project).getConsole();
-
-			JComponent panel = new JPanel(new BorderLayout());
-			panel.add(console.getComponent(), BorderLayout.CENTER);
-			DefaultActionGroup toolbarActions = new DefaultActionGroup();
-			for (AnAction action : console.createConsoleActions()) {
-				toolbarActions.add(action);
-			}
-
-			ActionToolbar toolbar = ActionManager.getInstance()
-					.createActionToolbar(ActionPlaces.TOOLBAR, toolbarActions, false);
-			toolbar.setTargetComponent(console.getComponent());
-			panel.add(toolbar.getComponent(), BorderLayout.WEST);
-
-			content = buildToolWindow.getContentManager().getFactory().createContent(panel, consoleTitle, true);
-			buildToolWindow.getContentManager().addContent(content);
-			Disposer.register(content, console);
+			newConsole = true;
 		}
 
-		final Content activeContent = content;
-		buildToolWindow.activate(() -> buildToolWindow.getContentManager().setSelectedContent(activeContent), false,
-				false);
+		final Content existingContent = content;
+		final ConsoleView activeConsole = console;
+		ToolWindowManager.getInstance(project).invokeLater(() -> {
+			Content activeContent;
+			if (newConsole) {
+				JComponent panel = new JPanel(new BorderLayout());
+				panel.add(activeConsole.getComponent(), BorderLayout.CENTER);
+				DefaultActionGroup toolbarActions = new DefaultActionGroup();
+				for (AnAction action : activeConsole.createConsoleActions()) {
+					toolbarActions.add(action);
+				}
+
+				ActionToolbar toolbar = ActionManager.getInstance()
+						.createActionToolbar(ActionPlaces.TOOLBAR, toolbarActions, false);
+				toolbar.setTargetComponent(activeConsole.getComponent());
+				panel.add(toolbar.getComponent(), BorderLayout.WEST);
+
+				activeContent = contentManager.getFactory().createContent(panel, consoleTitle, true);
+				activeContent.setPreferredFocusableComponent(activeConsole.getComponent());
+				contentManager.addContent(activeContent);
+				Disposer.register(activeContent, activeConsole);
+			} else {
+				activeContent = existingContent;
+			}
+			buildToolWindow.activate(() -> contentManager.setSelectedContent(activeContent), false, false);
+		});
 		return console;
 	}
 
