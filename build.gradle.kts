@@ -56,7 +56,7 @@ repositories {
 }
 java {
 	toolchain {
-		languageVersion.set(JavaLanguageVersion.of(17))
+		languageVersion.set(JavaLanguageVersion.of(21))
 	}
 }
 
@@ -139,7 +139,7 @@ intellijPlatform {
 		}
 		changeNotes.set("""
 			<p>Version 243.0.3:</p><ul>
-				<li>...</li>
+				<li>Upgrade JDK to 21, made possible by requiring 2024.3+</li>
 			</ul>
 			<p>Version 243.0.2:</p><ul>
 				<li>Fix crash/issue #267</li>
@@ -287,7 +287,7 @@ intellijPlatform {
 				<li>Fixed issue #22</li>
 			</ul>
 			<p>Version 213.0.0:</p><ul>
-				<li>New File dialog for IDL files</li>
+				<li>New File dialogue for IDL files</li>
 				<li>New: inspections for naming conventions and warnings</li>
 				<li>Improved refactoring actions (converting IDL from/to schema/protocol files)</li>
 				<li>Extended formatting & syntax highlighting options</li>
