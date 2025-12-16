@@ -95,11 +95,15 @@ public class AvroIdlActionsTest extends HeavyPlatformTestCase {
 				.build();
 
 		AnActionEvent event = TestActionEvent.createTestEvent(action, dataContext);
+		// TODO: use next line instead of the one after when requiring IDE 2025.?
+		//ActionUtil.updateAction(action, event);
 		ActionUtil.performDumbAwareUpdate(action, event, false);
 		Presentation p = event.getPresentation();
 		assertThat(p.isEnabled()).as("event %s", p.isEnabled() ? "enabled" : "disabled").isEqualTo(shouldExecute);
 		assertThat(p.isVisible()).as("event %s", p.isVisible() ? "visible" : "hidden").isEqualTo(shouldExecute);
 
+		// TODO: use next line instead of the one after when requiring IDE 2025.?
+		//ActionUtil.performAction(action, event);
 		ActionUtil.performActionDumbAwareWithCallbacks(action, event);
 		if (shouldExecute) {
 			assertSameTextContentRecursive(resultDirectory, outputDirectory);
