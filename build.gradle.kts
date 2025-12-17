@@ -138,6 +138,9 @@ intellijPlatform {
 			untilBuild.set(lastBuild)
 		}
 		changeNotes.set("""
+			<p>Version 243.0.4:</p><ul>
+				<li>Refactor error reported to use OPenFileAction as fallback (should fix #263)</li>
+			</ul>
 			<p>Version 243.0.3:</p><ul>
 				<li>Remove underlying Avro JSON languages. Fixes broken plugin #269 (duplicate of #273)</li>
 				<li>Upgrade JDK to 21, made possible by requiring 2024.3+</li>

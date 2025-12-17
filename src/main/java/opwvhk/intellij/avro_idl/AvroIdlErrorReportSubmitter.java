@@ -1,6 +1,7 @@
 package opwvhk.intellij.avro_idl;
 
 import com.intellij.ide.DataManager;
+import com.intellij.ide.actions.OpenFileAction;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.scratch.ScratchRootType;
@@ -13,8 +14,7 @@ import com.intellij.openapi.diagnostic.ErrorReportSubmitter;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.diagnostic.SubmittedReportInfo;
 import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.NlsActions;
@@ -90,7 +90,7 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 					GHIssue issue = findIssue(gitHub, searchTerm);
 					boolean duplicate = issue != null;
 					if (!duplicate) {
-						issue = createIssue(gitHub, "Crash Report: " + errorMessage, markdownText, "crash report");
+						issue = createCrashReport(gitHub, errorMessage, markdownText);
 					}
 					String issueUrl = issue.getHtmlUrl().toExternalForm();
 					int issueNumber = issue.getNumber();
@@ -255,12 +255,10 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 		}
 	}
 
-	private GHIssue createIssue(GitHub gitHub, String title, String markdownBody, String... labels) throws IOException {
-		GHIssueBuilder issueBuilder = gitHub.getRepository(repository).createIssue(title);
+	private GHIssue createCrashReport(GitHub gitHub, String errorMessage, String markdownBody) throws IOException {
+		GHIssueBuilder issueBuilder = gitHub.getRepository(repository).createIssue("Crash Report: " + errorMessage);
 		issueBuilder.body(markdownBody);
-		for (String label : labels) {
-			issueBuilder.label(label);
-		}
+		issueBuilder.label("crash report");
 		GHIssue issue = issueBuilder.create();
 		return issue;
 	}
@@ -272,11 +270,18 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 			project = ProjectManager.getInstance().getDefaultProject();
 		}
 		// Create scratch file.
+		VirtualFile file;
 		ScratchRootType scratchRoot = ScratchRootType.getInstance();
-		String fileName = hasWorkingJCEF() ? "bug-report.md" : "bug-report.txt";
-		VirtualFile file = scratchRoot.createScratchFile(project, fileName, Language.ANY, text);
+		Language markdownLanguage = Language.findLanguageByID("Markdown"); // Is Markdown supported?
+		// Without a properly working JCEF, the Markdown preview will not work well, so fall back to plain text then.
+		if (markdownLanguage != null && hasWorkingJCEF()) {
+			file = scratchRoot.createScratchFile(project, "bug-report.md", markdownLanguage, text);
+		} else {
+			file = scratchRoot.createScratchFile(project, "bug-report.txt", PlainTextLanguage.INSTANCE, text);
+		}
+
 		if (file != null) {
-			FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, file), true);
+			OpenFileAction.openFile(file, project);
 		}
 	}
 
