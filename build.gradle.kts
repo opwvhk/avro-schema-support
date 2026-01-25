@@ -128,7 +128,7 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-impl:0.13.0")
 	implementation("io.jsonwebtoken:jjwt-jackson:0.13.0")
 	testImplementation("junit:junit:4.13.2")
-	testImplementation("org.assertj:assertj-core:3.27.6")
+	testImplementation("org.assertj:assertj-core:3.27.7")
 }
 
 intellijPlatform {
