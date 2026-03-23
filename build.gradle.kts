@@ -382,6 +382,7 @@ tasks {
 
 	/** Fail the build if it has a SNAPSHOT version */
 	register<DefaultTask>("requireNonSnapshotBuild") {
+		finalizedBy("compileJava")
 		doFirst {
 			val version = project.version.toString()
 			if (version == "unspecified") {
