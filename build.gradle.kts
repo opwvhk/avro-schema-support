@@ -73,10 +73,10 @@ dependencies {
 		// Last minor versions differ, and the PSIViewer versions are not regular
 		// Also, tests require the base plugin (java/PythonCore; so don't remove it even if the plugin does not need it)
 
-		intellijIdeaCommunity("2024.3.6")
-		//intellijIdeaCommunity("2025.1.5.1")
-		//intellijIdeaCommunity("2025.2.4")
-		//intellijIdea("2025.3")
+		intellijIdeaCommunity("2024.3.7")
+		//intellijIdeaCommunity("2025.1.7")
+		//intellijIdeaCommunity("2025.2.6.1")
+		//intellijIdea("2025.3.4")
 		// EAP
 		bundledPlugin("com.intellij.java")
 
