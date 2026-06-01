@@ -2,11 +2,9 @@ package opwvhk.intellij.avro_idl.actions;
 
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationGroup;
-import com.intellij.notification.NotificationGroupManager;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.Project;
 import opwvhk.intellij.avro_idl.AvroIdlIcons;
 import org.jetbrains.annotations.NotNull;
@@ -22,10 +20,8 @@ public final class AvroIdlNotifications {
 	public static void showNotification(@NotNull Project project, @NotNull NotificationType type,
 	                                    @NotNull String title, @Nullable String message,
 	                                    @Nullable Consumer<Notification> configurer) {
-		//final NotificationGroup notificationGroup = requireNonNull(
-		//		NotificationGroup.findRegisteredGroup("avro.idl.updates"));
-		final NotificationGroup notificationGroup = requireNonNull(NotificationGroupManager.getInstance()
-				.getNotificationGroup("avro.idl.updates"));
+		final NotificationGroup notificationGroup = requireNonNull(
+				NotificationGroup.findRegisteredGroup("avro.idl.updates"));
 
 		Notification notification = notificationGroup.createNotification(title, message == null ? "" : message, type);
 		notification.setIcon(AvroIdlIcons.PLUGIN_ICON);

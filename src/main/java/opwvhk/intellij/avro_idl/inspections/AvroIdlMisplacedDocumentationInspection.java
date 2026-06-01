@@ -29,8 +29,9 @@ public class AvroIdlMisplacedDocumentationInspection extends BaseAvroIdlInspecti
 		}
 		assert element.getFirstChild() == null;
 
-		// Documentation is valid if the next visible non-comment leaf is part of a declaration (this means is cannot be whitespace, nor a comment),
-		// and the previous non-comment leaf of the declaration is our (leaf) element (this means the next leaf was the first leaf of the declaration).
+		// Documentation is valid if:
+		// - the next visible non-comment leaf is part of a declaration (this means is cannot be whitespace, nor a comment),
+		// - and the previous non-comment leaf of the declaration is our (leaf) element (this means the next leaf was the first leaf of the declaration).
 		PsiElement nextLeaf = AvroIdlPsiUtil.nextNonCommentLeaf(element);
 		PsiElement declaration = PsiTreeUtil.findFirstParent(nextLeaf, this::isDeclaration);
 		boolean validDocumentation = declaration != null && AvroIdlPsiUtil.prevNonCommentLeaf(declaration) == element;

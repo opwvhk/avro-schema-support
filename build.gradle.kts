@@ -33,7 +33,7 @@ plugins {
 // The first and last supported builds
 // The first build MUST be compatible with the platform & version in dependencies/intellijPlatform !
 // The last build is one more than the last release (to accommodate the EAP before it is released)
-val firstBuild = "243"
+val firstBuild = "252"
 val lastBuild = provider {
 	file("jetbrains.lastBuild.txt").readLines()
 		.asSequence()
@@ -42,10 +42,10 @@ val lastBuild = provider {
 		.map { Integer.valueOf(it) }
 		.map { "$it.*" }
 		.first()
-}!!
+}
 
 group = "net.sf.opk"
-version = "243.0.4"
+version = "252.0.0-SNAPSHOT"
 
 repositories {
 	mavenLocal()
@@ -73,16 +73,15 @@ dependencies {
 		// Last minor versions differ, and the PSIViewer versions are not regular
 		// Also, tests require the base plugin (java/PythonCore; so don't remove it even if the plugin does not need it)
 
-		intellijIdeaCommunity("2024.3.7")
-		//intellijIdeaCommunity("2025.1.7")
-		//intellijIdeaCommunity("2025.2.6.1")
-		//intellijIdea("2025.3.4")
+		intellijIdeaCommunity("2025.2.6.2")
+		//intellijIdeaCommunity("2025.3.5")
+		//intellijIdea("2026.1.2")
 		// EAP
 		bundledPlugin("com.intellij.java")
 
-		//pycharmCommunity("2024.3.6")
-		//pycharm("2025.1.3.1")
-		//pycharm("2025.2.1.1")
+		//pycharmCommunity("2025.2.6.1")
+		//pycharmCommunity("2025.3.5")
+		//pycharm("2026.1.2")
 		// EAP
 		//bundledPlugin("PythonCore")
 
@@ -97,9 +96,9 @@ dependencies {
 		bundledPlugin("org.intellij.plugins.markdown")
 		/* Other (bundled) plugins: */
 		// Define these variables to prevent spell checking errors in the comment below
-		@Suppress("UNUSED_VARIABLE", "unused")
+		@Suppress("unused", "SpellCheckingInspection")
 		val lombokPluginName = "Lombook Plugin" // Yes, the typo is part of the official name
-		@Suppress("UNUSED_VARIABLE", "unused")
+		@Suppress("unused")
 		val editorConfigPluginName = "org.editorconfig.editorconfigjetbrains"
 		/*
 		bundledPlugin("Git4Idea")
@@ -119,6 +118,7 @@ dependencies {
 		testFramework(TestFrameworkType.Platform)
 	}
 
+	@Suppress("VulnerableLibrariesLocal", "RedundantSuppression")
 	implementation("org.apache.avro:avro-idl:1.12.1") { exclude("org.slf4j") }
 	implementation("org.apache.commons:commons-compress:1.28.0")
 	implementation("org.apache.commons:commons-text:1.15.0")
@@ -138,6 +138,9 @@ intellijPlatform {
 			untilBuild.set(lastBuild)
 		}
 		changeNotes.set("""
+			<p>Version 251.0.0:</p><ul>
+				<li>Upgraded minimum supported JetBrains version to 2025.1</li>
+			</ul>
 			<p>Version 243.0.4:</p><ul>
 				<li>Refactor error reported to use OpenFileAction as fallback (should fix #263)</li>
 			</ul>
@@ -156,6 +159,8 @@ intellijPlatform {
 				<li>Disable upgrade notification links (avoids #230)</li>
 				<li>Fix bug #249 (a threading issue)</li>
 			</ul>
+		""".trimIndent())
+		/* Older changelog entries:
 			<p>Version 241.0.2:</p><ul>
 				<li>Add support for JetBrains version 2025.2</li>
 				<li>Fix bugs #222 and #223 (IDL syntax handling)</li>
@@ -173,8 +178,6 @@ intellijPlatform {
 				<li>Remove FileType instance references form JSON schema code</li>
 				<li>Reenable JSON compliance checks (they were rewritten as inspections). Fixes #213.</li>
 			</ul>
-		""".trimIndent())
-		/* Older changelog entries:
 			<p>Version 232.0.2:</p><ul>
 				<li>Fix filetype names</li>
 				<li>Improve text bundles for 2025.1 requirements</li>
@@ -382,6 +385,10 @@ tasks {
 
 	/** Fail the build if it has a SNAPSHOT version */
 	register<DefaultTask>("requireNonSnapshotBuild") {
+		description = """
+			Fails the build if the version is a snapshot version (i.e., ends with -SNAPSHOT) or is not set.
+			This is required by JetBrains Marketplace, and prevents accidentally publishing a broken plugin.
+			""".trimIndent()
 		finalizedBy("compileJava")
 		doFirst {
 			val version = project.version.toString()
@@ -396,6 +403,7 @@ tasks {
 
 	/** Copies files from "build/distributions" to "demo" directory */
 	register<Copy>("archiveBuildArtifact") {
+		description = "Copies the build artifact to a sibling folder."
 		dependsOn("buildPlugin")
 		println("Archiving Build Artifacts")
 		from(layout.buildDirectory.dir("distributions"))

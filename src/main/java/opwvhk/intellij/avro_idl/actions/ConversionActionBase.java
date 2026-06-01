@@ -87,7 +87,7 @@ abstract class ConversionActionBase extends DumbAwareAction {
 	                                            @SuppressWarnings("SameParameterValue") @Nullable String description,
 	                                            @Nullable VirtualFile suggestedTargetDirectory) {
 		if (ApplicationManager.getApplication().isUnitTestMode()) {
-			// Tests have no UI, and we don't want to manually fill in a dialog during tests anyway.
+			// Tests have no UI, and we don't want to manually fill in a dialogue during tests anyway.
 			return targetDirectory;
 		}
 		final String nonNullTitle = title == null ? UIBundle.message("file.chooser.default.title") : title;
@@ -109,7 +109,7 @@ abstract class ConversionActionBase extends DumbAwareAction {
 	                                              @Nullable VirtualFile suggestedTargetDirectory,
 	                                              @NotNull String suggestedBaseName) {
 		if (ApplicationManager.getApplication().isUnitTestMode()) {
-			// Tests have no UI, and we don't want to manually fill in a dialog during tests anyway.
+			// Tests have no UI, and we don't want to manually fill in a dialogue during tests anyway.
 			return targetFile;
 		}
 		//noinspection DialogTitleCapitalization: from IDE message bundle, so correct enough
@@ -125,12 +125,11 @@ abstract class ConversionActionBase extends DumbAwareAction {
 		VirtualFile baseDir = firstItem != null ? firstItem.getParent() : suggestedTargetDirectory;
 
 		// Note: the code in use is deprecated for IntellIJ 2025.x Use the commented out code instead.
-		//FileChooserDescriptor chooseDescriptor = FileChooserDescriptorFactory.createSingleFileDescriptor(fileType)
-		//		.withTitle(nonNullTitle).withDescription(nonNullDescription);
-		//FileSaverDescriptor saveDescriptor = new FileSaverDescriptor(chooseDescriptor);
-		FileSaverDescriptor saveDescriptor = new FileSaverDescriptor(nonNullTitle, nonNullDescription);
-		// withFileFilter() returns 'this'
-		saveDescriptor.withFileFilter(file -> FileTypeRegistry.getInstance().isFileOfType(file, fileType));
+		FileTypeRegistry fileTypeRegistry = FileTypeRegistry.getInstance();
+		FileChooserDescriptor chooseDescriptor = FileChooserDescriptorFactory.singleFile()
+				.withFileFilter(file -> fileTypeRegistry.isFileOfType(file, fileType))
+				.withTitle(nonNullTitle).withDescription(nonNullDescription);
+		FileSaverDescriptor saveDescriptor = new FileSaverDescriptor(chooseDescriptor);
 
 		return FileChooserFactory.getInstance().createSaveFileDialog(saveDescriptor, project).save(baseDir, fileName);
 	}

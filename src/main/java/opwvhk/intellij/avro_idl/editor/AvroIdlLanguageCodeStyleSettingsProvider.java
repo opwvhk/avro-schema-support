@@ -95,7 +95,6 @@ public class AvroIdlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleS
 
 	@Override
 	public String getCodeSample(@NotNull SettingsType settingsType) {
-		//noinspection InconsistentTextBlockIndent
 		return """
 		       namespace org.example;
 

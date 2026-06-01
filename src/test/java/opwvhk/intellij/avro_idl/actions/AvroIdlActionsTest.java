@@ -20,6 +20,8 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AvroIdlActionsTest extends HeavyPlatformTestCase {
+	private static final String TEST_DATA_PATH = "src/test/testData/actions";
+
 	private Path inputDirectory;
 	private Path outputDirectory;
 	private Path resultDirectory;
@@ -28,7 +30,7 @@ public class AvroIdlActionsTest extends HeavyPlatformTestCase {
 	public void setUp() throws Exception {
 		super.setUp();
 
-		Path testDirectory = Path.of(getTestDataPath(), getTestDirectoryName());
+		Path testDirectory = Path.of(TEST_DATA_PATH, getTestDirectoryName());
 		inputDirectory = testDirectory.resolve("input");
 		outputDirectory = testDirectory.resolve("output");
 
@@ -49,10 +51,6 @@ public class AvroIdlActionsTest extends HeavyPlatformTestCase {
 		ConversionActionBase.targetDirectory = null;
 		ConversionActionBase.targetFile = null;
 		super.tearDown();
-	}
-
-	protected String getTestDataPath() {
-		return "src/test/testData/actions";
 	}
 
 	public void testNoFiles() throws IOException {
@@ -95,16 +93,12 @@ public class AvroIdlActionsTest extends HeavyPlatformTestCase {
 				.build();
 
 		AnActionEvent event = TestActionEvent.createTestEvent(action, dataContext);
-		// TODO: use next line instead of the one after when requiring IDE 2025.?
-		//ActionUtil.updateAction(action, event);
-		ActionUtil.performDumbAwareUpdate(action, event, false);
+		ActionUtil.updateAction(action, event);
 		Presentation p = event.getPresentation();
 		assertThat(p.isEnabled()).as("event %s", p.isEnabled() ? "enabled" : "disabled").isEqualTo(shouldExecute);
 		assertThat(p.isVisible()).as("event %s", p.isVisible() ? "visible" : "hidden").isEqualTo(shouldExecute);
 
-		// TODO: use next line instead of the one after when requiring IDE 2025.?
-		//ActionUtil.performAction(action, event);
-		ActionUtil.performActionDumbAwareWithCallbacks(action, event);
+		ActionUtil.performAction(action, event);
 		if (shouldExecute) {
 			assertSameTextContentRecursive(resultDirectory, outputDirectory);
 		} else {

@@ -1,5 +1,6 @@
 <idea-plugin>
 	<id>net.sf.opk.avro-schema-support</id>
+	<!--suppress PluginXmlValidity -->
 	<name>Avro Schema Support</name>
 	<vendor email="oscar@westravanholthe.nl" url="https://www.github.com/opwvhk/avro-schema-support">
 		Oscar Westra van Holthe - Kind
@@ -81,7 +82,7 @@
 		                     implementationClass="opwvhk.intellij.avro_idl.language.AvroIdlNamesValidator"/>
 		<lang.elementManipulator forClass="opwvhk.intellij.avro_idl.psi.AvroIdlJsonStringLiteral"
 		                         implementationClass="opwvhk.intellij.avro_idl.psi.AvroIdlJsonStringLiteralManipulator"/>
-		<!-- Syntax highlighting & color definitions -->
+		<!-- Syntax highlighting & colour definitions -->
 		<lang.syntaxHighlighter language="AvroIDL"
 		                        implementationClass="opwvhk.intellij.avro_idl.editor.AvroIdlSyntaxHighlighter"/>
 		<colorSettingsPage implementation="opwvhk.intellij.avro_idl.editor.AvroIdlColorSettingsPage"/>

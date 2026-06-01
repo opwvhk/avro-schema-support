@@ -10,5 +10,4 @@
 protocol ${NAME} {
 	// Insert your protocol elements here
 	#[[$END$]]#
-
 }

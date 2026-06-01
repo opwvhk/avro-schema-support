@@ -18,7 +18,7 @@ public class AvroIdlStructureViewModel extends StructureViewModelBase
 		super(psiFile, editor, new AvroIdlStructureViewElement(psiFile));
 	}
 
-	public @NotNull Sorter[] getSorters() {
+	public Sorter @NotNull [] getSorters() {
 		return new Sorter[]{Sorter.ALPHA_SORTER};
 	}
 
@@ -34,7 +34,7 @@ public class AvroIdlStructureViewModel extends StructureViewModelBase
 	}
 
 	@Override
-	protected @NotNull Class<?>[] getSuitableClasses() {
+	protected Class<?> @NotNull [] getSuitableClasses() {
 		return new Class<?>[]{
 				AvroIdlFile.class,
 				AvroIdlNamedSchemaDeclaration.class, AvroIdlVariableDeclarator.class, AvroIdlEnumConstant.class,
