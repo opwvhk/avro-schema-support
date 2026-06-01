@@ -127,7 +127,6 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 
 		// Plugin version
 		appendPluginByDescriptor(builder, "Plugin", AvroIdlPluginUtils.getMyPluginDescriptor());
-		appendPluginByDescriptor(builder, "Extra", AvroIdlPluginUtils.getConflictingPluginDescriptor());
 		appendPluginByDescriptor(builder, "Extra", PluginManagerCore.getPlugin(PluginId.getId("sparql4idea")));
 		// IntelliJ version
 		ApplicationInfo info = ApplicationInfo.getInstance();

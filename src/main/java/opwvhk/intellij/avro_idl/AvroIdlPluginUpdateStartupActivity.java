@@ -1,17 +1,13 @@
 package opwvhk.intellij.avro_idl;
 
-import com.intellij.ide.IdeBundle;
 import com.intellij.ide.browsers.BrowserLauncher;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManager;
-import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationAction;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.ProjectActivity;
-import com.intellij.openapi.ui.Messages;
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
 import opwvhk.intellij.avro_idl.actions.AvroIdlNotifications;
@@ -46,8 +42,6 @@ public class AvroIdlPluginUpdateStartupActivity implements ProjectActivity {
 		AvroIdlSettings settings = AvroIdlSettings.getInstance();
 		IdeaPluginDescriptor plugin = AvroIdlPluginUtils.getMyPluginDescriptor();
 
-		checkForReplacedPlugin(project, plugin.getName());
-
 		String oldVersion = settings.getPluginVersion();
 		String newVersion = versionOf(plugin);
 		LOG.info("Collecting changes for the Avro Schema Plugin (%s) since version %s".formatted(newVersion,
@@ -56,27 +50,6 @@ public class AvroIdlPluginUpdateStartupActivity implements ProjectActivity {
 		notifyUserOfUpdate(project, plugin, newVersion, oldVersion);
 		settings.setPluginVersion(newVersion);
 		return null;
-	}
-
-	private void checkForReplacedPlugin(@NotNull Project project, String myName) {
-		IdeaPluginDescriptor descriptor = AvroIdlPluginUtils.getConflictingPluginDescriptor();
-		if (descriptor != null && !PluginManagerCore.isDisabled(descriptor.getPluginId())) {
-
-			// The old Avro plugin by Abigail Buccaneer is both installed and enabled.
-			// This can cause problems, so offer to disable it.
-
-			String offendingPluginName = descriptor.getName();
-			// Reuses the strings used by the PluginReplacement extension point, but now the other way around.
-			String title = IdeBundle.message("plugin.manager.obsolete.plugins.detected.title");
-			String message = IdeBundle.message("plugin.manager.replace.plugin.0.by.plugin.1", offendingPluginName,
-					myName);
-
-			AvroIdlNotifications.showNotification(project, NotificationType.WARNING, title, message,
-					notification -> notification
-							.addAction(NotificationAction.createSimpleExpiring(IdeBundle.message("button.disable"),
-									() -> PluginManager.disablePlugin(descriptor.getPluginId().getIdString())))
-							.addAction(NotificationAction.createSimpleExpiring(Messages.getNoButton(), () -> {})));
-		}
 	}
 
 	@NotNull
@@ -97,11 +70,6 @@ public class AvroIdlPluginUpdateStartupActivity implements ProjectActivity {
 				plugin.getName() + " " + newVersion + " installed." :
 				plugin.getName() + " updated to version " + newVersion;
 		Consumer<Notification> addNotificationActions = notification -> {
-			// Disabled because the IntelliJ settings dialog says "Not yet initialized"...
-			//// Values for idToSelect are in searchableOptions.xml; use this XPath: /option/configurable[configurable_name="AvroIDL"]@id
-			//// (note: searchableOptions.xml is created when building the plugin)
-			//notification.addAction(NotificationAction.createSimple("Open preferences",
-			//		() -> ShowSettingsUtilImpl.showSettingsDialog(project, "", "Avro IDL")));
 			notification.addAction(NotificationAction.createSimple("Ask questions",
 					() -> BrowserLauncher.getInstance()
 							.browse(URI.create("https://github.com/opwvhk/avro-schema-support/discussions"))));
