@@ -45,7 +45,7 @@ val lastBuild = provider {
 }!!
 
 group = "net.sf.opk"
-version = "243.0.4-SNAPSHOT"
+version = "243.0.4"
 
 repositories {
 	mavenLocal()
@@ -73,10 +73,10 @@ dependencies {
 		// Last minor versions differ, and the PSIViewer versions are not regular
 		// Also, tests require the base plugin (java/PythonCore; so don't remove it even if the plugin does not need it)
 
-		intellijIdeaCommunity("2024.3.6")
-		//intellijIdeaCommunity("2025.1.5.1")
-		//intellijIdeaCommunity("2025.2.4")
-		//intellijIdea("2025.3")
+		intellijIdeaCommunity("2024.3.7")
+		//intellijIdeaCommunity("2025.1.7")
+		//intellijIdeaCommunity("2025.2.6.1")
+		//intellijIdea("2025.3.4")
 		// EAP
 		bundledPlugin("com.intellij.java")
 
@@ -139,7 +139,7 @@ intellijPlatform {
 		}
 		changeNotes.set("""
 			<p>Version 243.0.4:</p><ul>
-				<li>Refactor error reported to use OPenFileAction as fallback (should fix #263)</li>
+				<li>Refactor error reported to use OpenFileAction as fallback (should fix #263)</li>
 			</ul>
 			<p>Version 243.0.3:</p><ul>
 				<li>Remove underlying Avro JSON languages. Fixes broken plugin #269 (duplicate of #273)</li>
@@ -382,6 +382,7 @@ tasks {
 
 	/** Fail the build if it has a SNAPSHOT version */
 	register<DefaultTask>("requireNonSnapshotBuild") {
+		finalizedBy("compileJava")
 		doFirst {
 			val version = project.version.toString()
 			if (version == "unspecified") {
