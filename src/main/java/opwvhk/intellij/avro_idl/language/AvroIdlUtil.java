@@ -5,6 +5,7 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
@@ -33,6 +34,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static java.util.Collections.emptyList;
 import static java.util.Objects.requireNonNull;
 
 public class AvroIdlUtil {
@@ -58,26 +60,28 @@ public class AvroIdlUtil {
 		// Only schemas, fields, messages, and parameters are considered symbols.
 		// Namespaces are not, as these can be specified in multiple locations.
 
-		List<AvroIdlNameIdentifierOwner> result = new ArrayList<>();
-
-		final PsiManager psiManager = PsiManager.getInstance(requireNonNull(scope.getProject()));
-		if (!scope.getProject().isDisposed()) {
-			FileTypeIndex.processFiles(AvroIdlFileType.INSTANCE, virtualFile -> {
-				ifType(psiManager.findFile(virtualFile), AvroIdlFile.class)
-						.flatMap(AvroIdlUtil::readNamedSchemas)
-						.flatMap(namedSchema -> Stream.concat(Stream.of(namedSchema),
-								ifType(namedSchema, AvroIdlRecordDeclaration.class)
-										.map(AvroIdlRecordDeclaration::getRecordBody)
-										.filter(Objects::nonNull)
-										.map(AvroIdlRecordBody::getFieldDeclarationList)
-										.flatMap(List::stream)
-										.map(AvroIdlFieldDeclaration::getVariableDeclaratorList)
-										.flatMap(List::stream)
-						))
-						.forEach(result::add);
-				return true;
-			}, scope);
+		Project project = scope.getProject();
+		if (project == null || project.isDisposed()) {
+			return emptyList();
 		}
+
+		List<AvroIdlNameIdentifierOwner> result = new ArrayList<>();
+		final PsiManager psiManager = PsiManager.getInstance(project);
+		FileTypeIndex.processFiles(AvroIdlFileType.INSTANCE, virtualFile -> {
+			ifType(psiManager.findFile(virtualFile), AvroIdlFile.class)
+					.flatMap(AvroIdlUtil::readNamedSchemas)
+					.flatMap(namedSchema -> Stream.concat(Stream.of(namedSchema),
+							ifType(namedSchema, AvroIdlRecordDeclaration.class)
+									.map(AvroIdlRecordDeclaration::getRecordBody)
+									.filter(Objects::nonNull)
+									.map(AvroIdlRecordBody::getFieldDeclarationList)
+									.flatMap(List::stream)
+									.map(AvroIdlFieldDeclaration::getVariableDeclaratorList)
+									.flatMap(List::stream)
+					))
+					.forEach(result::add);
+			return true;
+		}, scope);
 		return result;
 	}
 

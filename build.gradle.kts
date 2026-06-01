@@ -141,6 +141,7 @@ intellijPlatform {
 			<p>Version 251.0.0:</p><ul>
 				<li>Upgraded minimum supported JetBrains version to 2025.1</li>
 				<li>Removed old conflicting plugin 'claims.bold.intellij.avro'; it's not supported past 2020.2.4</li>
+				<li>Fix crash/issue #295</li>
 			</ul>
 			<p>Version 243.0.4:</p><ul>
 				<li>Refactor error reported to use OpenFileAction as fallback (should fix #263)</li>
