@@ -45,7 +45,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "252.0.0-SNAPSHOT"
+version = "252.0.0"
 
 repositories {
 	mavenLocal()
