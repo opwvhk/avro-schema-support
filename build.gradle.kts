@@ -57,6 +57,7 @@ repositories {
 java {
 	toolchain {
 		languageVersion.set(JavaLanguageVersion.of(21))
+		//languageVersion.set(JavaLanguageVersion.of(25))
 	}
 }
 
@@ -76,6 +77,7 @@ dependencies {
 		intellijIdeaCommunity("2025.2.6.2")
 		//intellijIdeaCommunity("2025.3.5")
 		//intellijIdea("2026.1.2")
+		//intellijIdea("2026.2.0.1")
 		// EAP
 		bundledPlugin("com.intellij.java")
 
@@ -87,16 +89,17 @@ dependencies {
 
 		// Plugin dependencies (for optional dependencies in the plugin.xml):
 		bundledPlugin("com.intellij.modules.json")
-		bundledPlugin("org.intellij.intelliLang")
+		//bundledPlugin("org.intellij.intelliLang")
 		// When targeting 2025.3 or later, language injection becomes a (bundled) module:
 		//bundledModule("intellij.platform.langInjection")
+		bundledModule("org.intellij.intelliLang")
 
 		// Extra plugin(s); not needed for the plugin, but maybe useful during development:
 		pluginsInLatestCompatibleVersion("PsiViewer")
 		bundledPlugin("org.intellij.plugins.markdown")
 		/* Other (bundled) plugins: */
 		// Define these variables to prevent spell checking errors in the comment below
-		@Suppress("unused", "SpellCheckingInspection")
+		@Suppress("unused")
 		val lombokPluginName = "Lombook Plugin" // Yes, the typo is part of the official name
 		@Suppress("unused")
 		val editorConfigPluginName = "org.editorconfig.editorconfigjetbrains"
@@ -118,8 +121,8 @@ dependencies {
 		testFramework(TestFrameworkType.Platform)
 	}
 
-	@Suppress("VulnerableLibrariesLocal", "RedundantSuppression")
 	implementation("org.apache.avro:avro-idl:1.12.1") { exclude("org.slf4j") }
+	implementation("com.fasterxml.jackson.core:jackson-core:2.22.1")
 	implementation("org.apache.commons:commons-compress:1.28.0")
 	implementation("org.apache.commons:commons-text:1.15.0")
 	implementation("org.apache.commons:commons-lang3:3.20.0")
@@ -129,6 +132,7 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-jackson:0.13.0")
 	testImplementation("junit:junit:4.13.2")
 	testImplementation("org.assertj:assertj-core:3.27.7")
+	implementation("org.jetbrains:annotations:26.1.0")
 }
 
 intellijPlatform {
@@ -407,7 +411,9 @@ tasks {
 	register<Copy>("archiveBuildArtifact") {
 		description = "Copies the build artifact to a sibling folder."
 		dependsOn("buildPlugin")
-		println("Archiving Build Artifacts")
+		doFirst {
+			project.logger.lifecycle("Archiving Build Artifacts")
+		}
 		from(layout.buildDirectory.dir("distributions"))
 		include("**/*.*")
 		into(layout.projectDirectory.dir("../archive-avro-schema-support"))

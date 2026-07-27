@@ -52,8 +52,13 @@
 	]]></description>
 
 	<!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html on how to target different products -->
+	<!-- Messaging, Themes, UI Components, Files, Documents, Actions, Components, Services, Extensions, Editors -->
 	<depends>com.intellij.modules.platform</depends>
+	<!-- File Type, Lexer, Parser, Highlighting, References, Code Completion, Find, Rename, Formatter, Code Navigation -->
 	<depends>com.intellij.modules.lang</depends>
+	<!-- XML, XML DOM, XSD/DTD, DOM Model -->
+	<depends>com.intellij.modules.xml</depends>
+	<!--<depends>com.intellij.java</depends>-->
 	<depends optional="true" config-file="plugin-json.xml">com.intellij.modules.json</depends>
 	<depends optional="true" config-file="plugin-intellilang.xml">org.intellij.intelliLang</depends>
 
@@ -143,7 +148,7 @@
 		                 level="ERROR" enabledByDefault="false"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlAvoidSchemaSyntaxInspection"/>
 		<localInspection language="AvroIDL" groupKey="inspection.group.avro.idl" key="inspection.naming.convention"
-		                 level="TYPO" enabledByDefault="false"
+		                 level="TEXT ATTRIBUTES" enabledByDefault="false"
 		                 implementationClass="opwvhk.intellij.avro_idl.inspections.AvroIdlNamingConventionInspection"/>
 	</extensions>
 	<extensions defaultExtensionNs="opwvhk.avro.idl">
