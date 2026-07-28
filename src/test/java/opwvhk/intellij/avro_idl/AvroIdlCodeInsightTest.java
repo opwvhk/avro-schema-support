@@ -3,7 +3,6 @@ package opwvhk.intellij.avro_idl;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.spellchecker.SpellCheckerSeveritiesProvider;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import opwvhk.intellij.avro_idl.inspections.*;
 
@@ -297,7 +296,7 @@ public class AvroIdlCodeInsightTest extends BasePlatformTestCase {
 		myFixture.enableInspections(AvroIdlUseSchemaSyntaxInspection.class);
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("DataProtocol_empty.avdl");
 		assertEquals(1, quickFixes.size());
-		IntentionAction quickFix = quickFixes.get(0);
+		IntentionAction quickFix = quickFixes.getFirst();
 		assertEquals("Replace protocol with schema syntax", quickFix.getText());
 		myFixture.launchAction(quickFix);
 		myFixture.checkResultByFile("DataProtocolFixed_empty.avdl");
@@ -307,7 +306,7 @@ public class AvroIdlCodeInsightTest extends BasePlatformTestCase {
 		myFixture.enableInspections(AvroIdlUseSchemaSyntaxInspection.class);
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("DataProtocol_ns.avdl");
 		assertEquals(1, quickFixes.size());
-		IntentionAction quickFix = quickFixes.get(0);
+		IntentionAction quickFix = quickFixes.getFirst();
 		assertEquals("Replace protocol with schema syntax", quickFix.getText());
 		myFixture.launchAction(quickFix);
 		myFixture.checkResultByFile("DataProtocolFixed_ns.avdl");
@@ -330,7 +329,7 @@ public class AvroIdlCodeInsightTest extends BasePlatformTestCase {
 		myFixture.enableInspections(AvroIdlUseSchemaSyntaxInspection.class);
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("DataProtocol_record.avdl");
 		assertEquals(1, quickFixes.size());
-		IntentionAction quickFix = quickFixes.get(0);
+		IntentionAction quickFix = quickFixes.getFirst();
 		assertEquals("Replace protocol with schema syntax", quickFix.getText());
 		myFixture.launchAction(quickFix);
 		myFixture.checkResultByFile("DataProtocolFixed_record.avdl");
@@ -353,7 +352,7 @@ public class AvroIdlCodeInsightTest extends BasePlatformTestCase {
 		myFixture.enableInspections(AvroIdlUseSchemaSyntaxInspection.class);
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("DataProtocol_ns_record.avdl");
 		assertEquals(1, quickFixes.size());
-		IntentionAction quickFix = quickFixes.get(0);
+		IntentionAction quickFix = quickFixes.getFirst();
 		assertEquals("Replace protocol with schema syntax", quickFix.getText());
 		myFixture.launchAction(quickFix);
 		myFixture.checkResultByFile("DataProtocolFixed_ns_record.avdl");
@@ -376,7 +375,7 @@ public class AvroIdlCodeInsightTest extends BasePlatformTestCase {
 		myFixture.enableInspections(AvroIdlAvoidSchemaSyntaxInspection.class);
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("SchemaSyntax.avdl");
 		assertEquals(1, quickFixes.size());
-		IntentionAction quickFix = quickFixes.get(0);
+		IntentionAction quickFix = quickFixes.getFirst();
 		assertEquals("Replace schema syntax with protocol", quickFix.getText());
 		myFixture.launchAction(quickFix);
 		myFixture.checkResultByFile("SchemaSyntaxFixed.avdl");
@@ -399,7 +398,7 @@ public class AvroIdlCodeInsightTest extends BasePlatformTestCase {
 		myFixture.enableInspections(AvroIdlAvoidSchemaSyntaxInspection.class);
 		final List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("SchemaSyntaxWithoutNamespace.avdl");
 		assertEquals(1, quickFixes.size());
-		IntentionAction quickFix = quickFixes.get(0);
+		IntentionAction quickFix = quickFixes.getFirst();
 		assertEquals("Replace schema syntax with protocol", quickFix.getText());
 		myFixture.launchAction(quickFix);
 		myFixture.checkResultByFile("SchemaSyntaxWithoutNamespaceFixed.avdl");
@@ -450,7 +449,7 @@ public class AvroIdlCodeInsightTest extends BasePlatformTestCase {
 	public void testMissingSymbolInEmptyEnumQuickFix() {
 		List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("MissingSymbolInEmptyEnum.avdl");
 		assertEquals(1, quickFixes.size());
-		IntentionAction quickFix = quickFixes.get(0);
+		IntentionAction quickFix = quickFixes.getFirst();
 		assertEquals("Create symbol", quickFix.getText());
 
 		myFixture.launchAction(quickFix);
@@ -460,7 +459,7 @@ public class AvroIdlCodeInsightTest extends BasePlatformTestCase {
 	public void testMissingSymbolInEnumQuickFix() {
 		List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("MissingSymbolInEnum.avdl");
 		assertEquals(1, quickFixes.size());
-		IntentionAction quickFix = quickFixes.get(0);
+		IntentionAction quickFix = quickFixes.getFirst();
 		assertEquals("Create symbol", quickFix.getText());
 
 		myFixture.launchAction(quickFix);
@@ -470,7 +469,7 @@ public class AvroIdlCodeInsightTest extends BasePlatformTestCase {
 	public void testMissingErrorQuickFix() {
 		List<IntentionAction> quickFixes = myFixture.getAllQuickFixes("MissingError.avdl");
 		assertEquals(1, quickFixes.size());
-		IntentionAction quickFix = quickFixes.get(0);
+		IntentionAction quickFix = quickFixes.getFirst();
 		assertEquals("Create error", quickFix.getText());
 
 		myFixture.launchAction(quickFix);
@@ -492,7 +491,7 @@ public class AvroIdlCodeInsightTest extends BasePlatformTestCase {
 		}
 
 		static Highlight typo(String text, String description) {
-			return new Highlight(SpellCheckerSeveritiesProvider.TYPO, text, description);
+			return new Highlight(HighlightSeverity.TEXT_ATTRIBUTES, text, description);
 		}
 
 		static List<Highlight> fromHighlightInfoList(List<HighlightInfo> highlightInfoList) {

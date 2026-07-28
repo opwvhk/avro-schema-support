@@ -17,12 +17,12 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.tree.IElementType;
-import groovy.json.StringEscapeUtils;
 import opwvhk.intellij.avro_idl.AvroIdlFileType;
 import opwvhk.intellij.avro_idl.AvroIdlIcons;
 import opwvhk.intellij.avro_idl.psi.*;
 import org.apache.avro.Protocol;
 import org.apache.avro.SchemaParser;
+import org.apache.commons.text.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -292,7 +292,7 @@ public class AvroIdlUtil {
 		if (jsonValue instanceof AvroIdlJsonStringLiteral) {
 			final TextRange range = ElementManipulators.getValueTextRange(jsonValue);
 			String escapedLiteral = range.substring(jsonValue.getText());
-			return StringEscapeUtils.unescapeJavaScript(escapedLiteral);
+			return StringEscapeUtils.unescapeJson(escapedLiteral);
 		}
 		return null;
 	}

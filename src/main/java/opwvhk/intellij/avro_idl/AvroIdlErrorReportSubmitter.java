@@ -2,8 +2,6 @@ package opwvhk.intellij.avro_idl;
 
 import com.intellij.ide.DataManager;
 import com.intellij.ide.actions.OpenFileAction;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.scratch.ScratchRootType;
 import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -13,13 +11,12 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.ErrorReportSubmitter;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.diagnostic.SubmittedReportInfo;
-import com.intellij.openapi.extensions.PluginId;
+import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.NlsActions;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.util.Consumer;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.impl.security.StandardSecureDigestAlgorithms;
@@ -109,7 +106,7 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 		return true;
 	}
 
-	private static @NotNull String createCrashReportMarkdown(@NotNull IdeaLoggingEvent[] events,
+	private @NotNull String createCrashReportMarkdown(@NotNull IdeaLoggingEvent[] events,
 	                                                         @Nullable String additionalInfo) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("# Crash Report\n");
@@ -126,12 +123,15 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 		builder.append("\n");
 
 		// Plugin version
-		appendPluginByDescriptor(builder, "Plugin", AvroIdlPluginUtils.getMyPluginDescriptor());
-		appendPluginByDescriptor(builder, "Extra", PluginManagerCore.getPlugin(PluginId.getId("sparql4idea")));
+		PluginDescriptor pluginDescriptor = getPluginDescriptor();
+		String pluginName = pluginDescriptor.getName();
+		String pluginVersion = pluginDescriptor.getVersion();
+		builder.append("* Plugin: ").append(pluginName).append(" `").append(pluginVersion).append("`\n");
 		// IntelliJ version
 		ApplicationInfo info = ApplicationInfo.getInstance();
-		builder.append("* IDE: ").append(info.getVersionName()).append(" `").append(info.getFullVersion())
-				.append("`\n");
+		String versionName = info.getVersionName();
+		String fullVersion = info.getFullVersion();
+		builder.append("* IDE: ").append(versionName).append(" `").append(fullVersion).append("`\n");
 		// Java VM
 		builder.append("* JVM: ")
 				.append(System.getProperty("java.vm.name")).append(" (")
@@ -163,18 +163,6 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 		}
 		String markdownText = builder.toString();
 		return markdownText;
-	}
-
-	private static void appendPluginByDescriptor(StringBuilder builder, String label, IdeaPluginDescriptor descriptor) {
-		if (descriptor != null) {
-			builder.append("* ").append(label).append(": ")
-					.append(" ").append(descriptor.getName())
-					.append(" `").append(descriptor.getVersion())
-					.append("` by ").append(descriptor.getVendor())
-					.append(" (id: ").append(descriptor.getPluginId().getIdString())
-					.append(PluginManagerCore.isDisabled(descriptor.getPluginId()) ? "; disabled" : "")
-					.append(")\n");
-		}
 	}
 
 	private static String getFirstMatchingGroup(Pattern pattern, CharSequence text) {
@@ -273,7 +261,7 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 		ScratchRootType scratchRoot = ScratchRootType.getInstance();
 		Language markdownLanguage = Language.findLanguageByID("Markdown"); // Is Markdown supported?
 		// Without a properly working JCEF, the Markdown preview will not work well, so fall back to plain text then.
-		if (markdownLanguage != null && hasWorkingJCEF()) {
+		if (markdownLanguage != null) {
 			file = scratchRoot.createScratchFile(project, "bug-report.md", markdownLanguage, text);
 		} else {
 			file = scratchRoot.createScratchFile(project, "bug-report.txt", PlainTextLanguage.INSTANCE, text);
@@ -281,18 +269,6 @@ public class AvroIdlErrorReportSubmitter extends ErrorReportSubmitter {
 
 		if (file != null) {
 			OpenFileAction.openFile(file, project);
-		}
-	}
-
-	private static boolean hasWorkingJCEF() {
-		try {
-			if (!JBCefApp.isSupported()) {
-				return false;
-			}
-			JBCefApp.getInstance();
-			return true;
-		} catch (Throwable t) {
-			return false;
 		}
 	}
 }

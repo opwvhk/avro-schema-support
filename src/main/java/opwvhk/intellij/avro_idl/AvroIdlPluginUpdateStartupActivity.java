@@ -33,17 +33,16 @@ import java.util.regex.Pattern;
 public class AvroIdlPluginUpdateStartupActivity implements ProjectActivity {
 	private static final Logger LOG = Logger.getInstance(AvroIdlUtil.class);
 
-	private static final String SNAPSHOT_SUFFIX = "-SNAPSHOT";
 	private static final Pattern CHANGE_NOTES_PATTERN = Pattern.compile(
 			"(?s)(?<=\\R|\\A)\\s*<p>Version (?<version>[^:]+):</p>.*?<ul[^>]*>.*?</ul>\\s*(?:\\R|\\Z)");
 
 	@Override
 	public @Nullable Object execute(@NotNull Project project, @NotNull Continuation<? super Unit> continuation) {
 		AvroIdlSettings settings = AvroIdlSettings.getInstance();
-		IdeaPluginDescriptor plugin = AvroIdlPluginUtils.getMyPluginDescriptor();
+		PluginInfo plugin = AvroIdlPluginUtils.getMyPluginInfo();
 
 		String oldVersion = settings.getPluginVersion();
-		String newVersion = versionOf(plugin);
+		String newVersion = plugin.nonSnapshotVersion();
 		LOG.info("Collecting changes for the Avro Schema Plugin (%s) since version %s".formatted(newVersion,
 				oldVersion));
 
@@ -52,23 +51,12 @@ public class AvroIdlPluginUpdateStartupActivity implements ProjectActivity {
 		return null;
 	}
 
-	@NotNull
-	private String versionOf(IdeaPluginDescriptor plugin) {
-		String pluginVersion = plugin.getVersion();
-		if (pluginVersion.endsWith(SNAPSHOT_SUFFIX)) {
-			return pluginVersion.substring(0, pluginVersion.length() - SNAPSHOT_SUFFIX.length());
-		} else {
-			return pluginVersion;
-		}
-	}
-
-
-	private void notifyUserOfUpdate(@NotNull Project project, @NotNull IdeaPluginDescriptor plugin,
+	private void notifyUserOfUpdate(@NotNull Project project, @NotNull PluginInfo plugin,
 	                                @NotNull String newVersion, @Nullable String oldVersion) {
-		String changeNotes = plugin.getChangeNotes();
+		String changeNotes = plugin.changeNotes();
 		String notificationTitle = oldVersion == null ?
-				plugin.getName() + " " + newVersion + " installed." :
-				plugin.getName() + " updated to version " + newVersion;
+				plugin.name() + " " + newVersion + " installed." :
+				plugin.name() + " updated to version " + newVersion;
 		Consumer<Notification> addNotificationActions = notification -> {
 			notification.addAction(NotificationAction.createSimple("Ask questions",
 					() -> BrowserLauncher.getInstance()

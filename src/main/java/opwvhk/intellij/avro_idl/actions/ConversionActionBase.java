@@ -4,7 +4,6 @@ import com.intellij.build.BuildContentManager;
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
-import com.intellij.ide.IdeBundle;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
@@ -28,6 +27,7 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import opwvhk.intellij.avro_idl.TextBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -113,9 +113,9 @@ abstract class ConversionActionBase extends DumbAwareAction {
 			return targetFile;
 		}
 		//noinspection DialogTitleCapitalization: from IDE message bundle, so correct enough
-		final String nonNullTitle = title == null ? IdeBundle.message("dialog.title.save.as") : title;
+		final String nonNullTitle = title == null ? TextBundle.ideMessage("dialog.title.save.as") : title;
 		final String nonNullDescription =
-				description == null ? IdeBundle.message("label.choose.target.file") : description;
+				description == null ? TextBundle.ideMessage("label.choose.target.file") : description;
 		final String fileName = suggestedBaseName + "." + destinationFileType.getDefaultExtension();
 
 		// Replacement for getVirtualFilesByName is not available in 2020.3.4
