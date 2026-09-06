@@ -121,7 +121,7 @@ dependencies {
 		testFramework(TestFrameworkType.Platform)
 	}
 
-	implementation("org.apache.avro:avro-idl:1.12.1") { exclude("org.slf4j") }
+	implementation("org.apache.avro:avro-idl:1.12.2") { exclude("org.slf4j") }
 	implementation("com.fasterxml.jackson.core:jackson-core:2.22.2")
 	implementation("org.apache.commons:commons-compress:1.28.0")
 	implementation("org.apache.commons:commons-text:1.15.0")
