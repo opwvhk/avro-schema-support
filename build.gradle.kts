@@ -122,7 +122,7 @@ dependencies {
 	}
 
 	implementation("org.apache.avro:avro-idl:1.12.1") { exclude("org.slf4j") }
-	implementation("com.fasterxml.jackson.core:jackson-core:2.22.2")
+	implementation("com.fasterxml.jackson.core:jackson-core:2.22.3")
 	implementation("org.apache.commons:commons-compress:1.28.0")
 	implementation("org.apache.commons:commons-text:1.15.0")
 	implementation("org.apache.commons:commons-lang3:3.20.0")
