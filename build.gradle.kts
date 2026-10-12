@@ -27,7 +27,7 @@ fun IntelliJPlatformDependenciesExtension.pluginsInLatestCompatibleVersion(varar
 plugins {
 	`java-library`
 	id("java")
-	id("org.jetbrains.intellij.platform") version "2.18.1"
+	id("org.jetbrains.intellij.platform") version "2.19.0"
 }
 
 // The first and last supported builds
