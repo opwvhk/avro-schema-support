@@ -27,7 +27,7 @@ fun IntelliJPlatformDependenciesExtension.pluginsInLatestCompatibleVersion(varar
 plugins {
 	`java-library`
 	id("java")
-	id("org.jetbrains.intellij.platform") version "2.18.1"
+	id("org.jetbrains.intellij.platform") version "2.19.0"
 }
 
 // The first and last supported builds
@@ -45,7 +45,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "252.0.1-SNAPSHOT"
+version = "252.0.2-SNAPSHOT"
 
 repositories {
 	mavenLocal()
@@ -122,10 +122,10 @@ dependencies {
 	}
 
 	implementation("org.apache.avro:avro-idl:1.12.2") { exclude("org.slf4j") }
-	implementation("com.fasterxml.jackson.core:jackson-core:2.22.2")
+	implementation("com.fasterxml.jackson.core:jackson-core:2.22.3")
 	implementation("org.apache.commons:commons-compress:1.28.0")
 	implementation("org.apache.commons:commons-text:1.15.0")
-	implementation("org.apache.commons:commons-lang3:3.20.0")
+	implementation("org.apache.commons:commons-lang3:3.21.0")
 	implementation("org.json:json:20260522")
 	implementation("org.kohsuke:github-api:1.330")
 	implementation("io.jsonwebtoken:jjwt-impl:0.13.0")
