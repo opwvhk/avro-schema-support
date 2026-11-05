@@ -1,7 +1,6 @@
 package opwvhk.intellij.avro_idl;
 
 import com.intellij.ide.browsers.BrowserLauncher;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationAction;
 import com.intellij.notification.NotificationType;
@@ -22,13 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Startup activity to show plugin changes (once per version), and to check if a known incompatible plugin is active (if
- * so, offer to disable it).
- *
- * <p>The reason to check for the plugin manually not via
- * {@link com.intellij.ide.plugins.PluginReplacement PluginReplacement} is because the latter works backwards: you
- * cannot define a replacement for a conflicting but unmaintained plugin, as it needs to be defined in the plugin to be
- * replaced (which you cannot do, as it is no longer maintained).</p>
+ * Startup activity to show plugin changes (once per version).
  */
 public class AvroIdlPluginUpdateStartupActivity implements ProjectActivity {
 	private static final Logger LOG = Logger.getInstance(AvroIdlUtil.class);
