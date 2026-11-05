@@ -26,7 +26,7 @@ fun IntelliJPlatformDependenciesExtension.pluginsInLatestCompatibleVersion(varar
 	})
 
 plugins {
-	id("org.jetbrains.intellij.platform") version "2.15.0"
+	id("org.jetbrains.intellij.platform") version "2.20.0"
 	id("java")
 	`java-library`
 }
@@ -46,7 +46,7 @@ val lastBuild = provider {
 }
 
 group = "net.sf.opk"
-version = "253.0.0"
+version = "253.0.1-SNAPSHOT"
 
 repositories {
 	mavenLocal()
@@ -87,9 +87,7 @@ dependencies {
 
 		// Plugin dependencies (for optional dependencies in the plugin.xml):
 		bundledPlugin("com.intellij.modules.json")
-		// When targeting 2025.3 or later, language injection becomes a (bundled) module:
-		bundledPlugin("org.intellij.intelliLang")
-		//bundledModule("org.intellij.intelliLang")
+		bundledModule("org.intellij.intelliLang")
 		bundledModule("intellij.platform.langInjection")
 		// For 2026.2 or later, the structure view has become a separate module
 		//bundledModule("intellij.platform.structureView")
@@ -99,7 +97,7 @@ dependencies {
 		bundledPlugin("org.intellij.plugins.markdown")
 		/* Other (bundled) plugins: */
 		// Define this variable to prevent spell checking errors in the comment below
-		@Suppress("unused", "SpellCheckingInspection")
+		@Suppress("SpellCheckingInspection", "unused", "UnusedVariable")
 		val lombokPluginName = "Lombook Plugin" // Yes, the typo is part of the official name
 
 		pluginVerifier()
