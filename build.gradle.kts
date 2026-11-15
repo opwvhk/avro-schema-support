@@ -108,7 +108,7 @@ dependencies {
 
 	implementation("org.jetbrains:annotations:26.1.0")
 	implementation("com.fasterxml.jackson.core:jackson-core:2.22.4")
-	implementation("com.fasterxml.jackson.core:jackson-databind:2.22.4")
+	implementation("com.fasterxml.jackson.core:jackson-databind:2.23.0")
 	implementation("org.apache.avro:avro-idl:1.12.2") { exclude("org.slf4j") }
 	implementation("org.apache.commons:commons-compress:1.28.0")
 	implementation("org.apache.commons:commons-text:1.15.0")
