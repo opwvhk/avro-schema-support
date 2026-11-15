@@ -112,7 +112,7 @@ dependencies {
 	implementation("org.apache.avro:avro-idl:1.12.2") { exclude("org.slf4j") }
 	implementation("org.apache.commons:commons-compress:1.28.0")
 	implementation("org.apache.commons:commons-text:1.15.0")
-	implementation("org.apache.commons:commons-lang3:3.21.0")
+	implementation("org.apache.commons:commons-lang3:3.22.0")
 	implementation("org.json:json:20260814")
 	implementation("org.kohsuke:github-api:1.330")
 	implementation("io.jsonwebtoken:jjwt-impl:0.13.0")
